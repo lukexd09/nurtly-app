@@ -1,3 +1,5 @@
+import 'json_readers.dart';
+
 class SoundItem {
   const SoundItem({
     required this.id,
@@ -17,20 +19,12 @@ class SoundItem {
 
   factory SoundItem.fromJson(Map<String, Object?> json) {
     return SoundItem(
-      id: _readString(json, 'id'),
-      title: _readString(json, 'title'),
-      category: _readString(json, 'category'),
-      summary: _readString(json, 'summary'),
-      assetPath: _readString(json, 'assetPath'),
-      unlockType: _readString(json, 'unlockType'),
+      id: readString(json, 'id'),
+      title: readString(json, 'title'),
+      category: readString(json, 'category'),
+      summary: readString(json, 'summary'),
+      assetPath: readString(json, 'assetPath'),
+      unlockType: readString(json, 'unlockType'),
     );
   }
-}
-
-String _readString(Map<String, Object?> json, String key) {
-  final value = json[key];
-  if (value is String && value.isNotEmpty) {
-    return value;
-  }
-  throw FormatException('Expected non-empty string field "$key".');
 }
