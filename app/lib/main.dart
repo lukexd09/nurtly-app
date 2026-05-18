@@ -114,7 +114,7 @@ class _AppTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return const Text(
       appName,
       textAlign: TextAlign.center,
       style: AppTextStyles.display,
@@ -127,7 +127,7 @@ class _AppSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return const Text(
       appSubtitle,
       textAlign: TextAlign.center,
       style: AppTextStyles.body,
