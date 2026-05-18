@@ -1,3 +1,7 @@
+param(
+    [switch] $AllowDirty
+)
+
 $ErrorActionPreference = "Stop"
 
 $originalLocation = Get-Location
@@ -14,8 +18,18 @@ try {
 
     $status = git status --short
     if ($status) {
-        Write-Host "Git status:"
+        if ($AllowDirty) {
+            Write-Host "Git status:"
+        }
+        else {
+            Write-Host "Git status is not clean after pre-PR checks." -ForegroundColor Red
+        }
+
         $status | ForEach-Object { Write-Host $_ }
+
+        if (-not $AllowDirty) {
+            throw "Git status is not clean."
+        }
     }
     else {
         Write-Host "Git status clean." -ForegroundColor Green
