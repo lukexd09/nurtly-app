@@ -20,40 +20,43 @@ $flutterCommand = Get-Command flutter -ErrorAction SilentlyContinue
 $dartCommand = Get-Command dart -ErrorAction SilentlyContinue
 
 if (-not $flutterCommand -or -not $dartCommand) {
-    Write-Host ""
-    Write-Host "Flutter/Dart verification cannot run because Flutter or Dart was not found." -ForegroundColor Red
-    Write-Host ""
+    Write-Host "FAILED Flutter/Dart not found." -ForegroundColor Red
     Write-Host "Checked Flutter bin candidates:"
     foreach ($candidate in $flutterBinCandidates) {
         Write-Host " - $candidate"
     }
-    Write-Host ""
     Write-Host "Current PATH:"
     Write-Host $env:PATH
-    Write-Host ""
-    Write-Host "Expected local setup example:"
-    Write-Host " - Flutter SDK: C:\src\flutter"
-    Write-Host " - Flutter bin on PATH: C:\src\flutter\bin"
-    Write-Host ""
+    Write-Host "Install Flutter or add Flutter bin to PATH."
     throw "Flutter or Dart is not available."
+}
+
+function Invoke-QuietStep {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Name,
+        [Parameter(Mandatory = $true)]
+        [scriptblock] $Command
+    )
+
+    $output = & $Command 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "FAILED $Name" -ForegroundColor Red
+        $output | ForEach-Object { Write-Host $_ }
+        throw "$Name failed."
+    }
+
+    Write-Host "OK $Name" -ForegroundColor Green
 }
 
 try {
     Set-Location $appDir
 
-    Write-Host "Running flutter pub get..."
-    flutter pub get
+    Invoke-QuietStep "flutter pub get" { flutter pub get }
+    Invoke-QuietStep "dart format ." { dart format . }
+    Invoke-QuietStep "flutter analyze" { flutter analyze }
+    Invoke-QuietStep "flutter test" { flutter test }
 
-    Write-Host "Running dart format..."
-    dart format .
-
-    Write-Host "Running flutter analyze..."
-    flutter analyze
-
-    Write-Host "Running flutter test..."
-    flutter test
-
-    Write-Host ""
     Write-Host "Flutter verification completed successfully." -ForegroundColor Green
 }
 finally {

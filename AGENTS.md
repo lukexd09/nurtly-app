@@ -172,6 +172,14 @@ powershell -ExecutionPolicy Bypass -File tools/cleanup_flutter_local.ps1
 
 and then check git status again.
 
+Before opening or updating a PR that changes app code, Codex must run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
+```
+
+This runs Flutter verification, known local cleanup, scope guard checks, Flutter quality checks, and a concise git status.
+
 Codex must include the verification result in the PR description.
 
 ---
@@ -189,7 +197,8 @@ Default behavior:
 - Do not scan unrelated files.
 - Inspect only files required for the current task.
 - Use deterministic shell commands and scripts instead of explaining manually.
-- Use `tools/verify_flutter.ps1` for verification.
+- Use `tools/pre_pr_check.ps1` before PRs that touch app code.
+- Use `tools/verify_flutter.ps1` for direct Flutter verification when a full pre-PR check is not needed.
 - Use `tools/cleanup_flutter_local.ps1` for known generated local noise.
 - Before opening a PR, perform a concise self-review of the diff and fix obvious issues.
 
