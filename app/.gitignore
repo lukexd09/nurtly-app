@@ -19,3 +19,13 @@ ios/Runner.xcworkspace/
 # IDE
 .idea/
 *.iml
+
+# Flutter/iOS ephemeral generated files
+ios/Flutter/ephemeral/
+
+# Local Android generated/migrated sources
+android/app/src/main/java/
+
+# IDE / local tooling
+../.idea/
+../.gradle/
