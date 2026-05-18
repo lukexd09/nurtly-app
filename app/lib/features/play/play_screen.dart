@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../core/content/content_loader.dart';
+import '../../core/content/content_package.dart';
 import '../../core/content/play_idea.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/empty_state.dart';
@@ -24,7 +26,7 @@ class PlayScreen extends StatefulWidget {
 }
 
 class _PlayScreenState extends State<PlayScreen> {
-  late final Future _contentFuture;
+  late final Future<ContentPackage> _contentFuture;
 
   @override
   void initState() {
@@ -152,18 +154,28 @@ class _PlayIdeaCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: 'Open ${idea.title}',
-      child: GestureDetector(
-        onTap: onTap,
-        child: NurtlyCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(idea.title, style: AppTextStyles.cardTitle),
-              const SizedBox(height: AppSpacing.xs),
-              Text(idea.summary, style: AppTextStyles.body),
-              const SizedBox(height: AppSpacing.md),
-              _PlayIdeaMetadata(idea: idea),
-            ],
+      child: Material(
+        color: AppColors.surface,
+        shadowColor: AppColors.textPrimary.withAlpha(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadii.cardRadius,
+          side: const BorderSide(color: AppColors.borderSoft),
+        ),
+        child: InkWell(
+          borderRadius: AppRadii.cardRadius,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(idea.title, style: AppTextStyles.cardTitle),
+                const SizedBox(height: AppSpacing.xs),
+                Text(idea.summary, style: AppTextStyles.body),
+                const SizedBox(height: AppSpacing.md),
+                _PlayIdeaMetadata(idea: idea),
+              ],
+            ),
           ),
         ),
       ),
