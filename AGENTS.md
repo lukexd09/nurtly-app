@@ -176,7 +176,60 @@ Codex must include the verification result in the PR description.
 
 ---
 
-## 9. MVP guardrails
+## 9. Token Saver Mode
+
+Codex should optimize for low token usage and high delivered value.
+
+Default behavior:
+
+- Prefer one focused module-level PR over many tiny PRs.
+- Do not create unnecessary progress narration.
+- Do not produce long PR descriptions.
+- Do not restate AGENTS.md in responses.
+- Do not scan unrelated files.
+- Inspect only files required for the current task.
+- Use deterministic shell commands and scripts instead of explaining manually.
+- Use `tools/verify_flutter.ps1` for verification.
+- Use `tools/cleanup_flutter_local.ps1` for known generated local noise.
+- Before opening a PR, perform a concise self-review of the diff and fix obvious issues.
+
+PR body should be short:
+
+```text
+Summary:
+- ...
+
+Verification:
+- tools/verify_flutter.ps1 passed
+
+Out of scope:
+- no SDKs, no remote content, no ads, no analytics, no audio, no localization unless explicitly requested
+```
+
+When implementing features:
+
+- Batch closely related work into one PR if it belongs to the same feature slice.
+- Do not split trivial refactors into separate PRs when they are required for the same feature.
+- Split only when the change affects architecture, dependencies, persistence, security, privacy, or multiple modules.
+
+Self-review checklist before PR:
+
+- Does the diff include only intentional files?
+- Did verification pass?
+- Did cleanup remove generated local files?
+- Are there unnecessary abstractions?
+- Are there trailing spacing hacks?
+- Are Futures recreated unnecessarily in build methods?
+- Did the change avoid new packages and SDKs unless requested?
+- Is the PR body short?
+
+If a task can be completed by editing fewer files, prefer that.
+
+If a task requires broad repo exploration, explain why before doing it.
+
+---
+
+## 10. MVP guardrails
 
 The MVP scope is intentionally limited.
 
@@ -204,7 +257,7 @@ Placeholders are allowed only when explicitly requested.
 
 ---
 
-## 10. Product guardrails
+## 11. Product guardrails
 
 Nurtly is for parents/caregivers, not children.
 
@@ -232,7 +285,7 @@ Avoid wording like:
 
 ---
 
-## 11. Design guardrails
+## 12. Design guardrails
 
 The accepted design direction is:
 
@@ -263,7 +316,7 @@ Use existing theme tokens and shared widgets when available.
 
 ---
 
-## 12. Localization guardrails
+## 13. Localization guardrails
 
 Nurtly is expected to support English and Polish.
 
@@ -275,7 +328,7 @@ Avoid scattering repeated product copy across many files when a central constant
 
 ---
 
-## 13. Content guardrails
+## 14. Content guardrails
 
 Content must stay outside app code where practical.
 
@@ -289,7 +342,7 @@ Do not mix source content, published content, and app code responsibilities.
 
 ---
 
-## 14. Privacy guardrails
+## 15. Privacy guardrails
 
 Privacy-by-design is mandatory.
 
@@ -305,7 +358,7 @@ When adding privacy-related UI, keep it practical, calm, and transparent.
 
 ---
 
-## 15. Ads and analytics guardrails
+## 16. Ads and analytics guardrails
 
 Ads may be considered later, but must not be added unless explicitly requested.
 
@@ -317,7 +370,7 @@ Do not add AdMob, Firebase Analytics, other analytics SDKs, or tracking code unl
 
 ---
 
-## 16. Product name guardrail
+## 17. Product name guardrail
 
 Do not hardcode the product name `Nurtly` in many places.
 
@@ -327,7 +380,7 @@ Native platform display names may contain the product name where required by pla
 
 ---
 
-## 17. When in doubt
+## 18. When in doubt
 
 Stop and ask for clarification if:
 
