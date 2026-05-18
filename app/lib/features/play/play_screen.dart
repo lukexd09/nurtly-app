@@ -11,7 +11,7 @@ import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../privacy/privacy_data_screen.dart';
 
-class PlayScreen extends StatelessWidget {
+class PlayScreen extends StatefulWidget {
   const PlayScreen({
     super.key,
     this.contentLoader = const ContentLoader(),
@@ -20,10 +20,23 @@ class PlayScreen extends StatelessWidget {
   final ContentLoader contentLoader;
 
   @override
+  State<PlayScreen> createState() => _PlayScreenState();
+}
+
+class _PlayScreenState extends State<PlayScreen> {
+  late final Future _contentFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _contentFuture = widget.contentLoader.load();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: FutureBuilder(
-        future: contentLoader.load(),
+        future: _contentFuture,
         builder: (context, snapshot) {
           final playIdeas = snapshot.data?.playIdeas;
 
@@ -44,17 +57,22 @@ class PlayScreen extends StatelessWidget {
                   title: 'No play ideas available yet.',
                   message: 'More simple ideas will appear here later.',
                 )
-              else ...[
-                for (final idea in playIdeas) ...[
-                  _PlayIdeaCard(idea: idea),
-                  const SizedBox(height: AppSpacing.md),
-                ],
-              ],
+              else
+                ..._playIdeaCards(playIdeas),
             ],
           );
         },
       ),
     );
+  }
+
+  List<Widget> _playIdeaCards(List<PlayIdea> playIdeas) {
+    return [
+      for (var index = 0; index < playIdeas.length; index++) ...[
+        if (index > 0) const SizedBox(height: AppSpacing.md),
+        _PlayIdeaCard(idea: playIdeas[index]),
+      ],
+    ];
   }
 }
 
