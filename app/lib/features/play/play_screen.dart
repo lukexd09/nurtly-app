@@ -70,7 +70,17 @@ class _PlayScreenState extends State<PlayScreen> {
     return [
       for (var index = 0; index < playIdeas.length; index++) ...[
         if (index > 0) const SizedBox(height: AppSpacing.md),
-        _PlayIdeaCard(idea: playIdeas[index]),
+        _PlayIdeaCard(
+          idea: playIdeas[index],
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) =>
+                    PlayActivityDetailScreen(idea: playIdeas[index]),
+              ),
+            );
+          },
+        ),
       ],
     ];
   }
@@ -129,9 +139,133 @@ class _LoadingState extends StatelessWidget {
 }
 
 class _PlayIdeaCard extends StatelessWidget {
-  const _PlayIdeaCard({required this.idea});
+  const _PlayIdeaCard({
+    required this.idea,
+    required this.onTap,
+  });
 
   final PlayIdea idea;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Open ${idea.title}',
+      child: GestureDetector(
+        onTap: onTap,
+        child: NurtlyCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(idea.title, style: AppTextStyles.cardTitle),
+              const SizedBox(height: AppSpacing.xs),
+              Text(idea.summary, style: AppTextStyles.body),
+              const SizedBox(height: AppSpacing.md),
+              _PlayIdeaMetadata(idea: idea),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PlayActivityDetailScreen extends StatelessWidget {
+  const PlayActivityDetailScreen({
+    required this.idea,
+    super.key,
+  });
+
+  final PlayIdea idea;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                tooltip: 'Back',
+                color: AppColors.primary,
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(idea.title, style: AppTextStyles.screenTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(idea.summary, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.md),
+            _PlayIdeaMetadata(idea: idea),
+            const SizedBox(height: AppSpacing.lg),
+            _DetailSection(
+              title: "What you'll need",
+              children: [
+                for (final item in idea.neededItems) _BulletText(item),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _DetailSection(
+              title: 'Steps',
+              children: [
+                for (var index = 0; index < idea.steps.length; index++)
+                  _NumberedText(
+                    number: index + 1,
+                    text: idea.steps[index],
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _DetailNote(
+              title: 'Parent note',
+              text: idea.parentNote,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _DetailNote(
+              title: 'Safety note',
+              text: idea.safetyNote,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayIdeaMetadata extends StatelessWidget {
+  const _PlayIdeaMetadata({required this.idea});
+
+  final PlayIdea idea;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xs,
+      children: [
+        NurtlyChip(label: idea.ageGroup),
+        NurtlyChip(label: idea.place),
+        NurtlyChip(label: idea.messLevel),
+        NurtlyChip(label: 'Child: ${idea.childEngagement}'),
+        NurtlyChip(label: 'Parent: ${idea.parentInvolvement}'),
+        NurtlyChip(label: idea.activityType),
+      ],
+    );
+  }
+}
+
+class _DetailSection extends StatelessWidget {
+  const _DetailSection({
+    required this.title,
+    required this.children,
+  });
+
+  final String title;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -139,24 +273,68 @@ class _PlayIdeaCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(idea.title, style: AppTextStyles.cardTitle),
+          Text(title, style: AppTextStyles.cardTitle),
+          const SizedBox(height: AppSpacing.sm),
+          for (var index = 0; index < children.length; index++) ...[
+            if (index > 0) const SizedBox(height: AppSpacing.xs),
+            children[index],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailNote extends StatelessWidget {
+  const _DetailNote({
+    required this.title,
+    required this.text,
+  });
+
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return NurtlyCard(
+      backgroundColor: AppColors.primarySoft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.cardTitle),
           const SizedBox(height: AppSpacing.xs),
-          Text(idea.summary, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.md),
-          Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: [
-              NurtlyChip(label: idea.ageGroup),
-              NurtlyChip(label: idea.place),
-              NurtlyChip(label: idea.messLevel),
-              NurtlyChip(label: 'Child: ${idea.childEngagement}'),
-              NurtlyChip(label: 'Parent: ${idea.parentInvolvement}'),
-              NurtlyChip(label: idea.activityType),
-            ],
+          Text(
+            text,
+            style: AppTextStyles.body.copyWith(color: AppColors.textPrimary),
           ),
         ],
       ),
     );
+  }
+}
+
+class _BulletText extends StatelessWidget {
+  const _BulletText(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('- $text', style: AppTextStyles.body);
+  }
+}
+
+class _NumberedText extends StatelessWidget {
+  const _NumberedText({
+    required this.number,
+    required this.text,
+  });
+
+  final int number;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('$number. $text', style: AppTextStyles.body);
   }
 }
