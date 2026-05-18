@@ -1,0 +1,149 @@
+param(
+    [switch] $AllowPlatformChanges
+)
+
+$ErrorActionPreference = "Stop"
+
+$originalLocation = Get-Location
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$repoRoot = Resolve-Path (Join-Path $scriptDir "..")
+
+$generatedNoisePatterns = @(
+    "^\.idea/",
+    "^\.gradle/",
+    "^app/ios/Flutter/ephemeral/",
+    "^app/android/app/src/main/java/"
+)
+
+$platformPatterns = @(
+    "^app/android/",
+    "^app/ios/"
+)
+
+$forbiddenPatterns = @(
+    "Firebase",
+    "Supabase",
+    "AdMob",
+    "analytics",
+    "firebase_",
+    "google_mobile_ads",
+    "just_audio",
+    "audioplayers",
+    "shared_preferences",
+    "sqflite",
+    "hive",
+    "http:",
+    "API_KEY",
+    "SECRET",
+    "TOKEN=",
+    "\.env"
+)
+
+function Get-ChangedFiles {
+    $files = @()
+    $files += Invoke-GitLines @("diff", "--name-only")
+    $files += Invoke-GitLines @("diff", "--cached", "--name-only")
+    $files += Invoke-GitLines @("ls-files", "--others", "--exclude-standard")
+
+    $base = $null
+    foreach ($candidate in @("origin/main", "main")) {
+        Invoke-GitLines @("rev-parse", "--verify", $candidate) | Out-Null
+        if ($script:LastGitExitCode -eq 0) {
+            $base = git merge-base HEAD $candidate
+            break
+        }
+    }
+
+    if ($base) {
+        $files += Invoke-GitLines @("diff", "--name-only", "$base...HEAD")
+    }
+
+    return $files | Where-Object { $_ } | Sort-Object -Unique
+}
+
+function Invoke-GitLines {
+    param([string[]] $Arguments)
+
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $output = & git @Arguments 2>$null
+        $script:LastGitExitCode = $LASTEXITCODE
+        return $output
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+}
+
+function Test-IsTextFile {
+    param([string] $Path)
+
+    $fullPath = Join-Path $repoRoot $Path
+    if (-not (Test-Path $fullPath -PathType Leaf)) {
+        return $false
+    }
+
+    $bytes = [System.IO.File]::ReadAllBytes($fullPath)
+    $sampleLength = [Math]::Min($bytes.Length, 4096)
+    for ($i = 0; $i -lt $sampleLength; $i++) {
+        if ($bytes[$i] -eq 0) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
+function Test-ShouldScanForbiddenPatterns {
+    param([string] $Path)
+
+    $normalized = $Path -replace "\\", "/"
+    return $normalized -ne "AGENTS.md" -and
+        $normalized -ne "tools/check_scope_guard.ps1"
+}
+
+try {
+    Set-Location $repoRoot
+    $changedFiles = @(Get-ChangedFiles)
+    $failures = @()
+
+    foreach ($file in $changedFiles) {
+        $normalized = $file -replace "\\", "/"
+
+        foreach ($pattern in $generatedNoisePatterns) {
+            if ($normalized -match $pattern) {
+                $failures += "Generated/local noise changed: $file"
+            }
+        }
+
+        if (-not $AllowPlatformChanges) {
+            foreach ($pattern in $platformPatterns) {
+                if ($normalized -match $pattern) {
+                    $failures += "Platform file changed without -AllowPlatformChanges: $file"
+                }
+            }
+        }
+
+        if ((Test-ShouldScanForbiddenPatterns $normalized) -and
+            (Test-IsTextFile $normalized)) {
+            $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
+            foreach ($pattern in $forbiddenPatterns) {
+                if ($content -match $pattern) {
+                    $failures += "Forbidden pattern '$pattern' found in $file"
+                }
+            }
+        }
+    }
+
+    if ($failures.Count -gt 0) {
+        Write-Host "Scope guard failed." -ForegroundColor Red
+        $failures | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" }
+        throw "Scope guard failed."
+    }
+
+    Write-Host "Scope guard passed." -ForegroundColor Green
+}
+finally {
+    Set-Location $originalLocation
+}
