@@ -146,7 +146,37 @@ Do not claim tests, formatting, analysis, builds, or app launches were run unles
 
 ---
 
-## 8. MVP guardrails
+## 8. Local verification for local Codex
+
+If Codex is running locally and Flutter/Dart is available, Codex must run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/verify_flutter.ps1
+```
+
+before opening or updating a PR that changes Flutter/Dart code.
+
+After verification, Codex must run:
+
+```powershell
+git status --short
+```
+
+and ensure the PR includes only intentional files.
+
+If local Flutter generated known iOS/Android ephemeral files, Codex may run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/cleanup_flutter_local.ps1
+```
+
+and then check git status again.
+
+Codex must include the verification result in the PR description.
+
+---
+
+## 9. MVP guardrails
 
 The MVP scope is intentionally limited.
 
@@ -174,7 +204,7 @@ Placeholders are allowed only when explicitly requested.
 
 ---
 
-## 9. Product guardrails
+## 10. Product guardrails
 
 Nurtly is for parents/caregivers, not children.
 
@@ -202,7 +232,7 @@ Avoid wording like:
 
 ---
 
-## 10. Design guardrails
+## 11. Design guardrails
 
 The accepted design direction is:
 
@@ -233,7 +263,7 @@ Use existing theme tokens and shared widgets when available.
 
 ---
 
-## 11. Localization guardrails
+## 12. Localization guardrails
 
 Nurtly is expected to support English and Polish.
 
@@ -245,7 +275,7 @@ Avoid scattering repeated product copy across many files when a central constant
 
 ---
 
-## 12. Content guardrails
+## 13. Content guardrails
 
 Content must stay outside app code where practical.
 
@@ -259,7 +289,7 @@ Do not mix source content, published content, and app code responsibilities.
 
 ---
 
-## 13. Privacy guardrails
+## 14. Privacy guardrails
 
 Privacy-by-design is mandatory.
 
@@ -275,7 +305,7 @@ When adding privacy-related UI, keep it practical, calm, and transparent.
 
 ---
 
-## 14. Ads and analytics guardrails
+## 15. Ads and analytics guardrails
 
 Ads may be considered later, but must not be added unless explicitly requested.
 
@@ -287,7 +317,7 @@ Do not add AdMob, Firebase Analytics, other analytics SDKs, or tracking code unl
 
 ---
 
-## 15. Product name guardrail
+## 16. Product name guardrail
 
 Do not hardcode the product name `Nurtly` in many places.
 
@@ -297,7 +327,7 @@ Native platform display names may contain the product name where required by pla
 
 ---
 
-## 16. When in doubt
+## 17. When in doubt
 
 Stop and ask for clarification if:
 
