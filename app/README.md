@@ -1,3 +1,16 @@
-# App
+# Nurtly Flutter App
 
-This folder is reserved for the future Nurtly mobile app source.
+Initial Flutter application skeleton for Android and iOS.
+
+## Run locally
+
+```powershell
+flutter pub get
+flutter run
+```
+
+## Verify
+
+```powershell
+flutter analyze
+```
