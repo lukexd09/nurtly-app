@@ -34,7 +34,8 @@ class PrivacyDataScreen extends StatelessWidget {
             const NurtlyCard(
               child: EmptyState(
                 title: 'Privacy details are not built yet',
-                message: 'Clear parent-focused privacy information will be added in a separate task.',
+                message:
+                    'Clear parent-focused privacy information will be added in a separate task.',
               ),
             ),
           ],
