@@ -8,6 +8,8 @@ void main() {
     expect(find.text('Play'), findsWidgets);
     expect(find.text('Journal'), findsWidgets);
     expect(find.text('Sounds'), findsWidgets);
-    expect(find.text('Play ideas are not built yet'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soft treasure basket'), findsOneWidget);
   });
 }
