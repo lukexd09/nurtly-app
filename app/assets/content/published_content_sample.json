@@ -1,0 +1,72 @@
+{
+  "metadata": {
+    "packageId": "nurtly_sample_content",
+    "version": "0.1.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18"
+  },
+  "playIdeas": [
+    {
+      "id": "play_soft_treasure_basket",
+      "title": "Soft treasure basket",
+      "summary": "Offer a few safe household textures to explore together.",
+      "ageGroup": "6-18 months",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sensory",
+      "neededItems": [
+        "Soft cloth",
+        "Wooden spoon",
+        "Large safe container"
+      ],
+      "steps": [
+        "Place the items in the container.",
+        "Sit nearby and let your child choose what to touch.",
+        "Name textures calmly as they explore."
+      ],
+      "parentNote": "Choose what fits the moment and keep it simple.",
+      "safetyNote": "Use only large, clean items that cannot be swallowed."
+    },
+    {
+      "id": "play_window_weather_words",
+      "title": "Window weather words",
+      "summary": "Look outside and talk about what you notice.",
+      "ageGroup": "18 months-3 years",
+      "place": "Home",
+      "messLevel": "None",
+      "childEngagement": "Low",
+      "parentInvolvement": "Medium",
+      "activityType": "Language",
+      "neededItems": [
+        "Window view"
+      ],
+      "steps": [
+        "Sit or stand together near a window.",
+        "Point to one thing you notice outside.",
+        "Use short calm words like cloudy, bright, windy, or quiet."
+      ],
+      "parentNote": "A short moment is enough.",
+      "safetyNote": "Keep windows locked and supervise closely."
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_soft_rain",
+      "title": "Soft rain",
+      "category": "Nature",
+      "summary": "A calm rain placeholder for future sound content.",
+      "assetPath": "placeholder://sounds/soft_rain",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_warm_noise",
+      "title": "Warm noise",
+      "category": "Noise",
+      "summary": "A steady noise placeholder for quiet routines.",
+      "assetPath": "placeholder://sounds/warm_noise",
+      "unlockType": "free"
+    }
+  ]
+}
