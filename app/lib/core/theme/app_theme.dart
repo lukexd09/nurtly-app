@@ -79,6 +79,34 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: AppRadii.chipRadius),
         ),
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.surface,
+        labelStyle: AppTextStyles.body,
+        hintStyle: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+        errorStyle: AppTextStyles.caption.copyWith(color: AppColors.primary),
+        contentPadding: const EdgeInsets.all(AppSpacing.md),
+        border: OutlineInputBorder(
+          borderRadius: AppRadii.controlSmallRadius,
+          borderSide: const BorderSide(color: AppColors.borderSoft),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppRadii.controlSmallRadius,
+          borderSide: const BorderSide(color: AppColors.borderSoft),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: AppRadii.controlSmallRadius,
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: AppRadii.controlSmallRadius,
+          borderSide: const BorderSide(color: AppColors.accentWarm),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: AppRadii.controlSmallRadius,
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
+      ),
     );
   }
 }

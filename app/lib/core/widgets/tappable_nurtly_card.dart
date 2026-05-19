@@ -21,18 +21,30 @@ class TappableNurtlyCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticLabel,
-      child: Material(
-        color: AppColors.surface,
-        shape: RoundedRectangleBorder(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
           borderRadius: AppRadii.cardRadius,
-          side: const BorderSide(color: AppColors.borderSoft),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withAlpha(10),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
+            ),
+          ],
         ),
-        child: InkWell(
-          borderRadius: AppRadii.cardRadius,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: child,
+        child: Material(
+          color: AppColors.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppRadii.cardRadius,
+            side: const BorderSide(color: AppColors.borderSoft),
+          ),
+          child: InkWell(
+            borderRadius: AppRadii.cardRadius,
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: child,
+            ),
           ),
         ),
       ),

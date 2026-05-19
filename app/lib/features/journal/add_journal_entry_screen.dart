@@ -81,6 +81,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                 controller: _noteController,
                 minLines: 4,
                 maxLines: 7,
+                textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.newline,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
