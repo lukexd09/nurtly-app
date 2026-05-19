@@ -4,6 +4,7 @@ import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/play_idea.dart';
 import 'package:nurtly/core/content/sound_item.dart';
+import 'package:nurtly/features/journal/journal_screen.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 import 'package:nurtly/features/sounds/sounds_screen.dart';
 import 'package:nurtly/main.dart';
@@ -85,6 +86,33 @@ void main() {
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
     expect(find.text('free'), findsOneWidget);
+  });
+
+  testWidgets('shows empty journal state', (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: JournalScreen()));
+
+    expect(find.text('No journal notes yet.'), findsOneWidget);
+    expect(find.text('Add a short note when you are ready.'), findsOneWidget);
+  });
+
+  testWidgets('add note flow creates a journal entry with mood',
+      (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: JournalScreen()));
+
+    await tester.tap(find.text('Add note'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byType(TextField),
+      'A quiet breakfast together.',
+    );
+    await tester.tap(find.text('Good moment'));
+    await tester.tap(find.text('Save note'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('A quiet breakfast together.'), findsOneWidget);
+    expect(find.text('Good moment'), findsOneWidget);
+    expect(find.textContaining('Today '), findsOneWidget);
   });
 }
 
