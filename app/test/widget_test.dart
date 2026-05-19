@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/play_idea.dart';
+import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/features/play/play_screen.dart';
+import 'package:nurtly/features/sounds/sounds_screen.dart';
 import 'package:nurtly/main.dart';
 
 void main() {
@@ -27,8 +29,7 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.text('Soft treasure basket'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     expect(find.text('What you\'ll need'), findsOneWidget);
     expect(find.text('- Soft cloth'), findsOneWidget);
@@ -48,6 +49,42 @@ void main() {
       find.text('Use only large, clean items that cannot be swallowed.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('shows sounds from bundled-style content', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SoundsScreen(contentLoader: _FakeContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Soft rain'), findsOneWidget);
+    expect(find.text('A calm rain placeholder for future sound content.'),
+        findsOneWidget);
+    expect(find.text('Nature'), findsOneWidget);
+    expect(find.text('free'), findsOneWidget);
+  });
+
+  testWidgets('opens sound detail from the sounds list', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SoundsScreen(contentLoader: _FakeContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.text('Soft rain'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Player placeholder'), findsOneWidget);
+    expect(
+      find.text('Real sound playback will be added in a later task.'),
+      findsOneWidget,
+    );
+    expect(find.text('Soft rain'), findsOneWidget);
+    expect(find.text('Nature'), findsOneWidget);
+    expect(find.text('free'), findsOneWidget);
   });
 }
 
@@ -86,7 +123,16 @@ class _FakeContentLoader extends ContentLoader {
           safetyNote: 'Use only large, clean items that cannot be swallowed.',
         ),
       ],
-      sounds: [],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'A calm rain placeholder for future sound content.',
+          assetPath: 'placeholder://sounds/soft_rain',
+          unlockType: 'free',
+        ),
+      ],
     );
   }
 }
