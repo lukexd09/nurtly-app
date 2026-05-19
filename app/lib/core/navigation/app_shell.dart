@@ -26,10 +26,11 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Align(
+      body: Column(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: Align(
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.only(right: 12, top: 4),
@@ -47,14 +48,14 @@ class _AppShellState extends State<AppShell> {
                 ),
               ),
             ),
-            Expanded(
-              child: IndexedStack(
-                index: _currentIndex,
-                children: _screens,
-              ),
+          ),
+          Expanded(
+            child: IndexedStack(
+              index: _currentIndex,
+              children: _screens,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
