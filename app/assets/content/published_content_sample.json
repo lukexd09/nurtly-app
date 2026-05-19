@@ -30,11 +30,78 @@
       "safetyNote": "Use only large, clean items that cannot be swallowed."
     },
     {
-      "id": "play_window_weather_words",
-      "title": "Window weather words",
+      "id": "play_couch_cushion_tunnel",
+      "title": "Couch cushion tunnel",
+      "summary": "Make a small tunnel for crawling, peeking, or passing a toy through.",
+      "ageGroup": "12 months-3 years",
+      "place": "Living room",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Movement",
+      "neededItems": [
+        "Couch cushions",
+        "Small soft toy"
+      ],
+      "steps": [
+        "Place cushions on the floor with a low open space between them.",
+        "Invite your child to crawl, peek, or pass the toy through.",
+        "Stay nearby and change the tunnel if it starts to wobble."
+      ],
+      "parentNote": "A short setup can turn familiar furniture into a fresh play space.",
+      "safetyNote": "Keep the tunnel low, stable, and away from sharp furniture edges."
+    },
+    {
+      "id": "play_kitchen_spoon_rhythm",
+      "title": "Kitchen spoon rhythm",
+      "summary": "Tap gentle patterns with safe kitchen items.",
+      "ageGroup": "18 months-4 years",
+      "place": "Kitchen",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Music",
+      "neededItems": [
+        "Wooden spoon",
+        "Plastic bowl",
+        "Tea towel"
+      ],
+      "steps": [
+        "Place the bowl on a tea towel to soften the sound.",
+        "Tap a slow pattern and pause for your child to answer.",
+        "Try quiet taps, soft scrapes, and gentle beats."
+      ],
+      "parentNote": "Keep the sound level comfortable for everyone nearby.",
+      "safetyNote": "Use sturdy, clean items and supervise while your child holds the spoon."
+    },
+    {
+      "id": "play_laundry_color_sorting",
+      "title": "Laundry color sorting",
+      "summary": "Sort a small pile of clean laundry by color or type.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sorting",
+      "neededItems": [
+        "Clean laundry",
+        "Two or three baskets"
+      ],
+      "steps": [
+        "Choose a small pile of clean laundry.",
+        "Pick one simple sorting idea, like socks and shirts or light and dark.",
+        "Let your child place each item in a basket."
+      ],
+      "parentNote": "It is fine if the sorting is imperfect; keep the moment easy.",
+      "safetyNote": "Avoid items with loose cords, small parts, or laundry products nearby."
+    },
+    {
+      "id": "play_window_weather_watch",
+      "title": "Window weather watch",
       "summary": "Look outside and talk about what you notice.",
       "ageGroup": "18 months-3 years",
-      "place": "Home",
+      "place": "Window",
       "messLevel": "None",
       "childEngagement": "Low",
       "parentInvolvement": "Medium",
@@ -49,6 +116,72 @@
       ],
       "parentNote": "A short moment is enough.",
       "safetyNote": "Keep windows locked and supervise closely."
+    },
+    {
+      "id": "play_sticker_rescue",
+      "title": "Sticker rescue",
+      "summary": "Place a few stickers on paper and invite your child to peel them away.",
+      "ageGroup": "2-5 years",
+      "place": "Table",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Fine motor",
+      "neededItems": [
+        "Large stickers",
+        "Plain paper"
+      ],
+      "steps": [
+        "Place a few large stickers on the paper with one edge slightly lifted.",
+        "Invite your child to peel each sticker and move it somewhere new.",
+        "Talk about where each sticker lands."
+      ],
+      "parentNote": "Use only a few stickers so the activity stays simple.",
+      "safetyNote": "Use large stickers and keep small backing pieces out of reach."
+    },
+    {
+      "id": "play_pillow_path",
+      "title": "Pillow path",
+      "summary": "Lay pillows on the floor for stepping, crawling, or balancing with help.",
+      "ageGroup": "2-4 years",
+      "place": "Bedroom",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "High",
+      "activityType": "Movement",
+      "neededItems": [
+        "Pillows",
+        "Clear floor space"
+      ],
+      "steps": [
+        "Place pillows in a short path on the floor.",
+        "Hold your child's hand if they want support.",
+        "Try stepping, crawling, or moving a soft toy along the path."
+      ],
+      "parentNote": "Keep the path short and adjust it to the space you have.",
+      "safetyNote": "Use a clear floor area and stop if pillows start to slide."
+    },
+    {
+      "id": "play_quiet_book_basket",
+      "title": "Quiet book basket",
+      "summary": "Set out a small basket of books for a calm shared pause.",
+      "ageGroup": "0-5 years",
+      "place": "Any quiet spot",
+      "messLevel": "None",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "neededItems": [
+        "Two or three sturdy books",
+        "Small basket"
+      ],
+      "steps": [
+        "Place a few books in a basket within easy reach.",
+        "Let your child choose one book.",
+        "Look at pictures, name one detail, or sit quietly together."
+      ],
+      "parentNote": "This can be a calm pause, not a full reading session.",
+      "safetyNote": "Use sturdy books without torn pages or loose pieces for younger children."
     }
   ],
   "sounds": [
@@ -63,9 +196,33 @@
     {
       "id": "sound_warm_noise",
       "title": "Warm noise",
-      "category": "Noise",
+      "category": "White noise",
       "summary": "A steady noise placeholder for quiet routines.",
       "assetPath": "placeholder://sounds/warm_noise",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_evening_crickets",
+      "title": "Evening crickets",
+      "category": "Nature",
+      "summary": "A soft outdoor evening placeholder.",
+      "assetPath": "placeholder://sounds/evening_crickets",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_dishwasher_hum",
+      "title": "Dishwasher hum",
+      "category": "Home",
+      "summary": "A gentle home hum placeholder for familiar background sound.",
+      "assetPath": "placeholder://sounds/dishwasher_hum",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_quiet_stream",
+      "title": "Quiet stream",
+      "category": "Calm",
+      "summary": "A simple flowing water placeholder for future sound content.",
+      "assetPath": "placeholder://sounds/quiet_stream",
       "unlockType": "free"
     }
   ]
