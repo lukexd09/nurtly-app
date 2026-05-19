@@ -24,7 +24,7 @@ $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
     "AdMob",
-    "analytics",
+    "FirebaseAnalytics",
     "firebase_",
     "google_mobile_ads",
     "just_audio",

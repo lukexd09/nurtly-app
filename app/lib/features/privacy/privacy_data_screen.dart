@@ -40,9 +40,7 @@ class PrivacyDataScreen extends StatelessWidget {
                   'Journal notes are currently kept only in this app session as a local in-memory prototype.',
                 ),
                 _PrivacyLine('No cloud sync is currently enabled.'),
-                _PrivacyLine(
-                  'No usage tracking or measurement is currently enabled.',
-                ),
+                _PrivacyLine('No analytics are currently enabled.'),
                 _PrivacyLine('No ads are currently enabled.'),
                 _PrivacyLine(
                   'Bundled sample content is included in the app.',

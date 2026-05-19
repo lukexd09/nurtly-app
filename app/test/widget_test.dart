@@ -31,10 +31,7 @@ void main() {
     expect(find.text('Privacy & Data'), findsOneWidget);
     expect(find.text('- No account is used.'), findsOneWidget);
     expect(find.text('- No cloud sync is currently enabled.'), findsOneWidget);
-    expect(
-      find.text('- No usage tracking or measurement is currently enabled.'),
-      findsOneWidget,
-    );
+    expect(find.text('- No analytics are currently enabled.'), findsOneWidget);
     expect(find.text('- No ads are currently enabled.'), findsOneWidget);
     expect(
       find.text('- Bundled sample content is included in the app.'),
