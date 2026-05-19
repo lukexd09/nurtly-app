@@ -62,7 +62,12 @@ try {
     $warnings = @()
 
     foreach ($file in $changedFiles) {
-        $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $file)
+        $fullPath = Join-Path $repoRoot $file
+        if (-not (Test-Path $fullPath -PathType Leaf)) {
+            continue
+        }
+
+        $content = Get-Content -Raw -LiteralPath $fullPath
 
         foreach ($pattern in $failPatterns) {
             if ($content -match $pattern) {
