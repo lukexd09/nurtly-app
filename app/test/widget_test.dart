@@ -16,9 +16,36 @@ void main() {
     expect(find.text('Play'), findsWidgets);
     expect(find.text('Journal'), findsWidgets);
     expect(find.text('Sounds'), findsWidgets);
+    expect(find.byTooltip('Privacy & Data'), findsOneWidget);
     await tester.pumpAndSettle();
 
     expect(find.text('Soft treasure basket'), findsOneWidget);
+  });
+
+  testWidgets('opens Privacy & Data from the app shell', (tester) async {
+    await tester.pumpWidget(const NurtlyApp());
+
+    await tester.tap(find.byTooltip('Privacy & Data'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Privacy & Data'), findsOneWidget);
+    expect(find.text('- No account is used.'), findsOneWidget);
+    expect(find.text('- No cloud sync is currently enabled.'), findsOneWidget);
+    expect(
+      find.text('- No usage tracking or measurement is currently enabled.'),
+      findsOneWidget,
+    );
+    expect(find.text('- No ads are currently enabled.'), findsOneWidget);
+    expect(
+      find.text('- Bundled sample content is included in the app.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'Future data-related changes should be introduced clearly before they are enabled.',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('opens play activity detail from the play list', (tester) async {

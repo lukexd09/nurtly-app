@@ -13,7 +13,6 @@ import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
-import '../privacy/privacy_data_screen.dart';
 
 class PlayScreen extends StatefulWidget {
   const PlayScreen({
@@ -95,28 +94,9 @@ class _PlayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Expanded(
-          child: SectionHeader(
-            title: 'Play',
-            subtitle: 'Simple screen-free ideas for calm, connected moments.',
-          ),
-        ),
-        IconButton(
-          tooltip: 'Privacy & Data',
-          color: AppColors.primary,
-          icon: const Icon(Icons.privacy_tip_outlined),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const PrivacyDataScreen(),
-              ),
-            );
-          },
-        ),
-      ],
+    return const SectionHeader(
+      title: 'Play',
+      subtitle: 'Simple screen-free ideas for calm, connected moments.',
     );
   }
 }
