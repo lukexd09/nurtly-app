@@ -18,7 +18,12 @@ const _moodLabels = [
 ];
 
 class JournalScreen extends StatefulWidget {
-  const JournalScreen({super.key});
+  const JournalScreen({
+    super.key,
+    this.now = DateTime.now,
+  });
+
+  final DateTime Function() now;
 
   @override
   State<JournalScreen> createState() => _JournalScreenState();
@@ -30,7 +35,7 @@ class _JournalScreenState extends State<JournalScreen> {
   Future<void> _openAddEntry() async {
     final entry = await Navigator.of(context).push<_JournalEntry>(
       MaterialPageRoute<_JournalEntry>(
-        builder: (_) => const AddJournalEntryScreen(),
+        builder: (_) => AddJournalEntryScreen(now: widget.now),
       ),
     );
 
@@ -49,23 +54,14 @@ class _JournalScreenState extends State<JournalScreen> {
       child: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(
-                child: SectionHeader(
-                  title: 'Journal',
-                  subtitle: 'Keep a small note from today.',
-                ),
-              ),
-              SizedBox(
-                width: 116,
-                child: PrimaryButton(
-                  label: 'Add note',
-                  onPressed: _openAddEntry,
-                ),
-              ),
-            ],
+          const SectionHeader(
+            title: 'Journal',
+            subtitle: 'Keep a small note from today.',
+          ),
+          const SizedBox(height: AppSpacing.md),
+          PrimaryButton(
+            label: 'Add note',
+            onPressed: _openAddEntry,
           ),
           const SizedBox(height: AppSpacing.lg),
           if (_entries.isEmpty)
@@ -91,7 +87,12 @@ class _JournalScreenState extends State<JournalScreen> {
 }
 
 class AddJournalEntryScreen extends StatefulWidget {
-  const AddJournalEntryScreen({super.key});
+  const AddJournalEntryScreen({
+    super.key,
+    this.now = DateTime.now,
+  });
+
+  final DateTime Function() now;
 
   @override
   State<AddJournalEntryScreen> createState() => _AddJournalEntryScreenState();
@@ -100,6 +101,7 @@ class AddJournalEntryScreen extends StatefulWidget {
 class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   final _noteController = TextEditingController();
   String? _selectedMood;
+  String? _validationMessage;
 
   @override
   void dispose() {
@@ -110,6 +112,9 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   void _save() {
     final note = _noteController.text.trim();
     if (note.isEmpty) {
+      setState(() {
+        _validationMessage = 'Please add a short note first.';
+      });
       return;
     }
 
@@ -117,7 +122,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
       _JournalEntry(
         note: note,
         moodLabel: _selectedMood,
-        createdAt: DateTime.now(),
+        createdAt: widget.now(),
       ),
     );
   }
@@ -154,6 +159,13 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                 hintText: 'Write a few words...',
               ),
             ),
+            if (_validationMessage != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                _validationMessage!,
+                style: AppTextStyles.body.copyWith(color: AppColors.primary),
+              ),
+            ],
             const SizedBox(height: AppSpacing.lg),
             const Text('Mood', style: AppTextStyles.cardTitle),
             const SizedBox(height: AppSpacing.sm),

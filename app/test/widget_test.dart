@@ -97,7 +97,11 @@ void main() {
 
   testWidgets('add note flow creates a journal entry with mood',
       (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: JournalScreen()));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: JournalScreen(now: () => DateTime(2026, 5, 19, 9, 30)),
+      ),
+    );
 
     await tester.tap(find.text('Add note'));
     await tester.pumpAndSettle();
@@ -112,7 +116,21 @@ void main() {
 
     expect(find.text('A quiet breakfast together.'), findsOneWidget);
     expect(find.text('Good moment'), findsOneWidget);
-    expect(find.textContaining('Today '), findsOneWidget);
+    expect(find.text('Today 09:30'), findsOneWidget);
+  });
+
+  testWidgets('empty journal note shows validation message', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AddJournalEntryScreen(now: () => DateTime(2026, 5, 19, 9, 30)),
+      ),
+    );
+
+    await tester.tap(find.text('Save note'));
+    await tester.pump();
+
+    expect(find.text('Please add a short note first.'), findsOneWidget);
+    expect(find.text('Add note'), findsOneWidget);
   });
 }
 
