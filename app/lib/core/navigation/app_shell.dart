@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
+import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
 import '../theme/app_colors.dart';
 import 'app_tab.dart';
@@ -25,9 +26,36 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
+      body: Column(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 12, top: 4),
+                child: IconButton(
+                  tooltip: 'Privacy & Data',
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.privacy_tip_outlined),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PrivacyDataScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: IndexedStack(
+              index: _currentIndex,
+              children: _screens,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
