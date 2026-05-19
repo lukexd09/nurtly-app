@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/features/journal/add_journal_entry_screen.dart';
 import 'package:nurtly/features/journal/journal_screen.dart';
 
 void main() {
