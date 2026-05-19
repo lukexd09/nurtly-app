@@ -4,13 +4,14 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/widgets/detail_note.dart';
 import '../../core/widgets/empty_state.dart';
-import '../../core/widgets/nurtly_card.dart';
+import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
+import '../../core/widgets/tappable_nurtly_card.dart';
 
 class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
@@ -50,7 +51,7 @@ class _SoundsScreenState extends State<SoundsScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
               if (snapshot.connectionState != ConnectionState.done)
-                const _LoadingState()
+                const LoadingCard(label: 'Loading sounds...')
               else if (snapshot.hasError)
                 const EmptyState(
                   title: 'Sounds could not be loaded.',
@@ -89,27 +90,6 @@ class _SoundsScreenState extends State<SoundsScreen> {
   }
 }
 
-class _LoadingState extends StatelessWidget {
-  const _LoadingState();
-
-  @override
-  Widget build(BuildContext context) {
-    return const NurtlyCard(
-      child: Row(
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-          SizedBox(width: AppSpacing.md),
-          Text('Loading sounds...', style: AppTextStyles.body),
-        ],
-      ),
-    );
-  }
-}
-
 class _SoundCard extends StatelessWidget {
   const _SoundCard({
     required this.sound,
@@ -121,32 +101,18 @@ class _SoundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Open ${sound.title}',
-      child: Material(
-        color: AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadii.cardRadius,
-          side: const BorderSide(color: AppColors.borderSoft),
-        ),
-        child: InkWell(
-          borderRadius: AppRadii.cardRadius,
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(sound.title, style: AppTextStyles.cardTitle),
-                const SizedBox(height: AppSpacing.xs),
-                Text(sound.summary, style: AppTextStyles.body),
-                const SizedBox(height: AppSpacing.md),
-                _SoundMetadata(sound: sound),
-              ],
-            ),
-          ),
-        ),
+    return TappableNurtlyCard(
+      semanticLabel: 'Open ${sound.title}',
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(sound.title, style: AppTextStyles.cardTitle),
+          const SizedBox(height: AppSpacing.xs),
+          Text(sound.summary, style: AppTextStyles.body),
+          const SizedBox(height: AppSpacing.md),
+          _SoundMetadata(sound: sound),
+        ],
       ),
     );
   }
@@ -183,19 +149,9 @@ class SoundDetailScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             _SoundMetadata(sound: sound),
             const SizedBox(height: AppSpacing.lg),
-            const NurtlyCard(
-              backgroundColor: AppColors.primarySoft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Player placeholder', style: AppTextStyles.cardTitle),
-                  SizedBox(height: AppSpacing.xs),
-                  Text(
-                    'Real sound playback will be added in a later task.',
-                    style: AppTextStyles.body,
-                  ),
-                ],
-              ),
+            const DetailNote(
+              title: 'Player placeholder',
+              text: 'Real sound playback will be added in a later task.',
             ),
           ],
         ),
