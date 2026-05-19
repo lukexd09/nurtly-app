@@ -9,8 +9,8 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly_sample_content');
     expect(package.metadata.locale, 'en');
-    expect(package.playIdeas, hasLength(2));
-    expect(package.sounds, hasLength(2));
+    expect(package.playIdeas, hasLength(8));
+    expect(package.sounds, hasLength(5));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
   });
