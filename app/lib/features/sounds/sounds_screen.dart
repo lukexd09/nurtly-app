@@ -191,7 +191,7 @@ class SoundDetailScreen extends StatelessWidget {
                   Text('Player placeholder', style: AppTextStyles.cardTitle),
                   SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Real audio playback will be added in a later task.',
+                    'Real sound playback will be added in a later task.',
                     style: AppTextStyles.body,
                   ),
                 ],

@@ -29,8 +29,7 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.text('Soft treasure basket'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     expect(find.text('What you\'ll need'), findsOneWidget);
     expect(find.text('- Soft cloth'), findsOneWidget);
@@ -76,12 +75,11 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.text('Soft rain'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     expect(find.text('Player placeholder'), findsOneWidget);
     expect(
-      find.text('Real audio playback will be added in a later task.'),
+      find.text('Real sound playback will be added in a later task.'),
       findsOneWidget,
     );
     expect(find.text('Soft rain'), findsOneWidget);
