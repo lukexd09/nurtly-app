@@ -28,9 +28,9 @@ class AddJournalEntryScreen extends StatefulWidget {
 }
 
 class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _noteController = TextEditingController();
   String? _selectedMood;
-  String? _validationMessage;
 
   @override
   void dispose() {
@@ -39,14 +39,11 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   }
 
   void _save() {
-    final note = _noteController.text.trim();
-    if (note.isEmpty) {
-      setState(() {
-        _validationMessage = 'Please add a short note first.';
-      });
+    if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
 
+    final note = _noteController.text.trim();
     Navigator.of(context).pop(
       JournalEntry(
         note: note,
@@ -60,66 +57,69 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                tooltip: 'Back',
-                color: AppColors.primary,
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).pop(),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  tooltip: 'Back',
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            const SectionHeader(
-              title: 'Add note',
-              subtitle: 'Capture a small moment from your day.',
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            TextField(
-              controller: _noteController,
-              minLines: 4,
-              maxLines: 7,
-              textInputAction: TextInputAction.newline,
-              decoration: const InputDecoration(
-                labelText: 'Note',
-                hintText: 'Write a few words...',
-              ),
-            ),
-            if (_validationMessage != null) ...[
               const SizedBox(height: AppSpacing.sm),
-              Text(
-                _validationMessage!,
-                style: AppTextStyles.body.copyWith(color: AppColors.primary),
+              const SectionHeader(
+                title: 'Add note',
+                subtitle: 'Capture a small moment from your day.',
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              TextFormField(
+                controller: _noteController,
+                minLines: 4,
+                maxLines: 7,
+                textInputAction: TextInputAction.newline,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please add a short note first.';
+                  }
+
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Note',
+                  hintText: 'Write a few words...',
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              const Text('Mood', style: AppTextStyles.cardTitle),
+              const SizedBox(height: AppSpacing.sm),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  for (final mood in _moodLabels)
+                    ChoiceChip(
+                      label: Text(mood),
+                      selected: _selectedMood == mood,
+                      onSelected: (selected) {
+                        setState(() {
+                          _selectedMood = selected ? mood : null;
+                        });
+                      },
+                    ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              PrimaryButton(
+                label: 'Save note',
+                onPressed: _save,
               ),
             ],
-            const SizedBox(height: AppSpacing.lg),
-            const Text('Mood', style: AppTextStyles.cardTitle),
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
-              children: [
-                for (final mood in _moodLabels)
-                  ChoiceChip(
-                    label: Text(mood),
-                    selected: _selectedMood == mood,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedMood = selected ? mood : null;
-                      });
-                    },
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            PrimaryButton(
-              label: 'Save note',
-              onPressed: _save,
-            ),
-          ],
+          ),
         ),
       ),
     );
