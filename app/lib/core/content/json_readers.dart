@@ -6,6 +6,14 @@ String readString(Map<String, Object?> json, String key) {
   throw FormatException('Expected non-empty string field "$key".');
 }
 
+int readInt(Map<String, Object?> json, String key) {
+  final value = json[key];
+  if (value is int) {
+    return value;
+  }
+  throw FormatException('Expected int field "$key".');
+}
+
 List<String> readStringList(Map<String, Object?> json, String key) {
   final value = json[key];
   if (value is List && value.every((item) => item is String)) {
