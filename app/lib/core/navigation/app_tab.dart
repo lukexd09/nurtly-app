@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 enum AppTab {
+  home(
+    label: 'Home',
+    icon: Icons.home_outlined,
+    selectedIcon: Icons.home,
+  ),
   play(
     label: 'Play',
     icon: Icons.lightbulb_outline,
