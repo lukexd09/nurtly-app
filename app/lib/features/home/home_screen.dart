@@ -156,40 +156,62 @@ class _GentleStartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TappableNurtlyCard(
-      semanticLabel: "Open today's idea",
-      onTap: onTap,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Semantics(
+      button: true,
+      label: "Open today's idea",
+      child: Material(
+        color: AppColors.primarySoft,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadii.cardRadius,
+          side: const BorderSide(color: AppColors.borderSoft),
+        ),
+        child: InkWell(
+          borderRadius: AppRadii.cardRadius,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Row(
               children: [
-                Text('A gentle start for now', style: AppTextStyles.cardTitle),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  'Try one simple, screen-free moment before the day gets louder.',
-                  style: AppTextStyles.caption,
+                const Icon(
+                  Icons.lightbulb_outline,
+                  color: AppColors.primary,
+                  size: 22,
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  "Open today's idea",
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'A gentle start for now',
+                        style: AppTextStyles.cardTitle,
+                      ),
+                      const SizedBox(height: AppSpacing.xxs),
+                      Text(
+                        'Try one simple, screen-free moment before the day gets louder.',
+                        style: AppTextStyles.caption,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        "Open today's idea",
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                const Icon(
+                  Icons.arrow_forward,
+                  color: AppColors.primary,
+                  size: 20,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
-          const Icon(
-            Icons.arrow_forward,
-            color: AppColors.primary,
-            size: 20,
-          ),
-        ],
+        ),
       ),
     );
   }
