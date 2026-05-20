@@ -49,7 +49,25 @@ void main() {
     expect(find.text('Quiet book basket'), findsOneWidget);
   });
 
-  testWidgets('low effort filter shows only low parent involvement ideas', (
+  testWidgets('low mess filter hides medium mess ideas', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Low mess'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soft treasure basket'), findsOneWidget);
+    expect(find.text('Couch cushion tunnel'), findsNothing);
+    expect(find.text('Quiet book basket'), findsOneWidget);
+  });
+
+  testWidgets('low effort filter shows low parent involvement ideas', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -63,6 +81,37 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Soft treasure basket'), findsOneWidget);
+    expect(find.text('Quiet book basket'), findsOneWidget);
+    expect(find.text('Couch cushion tunnel'), findsNothing);
+  });
+
+  testWidgets('filter chips cover babies, toddlers, movement and quiet', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'For babies'));
+    await tester.pumpAndSettle();
+    expect(find.text('Soft treasure basket'), findsOneWidget);
+    expect(find.text('Couch cushion tunnel'), findsNothing);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Toddlers'));
+    await tester.pumpAndSettle();
+    expect(find.text('Couch cushion tunnel'), findsOneWidget);
+    expect(find.text('Soft treasure basket'), findsNothing);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Movement'));
+    await tester.pumpAndSettle();
+    expect(find.text('Couch cushion tunnel'), findsOneWidget);
+    expect(find.text('Soft treasure basket'), findsNothing);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Quiet'));
+    await tester.pumpAndSettle();
     expect(find.text('Quiet book basket'), findsOneWidget);
     expect(find.text('Couch cushion tunnel'), findsNothing);
   });
