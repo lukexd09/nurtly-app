@@ -192,6 +192,8 @@ class PlayActivityDetailScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             _PlayDetailHero(idea: idea),
             const SizedBox(height: AppSpacing.lg),
+            _ExpectationSection(idea: idea),
+            const SizedBox(height: AppSpacing.md),
             DetailSection(
               title: "What you'll need",
               children: [
@@ -292,6 +294,129 @@ class _PlayDetailHero extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ExpectationSection extends StatelessWidget {
+  const _ExpectationSection({required this.idea});
+
+  final PlayIdea idea;
+
+  @override
+  Widget build(BuildContext context) {
+    return DetailSection(
+      title: 'What to expect',
+      children: [
+        _ExpectationItem(expectation: _messExpectation(idea.messLevel)),
+        _ExpectationItem(
+          expectation: _childEnergyExpectation(idea.childEngagement),
+        ),
+        _ExpectationItem(
+          expectation: _parentEffortExpectation(idea.parentInvolvement),
+        ),
+      ],
+    );
+  }
+}
+
+class _ExpectationItem extends StatelessWidget {
+  const _ExpectationItem({required this.expectation});
+
+  final _Expectation expectation;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: AppRadii.cardRadius,
+        border: Border.all(color: AppColors.borderSoft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(expectation.title, style: AppTextStyles.cardTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(expectation.body, style: AppTextStyles.body),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Expectation {
+  const _Expectation({
+    required this.title,
+    required this.body,
+  });
+
+  final String title;
+  final String body;
+}
+
+_Expectation _messExpectation(String value) {
+  return switch (value) {
+    'Low' => const _Expectation(
+        title: 'Low mess',
+        body: 'Simple cleanup, no special setup.',
+      ),
+    'Medium' => const _Expectation(
+        title: 'Medium mess',
+        body: 'A little cleanup may help after the activity.',
+      ),
+    'High' => const _Expectation(
+        title: 'High mess',
+        body: 'Best for a moment when extra cleanup feels okay.',
+      ),
+    _ => _Expectation(
+        title: '$value mess',
+        body: 'Choose this when it feels like a good fit for your space.',
+      ),
+  };
+}
+
+_Expectation _childEnergyExpectation(String value) {
+  return switch (value) {
+    'Low' => const _Expectation(
+        title: 'Low child energy',
+        body: 'A quiet moment with gentle attention.',
+      ),
+    'Medium' => const _Expectation(
+        title: 'Medium child energy',
+        body: 'A little curiosity, movement, or conversation.',
+      ),
+    'High' => const _Expectation(
+        title: 'High child energy',
+        body: 'More active play when your child wants to move.',
+      ),
+    _ => _Expectation(
+        title: '$value child energy',
+        body: 'Choose this when it fits your child in the moment.',
+      ),
+  };
+}
+
+_Expectation _parentEffortExpectation(String value) {
+  return switch (value) {
+    'Low' => const _Expectation(
+        title: 'Low parent effort',
+        body: 'Stay nearby and gently guide when needed.',
+      ),
+    'Medium' => const _Expectation(
+        title: 'Medium parent effort',
+        body: 'Join in for a few moments and help shape the play.',
+      ),
+    'High' => const _Expectation(
+        title: 'High parent effort',
+        body: 'Best when you have energy to actively participate.',
+      ),
+    _ => _Expectation(
+        title: '$value parent effort',
+        body: 'Choose this when it fits the energy you have available.',
+      ),
+  };
 }
 
 class _PlayIdeaMetadata extends StatelessWidget {
