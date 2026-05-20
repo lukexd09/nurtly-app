@@ -84,6 +84,16 @@ void main() {
       expect(idea.neededItems, isNotEmpty, reason: '${idea.id} neededItems');
       expect(idea.steps, isNotEmpty, reason: '${idea.id} steps');
       expect(
+        _isNotBlank(idea.whatToExpect),
+        isTrue,
+        reason: '${idea.id} whatToExpect',
+      );
+      expect(
+        idea.whatToExpect.length,
+        lessThanOrEqualTo(260),
+        reason: '${idea.id} whatToExpect length',
+      );
+      expect(
         _isNotBlank(idea.parentNote),
         isTrue,
         reason: '${idea.id} parentNote',
@@ -132,6 +142,7 @@ void main() {
         idea.title,
         idea.summary,
         ...idea.steps,
+        idea.whatToExpect,
         idea.parentNote,
         idea.safetyNote,
       ].join(' ').toLowerCase();
@@ -144,6 +155,15 @@ void main() {
         );
       }
     }
+  });
+
+  test('play idea whatToExpect values are distinct', () async {
+    final package = await const ContentLoader().load();
+    final values = package.playIdeas
+        .map((idea) => idea.whatToExpect.trim().toLowerCase())
+        .toList();
+
+    expect(values.toSet(), hasLength(values.length));
   });
 
   test('sounds have required placeholder fields', () async {

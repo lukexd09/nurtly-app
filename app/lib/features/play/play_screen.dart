@@ -313,6 +313,10 @@ class _ExpectationSection extends StatelessWidget {
 }
 
 String _expectationSummary(PlayIdea idea) {
+  if (idea.whatToExpect.trim().isNotEmpty) {
+    return idea.whatToExpect;
+  }
+
   final mess = _messPhrase(idea.messLevel);
   final childEnergy = _childEnergyPhrase(idea.childEngagement);
   final parentEffort = _parentEffortPhrase(idea.parentInvolvement);
