@@ -23,6 +23,10 @@ class HomeScreen extends StatelessWidget {
         _HomeHero(
           onTap: () => onSelectTab(AppTab.play),
         ),
+        const SizedBox(height: AppSpacing.md),
+        _GentleStartCard(
+          onTap: () => onSelectTab(AppTab.play),
+        ),
         const SizedBox(height: AppSpacing.lg),
         _HomeQuickLink(
           title: 'Save a small note',
@@ -63,9 +67,9 @@ class _HomeHero extends StatelessWidget {
         borderRadius: AppRadii.panelRadius,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withAlpha(44),
-            blurRadius: 34,
-            offset: const Offset(0, 20),
+            color: AppColors.primary.withAlpha(34),
+            blurRadius: 28,
+            offset: const Offset(0, 16),
           ),
         ],
       ),
@@ -77,20 +81,20 @@ class _HomeHero extends StatelessWidget {
             child: Icon(
               Icons.spa_outlined,
               color: Color(0x33E8DCC8),
-              size: 132,
+              size: 118,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons.auto_awesome,
                   color: AppColors.secondary,
-                  size: 26,
+                  size: 24,
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.md),
                 Text(
                   'Start with one small moment',
                   style: AppTextStyles.display.copyWith(
@@ -104,8 +108,8 @@ class _HomeHero extends StatelessWidget {
                     color: AppColors.primarySoft,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                ElevatedButton.icon(
+                const SizedBox(height: AppSpacing.md),
+                ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.surface,
                     foregroundColor: AppColors.primary,
@@ -120,10 +124,16 @@ class _HomeHero extends StatelessWidget {
                     ),
                   ),
                   onPressed: onTap,
-                  icon: const Icon(Icons.arrow_forward, size: 18),
-                  label: const Text('Find a play idea'),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Find a play idea'),
+                      SizedBox(width: AppSpacing.sm),
+                      Icon(Icons.arrow_forward, size: 18),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   'No pressure, no streaks, no goals — just a softer place to begin.',
                   style: AppTextStyles.caption.copyWith(
@@ -132,6 +142,52 @@ class _HomeHero extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GentleStartCard extends StatelessWidget {
+  const _GentleStartCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TappableNurtlyCard(
+      semanticLabel: "Open today's idea",
+      onTap: onTap,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('A gentle start for now', style: AppTextStyles.cardTitle),
+                const SizedBox(height: AppSpacing.xxs),
+                Text(
+                  'Try one simple, screen-free moment before the day gets louder.',
+                  style: AppTextStyles.caption,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  "Open today's idea",
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          const Icon(
+            Icons.arrow_forward,
+            color: AppColors.primary,
+            size: 20,
           ),
         ],
       ),
