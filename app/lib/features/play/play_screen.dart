@@ -153,31 +153,19 @@ class _PlayIdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: AppRadii.panelRadius,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textPrimary.withAlpha(8),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
+    return TappableNurtlyCard(
+      semanticLabel: 'Open ${idea.title}',
+      onTap: onTap,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(idea.title, style: AppTextStyles.cardTitle),
+          const SizedBox(height: AppSpacing.xs),
+          Text(idea.summary, style: AppTextStyles.body),
+          const SizedBox(height: AppSpacing.md),
+          _PlayIdeaMetadata(idea: idea),
         ],
-      ),
-      child: TappableNurtlyCard(
-        semanticLabel: 'Open ${idea.title}',
-        onTap: onTap,
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(idea.title, style: AppTextStyles.cardTitle),
-            const SizedBox(height: AppSpacing.xs),
-            Text(idea.summary, style: AppTextStyles.body),
-            const SizedBox(height: AppSpacing.md),
-            _PlayIdeaMetadata(idea: idea),
-          ],
-        ),
       ),
     );
   }
