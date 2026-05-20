@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
-
+import 'bundled_content_source.dart';
 import 'content_package.dart';
+import 'content_source.dart';
 
 class ContentLoader {
   const ContentLoader({
-    this.assetPath = 'assets/content/nurtly_content_en_v1.json',
+    this.source = const BundledContentSource(),
   });
 
-  final String assetPath;
+  final ContentSource source;
 
   Future<ContentPackage> load() async {
-    final content = await rootBundle.loadString(assetPath);
+    final content = await source.loadRawContent();
     final decoded = jsonDecode(content);
 
     if (decoded is! Map<String, Object?>) {
