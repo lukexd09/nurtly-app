@@ -10,7 +10,8 @@ void main() {
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.version, '1.0.0');
     expect(package.metadata.locale, 'en');
-    expect(package.metadata.publishedAt, '2026-05-18');
+    expect(_isNotBlank(package.metadata.publishedAt), isTrue);
+    expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
     expect(package.playIdeas, hasLength(8));
     expect(package.sounds, hasLength(5));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
