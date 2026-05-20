@@ -1,5 +1,6 @@
 param(
-    [switch] $AllowDirty
+    [switch] $AllowDirty,
+    [switch] $AllowPlatformChanges
 )
 
 $ErrorActionPreference = "Stop"
@@ -13,7 +14,12 @@ try {
 
     & (Join-Path $scriptDir "verify_flutter.ps1")
     & (Join-Path $scriptDir "cleanup_flutter_local.ps1")
-    & (Join-Path $scriptDir "check_scope_guard.ps1")
+    if ($AllowPlatformChanges) {
+        & (Join-Path $scriptDir "check_scope_guard.ps1") -AllowPlatformChanges
+    }
+    else {
+        & (Join-Path $scriptDir "check_scope_guard.ps1")
+    }
     & (Join-Path $scriptDir "check_flutter_quality.ps1")
 
     $status = git status --short
