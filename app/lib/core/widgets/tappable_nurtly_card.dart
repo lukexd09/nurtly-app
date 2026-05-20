@@ -10,11 +10,13 @@ class TappableNurtlyCard extends StatelessWidget {
     required this.onTap,
     required this.child,
     super.key,
+    this.padding = const EdgeInsets.all(AppSpacing.lg),
   });
 
   final String semanticLabel;
   final VoidCallback onTap;
   final Widget child;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class TappableNurtlyCard extends StatelessWidget {
             borderRadius: AppRadii.cardRadius,
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: padding,
               child: child,
             ),
           ),
