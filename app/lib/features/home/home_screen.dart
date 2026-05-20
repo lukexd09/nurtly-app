@@ -51,13 +51,21 @@ class _HomeHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF3E5846),
+            AppColors.primary,
+            Color(0xFF5F735E),
+          ],
+        ),
         borderRadius: AppRadii.panelRadius,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withAlpha(38),
-            blurRadius: 30,
-            offset: const Offset(0, 18),
+            color: AppColors.primary.withAlpha(44),
+            blurRadius: 34,
+            offset: const Offset(0, 20),
           ),
         ],
       ),
@@ -97,13 +105,23 @@ class _HomeHero extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                ElevatedButton(
+                ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.surfaceBright,
+                    backgroundColor: AppColors.surface,
                     foregroundColor: AppColors.primary,
+                    elevation: 0,
+                    minimumSize: const Size.fromHeight(52),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.md,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: AppRadii.chipRadius,
+                    ),
                   ),
                   onPressed: onTap,
-                  child: const Text('Find a play idea'),
+                  icon: const Icon(Icons.arrow_forward, size: 18),
+                  label: const Text('Find a play idea'),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
@@ -142,7 +160,15 @@ class _HomeQuickLink extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.primary, size: 24),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: const BoxDecoration(
+              color: AppColors.primarySoft,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 21),
+          ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
