@@ -12,16 +12,16 @@ void main() {
     expect(find.text('Sounds'), findsWidgets);
     expect(find.byTooltip('Privacy & Data'), findsOneWidget);
 
-    expect(find.text('Small moments, calmly planned'), findsOneWidget);
+    expect(find.text('Start with one small moment'), findsOneWidget);
     expect(find.text('Soft treasure basket'), findsNothing);
   });
 
   testWidgets('Home quick link navigates to Play', (tester) async {
     await tester.pumpWidget(const NurtlyApp());
 
-    await tester.tap(find.widgetWithText(TappableNurtlyCard, 'Play ideas'));
+    await tester.tap(find.text('Find a play idea'));
     await _pumpTabChange(tester);
-    expect(find.text('Small moments, calmly planned'), findsNothing);
+    expect(find.text('Start with one small moment'), findsNothing);
     expect(
       _hasText(tester, 'Soft treasure basket') ||
           _hasText(tester, 'Loading play ideas...'),
@@ -32,7 +32,10 @@ void main() {
   testWidgets('Home quick link navigates to Journal', (tester) async {
     await tester.pumpWidget(const NurtlyApp());
 
-    final journalCard = find.widgetWithText(TappableNurtlyCard, 'Journal');
+    final journalCard = find.widgetWithText(
+      TappableNurtlyCard,
+      'Save a small note',
+    );
     await tester.scrollUntilVisible(journalCard, 120);
     await tester.tap(journalCard);
     await _pumpTabChange(tester);
@@ -42,7 +45,10 @@ void main() {
   testWidgets('Home quick link navigates to Sounds', (tester) async {
     await tester.pumpWidget(const NurtlyApp());
 
-    final soundsCard = find.widgetWithText(TappableNurtlyCard, 'Sounds');
+    final soundsCard = find.widgetWithText(
+      TappableNurtlyCard,
+      'Start a calming sound',
+    );
     await tester.scrollUntilVisible(soundsCard, 120);
     await tester.tap(soundsCard);
     await _pumpTabChange(tester);

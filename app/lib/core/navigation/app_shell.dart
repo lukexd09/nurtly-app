@@ -7,7 +7,6 @@ import '../../features/play/play_screen.dart';
 import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_radii.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
 import 'app_tab.dart';
@@ -81,79 +80,38 @@ class _ShellTopBar extends StatelessWidget {
       bottom: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
+          AppSpacing.lg,
           AppSpacing.xs,
           AppSpacing.md,
           AppSpacing.xs,
         ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: AppRadii.panelRadius,
-            border: Border.all(color: AppColors.borderSoft),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.textPrimary.withAlpha(10),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+        child: Row(
+          children: [
+            const Text(appName, style: AppTextStyles.cardTitle),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                currentTab == AppTab.home
+                    ? 'A quieter start'
+                    : currentTab.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.caption,
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              AppSpacing.xs,
-              AppSpacing.xs,
-              AppSpacing.xs,
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primarySoft,
-                    shape: BoxShape.circle,
+            IconButton(
+              tooltip: 'Privacy & Data',
+              color: AppColors.primary,
+              icon: const Icon(Icons.privacy_tip_outlined),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const PrivacyDataScreen(),
                   ),
-                  child: const Icon(
-                    Icons.spa_outlined,
-                    color: AppColors.primary,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.sm),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(appName, style: AppTextStyles.cardTitle),
-                      Text(
-                        currentTab == AppTab.home
-                            ? 'Calm support for everyday family moments'
-                            : currentTab.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.caption,
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Privacy & Data',
-                  color: AppColors.primary,
-                  icon: const Icon(Icons.privacy_tip_outlined),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const PrivacyDataScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                );
+              },
             ),
-          ),
+          ],
         ),
       ),
     );
