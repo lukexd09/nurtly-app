@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/widgets/tappable_nurtly_card.dart';
 import 'package:nurtly/main.dart';
@@ -35,8 +34,6 @@ void main() {
 
     final journalCard = find.widgetWithText(TappableNurtlyCard, 'Journal');
     await tester.scrollUntilVisible(journalCard, 120);
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -120));
-    await tester.pump();
     await tester.tap(journalCard);
     await _pumpTabChange(tester);
     expect(find.text('No journal notes yet.'), findsOneWidget);
@@ -47,8 +44,6 @@ void main() {
 
     final soundsCard = find.widgetWithText(TappableNurtlyCard, 'Sounds');
     await tester.scrollUntilVisible(soundsCard, 120);
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -120));
-    await tester.pump();
     await tester.tap(soundsCard);
     await _pumpTabChange(tester);
     expect(
@@ -64,6 +59,5 @@ bool _hasText(WidgetTester tester, String text) {
 
 Future<void> _pumpTabChange(WidgetTester tester) async {
   await tester.pump();
-  await tester.pump(const Duration(milliseconds: 300));
   await tester.pump();
 }

@@ -17,43 +17,41 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        children: [
-          const _HomeHero(),
-          const SizedBox(height: AppSpacing.md),
-          _HomeQuickLink(
-            title: 'Play ideas',
-            subtitle: 'Simple screen-free ideas for calm, connected moments.',
-            icon: Icons.lightbulb_outline,
-            onTap: () => onSelectTab(AppTab.play),
+    return ListView(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      children: [
+        const _HomeHero(),
+        const SizedBox(height: AppSpacing.md),
+        _HomeQuickLink(
+          title: 'Play ideas',
+          subtitle: 'Simple screen-free ideas for calm, connected moments.',
+          icon: Icons.lightbulb_outline,
+          onTap: () => onSelectTab(AppTab.play),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _HomeQuickLink(
+          title: 'Journal',
+          subtitle: 'Keep a small note from today.',
+          icon: Icons.event_note_outlined,
+          onTap: () => onSelectTab(AppTab.journal),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _HomeQuickLink(
+          title: 'Sounds',
+          subtitle: 'Choose a sound for a quiet moment.',
+          icon: Icons.graphic_eq,
+          onTap: () => onSelectTab(AppTab.sounds),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        const NurtlyCard(
+          padding: EdgeInsets.all(AppSpacing.md),
+          backgroundColor: AppColors.primarySoft,
+          child: Text(
+            'Start with one small moment. No pressure, no streaks, no goals.',
+            style: AppTextStyles.body,
           ),
-          const SizedBox(height: AppSpacing.md),
-          _HomeQuickLink(
-            title: 'Journal',
-            subtitle: 'Keep a small note from today.',
-            icon: Icons.event_note_outlined,
-            onTap: () => onSelectTab(AppTab.journal),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          _HomeQuickLink(
-            title: 'Sounds',
-            subtitle: 'Choose a sound for a quiet moment.',
-            icon: Icons.graphic_eq,
-            onTap: () => onSelectTab(AppTab.sounds),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          const NurtlyCard(
-            padding: EdgeInsets.all(AppSpacing.md),
-            backgroundColor: AppColors.primarySoft,
-            child: Text(
-              'Start with one small moment. No pressure, no streaks, no goals.',
-              style: AppTextStyles.body,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
