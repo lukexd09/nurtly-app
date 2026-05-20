@@ -34,6 +34,8 @@ class FakeContentLoader extends ContentLoader {
             'Place the items in the container.',
             'Sit nearby and let your child choose what to touch.',
           ],
+          whatToExpect:
+              'This is a low-mess, gently engaging activity with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.',
           parentNote: 'Choose what fits the moment and keep it simple.',
           safetyNote: 'Use only large, clean items that cannot be swallowed.',
         ),

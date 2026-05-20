@@ -19,7 +19,7 @@ void main() {
     expect(find.text('What to expect'), findsOneWidget);
     expect(
       find.text(
-        'A gently engaging, low-mess activity that does not need much setup. Stay nearby, offer gentle guidance, and let your child explore at their own pace.',
+        'This is a low-mess, gently engaging activity with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.',
       ),
       findsOneWidget,
     );

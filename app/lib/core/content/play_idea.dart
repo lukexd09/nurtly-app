@@ -13,6 +13,7 @@ class PlayIdea {
     required this.activityType,
     required this.neededItems,
     required this.steps,
+    required this.whatToExpect,
     required this.parentNote,
     required this.safetyNote,
   });
@@ -28,6 +29,7 @@ class PlayIdea {
   final String activityType;
   final List<String> neededItems;
   final List<String> steps;
+  final String whatToExpect;
   final String parentNote;
   final String safetyNote;
 
@@ -44,6 +46,7 @@ class PlayIdea {
       activityType: readString(json, 'activityType'),
       neededItems: readStringList(json, 'neededItems'),
       steps: readStringList(json, 'steps'),
+      whatToExpect: readString(json, 'whatToExpect'),
       parentNote: readString(json, 'parentNote'),
       safetyNote: readString(json, 'safetyNote'),
     );
