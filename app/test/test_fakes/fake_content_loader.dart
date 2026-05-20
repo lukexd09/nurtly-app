@@ -11,9 +11,11 @@ class FakeContentLoader extends ContentLoader {
     return const ContentPackage(
       metadata: ContentMetadata(
         packageId: 'test',
+        schemaVersion: 1,
         version: '1.0.0',
         locale: 'en',
         publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
       ),
       playIdeas: [
         PlayIdea(

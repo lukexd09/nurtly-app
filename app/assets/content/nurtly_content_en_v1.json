@@ -1,9 +1,11 @@
 {
   "metadata": {
     "packageId": "nurtly-core-en",
+    "schemaVersion": 1,
     "version": "1.0.0",
     "locale": "en",
-    "publishedAt": "2026-05-18"
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
   },
   "playIdeas": [
     {
