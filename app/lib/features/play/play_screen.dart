@@ -63,37 +63,35 @@ class _PlayScreenState extends State<PlayScreen> {
                   message: 'More simple ideas will appear here later.',
                 )
               else ...[
-                _QuickFilterToggle(
+                _QuickFiltersModule(
                   expanded: _filtersExpanded,
-                  onTap: () {
+                  selectedFilters: _selectedFilters,
+                  onToggleExpanded: () {
                     setState(() {
                       _filtersExpanded = !_filtersExpanded;
                     });
                   },
+                  onToggleFilter: (filter) {
+                    setState(() {
+                      if (_selectedFilters.contains(filter)) {
+                        _selectedFilters.remove(filter);
+                      } else {
+                        _selectedFilters.add(filter);
+                      }
+                    });
+                  },
+                  onClear: _selectedFilters.isEmpty
+                      ? null
+                      : () {
+                          setState(() {
+                            _selectedFilters.clear();
+                          });
+                        },
+                  activeCountLabel: _selectedFilters.isEmpty
+                      ? null
+                      : '${_applyQuickFilters(playIdeas, _selectedFilters).length} gentle ideas',
                 ),
-                const SizedBox(height: AppSpacing.md),
-                if (_filtersExpanded) ...[
-                  _QuickFilters(
-                    selectedFilters: _selectedFilters,
-                    onToggle: (filter) {
-                      setState(() {
-                        if (_selectedFilters.contains(filter)) {
-                          _selectedFilters.remove(filter);
-                        } else {
-                          _selectedFilters.add(filter);
-                        }
-                      });
-                    },
-                    onClear: _selectedFilters.isEmpty
-                        ? null
-                        : () {
-                            setState(() {
-                              _selectedFilters.clear();
-                            });
-                          },
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                ],
+                const SizedBox(height: AppSpacing.sm),
                 ..._filteredPlayIdeaSection(playIdeas),
               ],
             ],
@@ -115,13 +113,6 @@ class _PlayScreenState extends State<PlayScreen> {
       ];
     }
     return [
-      if (_selectedFilters.isNotEmpty) ...[
-        Text(
-          '${filtered.length} gentle ideas',
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-      ],
       ..._playIdeaCards(filtered),
     ];
   }
@@ -182,90 +173,106 @@ enum _QuickFilter {
   }
 }
 
-class _QuickFilterToggle extends StatelessWidget {
-  const _QuickFilterToggle({
+class _QuickFiltersModule extends StatelessWidget {
+  const _QuickFiltersModule({
     required this.expanded,
-    required this.onTap,
+    required this.selectedFilters,
+    required this.onToggleExpanded,
+    required this.onToggleFilter,
+    required this.onClear,
+    required this.activeCountLabel,
   });
 
   final bool expanded;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: TextButton.icon(
-        onPressed: onTap,
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
-          ),
-        ),
-        icon: Icon(expanded ? Icons.expand_less : Icons.expand_more),
-        label: Text(
-          'Find the right fit',
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuickFilters extends StatelessWidget {
-  const _QuickFilters({
-    required this.selectedFilters,
-    required this.onToggle,
-    required this.onClear,
-  });
-
   final Set<_QuickFilter> selectedFilters;
-  final ValueChanged<_QuickFilter> onToggle;
+  final VoidCallback onToggleExpanded;
+  final ValueChanged<_QuickFilter> onToggleFilter;
   final VoidCallback? onClear;
+  final String? activeCountLabel;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: _QuickFilter.values.map((filter) {
-            return Material(
-              color: Colors.transparent,
-              child: FilterChip(
-                label: Text(filter.label),
-                selected: selectedFilters.contains(filter),
-                onSelected: (_) => onToggle(filter),
-                selectedColor: AppColors.primarySoft,
-                backgroundColor: AppColors.surface,
-                side: const BorderSide(color: AppColors.borderSoft),
-                labelStyle: selectedFilters.contains(filter)
-                    ? AppTextStyles.caption.copyWith(color: AppColors.primary)
-                    : AppTextStyles.caption
-                        .copyWith(color: AppColors.textSecondary),
-                showCheckmark: false,
+        Row(
+          children: [
+            Expanded(
+              child: TextButton.icon(
+                onPressed: onToggleExpanded,
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                    vertical: AppSpacing.xs,
+                  ),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                icon: Icon(
+                  expanded ? Icons.expand_less : Icons.expand_more,
+                  size: 18,
+                ),
+                label: Text(
+                  'Find the right fit',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
-            );
-          }).toList(),
-        ),
-        if (onClear != null) ...[
-          const SizedBox(height: AppSpacing.xs),
-          TextButton(
-            onPressed: onClear,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 0),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text('Clear', style: AppTextStyles.caption),
+            if (onClear != null)
+              TextButton(
+                onPressed: onClear,
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.textSecondary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xs,
+                    vertical: AppSpacing.xs,
+                  ),
+                  minimumSize: const Size(0, 0),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text('Clear', style: AppTextStyles.caption),
+              ),
+          ],
+        ),
+        if (activeCountLabel != null) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: AppSpacing.xs),
+            child: Text(
+              activeCountLabel!,
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+        ],
+        if (expanded) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: _QuickFilter.values.map((filter) {
+              return Material(
+                color: Colors.transparent,
+                child: FilterChip(
+                  label: Text(filter.label),
+                  selected: selectedFilters.contains(filter),
+                  onSelected: (_) => onToggleFilter(filter),
+                  selectedColor: AppColors.primarySoft,
+                  backgroundColor: AppColors.surface,
+                  side: const BorderSide(color: AppColors.borderSoft),
+                  labelStyle: selectedFilters.contains(filter)
+                      ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+                      : AppTextStyles.caption
+                          .copyWith(color: AppColors.textSecondary),
+                  showCheckmark: false,
+                ),
+              );
+            }).toList(),
           ),
         ],
       ],
