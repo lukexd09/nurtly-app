@@ -307,14 +307,16 @@ class _PlayIdeaMetadata extends StatelessWidget {
       children: [
         NurtlyChip(label: idea.ageGroup),
         NurtlyChip(label: idea.place),
-        NurtlyChip(label: idea.messLevel),
-        NurtlyChip(label: 'Child: ${idea.childEngagement}'),
-        NurtlyChip(label: 'Parent: ${idea.parentInvolvement}'),
+        NurtlyChip(label: '${idea.messLevel} mess'),
+        NurtlyChip(label: 'Child: ${_lowercaseLabel(idea.childEngagement)}'),
+        NurtlyChip(label: 'Parent: ${_lowercaseLabel(idea.parentInvolvement)}'),
         NurtlyChip(label: idea.activityType),
       ],
     );
   }
 }
+
+String _lowercaseLabel(String value) => value.toLowerCase();
 
 class _BulletText extends StatelessWidget {
   const _BulletText(this.text);
