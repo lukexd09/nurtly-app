@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/content_loader.dart';
+import 'package:nurtly/core/content/content_source.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,24 @@ void main() {
     expect(DateTime.tryParse(metadata.publishedAt), isNotNull);
     expect(_isNotBlank(metadata.minAppVersion), isTrue);
     expect(metadata.locale, 'en');
+  });
+
+  test('loads content from a custom content source', () async {
+    final package = await const ContentLoader(
+      source: _RawContentSource(_minimalContentPackageJson),
+    ).load();
+
+    expect(package.metadata.packageId, 'test-package');
+    expect(package.playIdeas.single.id, 'play_test_idea');
+    expect(package.sounds.single.id, 'sound_test_sound');
+  });
+
+  test('malformed custom content source throws FormatException', () async {
+    const loader = ContentLoader(
+      source: _RawContentSource('{not-json'),
+    );
+
+    await expectLater(loader.load(), throwsFormatException);
   });
 
   test('play idea ids and titles are unique and well formed', () async {
@@ -191,3 +210,53 @@ void main() {
 }
 
 bool _isNotBlank(String value) => value.trim().isNotEmpty;
+
+class _RawContentSource implements ContentSource {
+  const _RawContentSource(this.content);
+
+  final String content;
+
+  @override
+  Future<String> loadRawContent() async => content;
+}
+
+const _minimalContentPackageJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
