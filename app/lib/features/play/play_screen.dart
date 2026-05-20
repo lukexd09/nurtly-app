@@ -28,7 +28,8 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Future<ContentPackage> _contentFuture;
-  _QuickFilter _selectedFilter = _QuickFilter.all;
+  bool _filtersExpanded = false;
+  final Set<_QuickFilter> _selectedFilters = <_QuickFilter>{};
 
   @override
   void initState() {
@@ -62,15 +63,37 @@ class _PlayScreenState extends State<PlayScreen> {
                   message: 'More simple ideas will appear here later.',
                 )
               else ...[
-                _QuickFilters(
-                  selectedFilter: _selectedFilter,
-                  onSelected: (filter) {
+                _QuickFilterToggle(
+                  expanded: _filtersExpanded,
+                  onTap: () {
                     setState(() {
-                      _selectedFilter = filter;
+                      _filtersExpanded = !_filtersExpanded;
                     });
                   },
                 ),
                 const SizedBox(height: AppSpacing.md),
+                if (_filtersExpanded) ...[
+                  _QuickFilters(
+                    selectedFilters: _selectedFilters,
+                    onToggle: (filter) {
+                      setState(() {
+                        if (_selectedFilters.contains(filter)) {
+                          _selectedFilters.remove(filter);
+                        } else {
+                          _selectedFilters.add(filter);
+                        }
+                      });
+                    },
+                    onClear: _selectedFilters.isEmpty
+                        ? null
+                        : () {
+                            setState(() {
+                              _selectedFilters.clear();
+                            });
+                          },
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
                 ..._filteredPlayIdeaSection(playIdeas),
               ],
             ],
@@ -81,39 +104,38 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   List<Widget> _filteredPlayIdeaSection(List<PlayIdea> playIdeas) {
-    final filtered = _applyQuickFilter(playIdeas, _selectedFilter);
+    final filtered = _applyQuickFilters(playIdeas, _selectedFilters);
     if (filtered.isEmpty) {
       return const [
         EmptyState(
           title: 'Nothing here yet',
-          message: 'Try another filter for now. More gentle ideas are coming.',
+          message:
+              'Try removing one filter for now. More gentle ideas are coming.',
         ),
       ];
     }
-    return _playIdeaCards(filtered);
+    return [
+      if (_selectedFilters.isNotEmpty) ...[
+        Text(
+          '${filtered.length} gentle ideas',
+          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+      ],
+      ..._playIdeaCards(filtered),
+    ];
   }
 
-  List<PlayIdea> _applyQuickFilter(List<PlayIdea> ideas, _QuickFilter filter) {
-    return switch (filter) {
-      _QuickFilter.all => ideas,
-      _QuickFilter.lowEffort =>
-        ideas.where((idea) => idea.parentInvolvement == 'Low').toList(),
-      _QuickFilter.lowMess =>
-        ideas.where((idea) => idea.messLevel == 'Low').toList(),
-      _QuickFilter.forBabies =>
-        ideas.where((idea) => _isForBabies(idea.ageGroup)).toList(),
-      _QuickFilter.toddlers =>
-        ideas.where((idea) => _isForToddlers(idea.ageGroup)).toList(),
-      _QuickFilter.movement =>
-        ideas.where((idea) => idea.activityType == 'Movement').toList(),
-      _QuickFilter.quiet => ideas
-          .where(
-            (idea) =>
-                idea.activityType == 'Quiet time' ||
-                idea.childEngagement == 'Low',
-          )
-          .toList(),
-    };
+  List<PlayIdea> _applyQuickFilters(
+    List<PlayIdea> ideas,
+    Set<_QuickFilter> filters,
+  ) {
+    if (filters.isEmpty) {
+      return ideas;
+    }
+    return ideas
+        .where((idea) => filters.every((filter) => filter.matches(idea)))
+        .toList();
   }
 
   List<Widget> _playIdeaCards(List<PlayIdea> playIdeas) {
@@ -137,7 +159,6 @@ class _PlayScreenState extends State<PlayScreen> {
 }
 
 enum _QuickFilter {
-  all('All'),
   lowEffort('Low effort'),
   lowMess('Low mess'),
   forBabies('For babies'),
@@ -147,40 +168,107 @@ enum _QuickFilter {
 
   const _QuickFilter(this.label);
   final String label;
+
+  bool matches(PlayIdea idea) {
+    return switch (this) {
+      _QuickFilter.lowEffort => idea.parentInvolvement == 'Low',
+      _QuickFilter.lowMess => idea.messLevel == 'Low',
+      _QuickFilter.forBabies => _isForBabies(idea.ageGroup),
+      _QuickFilter.toddlers => _isForToddlers(idea.ageGroup),
+      _QuickFilter.movement => idea.activityType == 'Movement',
+      _QuickFilter.quiet =>
+        idea.activityType == 'Quiet time' || idea.childEngagement == 'Low',
+    };
+  }
+}
+
+class _QuickFilterToggle extends StatelessWidget {
+  const _QuickFilterToggle({
+    required this.expanded,
+    required this.onTap,
+  });
+
+  final bool expanded;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButton.icon(
+        onPressed: onTap,
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+        ),
+        icon: Icon(expanded ? Icons.expand_less : Icons.expand_more),
+        label: Text(
+          'Find the right fit',
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _QuickFilters extends StatelessWidget {
   const _QuickFilters({
-    required this.selectedFilter,
-    required this.onSelected,
+    required this.selectedFilters,
+    required this.onToggle,
+    required this.onClear,
   });
 
-  final _QuickFilter selectedFilter;
-  final ValueChanged<_QuickFilter> onSelected;
+  final Set<_QuickFilter> selectedFilters;
+  final ValueChanged<_QuickFilter> onToggle;
+  final VoidCallback? onClear;
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppSpacing.xs,
-      runSpacing: AppSpacing.xs,
-      children: _QuickFilter.values.map((filter) {
-        return Material(
-          color: Colors.transparent,
-          child: ChoiceChip(
-            label: Text(filter.label),
-            selected: selectedFilter == filter,
-            onSelected: (_) => onSelected(filter),
-            selectedColor: AppColors.primarySoft,
-            backgroundColor: AppColors.surface,
-            side: const BorderSide(color: AppColors.borderSoft),
-            labelStyle: selectedFilter == filter
-                ? AppTextStyles.caption.copyWith(color: AppColors.primary)
-                : AppTextStyles.caption
-                    .copyWith(color: AppColors.textSecondary),
-            showCheckmark: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          children: _QuickFilter.values.map((filter) {
+            return Material(
+              color: Colors.transparent,
+              child: FilterChip(
+                label: Text(filter.label),
+                selected: selectedFilters.contains(filter),
+                onSelected: (_) => onToggle(filter),
+                selectedColor: AppColors.primarySoft,
+                backgroundColor: AppColors.surface,
+                side: const BorderSide(color: AppColors.borderSoft),
+                labelStyle: selectedFilters.contains(filter)
+                    ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+                    : AppTextStyles.caption
+                        .copyWith(color: AppColors.textSecondary),
+                showCheckmark: false,
+              ),
+            );
+          }).toList(),
+        ),
+        if (onClear != null) ...[
+          const SizedBox(height: AppSpacing.xs),
+          TextButton(
+            onPressed: onClear,
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.textSecondary,
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text('Clear', style: AppTextStyles.caption),
           ),
-        );
-      }).toList(),
+        ],
+      ],
     );
   }
 }
