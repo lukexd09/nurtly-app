@@ -103,6 +103,27 @@ function Test-ShouldScanForbiddenPatterns {
         $normalized -ne "tools/check_scope_guard.ps1"
 }
 
+function Test-ForbiddenPatternMatch {
+    param(
+        [string] $Content,
+        [string] $Pattern
+    )
+
+    if ($Pattern -ne "http:") {
+        return $Content -match $Pattern
+    }
+
+    $lines = $Content -split "`r?`n"
+    foreach ($line in $lines) {
+        if (($line -match $Pattern) -and
+            ($line -notmatch 'xmlns:android="http://schemas\.android\.com/apk/res/android"')) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 try {
     Set-Location $repoRoot
     $changedFiles = @(Get-ChangedFiles)
@@ -129,7 +150,7 @@ try {
             (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
-                if ($content -match $pattern) {
+                if (Test-ForbiddenPatternMatch $content $pattern) {
                     $failures += "Forbidden pattern '$pattern' found in $file"
                 }
             }
