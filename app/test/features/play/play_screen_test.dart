@@ -17,9 +17,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('What to expect'), findsOneWidget);
-    expect(find.text('Low mess'), findsWidgets);
-    expect(find.text('Medium child energy'), findsOneWidget);
-    expect(find.text('Low parent effort'), findsOneWidget);
+    expect(
+      find.text(
+        'A gently engaging, low-mess activity that does not need much setup. Stay nearby, offer gentle guidance, and let your child explore at their own pace.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Medium child energy'), findsNothing);
+    expect(find.text('Low parent effort'), findsNothing);
 
     await tester.scrollUntilVisible(
       find.text('What you\'ll need'),

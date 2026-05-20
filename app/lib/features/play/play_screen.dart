@@ -306,116 +306,62 @@ class _ExpectationSection extends StatelessWidget {
     return DetailSection(
       title: 'What to expect',
       children: [
-        _ExpectationItem(expectation: _messExpectation(idea.messLevel)),
-        _ExpectationItem(
-          expectation: _childEnergyExpectation(idea.childEngagement),
-        ),
-        _ExpectationItem(
-          expectation: _parentEffortExpectation(idea.parentInvolvement),
-        ),
+        Text(_expectationSummary(idea), style: AppTextStyles.body),
       ],
     );
   }
 }
 
-class _ExpectationItem extends StatelessWidget {
-  const _ExpectationItem({required this.expectation});
+String _expectationSummary(PlayIdea idea) {
+  final mess = _messPhrase(idea.messLevel);
+  final childEnergy = _childEnergyPhrase(idea.childEngagement);
+  final parentEffort = _parentEffortPhrase(idea.parentInvolvement);
+  final guidance = _parentGuidance(idea.parentInvolvement);
 
-  final _Expectation expectation;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.primarySoft,
-        borderRadius: AppRadii.cardRadius,
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(expectation.title, style: AppTextStyles.cardTitle),
-            const SizedBox(height: AppSpacing.xs),
-            Text(expectation.body, style: AppTextStyles.body),
-          ],
-        ),
-      ),
-    );
+  if (mess == null ||
+      childEnergy == null ||
+      parentEffort == null ||
+      guidance == null) {
+    return 'Choose this when it feels like a good fit for your space, your child, and the energy you have available.';
   }
+
+  return 'A $childEnergy, $mess activity that $parentEffort. $guidance';
 }
 
-class _Expectation {
-  const _Expectation({
-    required this.title,
-    required this.body,
-  });
-
-  final String title;
-  final String body;
-}
-
-_Expectation _messExpectation(String value) {
+String? _messPhrase(String value) {
   return switch (value) {
-    'Low' => const _Expectation(
-        title: 'Low mess',
-        body: 'Simple cleanup, no special setup.',
-      ),
-    'Medium' => const _Expectation(
-        title: 'Medium mess',
-        body: 'A little cleanup may help after the activity.',
-      ),
-    'High' => const _Expectation(
-        title: 'High mess',
-        body: 'Best for a moment when extra cleanup feels okay.',
-      ),
-    _ => _Expectation(
-        title: '$value mess',
-        body: 'Choose this when it feels like a good fit for your space.',
-      ),
+    'Low' => 'low-mess',
+    'Medium' => 'slightly messy',
+    'High' => 'more hands-on cleanup',
+    _ => null,
   };
 }
 
-_Expectation _childEnergyExpectation(String value) {
+String? _childEnergyPhrase(String value) {
   return switch (value) {
-    'Low' => const _Expectation(
-        title: 'Low child energy',
-        body: 'A quiet moment with gentle attention.',
-      ),
-    'Medium' => const _Expectation(
-        title: 'Medium child energy',
-        body: 'A little curiosity, movement, or conversation.',
-      ),
-    'High' => const _Expectation(
-        title: 'High child energy',
-        body: 'More active play when your child wants to move.',
-      ),
-    _ => _Expectation(
-        title: '$value child energy',
-        body: 'Choose this when it fits your child in the moment.',
-      ),
+    'Low' => 'quiet',
+    'Medium' => 'gently engaging',
+    'High' => 'more active',
+    _ => null,
   };
 }
 
-_Expectation _parentEffortExpectation(String value) {
+String? _parentEffortPhrase(String value) {
   return switch (value) {
-    'Low' => const _Expectation(
-        title: 'Low parent effort',
-        body: 'Stay nearby and gently guide when needed.',
-      ),
-    'Medium' => const _Expectation(
-        title: 'Medium parent effort',
-        body: 'Join in for a few moments and help shape the play.',
-      ),
-    'High' => const _Expectation(
-        title: 'High parent effort',
-        body: 'Best when you have energy to actively participate.',
-      ),
-    _ => _Expectation(
-        title: '$value parent effort',
-        body: 'Choose this when it fits the energy you have available.',
-      ),
+    'Low' => 'does not need much setup',
+    'Medium' => 'works best with a little shared attention',
+    'High' => 'works best when you have energy to join in',
+    _ => null,
+  };
+}
+
+String? _parentGuidance(String value) {
+  return switch (value) {
+    'Low' =>
+      'Stay nearby, offer gentle guidance, and let your child explore at their own pace.',
+    'Medium' => 'Join in for a few moments and keep the play easy.',
+    'High' => 'Choose it when active participation feels available.',
+    _ => null,
   };
 }
 
