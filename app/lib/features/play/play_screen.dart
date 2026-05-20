@@ -4,6 +4,7 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/play_idea.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/detail_note.dart';
@@ -11,7 +12,6 @@ import '../../core/widgets/detail_section.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
-import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
 
 class PlayScreen extends StatefulWidget {
@@ -94,9 +94,50 @@ class _PlayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SectionHeader(
-      title: 'Play',
-      subtitle: 'Simple screen-free ideas for calm, connected moments.',
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadii.panelRadius,
+        border: Border.all(color: AppColors.borderSoft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: const BoxDecoration(
+                color: AppColors.primarySoft,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.lightbulb_outline,
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Choose a gentle play idea',
+                    style: AppTextStyles.screenTitle,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    'Simple screen-free moments for connection, calm, and everyday family rhythm.',
+                    style: AppTextStyles.body,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -112,18 +153,31 @@ class _PlayIdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TappableNurtlyCard(
-      semanticLabel: 'Open ${idea.title}',
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(idea.title, style: AppTextStyles.cardTitle),
-          const SizedBox(height: AppSpacing.xs),
-          Text(idea.summary, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.md),
-          _PlayIdeaMetadata(idea: idea),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: AppRadii.panelRadius,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withAlpha(8),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
+      ),
+      child: TappableNurtlyCard(
+        semanticLabel: 'Open ${idea.title}',
+        onTap: onTap,
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(idea.title, style: AppTextStyles.cardTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(idea.summary, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.md),
+            _PlayIdeaMetadata(idea: idea),
+          ],
+        ),
       ),
     );
   }
@@ -144,21 +198,11 @@ class PlayActivityDetailScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                tooltip: 'Back',
-                color: AppColors.primary,
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+            _DetailBackButton(
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(idea.title, style: AppTextStyles.screenTitle),
-            const SizedBox(height: AppSpacing.xs),
-            Text(idea.summary, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.md),
-            _PlayIdeaMetadata(idea: idea),
+            _PlayDetailHero(idea: idea),
             const SizedBox(height: AppSpacing.lg),
             DetailSection(
               title: "What you'll need",
@@ -187,6 +231,74 @@ class PlayActivityDetailScreen extends StatelessWidget {
               title: 'Safety note',
               text: idea.safetyNote,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailBackButton extends StatelessWidget {
+  const _DetailBackButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Material(
+        color: AppColors.surface,
+        shape: const CircleBorder(
+          side: BorderSide(color: AppColors.borderSoft),
+        ),
+        child: IconButton(
+          tooltip: 'Back',
+          color: AppColors.primary,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: onPressed,
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayDetailHero extends StatelessWidget {
+  const _PlayDetailHero({required this.idea});
+
+  final PlayIdea idea;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadii.panelRadius,
+        border: Border.all(color: AppColors.borderSoft),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withAlpha(8),
+            blurRadius: 22,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(
+              Icons.auto_awesome,
+              color: AppColors.primary,
+              size: 24,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(idea.title, style: AppTextStyles.screenTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(idea.summary, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.md),
+            _PlayIdeaMetadata(idea: idea),
           ],
         ),
       ),
