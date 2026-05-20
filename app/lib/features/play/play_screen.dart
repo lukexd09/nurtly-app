@@ -28,6 +28,7 @@ class PlayScreen extends StatefulWidget {
 
 class _PlayScreenState extends State<PlayScreen> {
   late final Future<ContentPackage> _contentFuture;
+  _QuickFilter _selectedFilter = _QuickFilter.all;
 
   @override
   void initState() {
@@ -60,13 +61,59 @@ class _PlayScreenState extends State<PlayScreen> {
                   title: 'No play ideas available yet.',
                   message: 'More simple ideas will appear here later.',
                 )
-              else
-                ..._playIdeaCards(playIdeas),
+              else ...[
+                _QuickFilters(
+                  selectedFilter: _selectedFilter,
+                  onSelected: (filter) {
+                    setState(() {
+                      _selectedFilter = filter;
+                    });
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ..._filteredPlayIdeaSection(playIdeas),
+              ],
             ],
           );
         },
       ),
     );
+  }
+
+  List<Widget> _filteredPlayIdeaSection(List<PlayIdea> playIdeas) {
+    final filtered = _applyQuickFilter(playIdeas, _selectedFilter);
+    if (filtered.isEmpty) {
+      return const [
+        EmptyState(
+          title: 'Nothing here yet',
+          message: 'Try another filter for now. More gentle ideas are coming.',
+        ),
+      ];
+    }
+    return _playIdeaCards(filtered);
+  }
+
+  List<PlayIdea> _applyQuickFilter(List<PlayIdea> ideas, _QuickFilter filter) {
+    return switch (filter) {
+      _QuickFilter.all => ideas,
+      _QuickFilter.lowEffort =>
+        ideas.where((idea) => idea.parentInvolvement == 'Low').toList(),
+      _QuickFilter.lowMess =>
+        ideas.where((idea) => idea.messLevel == 'Low').toList(),
+      _QuickFilter.forBabies =>
+        ideas.where((idea) => _isForBabies(idea.ageGroup)).toList(),
+      _QuickFilter.toddlers =>
+        ideas.where((idea) => _isForToddlers(idea.ageGroup)).toList(),
+      _QuickFilter.movement =>
+        ideas.where((idea) => idea.activityType == 'Movement').toList(),
+      _QuickFilter.quiet => ideas
+          .where(
+            (idea) =>
+                idea.activityType == 'Quiet time' ||
+                idea.childEngagement == 'Low',
+          )
+          .toList(),
+    };
   }
 
   List<Widget> _playIdeaCards(List<PlayIdea> playIdeas) {
@@ -87,6 +134,64 @@ class _PlayScreenState extends State<PlayScreen> {
       ],
     ];
   }
+}
+
+enum _QuickFilter {
+  all('All'),
+  lowEffort('Low effort'),
+  lowMess('Low mess'),
+  forBabies('For babies'),
+  toddlers('Toddlers'),
+  movement('Movement'),
+  quiet('Quiet');
+
+  const _QuickFilter(this.label);
+  final String label;
+}
+
+class _QuickFilters extends StatelessWidget {
+  const _QuickFilters({
+    required this.selectedFilter,
+    required this.onSelected,
+  });
+
+  final _QuickFilter selectedFilter;
+  final ValueChanged<_QuickFilter> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xs,
+      children: _QuickFilter.values.map((filter) {
+        return Material(
+          color: Colors.transparent,
+          child: ChoiceChip(
+            label: Text(filter.label),
+            selected: selectedFilter == filter,
+            onSelected: (_) => onSelected(filter),
+            selectedColor: AppColors.primarySoft,
+            backgroundColor: AppColors.surface,
+            side: const BorderSide(color: AppColors.borderSoft),
+            labelStyle: selectedFilter == filter
+                ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+                : AppTextStyles.caption
+                    .copyWith(color: AppColors.textSecondary),
+            showCheckmark: false,
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+bool _isForBabies(String ageGroup) {
+  return ageGroup.contains('0-12 months') || ageGroup.contains('6-18 months');
+}
+
+bool _isForToddlers(String ageGroup) {
+  return ageGroup.contains('18 months-3 years') ||
+      ageGroup.contains('2-5 years');
 }
 
 class _PlayHeader extends StatelessWidget {
