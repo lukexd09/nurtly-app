@@ -29,6 +29,135 @@ abstract final class _HomeTypography {
   );
 }
 
+enum _HomeDensityVariant { compact, cozy, spacious }
+
+class _HomeDensity {
+  const _HomeDensity._({
+    required this.variant,
+    required this.outerPadding,
+    required this.heroPadding,
+    required this.heroTopGap,
+    required this.heroContentGap,
+    required this.heroBottomGap,
+    required this.heroTitleSize,
+    required this.heroSubtitleSize,
+    required this.heroCtaMinHeight,
+    required this.heroCtaHorizontalPadding,
+    required this.heroDecorationSize,
+    required this.afterHeroGap,
+    required this.afterGentleStartGap,
+    required this.gentleStartPadding,
+    required this.secondaryCardPadding,
+    required this.secondaryIconWellSize,
+    required this.secondaryIconSize,
+  });
+
+  factory _HomeDensity.forHeight(double height) {
+    if (height < 700) {
+      return const _HomeDensity._(
+        variant: _HomeDensityVariant.compact,
+        outerPadding: EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.sm,
+          AppSpacing.md,
+          AppSpacing.md,
+        ),
+        heroPadding: EdgeInsets.all(AppSpacing.lg),
+        heroTopGap: AppSpacing.lg,
+        heroContentGap: AppSpacing.sm,
+        heroBottomGap: AppSpacing.lg,
+        heroTitleSize: 30,
+        heroSubtitleSize: 16,
+        heroCtaMinHeight: 56,
+        heroCtaHorizontalPadding: AppSpacing.lg,
+        heroDecorationSize: 118,
+        afterHeroGap: AppSpacing.sm,
+        afterGentleStartGap: AppSpacing.md,
+        gentleStartPadding: EdgeInsets.all(AppSpacing.md),
+        secondaryCardPadding: EdgeInsets.all(AppSpacing.md),
+        secondaryIconWellSize: 44,
+        secondaryIconSize: 22,
+      );
+    }
+
+    if (height < 820) {
+      return const _HomeDensity._(
+        variant: _HomeDensityVariant.cozy,
+        outerPadding: EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          AppSpacing.sm,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
+        heroPadding: EdgeInsets.all(AppSpacing.lg),
+        heroTopGap: AppSpacing.lg,
+        heroContentGap: AppSpacing.md,
+        heroBottomGap: AppSpacing.lg,
+        heroTitleSize: 32,
+        heroSubtitleSize: 16,
+        heroCtaMinHeight: 60,
+        heroCtaHorizontalPadding: AppSpacing.xl,
+        heroDecorationSize: 132,
+        afterHeroGap: AppSpacing.md,
+        afterGentleStartGap: AppSpacing.lg,
+        gentleStartPadding: EdgeInsets.all(AppSpacing.lg),
+        secondaryCardPadding: EdgeInsets.all(AppSpacing.lg),
+        secondaryIconWellSize: 48,
+        secondaryIconSize: 23,
+      );
+    }
+
+    return const _HomeDensity._(
+      variant: _HomeDensityVariant.spacious,
+      outerPadding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.lg,
+      ),
+      heroPadding: EdgeInsets.all(AppSpacing.xl),
+      heroTopGap: AppSpacing.xl,
+      heroContentGap: AppSpacing.md,
+      heroBottomGap: AppSpacing.xl,
+      heroTitleSize: 34,
+      heroSubtitleSize: 17,
+      heroCtaMinHeight: 64,
+      heroCtaHorizontalPadding: AppSpacing.xl,
+      heroDecorationSize: 150,
+      afterHeroGap: AppSpacing.md,
+      afterGentleStartGap: AppSpacing.lg,
+      gentleStartPadding: EdgeInsets.all(AppSpacing.lg),
+      secondaryCardPadding: EdgeInsets.all(AppSpacing.lg),
+      secondaryIconWellSize: 52,
+      secondaryIconSize: 24,
+    );
+  }
+
+  final _HomeDensityVariant variant;
+  final EdgeInsets outerPadding;
+  final EdgeInsets heroPadding;
+  final double heroTopGap;
+  final double heroContentGap;
+  final double heroBottomGap;
+  final double heroTitleSize;
+  final double heroSubtitleSize;
+  final double heroCtaMinHeight;
+  final double heroCtaHorizontalPadding;
+  final double heroDecorationSize;
+  final double afterHeroGap;
+  final double afterGentleStartGap;
+  final EdgeInsets gentleStartPadding;
+  final EdgeInsets secondaryCardPadding;
+  final double secondaryIconWellSize;
+  final double secondaryIconSize;
+
+  TextStyle get heroTitle =>
+      _HomeTypography.heroTitle.copyWith(fontSize: heroTitleSize);
+
+  TextStyle get heroSubtitle =>
+      _HomeTypography.heroSubtitle.copyWith(fontSize: heroSubtitleSize);
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.onSelectTab,
@@ -39,23 +168,23 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final density = _HomeDensity.forHeight(MediaQuery.sizeOf(context).height);
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.md,
-        AppSpacing.lg,
-        AppSpacing.lg,
-      ),
+      padding: density.outerPadding,
       children: [
         _HomeHero(
+          density: density,
           onTap: () => onSelectTab(AppTab.play),
         ),
-        const SizedBox(height: AppSpacing.md),
+        SizedBox(height: density.afterHeroGap),
         _GentleStartCard(
+          density: density,
           onTap: () => onSelectTab(AppTab.play),
         ),
-        const SizedBox(height: AppSpacing.lg),
+        SizedBox(height: density.afterGentleStartGap),
         _HomeQuickLink(
+          density: density,
           title: 'Save a small note',
           subtitle: 'Keep the moment without overthinking it.',
           icon: Icons.event_note_outlined,
@@ -63,6 +192,7 @@ class HomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         _HomeQuickLink(
+          density: density,
           title: 'Start a calming sound',
           subtitle: 'A quiet background for a softer pause.',
           icon: Icons.graphic_eq,
@@ -74,8 +204,12 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeHero extends StatelessWidget {
-  const _HomeHero({required this.onTap});
+  const _HomeHero({
+    required this.density,
+    required this.onTap,
+  });
 
+  final _HomeDensity density;
   final VoidCallback onTap;
 
   @override
@@ -102,17 +236,17 @@ class _HomeHero extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          const Positioned(
+          Positioned(
             right: -34,
             top: -10,
             child: Icon(
               Icons.spa_outlined,
               color: Color(0x33E8DCC8),
-              size: 150,
+              size: density.heroDecorationSize,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
+            padding: density.heroPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,21 +255,22 @@ class _HomeHero extends StatelessWidget {
                   color: AppColors.secondary,
                   size: 24,
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                SizedBox(height: density.heroTopGap),
                 Text(
                   'Start with one small moment',
-                  style: _HomeTypography.heroTitle,
+                  style: density.heroTitle,
                 ),
-                const SizedBox(height: AppSpacing.md),
+                SizedBox(height: density.heroContentGap),
                 Text(
                   'Choose a gentle idea, save a quiet note, or add a calming sound when the day feels full.',
-                  style: _HomeTypography.heroSubtitle,
+                  style: density.heroSubtitle,
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                SizedBox(height: density.heroBottomGap),
                 _HeroPillButton(
+                  density: density,
                   onPressed: onTap,
                 ),
-                const SizedBox(height: AppSpacing.xl),
+                SizedBox(height: density.heroBottomGap),
                 Center(
                   child: Text(
                     'NO PRESSURE, NO STREAKS, NO GOALS',
@@ -157,8 +292,12 @@ class _HomeHero extends StatelessWidget {
 }
 
 class _HeroPillButton extends StatelessWidget {
-  const _HeroPillButton({required this.onPressed});
+  const _HeroPillButton({
+    required this.density,
+    required this.onPressed,
+  });
 
+  final _HomeDensity density;
   final VoidCallback onPressed;
 
   @override
@@ -170,8 +309,10 @@ class _HeroPillButton extends StatelessWidget {
         borderRadius: AppRadii.chipRadius,
         onTap: onPressed,
         child: Container(
-          constraints: const BoxConstraints(minHeight: 64),
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+          constraints: BoxConstraints(minHeight: density.heroCtaMinHeight),
+          padding: EdgeInsets.symmetric(
+            horizontal: density.heroCtaHorizontalPadding,
+          ),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -192,8 +333,12 @@ class _HeroPillButton extends StatelessWidget {
 }
 
 class _GentleStartCard extends StatelessWidget {
-  const _GentleStartCard({required this.onTap});
+  const _GentleStartCard({
+    required this.density,
+    required this.onTap,
+  });
 
+  final _HomeDensity density;
   final VoidCallback onTap;
 
   @override
@@ -211,7 +356,7 @@ class _GentleStartCard extends StatelessWidget {
           borderRadius: AppRadii.panelRadius,
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: density.gentleStartPadding,
             child: Row(
               children: [
                 Container(
@@ -269,12 +414,14 @@ class _GentleStartCard extends StatelessWidget {
 
 class _HomeQuickLink extends StatelessWidget {
   const _HomeQuickLink({
+    required this.density,
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.onTap,
   });
 
+  final _HomeDensity density;
   final String title;
   final String subtitle;
   final IconData icon;
@@ -303,17 +450,21 @@ class _HomeQuickLink extends StatelessWidget {
             borderRadius: AppRadii.panelRadius,
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: density.secondaryCardPadding,
               child: Row(
                 children: [
                   Container(
-                    width: 52,
-                    height: 52,
+                    width: density.secondaryIconWellSize,
+                    height: density.secondaryIconWellSize,
                     decoration: BoxDecoration(
                       color: AppColors.background,
                       borderRadius: AppRadii.controlSmallRadius,
                     ),
-                    child: Icon(icon, color: AppColors.primary, size: 24),
+                    child: Icon(
+                      icon,
+                      color: AppColors.primary,
+                      size: density.secondaryIconSize,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.lg),
                   Expanded(
