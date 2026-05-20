@@ -95,13 +95,11 @@ class _ShellTopBar extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Text(
+            Text(
               appName,
-              style: TextStyle(
+              style: AppTextStyles.cardTitle.copyWith(
                 fontSize: 22,
-                height: 1.2,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(width: AppSpacing.md),

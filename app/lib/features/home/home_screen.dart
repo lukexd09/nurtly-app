@@ -6,6 +6,29 @@ import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 
+abstract final class _HomeTypography {
+  static const heroTitle = TextStyle(
+    fontSize: 34,
+    height: 1.25,
+    fontWeight: FontWeight.w800,
+    color: AppColors.surfaceBright,
+  );
+
+  static const heroSubtitle = TextStyle(
+    fontSize: 17,
+    height: 1.45,
+    fontWeight: FontWeight.w400,
+    color: AppColors.primarySoft,
+  );
+
+  static const heroCta = TextStyle(
+    fontSize: 18,
+    height: 1.2,
+    fontWeight: FontWeight.w800,
+    color: AppColors.primary,
+  );
+}
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.onSelectTab,
@@ -101,22 +124,12 @@ class _HomeHero extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xl),
                 Text(
                   'Start with one small moment',
-                  style: const TextStyle(
-                    fontSize: 34,
-                    height: 1.25,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.surfaceBright,
-                  ),
+                  style: _HomeTypography.heroTitle,
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
                   'Choose a gentle idea, save a quiet note, or add a calming sound when the day feels full.',
-                  style: const TextStyle(
-                    fontSize: 17,
-                    height: 1.45,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.primarySoft,
-                  ),
+                  style: _HomeTypography.heroSubtitle,
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 _HeroPillButton(
@@ -165,12 +178,7 @@ class _HeroPillButton extends StatelessWidget {
               Flexible(
                 child: Text(
                   'Find a play idea',
-                  style: TextStyle(
-                    fontSize: 18,
-                    height: 1.2,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.primary,
-                  ),
+                  style: _HomeTypography.heroCta,
                 ),
               ),
               SizedBox(width: AppSpacing.md),
