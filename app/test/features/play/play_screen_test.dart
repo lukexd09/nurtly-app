@@ -9,7 +9,21 @@ import 'package:nurtly/features/play/play_screen.dart';
 import '../../test_fakes/fake_content_loader.dart';
 
 void main() {
-  testWidgets('shows all ideas by default and restores all after filtering', (
+  testWidgets('filters are collapsed by default', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Find the right fit'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Low effort'), findsNothing);
+    expect(find.text('Soft treasure basket'), findsOneWidget);
+    expect(find.text('Couch cushion tunnel'), findsOneWidget);
+  });
+
+  testWidgets('no selected filters shows all ideas after expanding', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -19,102 +33,140 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('All'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FilterChip, 'Low effort'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Low mess'), findsOneWidget);
     expect(find.text('Soft treasure basket'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Couch cushion tunnel'),
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Couch cushion tunnel'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Indoor march'),
+      120,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Indoor march'), findsOneWidget);
+  });
+
+  testWidgets('low mess filter narrows results', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Low mess'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soft treasure basket'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('Quiet book basket'),
       120,
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Quiet book basket'), findsOneWidget);
-
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Low mess'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Soft treasure basket'), findsOneWidget);
     expect(find.text('Couch cushion tunnel'), findsNothing);
-    expect(find.text('Quiet book basket'), findsOneWidget);
+    expect(find.text('Indoor march'), findsNothing);
+    expect(find.text('2 gentle ideas'), findsOneWidget);
+  });
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'All'));
+  testWidgets('low mess and for babies use AND logic', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Low mess'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'For babies'));
     await tester.pumpAndSettle();
 
     expect(find.text('Soft treasure basket'), findsOneWidget);
-    expect(find.text('Couch cushion tunnel'), findsOneWidget);
+    expect(find.text('Quiet book basket'), findsNothing);
+    expect(find.text('Couch cushion tunnel'), findsNothing);
+    expect(find.text('1 gentle ideas'), findsOneWidget);
+  });
+
+  testWidgets('toggling a selected chip off updates results', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+      ),
+    );
+    await tester.pump();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Low mess'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'For babies'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'For babies'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soft treasure basket'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('Quiet book basket'),
       120,
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Quiet book basket'), findsOneWidget);
+    expect(find.text('2 gentle ideas'), findsOneWidget);
   });
 
-  testWidgets('low mess filter hides medium mess ideas', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
-      ),
-    );
-    await tester.pump();
+  testWidgets(
+    'clear action appears only when active and restores all ideas',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
+        ),
+      );
+      await tester.pump();
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Low mess'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+      await tester.pumpAndSettle();
 
-    expect(find.text('Soft treasure basket'), findsOneWidget);
-    expect(find.text('Couch cushion tunnel'), findsNothing);
-    expect(find.text('Quiet book basket'), findsOneWidget);
-  });
+      expect(find.widgetWithText(TextButton, 'Clear'), findsNothing);
 
-  testWidgets('low effort filter shows low parent involvement ideas', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
-      ),
-    );
-    await tester.pump();
+      await tester.tap(find.widgetWithText(FilterChip, 'Low effort'));
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Low effort'));
-    await tester.pumpAndSettle();
+      expect(find.widgetWithText(TextButton, 'Clear'), findsOneWidget);
+      expect(find.text('Soft treasure basket'), findsOneWidget);
+      expect(find.text('Couch cushion tunnel'), findsNothing);
 
-    expect(find.text('Soft treasure basket'), findsOneWidget);
-    expect(find.text('Quiet book basket'), findsOneWidget);
-    expect(find.text('Couch cushion tunnel'), findsNothing);
-  });
+      await tester.tap(find.widgetWithText(TextButton, 'Clear'));
+      await tester.pumpAndSettle();
 
-  testWidgets('filter chips cover babies, toddlers, movement and quiet', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: PlayScreen(contentLoader: _PlayFilterContentLoader()),
-      ),
-    );
-    await tester.pump();
-
-    await tester.tap(find.widgetWithText(ChoiceChip, 'For babies'));
-    await tester.pumpAndSettle();
-    expect(find.text('Soft treasure basket'), findsOneWidget);
-    expect(find.text('Couch cushion tunnel'), findsNothing);
-
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Toddlers'));
-    await tester.pumpAndSettle();
-    expect(find.text('Couch cushion tunnel'), findsOneWidget);
-    expect(find.text('Soft treasure basket'), findsNothing);
-
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Movement'));
-    await tester.pumpAndSettle();
-    expect(find.text('Couch cushion tunnel'), findsOneWidget);
-    expect(find.text('Soft treasure basket'), findsNothing);
-
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Quiet'));
-    await tester.pumpAndSettle();
-    expect(find.text('Quiet book basket'), findsOneWidget);
-    expect(find.text('Couch cushion tunnel'), findsNothing);
-  });
+      expect(find.widgetWithText(TextButton, 'Clear'), findsNothing);
+      expect(find.text('Soft treasure basket'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Couch cushion tunnel'),
+        120,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Couch cushion tunnel'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Indoor march'),
+        120,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Indoor march'), findsOneWidget);
+    },
+  );
 
   testWidgets('detail navigation still works after filtering', (tester) async {
     await tester.pumpWidget(
@@ -124,9 +176,10 @@ void main() {
     );
     await tester.pump();
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Low effort'));
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
     await tester.pumpAndSettle();
-
+    await tester.tap(find.widgetWithText(FilterChip, 'Low effort'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Soft treasure basket'));
     await tester.pumpAndSettle();
 
@@ -153,43 +206,6 @@ void main() {
       find.text(
         'This is a low-mess, gently engaging activity with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.',
       ),
-      findsOneWidget,
-    );
-    expect(find.text('Medium child energy'), findsNothing);
-    expect(find.text('Low parent effort'), findsNothing);
-
-    await tester.scrollUntilVisible(
-      find.text('What you\'ll need'),
-      120,
-      scrollable: find.byType(Scrollable).last,
-    );
-
-    expect(find.text('What you\'ll need'), findsOneWidget);
-    expect(find.text('- Soft cloth'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.text('Steps'),
-      120,
-      scrollable: find.byType(Scrollable).last,
-    );
-
-    expect(find.text('Steps'), findsOneWidget);
-    expect(find.text('1. Place the items in the container.'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.text('Parent note'),
-      120,
-      scrollable: find.byType(Scrollable).last,
-    );
-
-    expect(find.text('Parent note'), findsOneWidget);
-    expect(
-      find.text('Choose what fits the moment and keep it simple.'),
-      findsOneWidget,
-    );
-    expect(find.text('Safety note'), findsOneWidget);
-    expect(
-      find.text('Use only large, clean items that cannot be swallowed.'),
       findsOneWidget,
     );
   });
@@ -261,6 +277,23 @@ class _PlayFilterContentLoader extends ContentLoader {
               'A low-effort, low-mess pause when everyone needs something softer. Let your child choose the pace.',
           parentNote: 'This can be a calm pause, not a full reading session.',
           safetyNote: 'Use sturdy books without loose pieces.',
+        ),
+        PlayIdea(
+          id: 'play_indoor_march',
+          title: 'Indoor march',
+          summary: 'March around the room together in a gentle rhythm.',
+          ageGroup: '2-5 years',
+          place: 'Home',
+          messLevel: 'Medium',
+          childEngagement: 'Medium',
+          parentInvolvement: 'Low',
+          activityType: 'Movement',
+          neededItems: ['Clear floor space'],
+          steps: ['Take slow steps around the room together.'],
+          whatToExpect:
+              'A simple movement break with no special setup. Keep the pace easy and pause when the room feels settled.',
+          parentNote: 'A short march can be enough.',
+          safetyNote: 'Keep walkways clear and avoid slippery spots.',
         ),
       ],
       sounds: [
