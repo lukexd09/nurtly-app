@@ -107,7 +107,7 @@ class _HomeHero extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  'No pressure. Just a softer place to begin.',
+                  'No pressure, no streaks, no goals — just a softer place to begin.',
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.secondary,
                   ),
