@@ -5,7 +5,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/tappable_nurtly_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -18,7 +17,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.lg,
+      ),
       children: [
         _HomeHero(
           onTap: () => onSelectTab(AppTab.play),
@@ -64,28 +68,28 @@ class _HomeHero extends StatelessWidget {
             Color(0xFF5F735E),
           ],
         ),
-        borderRadius: AppRadii.panelRadius,
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withAlpha(34),
-            blurRadius: 28,
-            offset: const Offset(0, 16),
+            blurRadius: 32,
+            offset: const Offset(0, 18),
           ),
         ],
+        borderRadius: BorderRadius.circular(36),
       ),
       child: Stack(
         children: [
           const Positioned(
-            right: -26,
-            top: -24,
+            right: -34,
+            top: -10,
             child: Icon(
               Icons.spa_outlined,
               color: Color(0x33E8DCC8),
-              size: 118,
+              size: 150,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.xl),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -94,56 +98,86 @@ class _HomeHero extends StatelessWidget {
                   color: AppColors.secondary,
                   size: 24,
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.xl),
                 Text(
                   'Start with one small moment',
-                  style: AppTextStyles.display.copyWith(
+                  style: const TextStyle(
+                    fontSize: 34,
+                    height: 1.25,
+                    fontWeight: FontWeight.w800,
                     color: AppColors.surfaceBright,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.md),
                 Text(
                   'Choose a gentle idea, save a quiet note, or add a calming sound when the day feels full.',
-                  style: AppTextStyles.body.copyWith(
+                  style: const TextStyle(
+                    fontSize: 17,
+                    height: 1.45,
+                    fontWeight: FontWeight.w400,
                     color: AppColors.primarySoft,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.surface,
-                    foregroundColor: AppColors.primary,
-                    elevation: 0,
-                    minimumSize: const Size.fromHeight(52),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.md,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadii.chipRadius,
-                    ),
-                  ),
+                const SizedBox(height: AppSpacing.xl),
+                _HeroPillButton(
                   onPressed: onTap,
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Find a play idea'),
-                      SizedBox(width: AppSpacing.sm),
-                      Icon(Icons.arrow_forward, size: 18),
-                    ],
-                  ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'No pressure, no streaks, no goals — just a softer place to begin.',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.secondary,
+                const SizedBox(height: AppSpacing.xl),
+                Center(
+                  child: Text(
+                    'NO PRESSURE, NO STREAKS, NO GOALS',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.secondary.withAlpha(190),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.6,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HeroPillButton extends StatelessWidget {
+  const _HeroPillButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surfaceBright,
+      borderRadius: AppRadii.chipRadius,
+      child: InkWell(
+        borderRadius: AppRadii.chipRadius,
+        onTap: onPressed,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 64),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  'Find a play idea',
+                  style: TextStyle(
+                    fontSize: 18,
+                    height: 1.2,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              SizedBox(width: AppSpacing.md),
+              Icon(Icons.arrow_forward, color: AppColors.primary, size: 22),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -160,22 +194,30 @@ class _GentleStartCard extends StatelessWidget {
       button: true,
       label: "Open today's idea",
       child: Material(
-        color: AppColors.primarySoft,
+        color: AppColors.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: AppRadii.cardRadius,
+          borderRadius: AppRadii.panelRadius,
           side: const BorderSide(color: AppColors.borderSoft),
         ),
         child: InkWell(
-          borderRadius: AppRadii.cardRadius,
+          borderRadius: AppRadii.panelRadius,
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Row(
               children: [
-                const Icon(
-                  Icons.lightbulb_outline,
-                  color: AppColors.primary,
-                  size: 22,
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primarySoft,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.lightbulb_outline,
+                    color: AppColors.primary,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
@@ -204,9 +246,9 @@ class _GentleStartCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.md),
                 const Icon(
-                  Icons.arrow_forward,
-                  color: AppColors.primary,
-                  size: 20,
+                  Icons.chevron_right,
+                  color: AppColors.borderSoft,
+                  size: 26,
                 ),
               ],
             ),
@@ -232,39 +274,61 @@ class _HomeQuickLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TappableNurtlyCard(
-      semanticLabel: 'Open $title',
-      onTap: onTap,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: const BoxDecoration(
-              color: AppColors.primarySoft,
-              shape: BoxShape.circle,
+    return Semantics(
+      button: true,
+      label: 'Open $title',
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.surfaceBright,
+          borderRadius: AppRadii.panelRadius,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withAlpha(8),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-            child: Icon(icon, color: AppColors.primary, size: 21),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTextStyles.cardTitle),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(subtitle, style: AppTextStyles.caption),
-              ],
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: AppRadii.panelRadius,
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Row(
+                children: [
+                  Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: AppRadii.controlSmallRadius,
+                    ),
+                    child: Icon(icon, color: AppColors.primary, size: 24),
+                  ),
+                  const SizedBox(width: AppSpacing.lg),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: AppTextStyles.cardTitle),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(subtitle, style: AppTextStyles.body),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: AppColors.borderSoft,
+                    size: 26,
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.textMuted,
-            size: 16,
-          ),
-        ],
+        ),
       ),
     );
   }

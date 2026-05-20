@@ -53,10 +53,18 @@ class _AppShellState extends State<AppShell> {
         },
         backgroundColor: AppColors.surface,
         indicatorColor: AppColors.primarySoft,
+        indicatorShape: const StadiumBorder(),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return AppTextStyles.caption.copyWith(
+            color: selected ? AppColors.textPrimary : AppColors.textMuted,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          );
+        }),
         destinations: [
           for (final tab in AppTab.values)
             NavigationDestination(
-              icon: Icon(tab.icon),
+              icon: Icon(tab.icon, color: AppColors.textMuted),
               selectedIcon: Icon(
                 tab.selectedIcon,
                 color: AppColors.primary,
@@ -81,14 +89,22 @@ class _ShellTopBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg,
-          AppSpacing.xs,
-          AppSpacing.md,
-          AppSpacing.xs,
+          AppSpacing.sm,
+          AppSpacing.lg,
+          AppSpacing.sm,
         ),
         child: Row(
           children: [
-            const Text(appName, style: AppTextStyles.cardTitle),
-            const SizedBox(width: AppSpacing.sm),
+            const Text(
+              appName,
+              style: TextStyle(
+                fontSize: 22,
+                height: 1.2,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
                 currentTab == AppTab.home
@@ -96,20 +112,29 @@ class _ShellTopBar extends StatelessWidget {
                     : currentTab.label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.caption,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textMuted,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
-            IconButton(
-              tooltip: 'Privacy & Data',
-              color: AppColors.primary,
-              icon: const Icon(Icons.privacy_tip_outlined),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const PrivacyDataScreen(),
-                  ),
-                );
-              },
+            Material(
+              color: AppColors.surface,
+              shape: const CircleBorder(
+                side: BorderSide(color: AppColors.borderSoft),
+              ),
+              child: IconButton(
+                tooltip: 'Privacy & Data',
+                color: AppColors.primary,
+                icon: const Icon(Icons.shield_outlined),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PrivacyDataScreen(),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
