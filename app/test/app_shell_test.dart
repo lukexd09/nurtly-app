@@ -16,6 +16,21 @@ void main() {
     expect(find.text('Soft treasure basket'), findsNothing);
   });
 
+  testWidgets('Home adapts on compact phone height', (tester) async {
+    await _pumpNurtlyApp(tester, size: const Size(375, 667));
+
+    expect(find.text('Start with one small moment'), findsOneWidget);
+    expect(find.text('Find a play idea'), findsOneWidget);
+
+    final journalAction = find.text('Save a small note');
+    await tester.scrollUntilVisible(journalAction, 80);
+    expect(journalAction, findsOneWidget);
+
+    final soundsAction = find.text('Start a calming sound');
+    await tester.scrollUntilVisible(soundsAction, 80);
+    expect(soundsAction, findsOneWidget);
+  });
+
   testWidgets('Home quick link navigates to Play', (tester) async {
     await _pumpNurtlyApp(tester);
 
@@ -67,8 +82,11 @@ void main() {
   });
 }
 
-Future<void> _pumpNurtlyApp(WidgetTester tester) async {
-  tester.view.physicalSize = const Size(600, 1200);
+Future<void> _pumpNurtlyApp(
+  WidgetTester tester, {
+  Size size = const Size(600, 1200),
+}) async {
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
