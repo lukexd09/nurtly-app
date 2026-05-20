@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "packageId": "nurtly_sample_content",
-    "version": "0.1.0",
+    "packageId": "nurtly-core-en",
+    "version": "1.0.0",
     "locale": "en",
     "publishedAt": "2026-05-18"
   },
@@ -102,7 +102,7 @@
       "summary": "Look outside and talk about what you notice.",
       "ageGroup": "18 months-3 years",
       "place": "Window",
-      "messLevel": "None",
+      "messLevel": "Low",
       "childEngagement": "Low",
       "parentInvolvement": "Medium",
       "activityType": "Language",
@@ -167,7 +167,7 @@
       "summary": "Set out a small basket of books for a calm shared pause.",
       "ageGroup": "0-5 years",
       "place": "Any quiet spot",
-      "messLevel": "None",
+      "messLevel": "Low",
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",

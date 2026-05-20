@@ -6,7 +6,7 @@ import 'content_package.dart';
 
 class ContentLoader {
   const ContentLoader({
-    this.assetPath = 'assets/content/published_content_sample.json',
+    this.assetPath = 'assets/content/nurtly_content_en_v1.json',
   });
 
   final String assetPath;
