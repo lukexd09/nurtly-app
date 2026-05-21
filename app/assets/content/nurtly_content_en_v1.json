@@ -2,7 +2,7 @@
   "metadata": {
     "packageId": "nurtly-core-en",
     "schemaVersion": 1,
-    "version": "1.5.0",
+    "version": "1.5.1",
     "locale": "en",
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
@@ -28,8 +28,8 @@
         "Sit nearby and let your child choose what to touch.",
         "Name textures calmly as they explore."
       ],
-      "whatToExpect": "A low-mess, gently engaging moment with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.",
-      "parentNote": "Choose what fits the moment and keep it simple.",
+      "whatToExpect": "A low-mess, gently engaging pause with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.",
+      "parentNote": "Use only what feels easy to gather; two textures can be plenty.",
       "safetyNote": "Use only large, clean items that cannot be swallowed.",
       "contexts": [
         "home",
@@ -157,8 +157,8 @@
         "Point to one thing you notice outside.",
         "Use short calm words like cloudy, bright, windy, or quiet."
       ],
-      "whatToExpect": "A quiet, low-mess pause for a full day. Offer a few words, follow your child's attention, and let the moment stay brief.",
-      "parentNote": "A short moment is enough.",
+      "whatToExpect": "A quiet, low-mess pause for a full day. Offer a few words, follow your child's attention, and let the window do most of the work.",
+      "parentNote": "Even thirty seconds of noticing can soften the pace.",
       "safetyNote": "Keep windows locked and supervise closely.",
       "contexts": [
         "home",
@@ -189,8 +189,8 @@
         "Invite your child to peel each sticker and move it somewhere new.",
         "Talk about where each sticker lands."
       ],
-      "whatToExpect": "It can hold attention for a few playful minutes and may leave small paper bits behind. Set out only a few stickers so the activity stays light.",
-      "parentNote": "Use only a few stickers so the activity stays simple.",
+      "whatToExpect": "A focused table moment with a little peel-and-place curiosity. Set out only a few stickers so the activity stays light.",
+      "parentNote": "Starting with two or three stickers keeps the choice gentle.",
       "safetyNote": "Use large stickers and keep small backing pieces out of reach.",
       "contexts": [
         "home",
@@ -221,8 +221,8 @@
         "Hold your child's hand if they want support.",
         "Try stepping, crawling, or moving a soft toy along the path."
       ],
-      "whatToExpect": "A more active idea for a moment when you can join in closely. Keep the path short so the play feels fun instead of like a big setup.",
-      "parentNote": "Keep the path short and adjust it to the space you have.",
+      "whatToExpect": "A more active idea for a moment when you can join in closely. Keep the path short so it feels playful, not like a big setup.",
+      "parentNote": "Adjust the path to your energy and the space you already have.",
       "safetyNote": "Use a clear floor area and stop if pillows start to slide.",
       "contexts": [
         "home",
@@ -285,8 +285,8 @@
         "Hold the scarf near your face and lower it slowly.",
         "Pause, smile, and repeat only while it feels welcome."
       ],
-      "whatToExpect": "This is a soft, low-mess way to share attention without much setup. Keep your voice gentle and stop whenever your baby seems ready for a break.",
-      "parentNote": "A few slow peeks can be enough.",
+      "whatToExpect": "A soft, low-mess way to share attention with almost no preparation. Keep your voice gentle and stop whenever your baby seems ready for a break.",
+      "parentNote": "One slow peek can be just right.",
       "safetyNote": "Keep fabric away from your baby's nose and mouth and supervise closely.",
       "contexts": [
         "home",
@@ -317,8 +317,8 @@
         "Show one lid and wonder aloud where it might fit.",
         "Let your child try matches, stack pieces, or simply explore."
       ],
-      "whatToExpect": "This is a quiet practical-life idea with easy cleanup. It can stay simple even if the matching turns into stacking or sorting.",
-      "parentNote": "There is no need for the matches to be perfect.",
+      "whatToExpect": "A quiet kitchen activity with easy cleanup. Matching may turn into stacking or sorting, and that still fits the moment.",
+      "parentNote": "Let the containers be interesting without needing a correct answer.",
       "safetyNote": "Use clean, lightweight items without sharp edges or small loose parts.",
       "contexts": [
         "kitchen",
@@ -350,7 +350,7 @@
         "Place one small toy at the start of the road.",
         "Invite your child to move the toy slowly, quickly, or around a bend."
       ],
-      "whatToExpect": "This is a low-mess pretend setup that can last one minute or longer. You can narrate softly, then let your child take the story wherever it goes.",
+      "whatToExpect": "A low-mess pretend setup that can last one minute or longer. Narrate softly, then let your child take the road wherever it goes.",
       "parentNote": "A towel can become a road, river, bridge, or path.",
       "safetyNote": "Keep the towel flat so it does not become a tripping spot.",
       "contexts": [
@@ -381,8 +381,8 @@
         "Make the puppet say hello in a soft voice.",
         "Pause and let your child answer, point, or simply watch."
       ],
-      "whatToExpect": "This is a small connection moment that works best with your gentle participation. Keep the voice simple and follow your child's response.",
-      "parentNote": "The puppet does not need a story; a hello is enough.",
+      "whatToExpect": "A small connection moment shaped by your gentle participation. Keep the voice simple and follow your child's response.",
+      "parentNote": "The puppet does not need a story; a tiny hello is enough.",
       "safetyNote": "Use a clean sock without loose threads or small decorations.",
       "contexts": [
         "home",
@@ -413,7 +413,7 @@
         "Try a quiet version and a slightly bigger version.",
         "Rest when the movement feels done."
       ],
-      "whatToExpect": "This offers movement without needing a big setup. Join for a few rounds, then let the pace soften when the room feels ready.",
+      "whatToExpect": "A movement idea that does not need a big setup. Join for a few rounds, then let the pace soften when the room feels ready.",
       "parentNote": "Quiet animals can still be playful.",
       "safetyNote": "Clear the floor and avoid fast movement near furniture.",
       "contexts": [
@@ -447,7 +447,7 @@
         "Let your child make lines, dots, or soft shapes.",
         "Watch the marks fade as they dry."
       ],
-      "whatToExpect": "This feels creative without paint or lasting cleanup. Stay close with the water bowl and keep the activity small.",
+      "whatToExpect": "Creative, temporary marks without paint or lasting cleanup. Stay close with the water bowl and keep the activity small.",
       "parentNote": "Fading marks can be part of the calm rhythm.",
       "safetyNote": "Use only a little water and choose a non-slippery surface.",
       "contexts": [
@@ -481,7 +481,7 @@
         "Invite your child to move items to the other cup.",
         "Pause whenever the table needs a quick reset."
       ],
-      "whatToExpect": "This is a focused table activity with a little cleanup possible. Use only a handful of items so it stays manageable.",
+      "whatToExpect": "A focused table activity where a little cleanup may happen. Use only a handful of items so it stays manageable.",
       "parentNote": "Spills are part of the activity and can be kept small.",
       "safetyNote": "Choose items that are safe for your child's age and supervise closely.",
       "contexts": [
@@ -515,7 +515,7 @@
         "Use simple words like soft, warm, smooth, or bumpy.",
         "Let your child touch, hold, or look."
       ],
-      "whatToExpect": "This is a gentle sensory pause with almost no setup. A few calm words are enough, and the laundry can go right back afterward.",
+      "whatToExpect": "A gentle sensory pause with almost no setup. Name one or two textures, then let the laundry return to the day.",
       "parentNote": "You can do this while folding or sitting nearby.",
       "safetyNote": "Avoid items with loose strings, buttons, or small parts.",
       "contexts": [
@@ -547,7 +547,7 @@
         "Point to one shadow and name it simply.",
         "Move your hand slowly and notice what changes."
       ],
-      "whatToExpect": "This is a quiet observation moment for a slower part of the day. Stay curious, keep it brief, and let your child decide what is interesting.",
+      "whatToExpect": "A quiet observation moment for a slower part of the day. Stay curious, keep it brief, and follow what your child notices.",
       "parentNote": "No setup is needed if the light is already there.",
       "safetyNote": "Avoid looking directly at bright sunlight.",
       "contexts": [
@@ -580,7 +580,7 @@
         "Let your child lift the blanket or point to the toy.",
         "Celebrate softly and try again if they want."
       ],
-      "whatToExpect": "This is a small shared moment with very little cleanup. Keep the hiding easy so it feels comforting rather than tricky.",
+      "whatToExpect": "A small shared rescue with very little cleanup. Keep the hiding easy so it feels comforting rather than tricky.",
       "parentNote": "The toy can stay partly visible.",
       "safetyNote": "Use a light blanket and keep fabric away from faces.",
       "contexts": [
@@ -614,8 +614,8 @@
         "Offer pretend cups or plates.",
         "Ask what the animals might like today."
       ],
-      "whatToExpect": "This is gentle pretend play with a cozy feeling. Join long enough to start the scene, then let your child lead the picnic.",
-      "parentNote": "One animal and one cup can be enough.",
+      "whatToExpect": "Gentle pretend play with a cozy feeling. Join long enough to start the scene, then let your child lead the picnic.",
+      "parentNote": "One animal and one cup can carry the whole picnic.",
       "safetyNote": "Use unbreakable cups and keep small pretend pieces away from younger children.",
       "contexts": [
         "home",
@@ -647,8 +647,8 @@
         "Put one item away together.",
         "Stop after the small reset feels done."
       ],
-      "whatToExpect": "This turns a tiny reset into a connected moment without pressure. Keep the number of items small so it feels doable.",
-      "parentNote": "The point is a softer transition, not a perfect room.",
+      "whatToExpect": "A tiny reset becomes a connected moment without pressure. Keep the number of items small so it feels doable.",
+      "parentNote": "Aim for a softer transition, not a perfect room.",
       "safetyNote": "Keep pathways clear and avoid rushing while carrying toys.",
       "contexts": [
         "home",
@@ -680,7 +680,7 @@
         "Offer one gentle hint if they want it.",
         "Open the bag together."
       ],
-      "whatToExpect": "This is a quiet curiosity moment with almost no cleanup. Keep the object familiar so the guessing stays light.",
+      "whatToExpect": "A quiet curiosity moment with almost no cleanup. Keep the object familiar so the guessing stays light.",
       "parentNote": "You can skip guessing and simply discover the object together.",
       "safetyNote": "Do not place the bag over anyone's head and use only safe objects.",
       "contexts": [
@@ -713,7 +713,7 @@
         "Pause and wait to see what they do.",
         "Roll it again if the moment still feels good."
       ],
-      "whatToExpect": "This is a low-mess connection idea with a steady rhythm. The pauses matter as much as the rolling.",
+      "whatToExpect": "A low-mess connection idea with a steady rhythm. The pauses matter as much as the rolling.",
       "parentNote": "Your child may watch, touch, or push the ball in their own way.",
       "safetyNote": "Use a soft ball and keep the floor clear.",
       "contexts": [
@@ -746,7 +746,7 @@
         "Pretend the blanket is a boat moving slowly.",
         "Name what you see on the gentle trip."
       ],
-      "whatToExpect": "This is pretend play with a soft, contained setup. Join for the first idea, then let the boat stay as simple as your child wants.",
+      "whatToExpect": "Pretend play feels soft and contained here. Join for the first idea, then let the boat stay as simple as your child wants.",
       "parentNote": "The boat can stay still; imagination can do the moving.",
       "safetyNote": "Keep the blanket flat and do not pull a child on it.",
       "contexts": [
@@ -778,7 +778,7 @@
         "Pause and let your child look or copy.",
         "End after a few faces."
       ],
-      "whatToExpect": "This is a brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
+      "whatToExpect": "A brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
       "parentNote": "Two faces can be plenty.",
       "safetyNote": "Keep your child steady and away from wet or slippery areas.",
       "contexts": [
@@ -816,7 +816,7 @@
         "Invite your child to step, crawl, or pat the path at their own pace."
       ],
       "whatToExpect": "A soft movement idea with almost no setup or cleanup. Keep the path short, pause often, and let the rhythm stay gentle.",
-      "parentNote": "A few calm steps are enough if the day already feels full.",
+      "parentNote": "A short path can help the day move without asking much from you.",
       "safetyNote": "Keep towels flat so they do not slide or bunch under little feet.",
       "ageRangeMonths": {
         "min": 12,
@@ -846,7 +846,7 @@
         "Pause so your child can look before knocking it down.",
         "Build it again only if the moment still feels fun."
       ],
-      "whatToExpect": "This can bring a quick burst of energy without turning into a big activity. Keep the tower low and the reset simple.",
+      "whatToExpect": "A quick burst of energy can still stay small. Keep the tower low and the reset simple.",
       "parentNote": "Stopping after one or two towers still counts as a good moment.",
       "safetyNote": "Use soft blocks only and keep the tower low enough to stay safe if it tips.",
       "ageRangeMonths": {
@@ -909,9 +909,9 @@
         "Show a slow pour into the second cup.",
         "Let your child try pouring, filling, and pouring again."
       ],
-      "whatToExpect": "This keeps bath time focused on one simple action instead of lots of stimulation. A little splashing is normal, so keep the setup small.",
-      "parentNote": "One or two cups are enough to make the moment feel new.",
-      "safetyNote": "Stay within arms reach in the bath and keep the floor dry around the tub.",
+      "whatToExpect": "Bath time can focus on one simple action instead of lots of stimulation. A little splashing is normal, so keep the setup small.",
+      "parentNote": "One cup may be enough to give bath time a fresh rhythm.",
+      "safetyNote": "Stay within arm's reach in the bath and keep the floor dry around the tub.",
       "ageRangeMonths": {
         "min": 18,
         "max": 48
@@ -941,7 +941,7 @@
         "Place one pillow nearby as a safe landing spot.",
         "Invite your child to climb, sit, and imagine a tiny island story."
       ],
-      "whatToExpect": "This brings pretend play to a familiar space without much setup. Stay close enough to guide the movement and let the story stay simple.",
+      "whatToExpect": "Pretend play in a familiar space with only a little setup. Stay close enough to guide the movement and let the story stay simple.",
       "parentNote": "A short island story can feel just as satisfying as a long one.",
       "safetyNote": "Keep movement slow and supervise closely around furniture edges.",
       "ageRangeMonths": {
@@ -975,8 +975,8 @@
         "Add one tiny bedtime step, like a cuddle or a yawn."
       ],
       "whatToExpect": "A calm pretend moment that can gently soften a busy part of the day. Keep the routine tiny so it feels comforting, not like a task.",
-      "parentNote": "This can help you ease into rest without adding pressure to bedtime.",
-      "safetyNote": "Use light fabric only and keep it away from a childs face during play.",
+      "parentNote": "Let the pretend routine be tiny; it does not need to mirror real bedtime.",
+      "safetyNote": "Use light fabric only and keep it away from a child's face during play.",
       "ageRangeMonths": {
         "min": 24,
         "max": 60
@@ -1005,7 +1005,7 @@
         "Point out one bird, flutter, or movement outdoors.",
         "Name only what you notice and let silence be part of the moment."
       ],
-      "whatToExpect": "This is a low-pressure pause for slower energy. You may only notice one thing, and that can still feel complete.",
+      "whatToExpect": "A low-pressure pause for slower energy. You may only notice one small thing, and that can be plenty.",
       "parentNote": "No birds today is fine; clouds, branches, or passing light still work.",
       "safetyNote": "Keep windows locked and supervise closely around window areas.",
       "ageRangeMonths": {
@@ -1037,9 +1037,9 @@
         "Drop one toy through and listen for it to land.",
         "Let your child take turns dropping and retrieving the toy."
       ],
-      "whatToExpect": "A tiny repeatable activity that feels new without much effort. Keep the pieces few so setup and cleanup stay easy.",
+      "whatToExpect": "A tiny repeatable activity that feels fresh with very little effort. Keep the pieces few so setup and cleanup stay easy.",
       "parentNote": "One roll and one toy can carry the whole activity.",
-      "safetyNote": "Use items large enough for your childs age and avoid cardboard edges that feel rough.",
+      "safetyNote": "Use items large enough for your child's age and avoid cardboard edges that feel rough.",
       "ageRangeMonths": {
         "min": 24,
         "max": 60
@@ -1069,7 +1069,7 @@
         "Pull out two at a time and notice color or size.",
         "Let your child pair them, stack them, or simply sort by feel."
       ],
-      "whatToExpect": "A familiar home task can turn into a calm shared moment with very little setup. It works even if the pairs stay imperfect.",
+      "whatToExpect": "A familiar home task can become a calm shared moment. It still works if the pairs stay imperfect.",
       "parentNote": "There is no need to correct every mismatch.",
       "safetyNote": "Use clean socks only and keep the basket light enough to move safely.",
       "ageRangeMonths": {
@@ -1100,7 +1100,7 @@
         "Hide it where part of it still peeks out.",
         "Invite your child to look, point, or pick it up."
       ],
-      "whatToExpect": "This keeps the challenge light and the cleanup almost nonexistent. Stay playful, and keep the hiding spots easy to reach.",
+      "whatToExpect": "A light search game with almost no cleanup. Keep the hiding spots easy to reach and let the toy be partly visible if that feels better.",
       "parentNote": "Seeing a little bit of the toy can make the game feel safer and sweeter.",
       "safetyNote": "Avoid hiding toys in high, tight, or hard-to-reach places.",
       "ageRangeMonths": {
@@ -1131,7 +1131,7 @@
         "March softly down the hallway once or twice.",
         "Add a wave, a turn, or a quiet hum if it feels fun."
       ],
-      "whatToExpect": "This offers movement for a transition moment without turning the house upside down. Keep it short and let the energy settle as you finish.",
+      "whatToExpect": "A short movement break for a transition moment. Keep the parade brief and let the energy settle as you finish.",
       "parentNote": "One lap can be plenty when the day already feels loud.",
       "safetyNote": "Keep the hallway clear and use soft voices if others are nearby.",
       "ageRangeMonths": {
@@ -1163,7 +1163,7 @@
         "Place a few safe items beside it.",
         "Invite your child to group them by color, size, or where they belong."
       ],
-      "whatToExpect": "This feels a little special without much extra work. You can keep the groups loose and let curiosity lead the sorting.",
+      "whatToExpect": "A familiar sorting moment that feels a little special on a blanket. Keep the groups loose and let curiosity lead.",
       "parentNote": "The blanket makes the moment feel new even if the items are ordinary.",
       "safetyNote": "Choose sturdy items without sharp edges or small loose pieces.",
       "ageRangeMonths": {
@@ -1195,7 +1195,7 @@
         "Show how to squeeze it over the ground or a bucket.",
         "Let your child soak, squeeze, and pause as they like."
       ],
-      "whatToExpect": "This is a contained sensory moment with a little splash and easy cleanup outdoors. A few squeezes are enough.",
+      "whatToExpect": "A contained sensory moment with a little splash and easy outdoor cleanup. Use a small amount of water and stop while it still feels good.",
       "parentNote": "Using just a small amount of water helps the activity stay light.",
       "safetyNote": "Choose a non-slippery surface and supervise around water.",
       "ageRangeMonths": {
@@ -1261,8 +1261,8 @@
         "Trace around the fingers slowly with a crayon or fingertip.",
         "Pause to notice the shape and trace once more if it feels good."
       ],
-      "whatToExpect": "This is a very simple quiet idea for a moment that needs soft edges. Keep it slow and let one tracing be enough.",
-      "parentNote": "You can trace in the air if paper feels like too much setup.",
+      "whatToExpect": "A very simple quiet idea for a moment that needs soft edges. Trace slowly and let one outline be enough.",
+      "parentNote": "Tracing in the air works too if paper feels like too much.",
       "safetyNote": "Use age-safe drawing tools and supervise closely with younger children.",
       "ageRangeMonths": {
         "min": 36,
@@ -1294,7 +1294,7 @@
         "Dip the cloth or sponge in a little water.",
         "Wipe the toys slowly and set them aside to dry."
       ],
-      "whatToExpect": "This gives practical-life play a sensory feel without a big mess. Use only a couple of toys so the moment stays manageable.",
+      "whatToExpect": "Practical-life play with a gentle sensory feel and a contained reset afterward. Use only a couple of toys so it stays manageable.",
       "parentNote": "The wiping matters more than getting the toys perfectly clean.",
       "safetyNote": "Use only a small amount of water and choose toys without batteries or electronics.",
       "ageRangeMonths": {
@@ -1325,7 +1325,7 @@
         "Show one simple fold in half.",
         "Let your child try folding, stacking, or smoothing them."
       ],
-      "whatToExpect": "This is a quiet helper activity with almost no setup. It works best when the napkins stay few and the mood stays easy.",
+      "whatToExpect": "A quiet helper activity with almost no preparation. A small stack keeps the rhythm calm and easy.",
       "parentNote": "Crooked folds are fine; the rhythm is more important than the result.",
       "safetyNote": "Use clean cloth or paper napkins and keep the area dry.",
       "ageRangeMonths": {
@@ -1356,7 +1356,7 @@
         "Make the sound once in a gentle voice.",
         "Pause to listen before choosing another animal."
       ],
-      "whatToExpect": "This keeps connection simple without letting the room get too loud. The pause between sounds helps it stay calm.",
+      "whatToExpect": "Connection stays simple when the sounds are gentle and spaced out. The pause between animals helps the moment stay calm.",
       "parentNote": "You can stop after one or two animals if that feels best.",
       "safetyNote": "Keep voices soft and avoid animal jumps or rough movement in small spaces.",
       "ageRangeMonths": {
@@ -1388,9 +1388,9 @@
         "Set it down and let your child explore in their own order.",
         "Put it away when the quiet moment feels finished."
       ],
-      "whatToExpect": "This offers novelty without more clutter or stimulation. Keep the basket small so the choice stays gentle.",
+      "whatToExpect": "A touch of novelty without more clutter or stimulation. Keep the basket small so the choice feels gentle.",
       "parentNote": "Rotating only one basket at a time helps the room feel calmer too.",
-      "safetyNote": "Use safe, familiar toys without loose parts for your childs age.",
+      "safetyNote": "Use safe, familiar toys without loose parts for your child's age.",
       "ageRangeMonths": {
         "min": 18,
         "max": 60
@@ -1422,8 +1422,8 @@
         "Name big and small once or twice.",
         "Let your child match, compare, or line them up."
       ],
-      "whatToExpect": "This is an easy home activity that stays light and tidy. You can guide a little, then step back and watch what your child notices.",
-      "parentNote": "Two simple pairs are enough to hold the idea together.",
+      "whatToExpect": "An easy home activity that stays light and tidy. Guide a little, then step back and watch what your child notices.",
+      "parentNote": "Two simple pairs are plenty to hold the idea together.",
       "safetyNote": "Use safe household items without sharp edges or breakable parts.",
       "ageRangeMonths": {
         "min": 24,
@@ -1454,8 +1454,8 @@
         "Bring one book inside or beside the blanket.",
         "Read a page or two, or simply sit together in the small space."
       ],
-      "whatToExpect": "This can feel cozy and special without needing much setup. Keep the cave open and airy so the moment stays comfortable.",
-      "parentNote": "Even looking at the cover together can be enough.",
+      "whatToExpect": "A cozy reading nook with only a little setup. Keep the cave open and airy so the moment stays comfortable.",
+      "parentNote": "Looking at the cover together can be enough for today.",
       "safetyNote": "Keep blankets light, openings visible, and never block a child inside the space.",
       "ageRangeMonths": {
         "min": 24,
@@ -1486,7 +1486,7 @@
         "Tap the spoon gently against your hand or sink edge.",
         "Watch the movement in the reflection and keep the sound soft."
       ],
-      "whatToExpect": "This is a tiny sensory-observation moment that works best with a gentle pace. One or two taps may be plenty.",
+      "whatToExpect": "A tiny sensory-observation moment that works best with a gentle pace. One or two soft taps may be plenty.",
       "parentNote": "Soft taps keep the activity interesting without making it sharp or loud.",
       "safetyNote": "Avoid tapping directly on glass and keep the area dry and supervised.",
       "ageRangeMonths": {
@@ -1518,7 +1518,7 @@
         "Invite your child to choose, serve, or pretend to sell one.",
         "Take turns asking for one simple thing from the shop."
       ],
-      "whatToExpect": "This is gentle pretend play that feels social without needing lots of props. Keep the choices few so the scene stays calm.",
+      "whatToExpect": "Gentle pretend play that feels social without needing many props. Keep the choices few so the scene stays calm.",
       "parentNote": "You can let your child lead the whole shop after the first turn.",
       "safetyNote": "Use unbreakable cups and keep the play surface stable.",
       "ageRangeMonths": {
@@ -1549,9 +1549,9 @@
         "Pick up or point to one leaf at a time.",
         "Notice color, size, or texture together without rushing."
       ],
-      "whatToExpect": "This is a calm outside pause that works well when energy is low. A minute or two of noticing can be enough.",
-      "parentNote": "The quietness of the moment is part of what makes it useful.",
-      "safetyNote": "Stay on safe ground and avoid plants you do not recognize well.",
+      "whatToExpect": "A calm outside pause for lower-energy moments. A minute or two of noticing can be enough.",
+      "parentNote": "The quiet pace is part of what makes this useful.",
+      "safetyNote": "Stay on safe ground and avoid unfamiliar plants.",
       "ageRangeMonths": {
         "min": 18,
         "max": 60
@@ -1581,9 +1581,9 @@
         "Invite your child to scoop or lift it out.",
         "Let the toy go back in and rescue it again if they want."
       ],
-      "whatToExpect": "This keeps bath play simple and focused without adding lots of toys. Expect a little splash and an easy reset.",
+      "whatToExpect": "Bath play stays simple and focused with one toy at a time. Expect a little splash and an easy reset.",
       "parentNote": "One toy is enough to make the rescue feel real.",
-      "safetyNote": "Stay within arms reach in the bath and keep water play small.",
+      "safetyNote": "Stay within arm's reach in the bath and keep water play small.",
       "ageRangeMonths": {
         "min": 18,
         "max": 48
@@ -1613,8 +1613,8 @@
         "Show one slow wiping motion.",
         "Let your child wipe a little, then stop while it still feels good."
       ],
-      "whatToExpect": "This turns a tiny household task into a steady, connected moment. Keeping the surface small helps it stay calming instead of becoming work.",
-      "parentNote": "A few wipes are enough to make the helper role feel real.",
+      "whatToExpect": "A tiny household task can become a steady, connected moment. Keeping the surface small helps it feel calming instead of like work.",
+      "parentNote": "A few slow wipes can make the helper role feel real.",
       "safetyNote": "Use only water or a plain damp cloth and avoid cleaning products during play.",
       "ageRangeMonths": {
         "min": 18,
