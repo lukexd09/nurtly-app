@@ -11,6 +11,7 @@ class PlayIdea {
     required this.childEngagement,
     required this.parentInvolvement,
     required this.activityType,
+    required this.contexts,
     required this.neededItems,
     required this.steps,
     required this.whatToExpect,
@@ -27,6 +28,7 @@ class PlayIdea {
   final String childEngagement;
   final String parentInvolvement;
   final String activityType;
+  final List<String> contexts;
   final List<String> neededItems;
   final List<String> steps;
   final String whatToExpect;
@@ -44,6 +46,7 @@ class PlayIdea {
       childEngagement: readString(json, 'childEngagement'),
       parentInvolvement: readString(json, 'parentInvolvement'),
       activityType: readString(json, 'activityType'),
+      contexts: readStringList(json, 'contexts'),
       neededItems: readStringList(json, 'neededItems'),
       steps: readStringList(json, 'steps'),
       whatToExpect: readString(json, 'whatToExpect'),
