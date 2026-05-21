@@ -31,26 +31,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('sound-player-status')), findsOneWidget);
-    expect(find.text('READY'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('sound-player-safety-note')),
-      120,
-    );
-    await tester.pump();
-
+    expect(find.text('Ready'), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-progress')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-controls')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
-    expect(
-        find.byKey(const ValueKey('sound-player-safety-note')), findsOneWidget);
     expect(find.text('Stop'), findsOneWidget);
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
     expect(find.text('free'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Keep volume comfortable and device away from child.'),
+      120,
+    );
+    await tester.pump();
+
     expect(find.text('Keep volume comfortable and device away from child.'),
         findsOneWidget);
     expect(find.textContaining('placeholder'), findsNothing);

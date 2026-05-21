@@ -179,28 +179,39 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       if (_player.audioSource == null) {
         await _player.setAsset(widget.sound.assetPath);
       }
-      await _player.play();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _isLoading = false;
+      });
+      unawaited(
+        _player.play().catchError((Object _) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _errorMessage = 'Could not play this sound.';
+          });
+        }),
+      );
     } catch (_) {
       if (!mounted) {
         return;
       }
       setState(() {
-        _errorMessage = 'Could not play this sound';
+        _errorMessage = 'Could not play this sound.';
+        _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not play this sound')),
+        const SnackBar(content: Text('Could not play this sound.')),
       );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
     }
   }
 
   Future<void> _stop() async {
-    await _player.stop();
+    await _player.pause();
+    await _player.seek(Duration.zero);
     if (mounted) {
       setState(() {});
     }
@@ -208,59 +219,68 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   String _statusText() {
     if (_errorMessage != null) {
-      return 'COULD NOT PLAY';
+      return 'Could not play';
     }
     if (_isLoading) {
-      return 'LOADING';
+      return 'Loading';
     }
     if (_player.playing) {
-      return 'NOW PLAYING';
+      return 'Playing';
+    }
+    if (_player.position == Duration.zero) {
+      return 'Ready';
     }
     if (_player.processingState == ProcessingState.ready) {
-      return 'PAUSED';
+      return 'Paused';
     }
-    return 'READY';
+    return 'Ready';
   }
 
-  String _playPauseLabel() {
-    if (_player.playing) {
-      return 'Pause';
-    }
-    return 'Play';
+  String _formatDuration(Duration duration) {
+    final totalSeconds = duration.inSeconds.clamp(0, 359999);
+    final minutes = totalSeconds ~/ 60;
+    final seconds = totalSeconds % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
-  Duration _safeDuration() {
-    final value = _player.duration;
-    if (value == null || value.inMilliseconds <= 0) {
+  Duration _durationOrZero() {
+    final duration = _player.duration;
+    if (duration == null || duration.inMilliseconds <= 0) {
       return Duration.zero;
     }
-    return value;
+    return duration;
   }
 
-  String _formatTime(Duration value) {
-    final seconds = value.inSeconds.clamp(0, 359999);
-    final minutesPart = seconds ~/ 60;
-    final secondsPart = seconds % 60;
-    return '${minutesPart.toString()}:${secondsPart.toString().padLeft(2, '0')}';
+  Future<void> _seekToFraction(double value) async {
+    final duration = _durationOrZero();
+    if (duration == Duration.zero) {
+      return;
+    }
+    final target = Duration(
+      milliseconds: (duration.inMilliseconds * value).round(),
+    );
+    await _player.seek(target);
   }
 
   Widget _buildStatusBadge() {
-    return Container(
-      key: const ValueKey('sound-player-status'),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.primarySoft,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        _statusText(),
-        style: AppTextStyles.caption.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.4,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        key: const ValueKey('sound-player-status'),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.primarySoft,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          _statusText(),
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
@@ -295,13 +315,15 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                   top: 24,
                   left: 22,
                   child: _VisualDot(
-                      color: AppColors.primary.withValues(alpha: 0.20)),
+                    color: AppColors.primary.withValues(alpha: 0.20),
+                  ),
                 ),
                 Positioned(
                   right: 26,
                   bottom: 20,
                   child: _VisualDot(
-                      color: AppColors.primary.withValues(alpha: 0.12)),
+                    color: AppColors.primary.withValues(alpha: 0.12),
+                  ),
                 ),
                 const Center(
                   child: Icon(
@@ -319,44 +341,57 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           Text(widget.sound.summary, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.sm),
           _SoundMetadata(sound: widget.sound),
+          const SizedBox(height: AppSpacing.lg),
+          _buildProgressControl(),
         ],
       ),
     );
   }
 
-  Widget _buildProgress() {
+  Widget _buildProgressControl() {
     return StreamBuilder<Duration>(
       stream: _player.positionStream,
       initialData: Duration.zero,
       builder: (context, snapshot) {
+        final duration = _durationOrZero();
         final position = snapshot.data ?? Duration.zero;
-        final duration = _safeDuration();
-        final progress = duration == Duration.zero
-            ? 0.0
-            : (position.inMilliseconds / duration.inMilliseconds)
-                .clamp(0.0, 1.0);
-        final durationLabel =
-            duration == Duration.zero ? '--:--' : _formatTime(duration);
+        final canSeek = duration != Duration.zero;
+        final value = canSeek
+            ? (position.inMilliseconds / duration.inMilliseconds)
+                .clamp(0.0, 1.0)
+            : 0.0;
+        final durationLabel = canSeek ? _formatDuration(duration) : '--:--';
 
         return Column(
           key: const ValueKey('sound-player-progress'),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(999),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 8,
-                backgroundColor: AppColors.borderSoft,
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackHeight: 8,
+                thumbShape: const RoundSliderThumbShape(
+                  enabledThumbRadius: 8,
+                  disabledThumbRadius: 8,
+                ),
+                overlayShape: const RoundSliderOverlayShape(
+                  overlayRadius: 18,
+                ),
+                activeTrackColor: AppColors.primary,
+                inactiveTrackColor: AppColors.borderSoft,
+                thumbColor: AppColors.primary,
+                disabledActiveTrackColor: AppColors.borderSoft,
+                disabledInactiveTrackColor: AppColors.borderSoft,
+              ),
+              child: Slider(
+                value: value,
+                onChanged: canSeek ? (_) {} : null,
+                onChangeEnd: canSeek ? _seekToFraction : null,
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(_formatTime(position), style: AppTextStyles.caption),
+                Text(_formatDuration(position), style: AppTextStyles.caption),
                 Text(durationLabel, style: AppTextStyles.caption),
               ],
             ),
@@ -367,6 +402,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildControls() {
+    final isPlaying = _player.playing;
     return Column(
       key: const ValueKey('sound-player-controls'),
       children: [
@@ -375,7 +411,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           height: 86,
           child: FilledButton(
             key: const ValueKey('sound-player-primary-control'),
-            onLongPress: null,
             style: FilledButton.styleFrom(
               shape: const CircleBorder(),
               backgroundColor: AppColors.primary,
@@ -384,11 +419,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             ),
             onPressed: _togglePlayPause,
             child: Tooltip(
-              message: _playPauseLabel(),
+              message: isPlaying ? 'Pause' : 'Play',
               child: Icon(
-                _playPauseLabel() == 'Pause'
-                    ? Icons.pause_rounded
-                    : Icons.play_arrow_rounded,
+                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
                 size: 44,
               ),
             ),
@@ -424,8 +457,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             _buildStatusBadge(),
             const SizedBox(height: AppSpacing.lg),
             _buildPlayerCard(),
-            const SizedBox(height: AppSpacing.lg),
-            _buildProgress(),
             const SizedBox(height: AppSpacing.lg),
             _buildControls(),
             const SizedBox(height: AppSpacing.lg),
