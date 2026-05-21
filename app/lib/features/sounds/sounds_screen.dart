@@ -137,6 +137,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   late final StreamSubscription<PlayerState> _playerSubscription;
   bool _isLoading = false;
   String? _errorMessage;
+  double? _draggingProgress;
 
   @override
   void initState() {
@@ -160,6 +161,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   Future<void> _togglePlayPause() async {
     if (_isLoading) {
       return;
+    }
+
+    if (_errorMessage != null && mounted) {
+      setState(() {
+        _errorMessage = null;
+      });
     }
 
     if (_player.playing) {
@@ -186,22 +193,29 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         _isLoading = false;
       });
       unawaited(
-        _player.play().catchError((Object _) {
+        _player.play().catchError((Object _) async {
+          await _player.pause();
+          await _player.seek(Duration.zero);
           if (!mounted) {
             return;
           }
           setState(() {
-            _errorMessage = 'Could not play this sound.';
+            _errorMessage = 'Could not play';
+            _isLoading = false;
+            _draggingProgress = null;
           });
         }),
       );
     } catch (_) {
+      await _player.pause();
+      await _player.seek(Duration.zero);
       if (!mounted) {
         return;
       }
       setState(() {
-        _errorMessage = 'Could not play this sound.';
+        _errorMessage = 'Could not play';
         _isLoading = false;
+        _draggingProgress = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Could not play this sound.')),
@@ -213,7 +227,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     await _player.pause();
     await _player.seek(Duration.zero);
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _draggingProgress = null;
+        _errorMessage = null;
+      });
     }
   }
 
@@ -354,7 +371,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       initialData: Duration.zero,
       builder: (context, snapshot) {
         final duration = _durationOrZero();
-        final position = snapshot.data ?? Duration.zero;
+        final position = _draggingProgress != null
+            ? Duration(
+                milliseconds:
+                    (duration.inMilliseconds * _draggingProgress!).round(),
+              )
+            : snapshot.data ?? Duration.zero;
         final canSeek = duration != Duration.zero;
         final value = canSeek
             ? (position.inMilliseconds / duration.inMilliseconds)
@@ -384,8 +406,23 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
               ),
               child: Slider(
                 value: value,
-                onChanged: canSeek ? (_) {} : null,
-                onChangeEnd: canSeek ? _seekToFraction : null,
+                onChanged: canSeek
+                    ? (value) {
+                        setState(() {
+                          _draggingProgress = value;
+                        });
+                      }
+                    : null,
+                onChangeEnd: canSeek
+                    ? (value) async {
+                        await _seekToFraction(value);
+                        if (mounted) {
+                          setState(() {
+                            _draggingProgress = null;
+                          });
+                        }
+                      }
+                    : null,
               ),
             ),
             Row(
