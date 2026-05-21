@@ -71,6 +71,13 @@ class PlayFilterRule {
   }
 
   bool matches(PlayIdea idea) {
+    if (field == 'contexts') {
+      return switch (operator) {
+        'contains' => idea.contexts.contains(value),
+        _ => false,
+      };
+    }
+
     final source = _readFieldValue(idea, field);
     if (source == null) {
       return false;

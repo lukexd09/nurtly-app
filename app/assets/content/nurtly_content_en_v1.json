@@ -2,7 +2,7 @@
   "metadata": {
     "packageId": "nurtly-core-en",
     "schemaVersion": 1,
-    "version": "1.2.0",
+    "version": "1.3.0",
     "locale": "en",
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
@@ -30,7 +30,13 @@
       ],
       "whatToExpect": "A low-mess, gently engaging moment with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.",
       "parentNote": "Choose what fits the moment and keep it simple.",
-      "safetyNote": "Use only large, clean items that cannot be swallowed."
+      "safetyNote": "Use only large, clean items that cannot be swallowed.",
+      "contexts": [
+        "home",
+        "baby",
+        "sensory",
+        "low_setup"
+      ]
     },
     {
       "id": "play_couch_cushion_tunnel",
@@ -53,7 +59,12 @@
       ],
       "whatToExpect": "Expect more movement and a little room reset afterward. Join for a few minutes, then keep the tunnel as simple as your space allows.",
       "parentNote": "A short setup can turn familiar furniture into a fresh play space.",
-      "safetyNote": "Keep the tunnel low, stable, and away from sharp furniture edges."
+      "safetyNote": "Keep the tunnel low, stable, and away from sharp furniture edges.",
+      "contexts": [
+        "home",
+        "toddler",
+        "movement"
+      ]
     },
     {
       "id": "play_kitchen_spoon_rhythm",
@@ -77,7 +88,12 @@
       ],
       "whatToExpect": "It can become lively, but the setup stays small and easy to put away. Keep the rhythm soft and join only as much as feels good.",
       "parentNote": "Keep the sound level comfortable for everyone nearby.",
-      "safetyNote": "Use sturdy, clean items and supervise while your child holds the spoon."
+      "safetyNote": "Use sturdy, clean items and supervise while your child holds the spoon.",
+      "contexts": [
+        "kitchen",
+        "toddler",
+        "movement"
+      ]
     },
     {
       "id": "play_laundry_color_sorting",
@@ -100,7 +116,12 @@
       ],
       "whatToExpect": "A low-mess way to turn a familiar chore into a small shared moment. Stay close, name what you notice, and let the sorting stay imperfect.",
       "parentNote": "It is fine if the sorting is imperfect; keep the moment easy.",
-      "safetyNote": "Avoid items with loose cords, small parts, or laundry products nearby."
+      "safetyNote": "Avoid items with loose cords, small parts, or laundry products nearby.",
+      "contexts": [
+        "home",
+        "practical_life",
+        "low_setup"
+      ]
     },
     {
       "id": "play_window_weather_watch",
@@ -122,7 +143,12 @@
       ],
       "whatToExpect": "A quiet, low-mess pause for a full day. Offer a few words, follow your child's attention, and let the moment stay brief.",
       "parentNote": "A short moment is enough.",
-      "safetyNote": "Keep windows locked and supervise closely."
+      "safetyNote": "Keep windows locked and supervise closely.",
+      "contexts": [
+        "home",
+        "quiet",
+        "transition"
+      ]
     },
     {
       "id": "play_sticker_rescue",
@@ -145,7 +171,12 @@
       ],
       "whatToExpect": "It can hold attention for a few playful minutes and may leave small paper bits behind. Set out only a few stickers so the activity stays light.",
       "parentNote": "Use only a few stickers so the activity stays simple.",
-      "safetyNote": "Use large stickers and keep small backing pieces out of reach."
+      "safetyNote": "Use large stickers and keep small backing pieces out of reach.",
+      "contexts": [
+        "home",
+        "toddler",
+        "sensory"
+      ]
     },
     {
       "id": "play_pillow_path",
@@ -168,7 +199,12 @@
       ],
       "whatToExpect": "A more active idea for a moment when you can join in closely. Keep the path short so the play feels fun instead of like a big setup.",
       "parentNote": "Keep the path short and adjust it to the space you have.",
-      "safetyNote": "Use a clear floor area and stop if pillows start to slide."
+      "safetyNote": "Use a clear floor area and stop if pillows start to slide.",
+      "contexts": [
+        "home",
+        "movement",
+        "preschool"
+      ]
     },
     {
       "id": "play_quiet_book_basket",
@@ -191,7 +227,12 @@
       ],
       "whatToExpect": "A low-effort, low-mess pause when everyone needs something softer. Let your child choose the pace, even if that means only looking at one page.",
       "parentNote": "This can be a calm pause, not a full reading session.",
-      "safetyNote": "Use sturdy books without torn pages or loose pieces for younger children."
+      "safetyNote": "Use sturdy books without torn pages or loose pieces for younger children.",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ]
     },
     {
       "id": "play_soft_scarf_peekaboo",
@@ -214,7 +255,12 @@
       ],
       "whatToExpect": "This is a soft, low-mess way to share attention without much setup. Keep your voice gentle and stop whenever your baby seems ready for a break.",
       "parentNote": "A few slow peeks can be enough.",
-      "safetyNote": "Keep fabric away from your baby's nose and mouth and supervise closely."
+      "safetyNote": "Keep fabric away from your baby's nose and mouth and supervise closely.",
+      "contexts": [
+        "home",
+        "baby",
+        "connection"
+      ]
     },
     {
       "id": "play_container_matching",
@@ -237,7 +283,12 @@
       ],
       "whatToExpect": "This is a quiet practical-life idea with easy cleanup. It can stay simple even if the matching turns into stacking or sorting.",
       "parentNote": "There is no need for the matches to be perfect.",
-      "safetyNote": "Use clean, lightweight items without sharp edges or small loose parts."
+      "safetyNote": "Use clean, lightweight items without sharp edges or small loose parts.",
+      "contexts": [
+        "kitchen",
+        "toddler",
+        "practical_life"
+      ]
     },
     {
       "id": "play_towel_road",
@@ -261,7 +312,12 @@
       ],
       "whatToExpect": "This is a low-mess pretend setup that can last one minute or longer. You can narrate softly, then let your child take the story wherever it goes.",
       "parentNote": "A towel can become a road, river, bridge, or path.",
-      "safetyNote": "Keep the towel flat so it does not become a tripping spot."
+      "safetyNote": "Keep the towel flat so it does not become a tripping spot.",
+      "contexts": [
+        "home",
+        "pretend",
+        "low_setup"
+      ]
     },
     {
       "id": "play_sock_puppet_hello",
@@ -283,7 +339,12 @@
       ],
       "whatToExpect": "This is a small connection moment that works best with your gentle participation. Keep the voice simple and follow your child's response.",
       "parentNote": "The puppet does not need a story; a hello is enough.",
-      "safetyNote": "Use a clean sock without loose threads or small decorations."
+      "safetyNote": "Use a clean sock without loose threads or small decorations.",
+      "contexts": [
+        "home",
+        "connection",
+        "toddler"
+      ]
     },
     {
       "id": "play_gentle_animal_walks",
@@ -306,7 +367,12 @@
       ],
       "whatToExpect": "This offers movement without needing a big setup. Join for a few rounds, then let the pace soften when the room feels ready.",
       "parentNote": "Quiet animals can still be playful.",
-      "safetyNote": "Clear the floor and avoid fast movement near furniture."
+      "safetyNote": "Clear the floor and avoid fast movement near furniture.",
+      "contexts": [
+        "home",
+        "movement",
+        "preschool"
+      ]
     },
     {
       "id": "play_water_brush_painting",
@@ -331,7 +397,12 @@
       ],
       "whatToExpect": "This feels creative without paint or lasting cleanup. Stay close with the water bowl and keep the activity small.",
       "parentNote": "Fading marks can be part of the calm rhythm.",
-      "safetyNote": "Use only a little water and choose a non-slippery surface."
+      "safetyNote": "Use only a little water and choose a non-slippery surface.",
+      "contexts": [
+        "outside",
+        "sensory",
+        "movement"
+      ]
     },
     {
       "id": "play_spoon_cup_transfer",
@@ -356,7 +427,12 @@
       ],
       "whatToExpect": "This is a focused table activity with a little cleanup possible. Use only a handful of items so it stays manageable.",
       "parentNote": "Spills are part of the activity and can be kept small.",
-      "safetyNote": "Choose items that are safe for your child's age and supervise closely."
+      "safetyNote": "Choose items that are safe for your child's age and supervise closely.",
+      "contexts": [
+        "home",
+        "practical_life",
+        "toddler"
+      ]
     },
     {
       "id": "play_laundry_texture_naming",
@@ -381,7 +457,12 @@
       ],
       "whatToExpect": "This is a gentle sensory pause with almost no setup. A few calm words are enough, and the laundry can go right back afterward.",
       "parentNote": "You can do this while folding or sitting nearby.",
-      "safetyNote": "Avoid items with loose strings, buttons, or small parts."
+      "safetyNote": "Avoid items with loose strings, buttons, or small parts.",
+      "contexts": [
+        "home",
+        "baby",
+        "sensory"
+      ]
     },
     {
       "id": "play_shadow_watching",
@@ -404,7 +485,12 @@
       ],
       "whatToExpect": "This is a quiet observation moment for a slower part of the day. Stay curious, keep it brief, and let your child decide what is interesting.",
       "parentNote": "No setup is needed if the light is already there.",
-      "safetyNote": "Avoid looking directly at bright sunlight."
+      "safetyNote": "Avoid looking directly at bright sunlight.",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ]
     },
     {
       "id": "play_blanket_toy_rescue",
@@ -428,7 +514,12 @@
       ],
       "whatToExpect": "This is a small shared moment with very little cleanup. Keep the hiding easy so it feels comforting rather than tricky.",
       "parentNote": "The toy can stay partly visible.",
-      "safetyNote": "Use a light blanket and keep fabric away from faces."
+      "safetyNote": "Use a light blanket and keep fabric away from faces.",
+      "contexts": [
+        "home",
+        "toddler",
+        "connection"
+      ]
     },
     {
       "id": "play_tiny_stuffed_picnic",
@@ -453,7 +544,12 @@
       ],
       "whatToExpect": "This is gentle pretend play with a cozy feeling. Join long enough to start the scene, then let your child lead the picnic.",
       "parentNote": "One animal and one cup can be enough.",
-      "safetyNote": "Use unbreakable cups and keep small pretend pieces away from younger children."
+      "safetyNote": "Use unbreakable cups and keep small pretend pieces away from younger children.",
+      "contexts": [
+        "home",
+        "pretend",
+        "connection"
+      ]
     },
     {
       "id": "play_soft_cleanup_song",
@@ -477,7 +573,12 @@
       ],
       "whatToExpect": "This turns a tiny reset into a connected moment without pressure. Keep the number of items small so it feels doable.",
       "parentNote": "The point is a softer transition, not a perfect room.",
-      "safetyNote": "Keep pathways clear and avoid rushing while carrying toys."
+      "safetyNote": "Keep pathways clear and avoid rushing while carrying toys.",
+      "contexts": [
+        "home",
+        "transition",
+        "practical_life"
+      ]
     },
     {
       "id": "play_paper_bag_discovery",
@@ -501,7 +602,12 @@
       ],
       "whatToExpect": "This is a quiet curiosity moment with almost no cleanup. Keep the object familiar so the guessing stays light.",
       "parentNote": "You can skip guessing and simply discover the object together.",
-      "safetyNote": "Do not place the bag over anyone's head and use only safe objects."
+      "safetyNote": "Do not place the bag over anyone's head and use only safe objects.",
+      "contexts": [
+        "home",
+        "quiet",
+        "preschool"
+      ]
     },
     {
       "id": "play_soft_ball_roll_pause",
@@ -525,7 +631,12 @@
       ],
       "whatToExpect": "This is a low-mess connection idea with a steady rhythm. The pauses matter as much as the rolling.",
       "parentNote": "Your child may watch, touch, or push the ball in their own way.",
-      "safetyNote": "Use a soft ball and keep the floor clear."
+      "safetyNote": "Use a soft ball and keep the floor clear.",
+      "contexts": [
+        "home",
+        "baby",
+        "connection"
+      ]
     },
     {
       "id": "play_blanket_boat",
@@ -549,7 +660,12 @@
       ],
       "whatToExpect": "This is pretend play with a soft, contained setup. Join for the first idea, then let the boat stay as simple as your child wants.",
       "parentNote": "The boat can stay still; imagination can do the moving.",
-      "safetyNote": "Keep the blanket flat and do not pull a child on it."
+      "safetyNote": "Keep the blanket flat and do not pull a child on it.",
+      "contexts": [
+        "home",
+        "pretend",
+        "connection"
+      ]
     },
     {
       "id": "play_bathroom_mirror_faces",
@@ -572,7 +688,12 @@
       ],
       "whatToExpect": "This is a brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
       "parentNote": "Two faces can be plenty.",
-      "safetyNote": "Keep your child steady and away from wet or slippery areas."
+      "safetyNote": "Keep your child steady and away from wet or slippery areas.",
+      "contexts": [
+        "bathroom",
+        "quiet",
+        "connection"
+      ]
     }
   ],
   "playFilters": [

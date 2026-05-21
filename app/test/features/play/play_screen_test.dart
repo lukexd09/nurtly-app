@@ -326,6 +326,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           childEngagement: 'Medium',
           parentInvolvement: 'Low',
           activityType: 'Sensory',
+          contexts: ['home', 'baby', 'sensory', 'low_setup'],
           neededItems: ['Soft cloth'],
           steps: ['Place the items in the container.'],
           whatToExpect:
@@ -344,6 +345,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           childEngagement: 'High',
           parentInvolvement: 'Medium',
           activityType: 'Movement',
+          contexts: ['home', 'toddler', 'movement'],
           neededItems: ['Couch cushions'],
           steps: ['Place cushions on the floor with a low open space.'],
           whatToExpect:
@@ -361,6 +363,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           childEngagement: 'Low',
           parentInvolvement: 'Low',
           activityType: 'Quiet time',
+          contexts: ['home', 'quiet', 'low_setup'],
           neededItems: ['Two sturdy books'],
           steps: ['Place a few books in a basket within easy reach.'],
           whatToExpect:
@@ -378,6 +381,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           childEngagement: 'Medium',
           parentInvolvement: 'Low',
           activityType: 'Movement',
+          contexts: ['home', 'preschool', 'movement'],
           neededItems: ['Clear floor space'],
           steps: ['Take slow steps around the room together.'],
           whatToExpect:

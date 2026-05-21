@@ -43,6 +43,7 @@ class FakeContentLoader extends ContentLoader {
           childEngagement: 'Medium',
           parentInvolvement: 'Low',
           activityType: 'Sensory',
+          contexts: ['home', 'baby', 'sensory', 'low_setup'],
           neededItems: [
             'Soft cloth',
             'Wooden spoon',

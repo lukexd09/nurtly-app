@@ -10,7 +10,7 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.2.0');
+    expect(package.metadata.version, '1.3.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
@@ -45,6 +45,14 @@ void main() {
     expect(package.playIdeas.single.id, 'play_test_idea');
     expect(package.playFilters.single.id, 'low_effort');
     expect(package.sounds.single.id, 'sound_test_sound');
+  });
+
+  test('missing contexts parses as an empty list', () async {
+    final package = await const ContentLoader(
+      source: _RawContentSource(_minimalContentPackageWithoutContextsJson),
+    ).load();
+
+    expect(package.playIdeas.single.contexts, isEmpty);
   });
 
   test('missing playFilters parses as an empty list', () async {
@@ -87,6 +95,7 @@ void main() {
       'activityType',
       'childEngagement',
       'place',
+      'contexts',
     };
     const supportedOperators = {'equals', 'contains'};
     const expectedLabels = {
@@ -161,6 +170,7 @@ void main() {
         isTrue,
         reason: '${idea.id} activityType',
       );
+      expect(idea.contexts, isNotEmpty, reason: '${idea.id} contexts');
       expect(idea.neededItems, isNotEmpty, reason: '${idea.id} neededItems');
       expect(idea.steps, isNotEmpty, reason: '${idea.id} steps');
       expect(
@@ -197,6 +207,42 @@ void main() {
           reason: '${idea.id} childEngagement');
       expect(allowedLevels, contains(idea.parentInvolvement),
           reason: '${idea.id} parentInvolvement');
+    }
+  });
+
+  test('play idea contexts are controlled and well formed', () async {
+    final package = await const ContentLoader().load();
+    const allowedContexts = {
+      'home',
+      'baby',
+      'toddler',
+      'preschool',
+      'low_setup',
+      'quiet',
+      'movement',
+      'sensory',
+      'connection',
+      'practical_life',
+      'outside',
+      'bathroom',
+      'kitchen',
+      'transition',
+      'pretend',
+    };
+
+    for (final idea in package.playIdeas) {
+      expect(idea.contexts.length, lessThanOrEqualTo(5),
+          reason: '${idea.id} contexts length');
+      expect(idea.contexts.toSet(), hasLength(idea.contexts.length),
+          reason: '${idea.id} duplicate contexts');
+      for (final context in idea.contexts) {
+        expect(context, context.toLowerCase(),
+            reason: '${idea.id} context lowercase');
+        expect(context, matches(r'^[a-z0-9_]+$'),
+            reason: '${idea.id} context snake_case');
+        expect(allowedContexts, contains(context),
+            reason: '${idea.id} allowed context');
+      }
     }
   });
 
@@ -297,6 +343,7 @@ const _minimalContentPackageJson = '''
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -352,11 +399,67 @@ const _minimalContentPackageWithoutFiltersJson = '''
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
       "parentNote": "Keep it simple.",
       "safetyNote": "Use safe items."
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithoutContextsJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
     }
   ],
   "sounds": [

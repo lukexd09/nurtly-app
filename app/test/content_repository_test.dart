@@ -139,6 +139,7 @@ String _packageJson({
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
