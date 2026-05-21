@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nurtly/main.dart';
+import 'package:nurtly/core/navigation/app_shell.dart';
+import 'package:nurtly/core/theme/app_theme.dart';
+
+import 'test_fakes/fake_content_loader.dart';
 
 void main() {
   testWidgets('shows Home as the initial app shell tab', (tester) async {
@@ -44,18 +47,23 @@ void main() {
     );
   });
 
-  testWidgets('Home gentle start navigates to Play', (tester) async {
+  testWidgets('Home gentle start opens today idea detail', (tester) async {
     await _pumpNurtlyApp(tester);
 
     await tester.scrollUntilVisible(find.text("Open today's idea"), 80);
     await tester.tap(find.text("Open today's idea"));
-    await _pumpTabChange(tester);
-    expect(find.text('Start with one small moment'), findsNothing);
-    expect(
-      _hasText(tester, 'Soft treasure basket') ||
-          _hasText(tester, 'Loading play ideas...'),
-      isTrue,
+    await _pumpUntilAnyText(
+      tester,
+      ['What to expect', "What you'll need"],
     );
+
+    expect(find.text('What to expect'), findsOneWidget);
+    expect(find.text("What you'll need"), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Start with one small moment'), findsOneWidget);
   });
 
   testWidgets('Home quick link navigates to Journal', (tester) async {
@@ -82,6 +90,19 @@ void main() {
   });
 }
 
+Future<void> _pumpUntilAnyText(
+  WidgetTester tester,
+  List<String> texts, {
+  int maxTicks = 30,
+}) async {
+  for (var tick = 0; tick < maxTicks; tick++) {
+    await tester.pump(const Duration(milliseconds: 100));
+    if (texts.any((text) => _hasText(tester, text))) {
+      return;
+    }
+  }
+}
+
 Future<void> _pumpNurtlyApp(
   WidgetTester tester, {
   Size size = const Size(600, 1200),
@@ -91,7 +112,13 @@ Future<void> _pumpNurtlyApp(
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 
-  await tester.pumpWidget(const NurtlyApp());
+  await tester.pumpWidget(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      home: const AppShell(contentLoader: FakeContentLoader()),
+    ),
+  );
 }
 
 bool _hasText(WidgetTester tester, String text) {

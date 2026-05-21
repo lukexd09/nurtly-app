@@ -43,6 +43,7 @@ class PlayIdea {
     required this.neededItems,
     required this.steps,
     required this.whatToExpect,
+    this.suggestedSoundId,
     required this.parentNote,
     required this.safetyNote,
   });
@@ -61,6 +62,7 @@ class PlayIdea {
   final List<String> neededItems;
   final List<String> steps;
   final String whatToExpect;
+  final String? suggestedSoundId;
   final String parentNote;
   final String safetyNote;
 
@@ -82,6 +84,9 @@ class PlayIdea {
       neededItems: readStringList(json, 'neededItems'),
       steps: readStringList(json, 'steps'),
       whatToExpect: readString(json, 'whatToExpect'),
+      suggestedSoundId: json.containsKey('suggestedSoundId')
+          ? (json['suggestedSoundId'] as String?)
+          : null,
       parentNote: readString(json, 'parentNote'),
       safetyNote: readString(json, 'safetyNote'),
     );

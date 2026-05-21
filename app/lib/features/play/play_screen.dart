@@ -15,6 +15,13 @@ import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
 
+PlayIdea selectDailyPlayIdea(List<PlayIdea> ideas, DateTime date) {
+  final dayOfYear = DateTime(date.year, date.month, date.day)
+      .difference(DateTime(date.year, 1, 1))
+      .inDays;
+  return ideas[dayOfYear % ideas.length];
+}
+
 class PlayScreen extends StatefulWidget {
   const PlayScreen({
     super.key,

@@ -161,10 +161,12 @@ class _HomeDensity {
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     required this.onSelectTab,
+    required this.onOpenTodaysIdea,
     super.key,
   });
 
   final ValueChanged<AppTab> onSelectTab;
+  final VoidCallback onOpenTodaysIdea;
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +182,7 @@ class HomeScreen extends StatelessWidget {
         SizedBox(height: density.afterHeroGap),
         _GentleStartCard(
           density: density,
-          onTap: () => onSelectTab(AppTab.play),
+          onTap: onOpenTodaysIdea,
         ),
         SizedBox(height: density.afterGentleStartGap),
         _HomeQuickLink(
