@@ -10,7 +10,7 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.5.1');
+    expect(package.metadata.version, '1.6.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
@@ -53,6 +53,15 @@ void main() {
     ).load();
 
     expect(package.playIdeas.single.contexts, isEmpty);
+  });
+
+  test('missing suggestedSoundId parses as null', () async {
+    final package = await const ContentLoader(
+      source:
+          _RawContentSource(_minimalContentPackageWithoutSuggestedSoundJson),
+    ).load();
+
+    expect(package.playIdeas.single.suggestedSoundId, isNull);
   });
 
   test('missing ageRangeMonths throws FormatException', () async {
@@ -170,6 +179,7 @@ void main() {
 
   test('play ideas have required content fields', () async {
     final package = await const ContentLoader().load();
+    final soundIds = package.sounds.map((sound) => sound.id).toSet();
 
     for (final idea in package.playIdeas) {
       expect(_isNotBlank(idea.id), isTrue, reason: '${idea.id} id');
@@ -224,6 +234,10 @@ void main() {
         isTrue,
         reason: '${idea.id} safetyNote',
       );
+      if (idea.suggestedSoundId != null) {
+        expect(soundIds, contains(idea.suggestedSoundId),
+            reason: '${idea.id} suggestedSoundId exists');
+      }
     }
   });
 
@@ -534,6 +548,66 @@ const _minimalContentPackageWithoutAgeRangeMonthsJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithoutSuggestedSoundJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",

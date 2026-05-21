@@ -55,6 +55,7 @@ class FakeContentLoader extends ContentLoader {
           ],
           whatToExpect:
               'This is a low-mess, gently engaging activity with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.',
+          suggestedSoundId: 'sound_soft_rain',
           parentNote: 'Choose what fits the moment and keep it simple.',
           safetyNote: 'Use only large, clean items that cannot be swallowed.',
         ),

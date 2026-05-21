@@ -10,6 +10,52 @@ import 'package:nurtly/features/play/play_screen.dart';
 import '../../test_fakes/fake_content_loader.dart';
 
 void main() {
+  test('selectDailyPlayIdea is deterministic for a given day', () {
+    const ideas = [
+      PlayIdea(
+        id: 'play_a',
+        title: 'A',
+        summary: 'A',
+        ageGroup: '0-5 years',
+        ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+        place: 'Home',
+        messLevel: 'Low',
+        childEngagement: 'Low',
+        parentInvolvement: 'Low',
+        activityType: 'Quiet time',
+        contexts: ['home'],
+        neededItems: ['A'],
+        steps: ['A'],
+        whatToExpect: 'A',
+        parentNote: 'A',
+        safetyNote: 'A',
+      ),
+      PlayIdea(
+        id: 'play_b',
+        title: 'B',
+        summary: 'B',
+        ageGroup: '0-5 years',
+        ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+        place: 'Home',
+        messLevel: 'Low',
+        childEngagement: 'Low',
+        parentInvolvement: 'Low',
+        activityType: 'Quiet time',
+        contexts: ['home'],
+        neededItems: ['B'],
+        steps: ['B'],
+        whatToExpect: 'B',
+        parentNote: 'B',
+        safetyNote: 'B',
+      ),
+    ];
+
+    final first = selectDailyPlayIdea(ideas, DateTime(2026, 5, 21));
+    final second = selectDailyPlayIdea(ideas, DateTime(2026, 5, 21));
+
+    expect(first.id, second.id);
+  });
+
   testWidgets('filters are collapsed by default', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -331,6 +377,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           steps: ['Place the items in the container.'],
           whatToExpect:
               'A low-mess, gently engaging activity with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.',
+          suggestedSoundId: 'sound_soft_rain',
           parentNote: 'Choose what fits the moment and keep it simple.',
           safetyNote: 'Use only large, clean items that cannot be swallowed.',
         ),
@@ -351,6 +398,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           steps: ['Place cushions on the floor with a low open space.'],
           whatToExpect:
               'Expect more movement and a little room reset afterward. Join for a few minutes, then keep the tunnel simple.',
+          suggestedSoundId: 'sound_warm_noise',
           parentNote: 'A short setup can be enough.',
           safetyNote: 'Keep the tunnel low and stable.',
         ),
@@ -370,6 +418,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           steps: ['Place a few books in a basket within easy reach.'],
           whatToExpect:
               'A low-effort, low-mess pause when everyone needs something softer. Let your child choose the pace.',
+          suggestedSoundId: 'sound_quiet_stream',
           parentNote: 'This can be a calm pause, not a full reading session.',
           safetyNote: 'Use sturdy books without loose pieces.',
         ),
@@ -389,6 +438,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           steps: ['Take slow steps around the room together.'],
           whatToExpect:
               'A simple movement break with no special setup. Keep the pace easy and pause when the room feels settled.',
+          suggestedSoundId: 'sound_evening_crickets',
           parentNote: 'A short march can be enough.',
           safetyNote: 'Keep walkways clear and avoid slippery spots.',
         ),

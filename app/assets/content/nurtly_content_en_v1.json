@@ -2,7 +2,7 @@
   "metadata": {
     "packageId": "nurtly-core-en",
     "schemaVersion": 1,
-    "version": "1.5.1",
+    "version": "1.6.0",
     "locale": "en",
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
@@ -40,7 +40,8 @@
       "ageRangeMonths": {
         "min": 6,
         "max": 18
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_couch_cushion_tunnel",
@@ -72,7 +73,8 @@
       "ageRangeMonths": {
         "min": 12,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_kitchen_spoon_rhythm",
@@ -105,7 +107,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_laundry_color_sorting",
@@ -137,7 +140,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_window_weather_watch",
@@ -168,7 +172,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_sticker_rescue",
@@ -200,7 +205,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_pillow_path",
@@ -232,7 +238,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_quiet_book_basket",
@@ -264,7 +271,8 @@
       "ageRangeMonths": {
         "min": 0,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_soft_scarf_peekaboo",
@@ -296,7 +304,8 @@
       "ageRangeMonths": {
         "min": 0,
         "max": 12
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_container_matching",
@@ -328,7 +337,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_towel_road",
@@ -361,7 +371,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_sock_puppet_hello",
@@ -392,7 +403,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_gentle_animal_walks",
@@ -424,7 +436,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_water_brush_painting",
@@ -458,7 +471,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_spoon_cup_transfer",
@@ -492,7 +506,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_laundry_texture_naming",
@@ -526,7 +541,8 @@
       "ageRangeMonths": {
         "min": 6,
         "max": 18
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_shadow_watching",
@@ -558,7 +574,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_blanket_toy_rescue",
@@ -591,7 +608,8 @@
       "ageRangeMonths": {
         "min": 12,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_tiny_stuffed_picnic",
@@ -625,7 +643,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_soft_cleanup_song",
@@ -658,7 +677,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_paper_bag_discovery",
@@ -691,7 +711,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_soft_ball_roll_pause",
@@ -724,7 +745,8 @@
       "ageRangeMonths": {
         "min": 6,
         "max": 18
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_blanket_boat",
@@ -757,7 +779,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_bathroom_mirror_faces",
@@ -789,7 +812,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_towel_peek_path",
@@ -821,7 +845,8 @@
       "ageRangeMonths": {
         "min": 12,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_soft_block_knockdown",
@@ -852,7 +877,8 @@
       "ageRangeMonths": {
         "min": 12,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_kitchen_bowl_nesting",
@@ -884,7 +910,8 @@
       "ageRangeMonths": {
         "min": 12,
         "max": 36
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_bath_cup_pour",
@@ -915,7 +942,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_couch_island_pretend",
@@ -947,7 +975,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_stuffed_animal_bedtime",
@@ -980,7 +1009,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_window_bird_watch",
@@ -1011,7 +1041,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_paper_towel_roll_tunnel",
@@ -1043,7 +1074,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_sock_matching_basket",
@@ -1075,7 +1107,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_soft_toy_hide_find",
@@ -1106,7 +1139,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_gentle_hallway_parade",
@@ -1137,7 +1171,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_picnic_blanket_sorting",
@@ -1169,7 +1204,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_sponge_squeeze_outside",
@@ -1201,7 +1237,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_chair_train_pretend",
@@ -1234,7 +1271,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_calm_hand_tracing",
@@ -1267,7 +1305,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_toy_wash_station",
@@ -1300,7 +1339,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_napkin_folding_helper",
@@ -1331,7 +1371,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_animal_sound_pause",
@@ -1362,7 +1403,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_quiet_basket_rotation",
@@ -1394,7 +1436,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_big_small_match",
@@ -1428,7 +1471,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_blanket_cave_reading",
@@ -1460,7 +1504,8 @@
       "ageRangeMonths": {
         "min": 24,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     },
     {
       "id": "play_spoon_mirror_tap",
@@ -1492,7 +1537,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_pretend_shop_with_cups",
@@ -1524,7 +1570,8 @@
       "ageRangeMonths": {
         "min": 36,
         "max": 72
-      }
+      },
+      "suggestedSoundId": "sound_warm_noise"
     },
     {
       "id": "play_outdoor_leaf_noticing",
@@ -1555,7 +1602,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_evening_crickets"
     },
     {
       "id": "play_bath_toy_rescue",
@@ -1587,7 +1635,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 48
-      }
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
     },
     {
       "id": "play_clean_cloth_wipe_helper",
@@ -1619,7 +1668,8 @@
       "ageRangeMonths": {
         "min": 18,
         "max": 60
-      }
+      },
+      "suggestedSoundId": "sound_quiet_stream"
     }
   ],
   "playFilters": [

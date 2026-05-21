@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../content/content_loader.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
@@ -12,7 +13,12 @@ import '../theme/app_text_styles.dart';
 import 'app_tab.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  const AppShell({
+    this.contentLoader = const ContentLoader(),
+    super.key,
+  });
+
+  final ContentLoader contentLoader;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -25,11 +31,36 @@ class _AppShellState extends State<AppShell> {
     setState(() => _currentIndex = AppTab.values.indexOf(tab));
   }
 
+  Future<void> _openTodaysIdea() async {
+    try {
+      final package = await widget.contentLoader.load();
+      if (!mounted || package.playIdeas.isEmpty) {
+        return;
+      }
+      final idea = selectDailyPlayIdea(package.playIdeas, DateTime.now());
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => PlayActivityDetailScreen(idea: idea),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Today\'s idea is not available yet.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screens = [
-      HomeScreen(onSelectTab: _selectTab),
-      const PlayScreen(),
+      HomeScreen(
+        onSelectTab: _selectTab,
+        onOpenTodaysIdea: _openTodaysIdea,
+      ),
+      PlayScreen(contentLoader: widget.contentLoader),
       const JournalScreen(),
       const SoundsScreen(),
     ];
