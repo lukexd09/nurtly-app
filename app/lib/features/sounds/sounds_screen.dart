@@ -135,6 +135,7 @@ class SoundDetailScreen extends StatefulWidget {
 }
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
+  static const int _loopPlaylistCopies = 3;
   late final AudioPlayer _player;
   late final StreamSubscription<PlayerState> _playerSubscription;
   bool _isLoading = false;
@@ -145,7 +146,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   void initState() {
     super.initState();
     _player = AudioPlayer();
-    _player.setLoopMode(LoopMode.one);
     _playerSubscription = _player.playerStateStream.listen((_) {
       if (mounted) {
         setState(() {});
@@ -186,7 +186,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
     try {
       if (_player.audioSource == null) {
-        await _player.setAsset(widget.sound.assetPath);
+        await _loadGaplessLoopPlaylist();
       }
       if (!mounted) {
         return;
@@ -223,6 +223,20 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         const SnackBar(content: Text('Could not play this sound.')),
       );
     }
+  }
+
+  Future<void> _loadGaplessLoopPlaylist() async {
+    // Use repeated identical sources to spike a smoother loop boundary than
+    // single-source LoopMode.one, which has shown an audible gap on devices.
+    await _player.setAudioSources(
+      List<AudioSource>.generate(
+        _loopPlaylistCopies,
+        (_) => AudioSource.asset(widget.sound.assetPath),
+      ),
+      initialIndex: 0,
+      initialPosition: Duration.zero,
+    );
+    await _player.setLoopMode(LoopMode.all);
   }
 
   Future<void> _stop() async {
