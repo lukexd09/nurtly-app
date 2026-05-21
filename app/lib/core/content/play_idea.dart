@@ -46,7 +46,9 @@ class PlayIdea {
       childEngagement: readString(json, 'childEngagement'),
       parentInvolvement: readString(json, 'parentInvolvement'),
       activityType: readString(json, 'activityType'),
-      contexts: readStringList(json, 'contexts'),
+      contexts: json.containsKey('contexts')
+          ? readStringList(json, 'contexts')
+          : const <String>[],
       neededItems: readStringList(json, 'neededItems'),
       steps: readStringList(json, 'steps'),
       whatToExpect: readString(json, 'whatToExpect'),
