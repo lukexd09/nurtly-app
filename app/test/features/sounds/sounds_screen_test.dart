@@ -14,8 +14,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Soft rain'), findsOneWidget);
-    expect(find.text('A calm rain placeholder for future sound content.'),
-        findsOneWidget);
+    expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
     expect(find.text('free'), findsOneWidget);
   });
@@ -31,11 +30,10 @@ void main() {
     await tester.tap(find.text('Soft rain'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Player placeholder'), findsOneWidget);
-    expect(
-      find.text('Real sound playback will be added in a later task.'),
-      findsOneWidget,
-    );
+    expect(find.text('Playback'), findsOneWidget);
+    expect(find.text('Ready'), findsOneWidget);
+    expect(find.text('Play'), findsOneWidget);
+    expect(find.text('Stop'), findsOneWidget);
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
     expect(find.text('free'), findsOneWidget);

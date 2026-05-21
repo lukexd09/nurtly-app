@@ -10,14 +10,14 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.6.0');
+    expect(package.metadata.version, '1.7.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
     expect(_isNotBlank(package.metadata.minAppVersion), isTrue);
     expect(package.playIdeas, hasLength(50));
     expect(package.playFilters, hasLength(7));
-    expect(package.sounds, hasLength(5));
+    expect(package.sounds, hasLength(6));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
   });
@@ -337,7 +337,7 @@ void main() {
     expect(values.toSet(), hasLength(values.length));
   });
 
-  test('sounds have required placeholder fields', () async {
+  test('sounds have local mp3 assets and non-placeholder copy', () async {
     final package = await const ContentLoader().load();
 
     expect(package.sounds, isNotEmpty);
@@ -350,7 +350,10 @@ void main() {
           reason: '${sound.id} assetPath');
       expect(_isNotBlank(sound.unlockType), isTrue,
           reason: '${sound.id} unlockType');
-      expect(sound.assetPath, startsWith('placeholder://sounds/'));
+      expect(sound.assetPath, startsWith('assets/audio/'));
+      expect(sound.assetPath, endsWith('.mp3'));
+      expect(sound.summary.toLowerCase(), isNot(contains('placeholder')));
+      expect(sound.summary.toLowerCase(), isNot(contains('future')));
       expect(sound.unlockType, 'free');
     }
   });
