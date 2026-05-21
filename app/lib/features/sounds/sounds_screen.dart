@@ -495,58 +495,53 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Widget _buildControls() {
     final isPlaying = _player.playing;
-    return SizedBox(
+    return Column(
       key: const ValueKey('sound-player-controls'),
-      height: 86,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            width: 86,
-            height: 86,
-            child: FilledButton(
-              key: const ValueKey('sound-player-primary-control'),
-              style: FilledButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: EdgeInsets.zero,
-              ),
-              onPressed: _togglePlayPause,
-              child: Tooltip(
-                message: isPlaying ? 'Pause' : 'Play',
-                child: Icon(
-                  isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  size: 44,
-                ),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 86,
+          height: 86,
+          child: FilledButton(
+            key: const ValueKey('sound-player-primary-control'),
+            style: FilledButton.styleFrom(
+              shape: const CircleBorder(),
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.zero,
+            ),
+            onPressed: _togglePlayPause,
+            child: Tooltip(
+              message: isPlaying ? 'Pause' : 'Play',
+              child: Icon(
+                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                size: 44,
               ),
             ),
           ),
-          Positioned(
-            right: 4,
-            child: OutlinedButton.icon(
-              key: const ValueKey('sound-player-stop-control'),
-              onPressed: _stop,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.textSecondary,
-                side: const BorderSide(color: AppColors.borderSoft),
-                backgroundColor: AppColors.surface,
-                minimumSize: const Size(76, 36),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-              icon: const Icon(Icons.stop_rounded, size: 16),
-              label: const Text('Stop'),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        OutlinedButton.icon(
+          key: const ValueKey('sound-player-stop-control'),
+          onPressed: _stop,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.textSecondary,
+            side: const BorderSide(color: AppColors.borderSoft),
+            backgroundColor: AppColors.surface,
+            minimumSize: const Size(88, 34),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(999),
             ),
           ),
-        ],
-      ),
+          icon: const Icon(Icons.stop_rounded, size: 16),
+          label: const Text('Stop'),
+        ),
+      ],
     );
   }
 
