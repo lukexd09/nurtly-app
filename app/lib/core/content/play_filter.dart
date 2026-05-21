@@ -67,13 +67,74 @@ class PlayFilterRule {
   final int? max;
 
   factory PlayFilterRule.fromJson(Map<String, Object?> json) {
+    final field = readString(json, 'field');
+    final operator = readString(json, 'operator');
+    final value = json.containsKey('value') ? readString(json, 'value') : null;
+    final min = json.containsKey('min') ? readInt(json, 'min') : null;
+    final max = json.containsKey('max') ? readInt(json, 'max') : null;
+
+    _validateRule(field, operator, value: value, min: min, max: max);
+
     return PlayFilterRule(
-      field: readString(json, 'field'),
-      operator: readString(json, 'operator'),
-      value: json.containsKey('value') ? readString(json, 'value') : null,
-      min: json.containsKey('min') ? readInt(json, 'min') : null,
-      max: json.containsKey('max') ? readInt(json, 'max') : null,
+      field: field,
+      operator: operator,
+      value: value,
+      min: min,
+      max: max,
     );
+  }
+
+  static void _validateRule(
+    String field,
+    String operator, {
+    String? value,
+    int? min,
+    int? max,
+  }) {
+    if (field == 'ageRangeMonths') {
+      if (operator != 'overlaps') {
+        throw FormatException(
+          "Invalid 'operator' for field 'ageRangeMonths'. Expected 'overlaps'.",
+        );
+      }
+      if (min == null || max == null) {
+        throw FormatException(
+          "Invalid 'ageRangeMonths' rule. Expected 'min' and 'max'.",
+        );
+      }
+      if (min < 0) {
+        throw FormatException("Invalid 'min'. Expected >= 0.");
+      }
+      if (max < min) {
+        throw FormatException("Invalid 'max'. Expected >= 'min'.");
+      }
+      if (max > 96) {
+        throw FormatException("Invalid 'max'. Expected <= 96.");
+      }
+      return;
+    }
+
+    if (field == 'contexts') {
+      if (operator != 'contains') {
+        throw FormatException(
+          "Invalid 'operator' for field 'contexts'. Expected 'contains'.",
+        );
+      }
+      if (value == null) {
+        throw FormatException(
+            "Expected non-empty 'value' for field 'contexts'.");
+      }
+      return;
+    }
+
+    if (operator == 'equals' || operator == 'contains') {
+      if (value == null) {
+        throw FormatException('Expected non-empty value for rule.');
+      }
+      return;
+    }
+
+    throw FormatException("Invalid 'operator'.");
   }
 
   bool matches(PlayIdea idea) {

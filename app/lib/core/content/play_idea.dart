@@ -10,10 +10,20 @@ class AgeRangeMonths {
   final int max;
 
   factory AgeRangeMonths.fromJson(Map<String, Object?> json) {
-    return AgeRangeMonths(
-      min: readInt(json, 'min'),
-      max: readInt(json, 'max'),
-    );
+    final min = readInt(json, 'min');
+    final max = readInt(json, 'max');
+    if (min < 0) {
+      throw FormatException("Invalid 'ageRangeMonths.min'. Expected >= 0.");
+    }
+    if (max < min) {
+      throw FormatException(
+        "Invalid 'ageRangeMonths.max'. Expected >= 'min'.",
+      );
+    }
+    if (max > 96) {
+      throw FormatException("Invalid 'ageRangeMonths.max'. Expected <= 96.");
+    }
+    return AgeRangeMonths(min: min, max: max);
   }
 }
 
@@ -60,9 +70,7 @@ class PlayIdea {
       title: readString(json, 'title'),
       summary: readString(json, 'summary'),
       ageGroup: readString(json, 'ageGroup'),
-      ageRangeMonths: json.containsKey('ageRangeMonths')
-          ? AgeRangeMonths.fromJson(readMap(json, 'ageRangeMonths'))
-          : const AgeRangeMonths(min: 0, max: 96),
+      ageRangeMonths: AgeRangeMonths.fromJson(readMap(json, 'ageRangeMonths')),
       place: readString(json, 'place'),
       messLevel: readString(json, 'messLevel'),
       childEngagement: readString(json, 'childEngagement'),

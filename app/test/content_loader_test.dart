@@ -55,6 +55,23 @@ void main() {
     expect(package.playIdeas.single.contexts, isEmpty);
   });
 
+  test('missing ageRangeMonths throws FormatException', () async {
+    final loader = ContentLoader(
+      source:
+          _RawContentSource(_minimalContentPackageWithoutAgeRangeMonthsJson),
+    );
+
+    await expectLater(loader.load(), throwsFormatException);
+  });
+
+  test('invalid ageRangeMonths throws FormatException', () async {
+    final loader = ContentLoader(
+      source: _RawContentSource(_minimalContentPackageWithInvalidAgeRangeJson),
+    );
+
+    await expectLater(loader.load(), throwsFormatException);
+  });
+
   test('missing playFilters parses as an empty list', () async {
     final package = await const ContentLoader(
       source: _RawContentSource(_minimalContentPackageWithoutFiltersJson),
@@ -352,6 +369,10 @@ const _minimalContentPackageJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
@@ -408,6 +429,10 @@ const _minimalContentPackageWithoutFiltersJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
@@ -450,11 +475,131 @@ const _minimalContentPackageWithoutContextsJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithoutAgeRangeMonthsJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithInvalidAgeRangeJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 24
+      },
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
