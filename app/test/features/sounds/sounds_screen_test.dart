@@ -40,8 +40,8 @@ void main() {
     expect(find.byKey(const ValueKey('sound-player-controls')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
-    expect(find.byKey(const ValueKey('sound-player-stop-control')),
-        findsOneWidget);
+    expect(
+        find.byKey(const ValueKey('sound-player-stop-control')), findsNothing);
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
