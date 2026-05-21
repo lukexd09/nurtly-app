@@ -31,6 +31,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Playback'), findsOneWidget);
+    expect(find.text('Ready'), findsOneWidget);
     expect(find.text('Play'), findsOneWidget);
     expect(find.text('Stop'), findsOneWidget);
     expect(find.text('Soft rain'), findsOneWidget);

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -133,6 +135,7 @@ class SoundDetailScreen extends StatefulWidget {
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
   late final AudioPlayer _player;
+  late final StreamSubscription<PlayerState> _playerStateSubscription;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -141,10 +144,16 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     super.initState();
     _player = AudioPlayer();
     _player.setLoopMode(LoopMode.one);
+    _playerStateSubscription = _player.playerStateStream.listen((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   void dispose() {
+    _playerStateSubscription.cancel();
     _player.dispose();
     super.dispose();
   }
@@ -156,6 +165,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
     if (_player.playing) {
       await _player.pause();
+      if (mounted) {
+        setState(() {});
+      }
       return;
     }
 
@@ -190,6 +202,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Future<void> _stop() async {
     await _player.stop();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   String _statusText() {
