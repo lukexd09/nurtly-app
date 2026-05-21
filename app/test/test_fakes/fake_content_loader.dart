@@ -38,6 +38,7 @@ class FakeContentLoader extends ContentLoader {
           title: 'Soft treasure basket',
           summary: 'Offer a few safe household textures to explore together.',
           ageGroup: '6-18 months',
+          ageRangeMonths: AgeRangeMonths(min: 6, max: 18),
           place: 'Home',
           messLevel: 'Low',
           childEngagement: 'Medium',

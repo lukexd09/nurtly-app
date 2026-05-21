@@ -134,6 +134,10 @@ String _packageJson({
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",

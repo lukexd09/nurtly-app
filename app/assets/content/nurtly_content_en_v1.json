@@ -2,7 +2,7 @@
   "metadata": {
     "packageId": "nurtly-core-en",
     "schemaVersion": 1,
-    "version": "1.4.0",
+    "version": "1.5.0",
     "locale": "en",
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
@@ -36,7 +36,11 @@
         "baby",
         "sensory",
         "low_setup"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      }
     },
     {
       "id": "play_couch_cushion_tunnel",
@@ -64,7 +68,11 @@
         "home",
         "toddler",
         "movement"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      }
     },
     {
       "id": "play_kitchen_spoon_rhythm",
@@ -93,7 +101,11 @@
         "kitchen",
         "toddler",
         "movement"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_laundry_color_sorting",
@@ -121,7 +133,11 @@
         "home",
         "practical_life",
         "low_setup"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_window_weather_watch",
@@ -148,7 +164,11 @@
         "home",
         "quiet",
         "transition"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      }
     },
     {
       "id": "play_sticker_rescue",
@@ -176,7 +196,11 @@
         "home",
         "toddler",
         "sensory"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_pillow_path",
@@ -204,7 +228,11 @@
         "home",
         "movement",
         "preschool"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 48
+      }
     },
     {
       "id": "play_quiet_book_basket",
@@ -232,7 +260,11 @@
         "home",
         "quiet",
         "low_setup"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 0,
+        "max": 60
+      }
     },
     {
       "id": "play_soft_scarf_peekaboo",
@@ -260,7 +292,11 @@
         "home",
         "baby",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 0,
+        "max": 12
+      }
     },
     {
       "id": "play_container_matching",
@@ -288,7 +324,11 @@
         "kitchen",
         "toddler",
         "practical_life"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      }
     },
     {
       "id": "play_towel_road",
@@ -317,7 +357,11 @@
         "home",
         "pretend",
         "low_setup"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_sock_puppet_hello",
@@ -344,7 +388,11 @@
         "home",
         "connection",
         "toddler"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      }
     },
     {
       "id": "play_gentle_animal_walks",
@@ -372,7 +420,11 @@
         "home",
         "movement",
         "preschool"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_water_brush_painting",
@@ -402,7 +454,11 @@
         "outside",
         "sensory",
         "movement"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_spoon_cup_transfer",
@@ -432,7 +488,11 @@
         "home",
         "practical_life",
         "toddler"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_laundry_texture_naming",
@@ -462,7 +522,11 @@
         "home",
         "baby",
         "sensory"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      }
     },
     {
       "id": "play_shadow_watching",
@@ -490,7 +554,11 @@
         "home",
         "quiet",
         "low_setup"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      }
     },
     {
       "id": "play_blanket_toy_rescue",
@@ -519,7 +587,11 @@
         "home",
         "toddler",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      }
     },
     {
       "id": "play_tiny_stuffed_picnic",
@@ -549,7 +621,11 @@
         "home",
         "pretend",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_soft_cleanup_song",
@@ -578,7 +654,11 @@
         "home",
         "transition",
         "practical_life"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_paper_bag_discovery",
@@ -607,7 +687,11 @@
         "home",
         "quiet",
         "preschool"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_soft_ball_roll_pause",
@@ -636,7 +720,11 @@
         "home",
         "baby",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      }
     },
     {
       "id": "play_blanket_boat",
@@ -665,7 +753,11 @@
         "home",
         "pretend",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_bathroom_mirror_faces",
@@ -693,7 +785,11 @@
         "bathroom",
         "quiet",
         "connection"
-      ]
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      }
     },
     {
       "id": "play_towel_peek_path",
@@ -721,7 +817,11 @@
       ],
       "whatToExpect": "A soft movement idea with almost no setup or cleanup. Keep the path short, pause often, and let the rhythm stay gentle.",
       "parentNote": "A few calm steps are enough if the day already feels full.",
-      "safetyNote": "Keep towels flat so they do not slide or bunch under little feet."
+      "safetyNote": "Keep towels flat so they do not slide or bunch under little feet.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      }
     },
     {
       "id": "play_soft_block_knockdown",
@@ -748,7 +848,11 @@
       ],
       "whatToExpect": "This can bring a quick burst of energy without turning into a big activity. Keep the tower low and the reset simple.",
       "parentNote": "Stopping after one or two towers still counts as a good moment.",
-      "safetyNote": "Use soft blocks only and keep the tower low enough to stay safe if it tips."
+      "safetyNote": "Use soft blocks only and keep the tower low enough to stay safe if it tips.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      }
     },
     {
       "id": "play_kitchen_bowl_nesting",
@@ -776,7 +880,11 @@
       ],
       "whatToExpect": "A quiet kitchen moment with easy cleanup and familiar objects. It can stay calm even if the bowls end up spread around you.",
       "parentNote": "There is no need to teach the right order for the bowls.",
-      "safetyNote": "Use lightweight bowls without sharp edges and stay close during play."
+      "safetyNote": "Use lightweight bowls without sharp edges and stay close during play.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      }
     },
     {
       "id": "play_bath_cup_pour",
@@ -803,7 +911,11 @@
       ],
       "whatToExpect": "This keeps bath time focused on one simple action instead of lots of stimulation. A little splashing is normal, so keep the setup small.",
       "parentNote": "One or two cups are enough to make the moment feel new.",
-      "safetyNote": "Stay within arms reach in the bath and keep the floor dry around the tub."
+      "safetyNote": "Stay within arms reach in the bath and keep the floor dry around the tub.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_couch_island_pretend",
@@ -831,7 +943,11 @@
       ],
       "whatToExpect": "This brings pretend play to a familiar space without much setup. Stay close enough to guide the movement and let the story stay simple.",
       "parentNote": "A short island story can feel just as satisfying as a long one.",
-      "safetyNote": "Keep movement slow and supervise closely around furniture edges."
+      "safetyNote": "Keep movement slow and supervise closely around furniture edges.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_stuffed_animal_bedtime",
@@ -860,7 +976,11 @@
       ],
       "whatToExpect": "A calm pretend moment that can gently soften a busy part of the day. Keep the routine tiny so it feels comforting, not like a task.",
       "parentNote": "This can help you ease into rest without adding pressure to bedtime.",
-      "safetyNote": "Use light fabric only and keep it away from a childs face during play."
+      "safetyNote": "Use light fabric only and keep it away from a childs face during play.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_window_bird_watch",
@@ -887,7 +1007,11 @@
       ],
       "whatToExpect": "This is a low-pressure pause for slower energy. You may only notice one thing, and that can still feel complete.",
       "parentNote": "No birds today is fine; clouds, branches, or passing light still work.",
-      "safetyNote": "Keep windows locked and supervise closely around window areas."
+      "safetyNote": "Keep windows locked and supervise closely around window areas.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      }
     },
     {
       "id": "play_paper_towel_roll_tunnel",
@@ -915,7 +1039,11 @@
       ],
       "whatToExpect": "A tiny repeatable activity that feels new without much effort. Keep the pieces few so setup and cleanup stay easy.",
       "parentNote": "One roll and one toy can carry the whole activity.",
-      "safetyNote": "Use items large enough for your childs age and avoid cardboard edges that feel rough."
+      "safetyNote": "Use items large enough for your childs age and avoid cardboard edges that feel rough.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_sock_matching_basket",
@@ -943,7 +1071,11 @@
       ],
       "whatToExpect": "A familiar home task can turn into a calm shared moment with very little setup. It works even if the pairs stay imperfect.",
       "parentNote": "There is no need to correct every mismatch.",
-      "safetyNote": "Use clean socks only and keep the basket light enough to move safely."
+      "safetyNote": "Use clean socks only and keep the basket light enough to move safely.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_soft_toy_hide_find",
@@ -970,7 +1102,11 @@
       ],
       "whatToExpect": "This keeps the challenge light and the cleanup almost nonexistent. Stay playful, and keep the hiding spots easy to reach.",
       "parentNote": "Seeing a little bit of the toy can make the game feel safer and sweeter.",
-      "safetyNote": "Avoid hiding toys in high, tight, or hard-to-reach places."
+      "safetyNote": "Avoid hiding toys in high, tight, or hard-to-reach places.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_gentle_hallway_parade",
@@ -997,7 +1133,11 @@
       ],
       "whatToExpect": "This offers movement for a transition moment without turning the house upside down. Keep it short and let the energy settle as you finish.",
       "parentNote": "One lap can be plenty when the day already feels loud.",
-      "safetyNote": "Keep the hallway clear and use soft voices if others are nearby."
+      "safetyNote": "Keep the hallway clear and use soft voices if others are nearby.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_picnic_blanket_sorting",
@@ -1025,7 +1165,11 @@
       ],
       "whatToExpect": "This feels a little special without much extra work. You can keep the groups loose and let curiosity lead the sorting.",
       "parentNote": "The blanket makes the moment feel new even if the items are ordinary.",
-      "safetyNote": "Choose sturdy items without sharp edges or small loose pieces."
+      "safetyNote": "Choose sturdy items without sharp edges or small loose pieces.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_sponge_squeeze_outside",
@@ -1053,7 +1197,11 @@
       ],
       "whatToExpect": "This is a contained sensory moment with a little splash and easy cleanup outdoors. A few squeezes are enough.",
       "parentNote": "Using just a small amount of water helps the activity stay light.",
-      "safetyNote": "Choose a non-slippery surface and supervise around water."
+      "safetyNote": "Choose a non-slippery surface and supervise around water.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_chair_train_pretend",
@@ -1082,7 +1230,11 @@
       ],
       "whatToExpect": "This can feel exciting, so a little structure helps it stay calm. Set a gentle pace and keep the route short.",
       "parentNote": "You do not need a long storyline to make the train feel real.",
-      "safetyNote": "Use sturdy chairs and stay close so climbing and leaning stay safe."
+      "safetyNote": "Use sturdy chairs and stay close so climbing and leaning stay safe.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_calm_hand_tracing",
@@ -1111,7 +1263,11 @@
       ],
       "whatToExpect": "This is a very simple quiet idea for a moment that needs soft edges. Keep it slow and let one tracing be enough.",
       "parentNote": "You can trace in the air if paper feels like too much setup.",
-      "safetyNote": "Use age-safe drawing tools and supervise closely with younger children."
+      "safetyNote": "Use age-safe drawing tools and supervise closely with younger children.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_toy_wash_station",
@@ -1140,7 +1296,11 @@
       ],
       "whatToExpect": "This gives practical-life play a sensory feel without a big mess. Use only a couple of toys so the moment stays manageable.",
       "parentNote": "The wiping matters more than getting the toys perfectly clean.",
-      "safetyNote": "Use only a small amount of water and choose toys without batteries or electronics."
+      "safetyNote": "Use only a small amount of water and choose toys without batteries or electronics.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_napkin_folding_helper",
@@ -1167,7 +1327,11 @@
       ],
       "whatToExpect": "This is a quiet helper activity with almost no setup. It works best when the napkins stay few and the mood stays easy.",
       "parentNote": "Crooked folds are fine; the rhythm is more important than the result.",
-      "safetyNote": "Use clean cloth or paper napkins and keep the area dry."
+      "safetyNote": "Use clean cloth or paper napkins and keep the area dry.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_animal_sound_pause",
@@ -1194,7 +1358,11 @@
       ],
       "whatToExpect": "This keeps connection simple without letting the room get too loud. The pause between sounds helps it stay calm.",
       "parentNote": "You can stop after one or two animals if that feels best.",
-      "safetyNote": "Keep voices soft and avoid animal jumps or rough movement in small spaces."
+      "safetyNote": "Keep voices soft and avoid animal jumps or rough movement in small spaces.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_quiet_basket_rotation",
@@ -1222,7 +1390,11 @@
       ],
       "whatToExpect": "This offers novelty without more clutter or stimulation. Keep the basket small so the choice stays gentle.",
       "parentNote": "Rotating only one basket at a time helps the room feel calmer too.",
-      "safetyNote": "Use safe, familiar toys without loose parts for your childs age."
+      "safetyNote": "Use safe, familiar toys without loose parts for your childs age.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      }
     },
     {
       "id": "play_big_small_match",
@@ -1252,7 +1424,11 @@
       ],
       "whatToExpect": "This is an easy home activity that stays light and tidy. You can guide a little, then step back and watch what your child notices.",
       "parentNote": "Two simple pairs are enough to hold the idea together.",
-      "safetyNote": "Use safe household items without sharp edges or breakable parts."
+      "safetyNote": "Use safe household items without sharp edges or breakable parts.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_blanket_cave_reading",
@@ -1280,7 +1456,11 @@
       ],
       "whatToExpect": "This can feel cozy and special without needing much setup. Keep the cave open and airy so the moment stays comfortable.",
       "parentNote": "Even looking at the cover together can be enough.",
-      "safetyNote": "Keep blankets light, openings visible, and never block a child inside the space."
+      "safetyNote": "Keep blankets light, openings visible, and never block a child inside the space.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      }
     },
     {
       "id": "play_spoon_mirror_tap",
@@ -1308,7 +1488,11 @@
       ],
       "whatToExpect": "This is a tiny sensory-observation moment that works best with a gentle pace. One or two taps may be plenty.",
       "parentNote": "Soft taps keep the activity interesting without making it sharp or loud.",
-      "safetyNote": "Avoid tapping directly on glass and keep the area dry and supervised."
+      "safetyNote": "Avoid tapping directly on glass and keep the area dry and supervised.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_pretend_shop_with_cups",
@@ -1336,7 +1520,11 @@
       ],
       "whatToExpect": "This is gentle pretend play that feels social without needing lots of props. Keep the choices few so the scene stays calm.",
       "parentNote": "You can let your child lead the whole shop after the first turn.",
-      "safetyNote": "Use unbreakable cups and keep the play surface stable."
+      "safetyNote": "Use unbreakable cups and keep the play surface stable.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      }
     },
     {
       "id": "play_outdoor_leaf_noticing",
@@ -1363,7 +1551,11 @@
       ],
       "whatToExpect": "This is a calm outside pause that works well when energy is low. A minute or two of noticing can be enough.",
       "parentNote": "The quietness of the moment is part of what makes it useful.",
-      "safetyNote": "Stay on safe ground and avoid plants you do not recognize well."
+      "safetyNote": "Stay on safe ground and avoid plants you do not recognize well.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      }
     },
     {
       "id": "play_bath_toy_rescue",
@@ -1391,7 +1583,11 @@
       ],
       "whatToExpect": "This keeps bath play simple and focused without adding lots of toys. Expect a little splash and an easy reset.",
       "parentNote": "One toy is enough to make the rescue feel real.",
-      "safetyNote": "Stay within arms reach in the bath and keep water play small."
+      "safetyNote": "Stay within arms reach in the bath and keep water play small.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      }
     },
     {
       "id": "play_clean_cloth_wipe_helper",
@@ -1419,7 +1615,11 @@
       ],
       "whatToExpect": "This turns a tiny household task into a steady, connected moment. Keeping the surface small helps it stay calming instead of becoming work.",
       "parentNote": "A few wipes are enough to make the helper role feel real.",
-      "safetyNote": "Use only water or a plain damp cloth and avoid cleaning products during play."
+      "safetyNote": "Use only water or a plain damp cloth and avoid cleaning products during play.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      }
     }
   ],
   "playFilters": [
@@ -1450,34 +1650,39 @@
     {
       "id": "for_babies",
       "label": "For babies",
-      "matchMode": "any",
+      "matchMode": "all",
       "rules": [
         {
-          "field": "ageGroup",
-          "operator": "contains",
-          "value": "0-12 months"
-        },
-        {
-          "field": "ageGroup",
-          "operator": "contains",
-          "value": "6-18 months"
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 0,
+          "max": 18
         }
       ]
     },
     {
       "id": "toddlers",
       "label": "Toddlers",
-      "matchMode": "any",
+      "matchMode": "all",
       "rules": [
         {
-          "field": "ageGroup",
-          "operator": "contains",
-          "value": "18 months-3 years"
-        },
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 12,
+          "max": 36
+        }
+      ]
+    },
+    {
+      "id": "preschool",
+      "label": "Preschool",
+      "matchMode": "all",
+      "rules": [
         {
-          "field": "ageGroup",
-          "operator": "contains",
-          "value": "2-5 years"
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 36,
+          "max": 72
         }
       ]
     },
@@ -1487,26 +1692,21 @@
       "matchMode": "all",
       "rules": [
         {
-          "field": "activityType",
-          "operator": "equals",
-          "value": "Movement"
+          "field": "contexts",
+          "operator": "contains",
+          "value": "movement"
         }
       ]
     },
     {
       "id": "quiet",
       "label": "Quiet",
-      "matchMode": "any",
+      "matchMode": "all",
       "rules": [
         {
-          "field": "activityType",
-          "operator": "equals",
-          "value": "Quiet time"
-        },
-        {
-          "field": "childEngagement",
-          "operator": "equals",
-          "value": "Low"
+          "field": "contexts",
+          "operator": "contains",
+          "value": "quiet"
         }
       ]
     }

@@ -10,13 +10,13 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.4.0');
+    expect(package.metadata.version, '1.5.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
     expect(_isNotBlank(package.metadata.minAppVersion), isTrue);
     expect(package.playIdeas, hasLength(50));
-    expect(package.playFilters, hasLength(6));
+    expect(package.playFilters, hasLength(7));
     expect(package.sounds, hasLength(5));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
@@ -55,6 +55,23 @@ void main() {
     expect(package.playIdeas.single.contexts, isEmpty);
   });
 
+  test('missing ageRangeMonths throws FormatException', () async {
+    final loader = ContentLoader(
+      source:
+          _RawContentSource(_minimalContentPackageWithoutAgeRangeMonthsJson),
+    );
+
+    await expectLater(loader.load(), throwsFormatException);
+  });
+
+  test('invalid ageRangeMonths throws FormatException', () async {
+    final loader = ContentLoader(
+      source: _RawContentSource(_minimalContentPackageWithInvalidAgeRangeJson),
+    );
+
+    await expectLater(loader.load(), throwsFormatException);
+  });
+
   test('missing playFilters parses as an empty list', () async {
     final package = await const ContentLoader(
       source: _RawContentSource(_minimalContentPackageWithoutFiltersJson),
@@ -91,18 +108,19 @@ void main() {
     const supportedFields = {
       'parentInvolvement',
       'messLevel',
-      'ageGroup',
+      'ageRangeMonths',
       'activityType',
       'childEngagement',
       'place',
       'contexts',
     };
-    const supportedOperators = {'equals', 'contains'};
+    const supportedOperators = {'equals', 'contains', 'overlaps'};
     const expectedLabels = {
       'Low effort',
       'Low mess',
       'For babies',
       'Toddlers',
+      'Preschool',
       'Movement',
       'Quiet',
     };
@@ -128,7 +146,13 @@ void main() {
             reason: '${filter.id} field');
         expect(supportedOperators, contains(rule.operator),
             reason: '${filter.id} operator');
-        expect(_isNotBlank(rule.value), isTrue, reason: '${filter.id} value');
+        if (rule.operator == 'overlaps') {
+          expect(rule.min, isNotNull, reason: '${filter.id} overlaps min');
+          expect(rule.max, isNotNull, reason: '${filter.id} overlaps max');
+        } else {
+          expect(_isNotBlank(rule.value ?? ''), isTrue,
+              reason: '${filter.id} value');
+        }
       }
     }
   });
@@ -152,6 +176,13 @@ void main() {
       expect(_isNotBlank(idea.title), isTrue, reason: '${idea.id} title');
       expect(_isNotBlank(idea.summary), isTrue, reason: '${idea.id} summary');
       expect(_isNotBlank(idea.ageGroup), isTrue, reason: '${idea.id} ageGroup');
+      expect(idea.ageRangeMonths.min, greaterThanOrEqualTo(0),
+          reason: '${idea.id} ageRangeMonths min');
+      expect(idea.ageRangeMonths.max,
+          greaterThanOrEqualTo(idea.ageRangeMonths.min),
+          reason: '${idea.id} ageRangeMonths max>=min');
+      expect(idea.ageRangeMonths.max, lessThanOrEqualTo(96),
+          reason: '${idea.id} ageRangeMonths max');
       expect(_isNotBlank(idea.place), isTrue, reason: '${idea.id} place');
       expect(_isNotBlank(idea.messLevel), isTrue,
           reason: '${idea.id} messLevel');
@@ -338,6 +369,10 @@ const _minimalContentPackageJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
@@ -394,6 +429,10 @@ const _minimalContentPackageWithoutFiltersJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
@@ -436,11 +475,131 @@ const _minimalContentPackageWithoutContextsJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
       "place": "Home",
       "messLevel": "Low",
       "childEngagement": "Low",
       "parentInvolvement": "Low",
       "activityType": "Quiet time",
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithoutAgeRangeMonthsJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
+      "neededItems": ["Soft cloth"],
+      "steps": ["Place the item nearby."],
+      "whatToExpect": "A simple test note for content loading.",
+      "parentNote": "Keep it simple.",
+      "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_test_sound",
+      "title": "Test sound",
+      "category": "Calm",
+      "summary": "A placeholder sound.",
+      "assetPath": "placeholder://sounds/test_sound",
+      "unlockType": "free"
+    }
+  ]
+}
+''';
+
+const _minimalContentPackageWithInvalidAgeRangeJson = '''
+{
+  "metadata": {
+    "packageId": "test-package",
+    "schemaVersion": 1,
+    "version": "1.0.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_test_idea",
+      "title": "Test idea",
+      "summary": "A calm test idea.",
+      "ageGroup": "2-5 years",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 24
+      },
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": ["home", "quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",

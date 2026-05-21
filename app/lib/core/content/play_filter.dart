@@ -55,36 +55,116 @@ class PlayFilterRule {
   const PlayFilterRule({
     required this.field,
     required this.operator,
-    required this.value,
+    this.value,
+    this.min,
+    this.max,
   });
 
   final String field;
   final String operator;
-  final String value;
+  final String? value;
+  final int? min;
+  final int? max;
 
   factory PlayFilterRule.fromJson(Map<String, Object?> json) {
+    final field = readString(json, 'field');
+    final operator = readString(json, 'operator');
+    final value = json.containsKey('value') ? readString(json, 'value') : null;
+    final min = json.containsKey('min') ? readInt(json, 'min') : null;
+    final max = json.containsKey('max') ? readInt(json, 'max') : null;
+
+    _validateRule(field, operator, value: value, min: min, max: max);
+
     return PlayFilterRule(
-      field: readString(json, 'field'),
-      operator: readString(json, 'operator'),
-      value: readString(json, 'value'),
+      field: field,
+      operator: operator,
+      value: value,
+      min: min,
+      max: max,
     );
+  }
+
+  static void _validateRule(
+    String field,
+    String operator, {
+    String? value,
+    int? min,
+    int? max,
+  }) {
+    if (field == 'ageRangeMonths') {
+      if (operator != 'overlaps') {
+        throw FormatException(
+          "Invalid 'operator' for field 'ageRangeMonths'. Expected 'overlaps'.",
+        );
+      }
+      if (min == null || max == null) {
+        throw FormatException(
+          "Invalid 'ageRangeMonths' rule. Expected 'min' and 'max'.",
+        );
+      }
+      if (min < 0) {
+        throw FormatException("Invalid 'min'. Expected >= 0.");
+      }
+      if (max < min) {
+        throw FormatException("Invalid 'max'. Expected >= 'min'.");
+      }
+      if (max > 96) {
+        throw FormatException("Invalid 'max'. Expected <= 96.");
+      }
+      return;
+    }
+
+    if (field == 'contexts') {
+      if (operator != 'contains') {
+        throw FormatException(
+          "Invalid 'operator' for field 'contexts'. Expected 'contains'.",
+        );
+      }
+      if (value == null) {
+        throw FormatException(
+            "Expected non-empty 'value' for field 'contexts'.");
+      }
+      return;
+    }
+
+    if (operator == 'equals' || operator == 'contains') {
+      if (value == null) {
+        throw FormatException('Expected non-empty value for rule.');
+      }
+      return;
+    }
+
+    throw FormatException("Invalid 'operator'.");
   }
 
   bool matches(PlayIdea idea) {
     if (field == 'contexts') {
       return switch (operator) {
-        'contains' => idea.contexts.contains(value),
+        'contains' => value != null && idea.contexts.contains(value),
+        _ => false,
+      };
+    }
+    if (field == 'ageRangeMonths') {
+      return switch (operator) {
+        'overlaps' => min != null &&
+            max != null &&
+            idea.ageRangeMonths.min <= max! &&
+            idea.ageRangeMonths.max >= min!,
         _ => false,
       };
     }
 
     final source = _readFieldValue(idea, field);
+    final ruleValue = value;
     if (source == null) {
       return false;
     }
+    if (ruleValue == null) {
+      return false;
+    }
     return switch (operator) {
-      'equals' => source == value,
-      'contains' => source.contains(value),
+      'equals' => source == ruleValue,
+      'contains' => source.contains(ruleValue),
       _ => false,
     };
   }
