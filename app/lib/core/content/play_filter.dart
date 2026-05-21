@@ -55,36 +55,55 @@ class PlayFilterRule {
   const PlayFilterRule({
     required this.field,
     required this.operator,
-    required this.value,
+    this.value,
+    this.min,
+    this.max,
   });
 
   final String field;
   final String operator;
-  final String value;
+  final String? value;
+  final int? min;
+  final int? max;
 
   factory PlayFilterRule.fromJson(Map<String, Object?> json) {
     return PlayFilterRule(
       field: readString(json, 'field'),
       operator: readString(json, 'operator'),
-      value: readString(json, 'value'),
+      value: json.containsKey('value') ? readString(json, 'value') : null,
+      min: json.containsKey('min') ? readInt(json, 'min') : null,
+      max: json.containsKey('max') ? readInt(json, 'max') : null,
     );
   }
 
   bool matches(PlayIdea idea) {
     if (field == 'contexts') {
       return switch (operator) {
-        'contains' => idea.contexts.contains(value),
+        'contains' => value != null && idea.contexts.contains(value),
+        _ => false,
+      };
+    }
+    if (field == 'ageRangeMonths') {
+      return switch (operator) {
+        'overlaps' => min != null &&
+            max != null &&
+            idea.ageRangeMonths.min <= max! &&
+            idea.ageRangeMonths.max >= min!,
         _ => false,
       };
     }
 
     final source = _readFieldValue(idea, field);
+    final ruleValue = value;
     if (source == null) {
       return false;
     }
+    if (ruleValue == null) {
+      return false;
+    }
     return switch (operator) {
-      'equals' => source == value,
-      'contains' => source.contains(value),
+      'equals' => source == ruleValue,
+      'contains' => source.contains(ruleValue),
       _ => false,
     };
   }

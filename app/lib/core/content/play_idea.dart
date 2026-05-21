@@ -1,11 +1,29 @@
 import 'json_readers.dart';
 
+class AgeRangeMonths {
+  const AgeRangeMonths({
+    required this.min,
+    required this.max,
+  });
+
+  final int min;
+  final int max;
+
+  factory AgeRangeMonths.fromJson(Map<String, Object?> json) {
+    return AgeRangeMonths(
+      min: readInt(json, 'min'),
+      max: readInt(json, 'max'),
+    );
+  }
+}
+
 class PlayIdea {
   const PlayIdea({
     required this.id,
     required this.title,
     required this.summary,
     required this.ageGroup,
+    required this.ageRangeMonths,
     required this.place,
     required this.messLevel,
     required this.childEngagement,
@@ -23,6 +41,7 @@ class PlayIdea {
   final String title;
   final String summary;
   final String ageGroup;
+  final AgeRangeMonths ageRangeMonths;
   final String place;
   final String messLevel;
   final String childEngagement;
@@ -41,6 +60,9 @@ class PlayIdea {
       title: readString(json, 'title'),
       summary: readString(json, 'summary'),
       ageGroup: readString(json, 'ageGroup'),
+      ageRangeMonths: json.containsKey('ageRangeMonths')
+          ? AgeRangeMonths.fromJson(readMap(json, 'ageRangeMonths'))
+          : const AgeRangeMonths(min: 0, max: 96),
       place: readString(json, 'place'),
       messLevel: readString(json, 'messLevel'),
       childEngagement: readString(json, 'childEngagement'),

@@ -95,9 +95,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Soft treasure basket'), findsOneWidget);
-    expect(find.text('Quiet book basket'), findsNothing);
     expect(find.text('Couch cushion tunnel'), findsNothing);
-    expect(find.text('1 gentle ideas'), findsOneWidget);
+    expect(find.text('2 gentle ideas'), findsOneWidget);
   });
 
   testWidgets('toggling a selected chip off updates results', (tester) async {
@@ -254,34 +253,39 @@ class _PlayFilterContentLoader extends ContentLoader {
         PlayFilter(
           id: 'for_babies',
           label: 'For babies',
-          matchMode: PlayFilterMatchMode.any,
+          matchMode: PlayFilterMatchMode.all,
           rules: [
             PlayFilterRule(
-              field: 'ageGroup',
-              operator: 'contains',
-              value: '0-12 months',
-            ),
-            PlayFilterRule(
-              field: 'ageGroup',
-              operator: 'contains',
-              value: '6-18 months',
+              field: 'ageRangeMonths',
+              operator: 'overlaps',
+              min: 0,
+              max: 18,
             ),
           ],
         ),
         PlayFilter(
           id: 'toddlers',
           label: 'Toddlers',
-          matchMode: PlayFilterMatchMode.any,
+          matchMode: PlayFilterMatchMode.all,
           rules: [
             PlayFilterRule(
-              field: 'ageGroup',
-              operator: 'contains',
-              value: '18 months-3 years',
+              field: 'ageRangeMonths',
+              operator: 'overlaps',
+              min: 12,
+              max: 36,
             ),
+          ],
+        ),
+        PlayFilter(
+          id: 'preschool',
+          label: 'Preschool',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
             PlayFilterRule(
-              field: 'ageGroup',
-              operator: 'contains',
-              value: '2-5 years',
+              field: 'ageRangeMonths',
+              operator: 'overlaps',
+              min: 36,
+              max: 72,
             ),
           ],
         ),
@@ -291,26 +295,21 @@ class _PlayFilterContentLoader extends ContentLoader {
           matchMode: PlayFilterMatchMode.all,
           rules: [
             PlayFilterRule(
-              field: 'activityType',
-              operator: 'equals',
-              value: 'Movement',
+              field: 'contexts',
+              operator: 'contains',
+              value: 'movement',
             ),
           ],
         ),
         PlayFilter(
           id: 'quiet',
           label: 'Quiet',
-          matchMode: PlayFilterMatchMode.any,
+          matchMode: PlayFilterMatchMode.all,
           rules: [
             PlayFilterRule(
-              field: 'activityType',
-              operator: 'equals',
-              value: 'Quiet time',
-            ),
-            PlayFilterRule(
-              field: 'childEngagement',
-              operator: 'equals',
-              value: 'Low',
+              field: 'contexts',
+              operator: 'contains',
+              value: 'quiet',
             ),
           ],
         ),
@@ -321,6 +320,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           title: 'Soft treasure basket',
           summary: 'Offer a few safe household textures to explore together.',
           ageGroup: '6-18 months',
+          ageRangeMonths: AgeRangeMonths(min: 6, max: 18),
           place: 'Home',
           messLevel: 'Low',
           childEngagement: 'Medium',
@@ -340,6 +340,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           summary:
               'Make a small tunnel for crawling, peeking, or passing a toy.',
           ageGroup: '18 months-3 years',
+          ageRangeMonths: AgeRangeMonths(min: 18, max: 36),
           place: 'Floor',
           messLevel: 'Medium',
           childEngagement: 'High',
@@ -358,6 +359,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           title: 'Quiet book basket',
           summary: 'Set out a small basket of books for a calm shared pause.',
           ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
           place: 'Any quiet spot',
           messLevel: 'Low',
           childEngagement: 'Low',
@@ -376,6 +378,7 @@ class _PlayFilterContentLoader extends ContentLoader {
           title: 'Indoor march',
           summary: 'March around the room together in a gentle rhythm.',
           ageGroup: '2-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
           place: 'Home',
           messLevel: 'Medium',
           childEngagement: 'Medium',

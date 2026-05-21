@@ -10,13 +10,13 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.4.0');
+    expect(package.metadata.version, '1.5.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
     expect(_isNotBlank(package.metadata.minAppVersion), isTrue);
     expect(package.playIdeas, hasLength(50));
-    expect(package.playFilters, hasLength(6));
+    expect(package.playFilters, hasLength(7));
     expect(package.sounds, hasLength(5));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
@@ -91,18 +91,19 @@ void main() {
     const supportedFields = {
       'parentInvolvement',
       'messLevel',
-      'ageGroup',
+      'ageRangeMonths',
       'activityType',
       'childEngagement',
       'place',
       'contexts',
     };
-    const supportedOperators = {'equals', 'contains'};
+    const supportedOperators = {'equals', 'contains', 'overlaps'};
     const expectedLabels = {
       'Low effort',
       'Low mess',
       'For babies',
       'Toddlers',
+      'Preschool',
       'Movement',
       'Quiet',
     };
@@ -128,7 +129,13 @@ void main() {
             reason: '${filter.id} field');
         expect(supportedOperators, contains(rule.operator),
             reason: '${filter.id} operator');
-        expect(_isNotBlank(rule.value), isTrue, reason: '${filter.id} value');
+        if (rule.operator == 'overlaps') {
+          expect(rule.min, isNotNull, reason: '${filter.id} overlaps min');
+          expect(rule.max, isNotNull, reason: '${filter.id} overlaps max');
+        } else {
+          expect(_isNotBlank(rule.value ?? ''), isTrue,
+              reason: '${filter.id} value');
+        }
       }
     }
   });
@@ -152,6 +159,13 @@ void main() {
       expect(_isNotBlank(idea.title), isTrue, reason: '${idea.id} title');
       expect(_isNotBlank(idea.summary), isTrue, reason: '${idea.id} summary');
       expect(_isNotBlank(idea.ageGroup), isTrue, reason: '${idea.id} ageGroup');
+      expect(idea.ageRangeMonths.min, greaterThanOrEqualTo(0),
+          reason: '${idea.id} ageRangeMonths min');
+      expect(idea.ageRangeMonths.max,
+          greaterThanOrEqualTo(idea.ageRangeMonths.min),
+          reason: '${idea.id} ageRangeMonths max>=min');
+      expect(idea.ageRangeMonths.max, lessThanOrEqualTo(96),
+          reason: '${idea.id} ageRangeMonths max');
       expect(_isNotBlank(idea.place), isTrue, reason: '${idea.id} place');
       expect(_isNotBlank(idea.messLevel), isTrue,
           reason: '${idea.id} messLevel');
