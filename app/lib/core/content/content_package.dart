@@ -17,10 +17,14 @@ class ContentPackage {
   final List<SoundItem> sounds;
 
   factory ContentPackage.fromJson(Map<String, Object?> json) {
+    final playFilters = json.containsKey('playFilters')
+        ? readItems(json, 'playFilters', PlayFilter.fromJson)
+        : const <PlayFilter>[];
+
     return ContentPackage(
       metadata: ContentMetadata.fromJson(readMap(json, 'metadata')),
       playIdeas: readItems(json, 'playIdeas', PlayIdea.fromJson),
-      playFilters: readItems(json, 'playFilters', PlayFilter.fromJson),
+      playFilters: playFilters,
       sounds: readItems(json, 'sounds', SoundItem.fromJson),
     );
   }
