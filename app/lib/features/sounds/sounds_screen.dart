@@ -294,7 +294,68 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            _buildArtworkMoodPanel(),
+            const SizedBox(height: AppSpacing.lg),
+            Text(widget.sound.title, style: AppTextStyles.screenTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(widget.sound.summary, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.sm),
+            _SoundMetadata(
+              sound: widget.sound,
+              showUnlockType: false,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArtworkMoodPanel() {
+    return Container(
+      key: const ValueKey('sound-player-artwork'),
+      height: 124,
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFF3F8F4),
+            Color(0xFFE9F3EC),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 10,
+            right: 8,
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.10),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 10,
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
               width: 42,
               height: 42,
               decoration: const BoxDecoration(
@@ -307,17 +368,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                 size: 22,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
-            Text(widget.sound.title, style: AppTextStyles.screenTitle),
-            const SizedBox(height: AppSpacing.xs),
-            Text(widget.sound.summary, style: AppTextStyles.body),
-            const SizedBox(height: AppSpacing.sm),
-            _SoundMetadata(
-              sound: widget.sound,
-              showUnlockType: false,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -429,9 +481,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Widget _buildControls() {
     final isPlaying = _player.playing;
-    return Column(
+    return Row(
       key: const ValueKey('sound-player-controls'),
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        const SizedBox(width: 40),
         SizedBox(
           width: 86,
           height: 86,
@@ -453,14 +508,23 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
-        TextButton.icon(
+        const SizedBox(width: AppSpacing.md),
+        TextButton(
+          key: const ValueKey('sound-player-stop-control'),
           onPressed: _stop,
           style: TextButton.styleFrom(
             foregroundColor: AppColors.textSecondary,
+            minimumSize: const Size(40, 40),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          icon: const Icon(Icons.stop_rounded, size: 18),
-          label: const Text('Stop'),
+          child: const Tooltip(
+            message: 'Stop',
+            child: Icon(Icons.stop_rounded, size: 18),
+          ),
         ),
       ],
     );
