@@ -239,17 +239,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     await _player.setLoopMode(LoopMode.all);
   }
 
-  Future<void> _stop() async {
-    await _player.pause();
-    await _player.seek(Duration.zero);
-    if (mounted) {
-      setState(() {
-        _draggingProgress = null;
-        _errorMessage = null;
-      });
-    }
-  }
-
   String _statusText() {
     if (_errorMessage != null) {
       return 'Could not play';
@@ -495,53 +484,30 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Widget _buildControls() {
     final isPlaying = _player.playing;
-    return Column(
+    return Padding(
       key: const ValueKey('sound-player-controls'),
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 86,
-          height: 86,
-          child: FilledButton(
-            key: const ValueKey('sound-player-primary-control'),
-            style: FilledButton.styleFrom(
-              shape: const CircleBorder(),
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.zero,
-            ),
-            onPressed: _togglePlayPause,
-            child: Tooltip(
-              message: isPlaying ? 'Pause' : 'Play',
-              child: Icon(
-                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                size: 44,
-              ),
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
+      child: SizedBox(
+        width: 86,
+        height: 86,
+        child: FilledButton(
+          key: const ValueKey('sound-player-primary-control'),
+          style: FilledButton.styleFrom(
+            shape: const CircleBorder(),
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            padding: EdgeInsets.zero,
+          ),
+          onPressed: _togglePlayPause,
+          child: Tooltip(
+            message: isPlaying ? 'Pause' : 'Play',
+            child: Icon(
+              isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+              size: 44,
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
-        OutlinedButton.icon(
-          key: const ValueKey('sound-player-stop-control'),
-          onPressed: _stop,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.textSecondary,
-            side: const BorderSide(color: AppColors.borderSoft),
-            backgroundColor: AppColors.surface,
-            minimumSize: const Size(88, 34),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xs,
-            ),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(999),
-            ),
-          ),
-          icon: const Icon(Icons.stop_rounded, size: 16),
-          label: const Text('Stop'),
-        ),
-      ],
+      ),
     );
   }
 
