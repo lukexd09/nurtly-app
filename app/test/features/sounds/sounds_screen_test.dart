@@ -33,11 +33,13 @@ void main() {
     expect(find.byKey(const ValueKey('sound-player-status')), findsOneWidget);
     expect(find.text('Ready'), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
+    expect(find.byKey(const ValueKey('sound-player-artwork')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-progress')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-controls')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
-    expect(find.text('Stop'), findsOneWidget);
+    expect(find.byKey(const ValueKey('sound-player-stop-control')),
+        findsOneWidget);
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
