@@ -41,7 +41,7 @@ void main() {
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
-    expect(find.text('free'), findsOneWidget);
+    expect(find.text('free'), findsNothing);
 
     await tester.scrollUntilVisible(
       find.text('Keep volume comfortable and device away from child.'),

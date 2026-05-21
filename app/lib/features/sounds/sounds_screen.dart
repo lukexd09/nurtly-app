@@ -7,8 +7,10 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/widgets/detail_note.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
@@ -279,88 +281,75 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     await _player.seek(target);
   }
 
-  Widget _buildStatusBadge() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        key: const ValueKey('sound-player-status'),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.xs,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.primarySoft,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(
-          _statusText(),
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.w700,
-          ),
+  Widget _buildHeroCard() {
+    return DecoratedBox(
+      key: const ValueKey('sound-player-card'),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadii.panelRadius,
+        border: Border.all(color: AppColors.borderSoft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: const BoxDecoration(
+                color: AppColors.primarySoft,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.waves_rounded,
+                color: AppColors.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(widget.sound.title, style: AppTextStyles.screenTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(widget.sound.summary, style: AppTextStyles.body),
+            const SizedBox(height: AppSpacing.sm),
+            _SoundMetadata(
+              sound: widget.sound,
+              showUnlockType: false,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildPlayerCard() {
-    return Container(
-      key: const ValueKey('sound-player-card'),
-      padding: const EdgeInsets.all(AppSpacing.lg),
+  Widget _buildPlaybackCard() {
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.panelRadius,
         border: Border.all(color: AppColors.borderSoft),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 148,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: const LinearGradient(
-                colors: [Color(0xFFE9F5ED), Color(0xFFF5F8F1)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Playback', style: AppTextStyles.cardTitle),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              _statusText(),
+              key: const ValueKey('sound-player-status'),
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 24,
-                  left: 22,
-                  child: _VisualDot(
-                    color: AppColors.primary.withValues(alpha: 0.20),
-                  ),
-                ),
-                Positioned(
-                  right: 26,
-                  bottom: 20,
-                  child: _VisualDot(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                  ),
-                ),
-                const Center(
-                  child: Icon(
-                    Icons.graphic_eq_rounded,
-                    size: 46,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(widget.sound.title, style: AppTextStyles.screenTitle),
-          const SizedBox(height: AppSpacing.xs),
-          Text(widget.sound.summary, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.sm),
-          _SoundMetadata(sound: widget.sound),
-          const SizedBox(height: AppSpacing.lg),
-          _buildProgressControl(),
-        ],
+            const SizedBox(height: AppSpacing.md),
+            _buildProgressControl(),
+            const SizedBox(height: AppSpacing.lg),
+            _buildControls(),
+          ],
+        ),
       ),
     );
   }
@@ -467,6 +456,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         const SizedBox(height: AppSpacing.sm),
         TextButton.icon(
           onPressed: _stop,
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.textSecondary,
+          ),
           icon: const Icon(Icons.stop_rounded, size: 18),
           label: const Text('Stop'),
         ),
@@ -491,24 +483,14 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            _buildStatusBadge(),
+            _buildHeroCard(),
             const SizedBox(height: AppSpacing.lg),
-            _buildPlayerCard(),
+            _buildPlaybackCard(),
             const SizedBox(height: AppSpacing.lg),
-            _buildControls(),
-            const SizedBox(height: AppSpacing.lg),
-            Container(
-              key: const ValueKey('sound-player-safety-note'),
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderSoft),
-              ),
-              child: const Text(
-                'Keep volume comfortable and device away from child.',
-                style: AppTextStyles.caption,
-              ),
+            const DetailNote(
+              key: ValueKey('sound-player-safety-note'),
+              title: 'Safety note',
+              text: 'Keep volume comfortable and device away from child.',
             ),
           ],
         ),
@@ -517,28 +499,14 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 }
 
-class _VisualDot extends StatelessWidget {
-  const _VisualDot({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-    );
-  }
-}
-
 class _SoundMetadata extends StatelessWidget {
-  const _SoundMetadata({required this.sound});
+  const _SoundMetadata({
+    required this.sound,
+    this.showUnlockType = true,
+  });
 
   final SoundItem sound;
+  final bool showUnlockType;
 
   @override
   Widget build(BuildContext context) {
@@ -547,7 +515,7 @@ class _SoundMetadata extends StatelessWidget {
       runSpacing: AppSpacing.xs,
       children: [
         NurtlyChip(label: sound.category),
-        NurtlyChip(label: sound.unlockType),
+        if (showUnlockType) NurtlyChip(label: sound.unlockType),
       ],
     );
   }
