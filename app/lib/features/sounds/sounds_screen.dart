@@ -136,11 +136,15 @@ class SoundDetailScreen extends StatefulWidget {
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
   static const int _loopPlaylistCopies = 3;
+  static const double _normalVolume = 1;
   late final AudioPlayer _player;
   late final StreamSubscription<PlayerState> _playerSubscription;
   bool _isLoading = false;
   String? _errorMessage;
   double? _draggingProgress;
+  Timer? _sessionTimer;
+  Duration? _selectedSessionDuration;
+  Duration? _remainingSessionDuration;
 
   @override
   void initState() {
@@ -155,6 +159,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   @override
   void dispose() {
+    _cancelSessionTimer();
+    unawaited(_restoreVolume());
     _playerSubscription.cancel();
     _player.dispose();
     super.dispose();
@@ -173,6 +179,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
     if (_player.playing) {
       await _player.pause();
+      _pauseSessionTimer();
       if (mounted) {
         setState(() {});
       }
@@ -195,7 +202,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         _isLoading = false;
       });
       unawaited(
-        _player.play().catchError((Object _) async {
+        _player.play().then((_) {}).catchError((Object _) async {
+          _cancelSessionTimer();
+          await _restoreVolume();
           await _player.pause();
           await _player.seek(Duration.zero);
           if (!mounted) {
@@ -208,7 +217,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           });
         }),
       );
+      _startSessionTimerIfNeeded();
     } catch (_) {
+      _cancelSessionTimer();
+      await _restoreVolume();
       await _player.pause();
       await _player.seek(Duration.zero);
       if (!mounted) {
@@ -239,6 +251,93 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     await _player.setLoopMode(LoopMode.all);
   }
 
+  void _selectSessionDuration(Duration? duration) {
+    _cancelSessionTimer();
+    _selectedSessionDuration = duration;
+    _remainingSessionDuration = duration;
+    unawaited(_restoreVolume());
+    if (_player.playing) {
+      _startSessionTimerIfNeeded();
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _startSessionTimerIfNeeded() {
+    final selectedDuration = _selectedSessionDuration;
+    if (selectedDuration == null) {
+      return;
+    }
+    _cancelSessionTimer();
+    if (_remainingSessionDuration == null ||
+        _remainingSessionDuration! <= Duration.zero) {
+      _remainingSessionDuration = selectedDuration;
+    }
+    _updateFadeVolume();
+    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (_) async {
+      final remaining = _remainingSessionDuration;
+      if (remaining == null) {
+        _cancelSessionTimer();
+        return;
+      }
+      final nextRemaining = remaining - const Duration(seconds: 1);
+      if (nextRemaining <= Duration.zero) {
+        _remainingSessionDuration = selectedDuration;
+        _cancelSessionTimer();
+        await _player.pause();
+        await _restoreVolume();
+        if (mounted) {
+          setState(() {});
+        }
+        return;
+      }
+      _remainingSessionDuration = nextRemaining;
+      await _updateFadeVolume();
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  void _pauseSessionTimer() {
+    _cancelSessionTimer();
+    unawaited(_restoreVolume());
+  }
+
+  void _cancelSessionTimer() {
+    _sessionTimer?.cancel();
+    _sessionTimer = null;
+  }
+
+  Future<void> _updateFadeVolume() async {
+    final selectedDuration = _selectedSessionDuration;
+    final remaining = _remainingSessionDuration;
+    if (selectedDuration == null || remaining == null) {
+      await _restoreVolume();
+      return;
+    }
+    final fadeSeconds = _fadeWindow(selectedDuration).inSeconds;
+    if (fadeSeconds <= 0 || remaining.inSeconds > fadeSeconds) {
+      await _restoreVolume();
+      return;
+    }
+    final volume = (remaining.inMilliseconds /
+            Duration(seconds: fadeSeconds).inMilliseconds)
+        .clamp(0.0, _normalVolume);
+    await _player.setVolume(volume);
+  }
+
+  Future<void> _restoreVolume() async {
+    await _player.setVolume(_normalVolume);
+  }
+
+  Duration _fadeWindow(Duration duration) {
+    final tenPercentSeconds = (duration.inSeconds * 0.1).round();
+    final fadeSeconds = tenPercentSeconds.clamp(1, 30);
+    return Duration(seconds: fadeSeconds);
+  }
+
   String _statusText() {
     if (_errorMessage != null) {
       return 'Could not play';
@@ -263,6 +362,15 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     final minutes = totalSeconds ~/ 60;
     final seconds = totalSeconds % 60;
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String _sessionLabel() {
+    final selected = _selectedSessionDuration;
+    if (selected == null) {
+      return 'Infinity';
+    }
+    final remaining = _remainingSessionDuration ?? selected;
+    return '${_formatDuration(remaining)} left';
   }
 
   Duration _durationOrZero() {
@@ -295,13 +403,21 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildArtworkMoodPanel(),
             const SizedBox(height: AppSpacing.lg),
-            Text(widget.sound.title, style: AppTextStyles.screenTitle),
+            Text(
+              widget.sound.title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.screenTitle,
+            ),
             const SizedBox(height: AppSpacing.xs),
-            Text(widget.sound.summary, style: AppTextStyles.body),
+            Text(
+              widget.sound.summary,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body,
+            ),
             const SizedBox(height: AppSpacing.sm),
             _SoundMetadata(
               sound: widget.sound,
@@ -316,11 +432,11 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   Widget _buildArtworkMoodPanel() {
     return Container(
       key: const ValueKey('sound-player-artwork'),
-      height: 124,
+      height: 204,
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -333,11 +449,11 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       child: Stack(
         children: [
           Positioned(
-            top: 10,
-            right: 8,
+            top: 16,
+            right: 18,
             child: Container(
-              width: 42,
-              height: 42,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.10),
                 shape: BoxShape.circle,
@@ -345,30 +461,30 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             ),
           ),
           Positioned(
-            bottom: 8,
-            left: 10,
+            bottom: 18,
+            left: 22,
             child: Container(
-              width: 24,
-              height: 24,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topLeft,
+          Center(
             child: Container(
-              width: 42,
-              height: 42,
-              decoration: const BoxDecoration(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
                 color: AppColors.primarySoft,
                 shape: BoxShape.circle,
+                border: Border.all(color: AppColors.surfaceBright, width: 6),
               ),
               child: const Icon(
                 Icons.waves_rounded,
                 color: AppColors.primary,
-                size: 22,
+                size: 42,
               ),
             ),
           ),
@@ -389,22 +505,97 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Playback', style: AppTextStyles.cardTitle),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              _statusText(),
-              key: const ValueKey('sound-player-status'),
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Expanded(
+                    child: Text('Playback', style: AppTextStyles.cardTitle)),
+                Text(
+                  _statusText(),
+                  key: const ValueKey('sound-player-status'),
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.md),
             _buildProgressControl(),
             const SizedBox(height: AppSpacing.lg),
+            _buildSessionOptions(),
+            const SizedBox(height: AppSpacing.md),
+            _buildAutoFadeIndicator(),
+            const SizedBox(height: AppSpacing.lg),
             _buildControls(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSessionOptions() {
+    return Column(
+      key: const ValueKey('sound-player-session-options'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _sessionLabel(),
+          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
+          children: [
+            _SessionChip(
+              label: '15 min',
+              selected: _selectedSessionDuration == const Duration(minutes: 15),
+              onSelected: () =>
+                  _selectSessionDuration(const Duration(minutes: 15)),
+            ),
+            _SessionChip(
+              label: '30 min',
+              selected: _selectedSessionDuration == const Duration(minutes: 30),
+              onSelected: () =>
+                  _selectSessionDuration(const Duration(minutes: 30)),
+            ),
+            _SessionChip(
+              label: '60 min',
+              selected: _selectedSessionDuration == const Duration(minutes: 60),
+              onSelected: () =>
+                  _selectSessionDuration(const Duration(minutes: 60)),
+            ),
+            _SessionChip(
+              label: 'Infinity',
+              selected: _selectedSessionDuration == null,
+              onSelected: () => _selectSessionDuration(null),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAutoFadeIndicator() {
+    final finiteTimerSelected = _selectedSessionDuration != null;
+    return Container(
+      key: const ValueKey('sound-player-auto-fade'),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: AppRadii.chipRadius,
+      ),
+      child: Text(
+        finiteTimerSelected
+            ? 'Auto-fade enabled'
+            : 'Auto-fade for timed sessions',
+        textAlign: TextAlign.center,
+        style: AppTextStyles.caption.copyWith(color: AppColors.primary),
       ),
     );
   }
@@ -569,6 +760,35 @@ class _SoundMetadata extends StatelessWidget {
         NurtlyChip(label: sound.category),
         if (showUnlockType) NurtlyChip(label: sound.unlockType),
       ],
+    );
+  }
+}
+
+class _SessionChip extends StatelessWidget {
+  const _SessionChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onSelected(),
+      selectedColor: AppColors.primarySoft,
+      backgroundColor: AppColors.surface,
+      side: const BorderSide(color: AppColors.borderSoft),
+      showCheckmark: false,
+      labelStyle: AppTextStyles.caption.copyWith(
+        color: selected ? AppColors.primary : AppColors.textSecondary,
+        fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+      ),
     );
   }
 }

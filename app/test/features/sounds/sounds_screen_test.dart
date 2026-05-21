@@ -37,6 +37,15 @@ void main() {
     expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-artwork')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-progress')), findsOneWidget);
+    expect(find.byKey(const ValueKey('sound-player-session-options')),
+        findsOneWidget);
+    expect(find.text('15 min'), findsOneWidget);
+    expect(find.text('30 min'), findsOneWidget);
+    expect(find.text('60 min'), findsOneWidget);
+    expect(find.text('Infinity'), findsWidgets);
+    expect(
+        find.byKey(const ValueKey('sound-player-auto-fade')), findsOneWidget);
+    expect(find.text('Auto-fade for timed sessions'), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-controls')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
