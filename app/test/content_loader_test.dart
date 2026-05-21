@@ -10,7 +10,7 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.5.0');
+    expect(package.metadata.version, '1.5.1');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
