@@ -28,6 +28,8 @@ $forbiddenPatterns = @(
     "firebase_",
     "google_mobile_ads",
     "just_audio",
+    "just_audio_background",
+    "audio_service",
     "audioplayers",
     "shared_preferences",
     "sqflite",
@@ -103,6 +105,24 @@ function Test-ShouldScanForbiddenPatterns {
         $normalized -ne "tools/check_scope_guard.ps1"
 }
 
+function Test-IsAllowedJustAudioUsage {
+    param(
+        [string] $Path,
+        [string] $Pattern
+    )
+
+    if ($Pattern -ne "just_audio") {
+        return $false
+    }
+
+    $normalized = $Path -replace "\\", "/"
+    return $normalized -in @(
+        "app/pubspec.yaml",
+        "app/pubspec.lock",
+        "app/lib/features/sounds/sounds_screen.dart"
+    )
+}
+
 function Test-ForbiddenPatternMatch {
     param(
         [string] $Content,
@@ -150,6 +170,9 @@ try {
             (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
+                if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
+                    continue
+                }
                 if (Test-ForbiddenPatternMatch $content $pattern) {
                     $failures += "Forbidden pattern '$pattern' found in $file"
                 }

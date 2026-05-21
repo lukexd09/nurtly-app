@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
@@ -118,13 +119,94 @@ class _SoundCard extends StatelessWidget {
   }
 }
 
-class SoundDetailScreen extends StatelessWidget {
+class SoundDetailScreen extends StatefulWidget {
   const SoundDetailScreen({
     required this.sound,
     super.key,
   });
 
   final SoundItem sound;
+
+  @override
+  State<SoundDetailScreen> createState() => _SoundDetailScreenState();
+}
+
+class _SoundDetailScreenState extends State<SoundDetailScreen> {
+  late final AudioPlayer _player;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _player = AudioPlayer();
+    _player.setLoopMode(LoopMode.one);
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  Future<void> _togglePlayPause() async {
+    if (_isLoading) {
+      return;
+    }
+
+    if (_player.playing) {
+      await _player.pause();
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      if (_player.audioSource == null) {
+        await _player.setAsset(widget.sound.assetPath);
+      }
+      await _player.play();
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _errorMessage = 'Could not play this sound';
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not play this sound')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _stop() async {
+    await _player.stop();
+  }
+
+  String _statusText() {
+    if (_errorMessage != null) {
+      return _errorMessage!;
+    }
+    if (_isLoading) {
+      return 'Loading';
+    }
+    if (_player.playing) {
+      return 'Playing';
+    }
+    if (_player.processingState == ProcessingState.ready) {
+      return 'Paused';
+    }
+    return 'Ready';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,15 +225,33 @@ class SoundDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
-            Text(sound.title, style: AppTextStyles.screenTitle),
+            Text(widget.sound.title, style: AppTextStyles.screenTitle),
             const SizedBox(height: AppSpacing.xs),
-            Text(sound.summary, style: AppTextStyles.body),
+            Text(widget.sound.summary, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.md),
-            _SoundMetadata(sound: sound),
+            _SoundMetadata(sound: widget.sound),
             const SizedBox(height: AppSpacing.lg),
-            const DetailNote(
-              title: 'Player placeholder',
-              text: 'Real sound playback will be added in a later task.',
+            DetailNote(
+              title: 'Playback',
+              text: _statusText(),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: _togglePlayPause,
+                    child: Text(_player.playing ? 'Pause' : 'Play'),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _stop,
+                    child: const Text('Stop'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
