@@ -1,5 +1,6 @@
 import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_package.dart';
+import 'package:nurtly/core/content/play_filter.dart';
 import 'package:nurtly/core/content/play_idea.dart';
 import 'package:nurtly/core/content/sound_item.dart';
 
@@ -17,6 +18,20 @@ class FakeContentLoader extends ContentLoader {
         publishedAt: '2026-05-18',
         minAppVersion: '0.1.0',
       ),
+      playFilters: [
+        PlayFilter(
+          id: 'low_effort',
+          label: 'Low effort',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'parentInvolvement',
+              operator: 'equals',
+              value: 'Low',
+            ),
+          ],
+        ),
+      ],
       playIdeas: [
         PlayIdea(
           id: 'play_soft_treasure_basket',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
+import '../../core/content/play_filter.dart';
 import '../../core/content/play_idea.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
@@ -29,7 +30,7 @@ class PlayScreen extends StatefulWidget {
 class _PlayScreenState extends State<PlayScreen> {
   late final Future<ContentPackage> _contentFuture;
   bool _filtersExpanded = false;
-  final Set<_QuickFilter> _selectedFilters = <_QuickFilter>{};
+  final Set<String> _selectedFilterIds = <String>{};
 
   @override
   void initState() {
@@ -43,7 +44,8 @@ class _PlayScreenState extends State<PlayScreen> {
       child: FutureBuilder(
         future: _contentFuture,
         builder: (context, snapshot) {
-          final playIdeas = snapshot.data?.playIdeas;
+          final package = snapshot.data;
+          final playIdeas = package?.playIdeas;
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
@@ -65,7 +67,8 @@ class _PlayScreenState extends State<PlayScreen> {
               else ...[
                 _QuickFiltersModule(
                   expanded: _filtersExpanded,
-                  selectedFilters: _selectedFilters,
+                  filters: package?.playFilters ?? const <PlayFilter>[],
+                  selectedFilterIds: _selectedFilterIds,
                   onToggleExpanded: () {
                     setState(() {
                       _filtersExpanded = !_filtersExpanded;
@@ -73,26 +76,29 @@ class _PlayScreenState extends State<PlayScreen> {
                   },
                   onToggleFilter: (filter) {
                     setState(() {
-                      if (_selectedFilters.contains(filter)) {
-                        _selectedFilters.remove(filter);
+                      if (_selectedFilterIds.contains(filter.id)) {
+                        _selectedFilterIds.remove(filter.id);
                       } else {
-                        _selectedFilters.add(filter);
+                        _selectedFilterIds.add(filter.id);
                       }
                     });
                   },
-                  onClear: _selectedFilters.isEmpty
+                  onClear: _selectedFilterIds.isEmpty
                       ? null
                       : () {
                           setState(() {
-                            _selectedFilters.clear();
+                            _selectedFilterIds.clear();
                           });
                         },
-                  activeCountLabel: _selectedFilters.isEmpty
+                  activeCountLabel: _selectedFilterIds.isEmpty
                       ? null
-                      : '${_applyQuickFilters(playIdeas, _selectedFilters).length} gentle ideas',
+                      : '${_applyQuickFilters(playIdeas, package?.playFilters ?? const <PlayFilter>[], _selectedFilterIds).length} gentle ideas',
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                ..._filteredPlayIdeaSection(playIdeas),
+                ..._filteredPlayIdeaSection(
+                  playIdeas,
+                  package?.playFilters ?? const <PlayFilter>[],
+                ),
               ],
             ],
           );
@@ -101,8 +107,15 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
-  List<Widget> _filteredPlayIdeaSection(List<PlayIdea> playIdeas) {
-    final filtered = _applyQuickFilters(playIdeas, _selectedFilters);
+  List<Widget> _filteredPlayIdeaSection(
+    List<PlayIdea> playIdeas,
+    List<PlayFilter> filters,
+  ) {
+    final filtered = _applyQuickFilters(
+      playIdeas,
+      filters,
+      _selectedFilterIds,
+    );
     if (filtered.isEmpty) {
       return const [
         EmptyState(
@@ -119,13 +132,21 @@ class _PlayScreenState extends State<PlayScreen> {
 
   List<PlayIdea> _applyQuickFilters(
     List<PlayIdea> ideas,
-    Set<_QuickFilter> filters,
+    List<PlayFilter> filters,
+    Set<String> selectedFilterIds,
   ) {
-    if (filters.isEmpty) {
+    if (selectedFilterIds.isEmpty) {
+      return ideas;
+    }
+    final selectedFilters = filters
+        .where((filter) => selectedFilterIds.contains(filter.id))
+        .toList();
+    if (selectedFilters.isEmpty) {
       return ideas;
     }
     return ideas
-        .where((idea) => filters.every((filter) => filter.matches(idea)))
+        .where(
+            (idea) => selectedFilters.every((filter) => filter.matches(idea)))
         .toList();
   }
 
@@ -149,34 +170,11 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 }
 
-enum _QuickFilter {
-  lowEffort('Low effort'),
-  lowMess('Low mess'),
-  forBabies('For babies'),
-  toddlers('Toddlers'),
-  movement('Movement'),
-  quiet('Quiet');
-
-  const _QuickFilter(this.label);
-  final String label;
-
-  bool matches(PlayIdea idea) {
-    return switch (this) {
-      _QuickFilter.lowEffort => idea.parentInvolvement == 'Low',
-      _QuickFilter.lowMess => idea.messLevel == 'Low',
-      _QuickFilter.forBabies => _isForBabies(idea.ageGroup),
-      _QuickFilter.toddlers => _isForToddlers(idea.ageGroup),
-      _QuickFilter.movement => idea.activityType == 'Movement',
-      _QuickFilter.quiet =>
-        idea.activityType == 'Quiet time' || idea.childEngagement == 'Low',
-    };
-  }
-}
-
 class _QuickFiltersModule extends StatelessWidget {
   const _QuickFiltersModule({
     required this.expanded,
-    required this.selectedFilters,
+    required this.filters,
+    required this.selectedFilterIds,
     required this.onToggleExpanded,
     required this.onToggleFilter,
     required this.onClear,
@@ -184,9 +182,10 @@ class _QuickFiltersModule extends StatelessWidget {
   });
 
   final bool expanded;
-  final Set<_QuickFilter> selectedFilters;
+  final List<PlayFilter> filters;
+  final Set<String> selectedFilterIds;
   final VoidCallback onToggleExpanded;
-  final ValueChanged<_QuickFilter> onToggleFilter;
+  final ValueChanged<PlayFilter> onToggleFilter;
   final VoidCallback? onClear;
   final String? activeCountLabel;
 
@@ -255,17 +254,17 @@ class _QuickFiltersModule extends StatelessWidget {
           Wrap(
             spacing: AppSpacing.xs,
             runSpacing: AppSpacing.xs,
-            children: _QuickFilter.values.map((filter) {
+            children: filters.map((filter) {
               return Material(
                 color: Colors.transparent,
                 child: FilterChip(
                   label: Text(filter.label),
-                  selected: selectedFilters.contains(filter),
+                  selected: selectedFilterIds.contains(filter.id),
                   onSelected: (_) => onToggleFilter(filter),
                   selectedColor: AppColors.primarySoft,
                   backgroundColor: AppColors.surface,
                   side: const BorderSide(color: AppColors.borderSoft),
-                  labelStyle: selectedFilters.contains(filter)
+                  labelStyle: selectedFilterIds.contains(filter.id)
                       ? AppTextStyles.caption.copyWith(color: AppColors.primary)
                       : AppTextStyles.caption
                           .copyWith(color: AppColors.textSecondary),
@@ -278,15 +277,6 @@ class _QuickFiltersModule extends StatelessWidget {
       ],
     );
   }
-}
-
-bool _isForBabies(String ageGroup) {
-  return ageGroup.contains('0-12 months') || ageGroup.contains('6-18 months');
-}
-
-bool _isForToddlers(String ageGroup) {
-  return ageGroup.contains('18 months-3 years') ||
-      ageGroup.contains('2-5 years');
 }
 
 class _PlayHeader extends StatelessWidget {
