@@ -30,6 +30,8 @@ void main() {
     await tester.tap(find.text('Soft rain'));
     await tester.pumpAndSettle();
 
+    expect(
+        find.byKey(const ValueKey('sound-detail-back-button')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-status')), findsOneWidget);
     expect(find.text('Ready'), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);

@@ -481,52 +481,58 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Widget _buildControls() {
     final isPlaying = _player.playing;
-    return Row(
+    return SizedBox(
       key: const ValueKey('sound-player-controls'),
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(width: 40),
-        SizedBox(
-          width: 86,
-          height: 86,
-          child: FilledButton(
-            key: const ValueKey('sound-player-primary-control'),
-            style: FilledButton.styleFrom(
-              shape: const CircleBorder(),
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.zero,
-            ),
-            onPressed: _togglePlayPause,
-            child: Tooltip(
-              message: isPlaying ? 'Pause' : 'Play',
-              child: Icon(
-                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                size: 44,
+      height: 86,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: 86,
+            height: 86,
+            child: FilledButton(
+              key: const ValueKey('sound-player-primary-control'),
+              style: FilledButton.styleFrom(
+                shape: const CircleBorder(),
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.zero,
+              ),
+              onPressed: _togglePlayPause,
+              child: Tooltip(
+                message: isPlaying ? 'Pause' : 'Play',
+                child: Icon(
+                  isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                  size: 44,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: AppSpacing.md),
-        TextButton(
-          key: const ValueKey('sound-player-stop-control'),
-          onPressed: _stop,
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.textSecondary,
-            minimumSize: const Size(40, 40),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.sm,
-              vertical: AppSpacing.xs,
+          Positioned(
+            right: 4,
+            child: OutlinedButton.icon(
+              key: const ValueKey('sound-player-stop-control'),
+              onPressed: _stop,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                side: const BorderSide(color: AppColors.borderSoft),
+                backgroundColor: AppColors.surface,
+                minimumSize: const Size(76, 36),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              icon: const Icon(Icons.stop_rounded, size: 16),
+              label: const Text('Stop'),
             ),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          child: const Tooltip(
-            message: 'Stop',
-            child: Icon(Icons.stop_rounded, size: 18),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -539,11 +545,18 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: IconButton(
-                tooltip: 'Back',
-                color: AppColors.primary,
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).pop(),
+              child: Material(
+                color: AppColors.surface,
+                shape: const CircleBorder(
+                  side: BorderSide(color: AppColors.borderSoft),
+                ),
+                child: IconButton(
+                  key: const ValueKey('sound-detail-back-button'),
+                  tooltip: 'Back',
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
