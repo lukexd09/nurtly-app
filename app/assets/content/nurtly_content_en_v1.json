@@ -1,1806 +1,1806 @@
 {
-    "metadata":  {
-                     "packageId":  "nurtly-core-en",
-                     "schemaVersion":  1,
-                     "version":  "1.6.0",
-                     "locale":  "en",
-                     "publishedAt":  "2026-05-18",
-                     "minAppVersion":  "0.1.0"
-                 },
-    "playIdeas":  [
-                      {
-                          "id":  "play_soft_treasure_basket",
-                          "title":  "Soft treasure basket",
-                          "summary":  "Offer a few safe household textures to explore together.",
-                          "ageGroup":  "6-18 months",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sensory",
-                          "neededItems":  [
-                                              "Soft cloth",
-                                              "Wooden spoon",
-                                              "Large safe container"
-                                          ],
-                          "steps":  [
-                                        "Place the items in the container.",
-                                        "Sit nearby and let your child choose what to touch.",
-                                        "Name textures calmly as they explore."
-                                    ],
-                          "whatToExpect":  "A low-mess, gently engaging pause with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.",
-                          "parentNote":  "Use only what feels easy to gather; two textures can be plenty.",
-                          "safetyNote":  "Use only large, clean items that cannot be swallowed.",
-                          "contexts":  [
-                                           "home",
-                                           "baby",
-                                           "sensory",
-                                           "low_setup"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  6,
-                                                 "max":  18
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_couch_cushion_tunnel",
-                          "title":  "Couch cushion tunnel",
-                          "summary":  "Make a small tunnel for crawling, peeking, or passing a toy through.",
-                          "ageGroup":  "12 months-3 years",
-                          "place":  "Living room",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Movement",
-                          "neededItems":  [
-                                              "Couch cushions",
-                                              "Small soft toy"
-                                          ],
-                          "steps":  [
-                                        "Place cushions on the floor with a low open space between them.",
-                                        "Invite your child to crawl, peek, or pass the toy through.",
-                                        "Stay nearby and change the tunnel if it starts to wobble."
-                                    ],
-                          "whatToExpect":  "Expect more movement and a little room reset afterward. Join for a few minutes, then keep the tunnel as simple as your space allows.",
-                          "parentNote":  "A short setup can turn familiar furniture into a fresh play space.",
-                          "safetyNote":  "Keep the tunnel low, stable, and away from sharp furniture edges.",
-                          "contexts":  [
-                                           "home",
-                                           "toddler",
-                                           "movement"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  12,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_kitchen_spoon_rhythm",
-                          "title":  "Kitchen spoon rhythm",
-                          "summary":  "Tap gentle patterns with safe kitchen items.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Kitchen",
-                          "messLevel":  "Low",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Music",
-                          "neededItems":  [
-                                              "Wooden spoon",
-                                              "Plastic bowl",
-                                              "Tea towel"
-                                          ],
-                          "steps":  [
-                                        "Place the bowl on a tea towel to soften the sound.",
-                                        "Tap a slow pattern and pause for your child to answer.",
-                                        "Try quiet taps, soft scrapes, and gentle beats."
-                                    ],
-                          "whatToExpect":  "It can become lively, but the setup stays small and easy to put away. Keep the rhythm soft and join only as much as feels good.",
-                          "parentNote":  "Keep the sound level comfortable for everyone nearby.",
-                          "safetyNote":  "Use sturdy, clean items and supervise while your child holds the spoon.",
-                          "contexts":  [
-                                           "kitchen",
-                                           "toddler",
-                                           "movement"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_laundry_color_sorting",
-                          "title":  "Laundry color sorting",
-                          "summary":  "Sort a small pile of clean laundry by color or type.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sorting",
-                          "neededItems":  [
-                                              "Clean laundry",
-                                              "Two or three baskets"
-                                          ],
-                          "steps":  [
-                                        "Choose a small pile of clean laundry.",
-                                        "Pick one simple sorting idea, like socks and shirts or light and dark.",
-                                        "Let your child place each item in a basket."
-                                    ],
-                          "whatToExpect":  "A low-mess way to turn a familiar chore into a small shared moment. Stay close, name what you notice, and let the sorting stay imperfect.",
-                          "parentNote":  "It is fine if the sorting is imperfect; keep the moment easy.",
-                          "safetyNote":  "Avoid items with loose cords, small parts, or laundry products nearby.",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "low_setup"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_window_weather_watch",
-                          "title":  "Window weather watch",
-                          "summary":  "Look outside and talk about what you notice.",
-                          "ageGroup":  "18 months-3 years",
-                          "place":  "Window",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Language",
-                          "neededItems":  [
-                                              "Window view"
-                                          ],
-                          "steps":  [
-                                        "Sit or stand together near a window.",
-                                        "Point to one thing you notice outside.",
-                                        "Use short calm words like cloudy, bright, windy, or quiet."
-                                    ],
-                          "whatToExpect":  "A quiet, low-mess pause for a full day. Offer a few words, follow your child\u0027s attention, and let the window do most of the work.",
-                          "parentNote":  "Even thirty seconds of noticing can soften the pace.",
-                          "safetyNote":  "Keep windows locked and supervise closely.",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "transition"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_sticker_rescue",
-                          "title":  "Sticker rescue",
-                          "summary":  "Place a few stickers on paper and invite your child to peel them away.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Table",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Fine motor",
-                          "neededItems":  [
-                                              "Large stickers",
-                                              "Plain paper"
-                                          ],
-                          "steps":  [
-                                        "Place a few large stickers on the paper with one edge slightly lifted.",
-                                        "Invite your child to peel each sticker and move it somewhere new.",
-                                        "Talk about where each sticker lands."
-                                    ],
-                          "whatToExpect":  "A focused table moment with a little peel-and-place curiosity. Set out only a few stickers so the activity stays light.",
-                          "parentNote":  "Starting with two or three stickers keeps the choice gentle.",
-                          "safetyNote":  "Use large stickers and keep small backing pieces out of reach.",
-                          "contexts":  [
-                                           "home",
-                                           "toddler",
-                                           "sensory"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_pillow_path",
-                          "title":  "Pillow path",
-                          "summary":  "Lay pillows on the floor for stepping, crawling, or balancing with help.",
-                          "ageGroup":  "2-4 years",
-                          "place":  "Bedroom",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "High",
-                          "activityType":  "Movement",
-                          "neededItems":  [
-                                              "Pillows",
-                                              "Clear floor space"
-                                          ],
-                          "steps":  [
-                                        "Place pillows in a short path on the floor.",
-                                        "Hold your child\u0027s hand if they want support.",
-                                        "Try stepping, crawling, or moving a soft toy along the path."
-                                    ],
-                          "whatToExpect":  "A more active idea for a moment when you can join in closely. Keep the path short so it feels playful, not like a big setup.",
-                          "parentNote":  "Adjust the path to your energy and the space you already have.",
-                          "safetyNote":  "Use a clear floor area and stop if pillows start to slide.",
-                          "contexts":  [
-                                           "home",
-                                           "movement",
-                                           "preschool"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_quiet_book_basket",
-                          "title":  "Quiet book basket",
-                          "summary":  "Set out a small basket of books for a calm shared pause.",
-                          "ageGroup":  "0-5 years",
-                          "place":  "Any quiet spot",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Quiet time",
-                          "neededItems":  [
-                                              "Two or three sturdy books",
-                                              "Small basket"
-                                          ],
-                          "steps":  [
-                                        "Place a few books in a basket within easy reach.",
-                                        "Let your child choose one book.",
-                                        "Look at pictures, name one detail, or sit quietly together."
-                                    ],
-                          "whatToExpect":  "A low-effort, low-mess pause when everyone needs something softer. Let your child choose the pace, even if that means only looking at one page.",
-                          "parentNote":  "This can be a calm pause, not a full reading session.",
-                          "safetyNote":  "Use sturdy books without torn pages or loose pieces for younger children.",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "low_setup"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  0,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_soft_scarf_peekaboo",
-                          "title":  "Soft scarf peekaboo",
-                          "summary":  "Use a light scarf or cloth for a gentle peekaboo moment.",
-                          "ageGroup":  "0-12 months",
-                          "place":  "Sofa",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "neededItems":  [
-                                              "Light scarf",
-                                              "Soft cloth"
-                                          ],
-                          "steps":  [
-                                        "Sit close where your baby can see your face.",
-                                        "Hold the scarf near your face and lower it slowly.",
-                                        "Pause, smile, and repeat only while it feels welcome."
-                                    ],
-                          "whatToExpect":  "A soft, low-mess way to share attention with almost no preparation. Keep your voice gentle and stop whenever your baby seems ready for a break.",
-                          "parentNote":  "One slow peek can be just right.",
-                          "safetyNote":  "Keep fabric away from your baby\u0027s nose and mouth and supervise closely.",
-                          "contexts":  [
-                                           "home",
-                                           "baby",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  0,
-                                                 "max":  12
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_container_matching",
-                          "title":  "Container matching",
-                          "summary":  "Match safe lids and containers from the kitchen.",
-                          "ageGroup":  "18 months-3 years",
-                          "place":  "Kitchen",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Practical life",
-                          "neededItems":  [
-                                              "Plastic containers",
-                                              "Matching lids"
-                                          ],
-                          "steps":  [
-                                        "Set out two or three clean containers and lids.",
-                                        "Show one lid and wonder aloud where it might fit.",
-                                        "Let your child try matches, stack pieces, or simply explore."
-                                    ],
-                          "whatToExpect":  "A quiet kitchen activity with easy cleanup. Matching may turn into stacking or sorting, and that still fits the moment.",
-                          "parentNote":  "Let the containers be interesting without needing a correct answer.",
-                          "safetyNote":  "Use clean, lightweight items without sharp edges or small loose parts.",
-                          "contexts":  [
-                                           "kitchen",
-                                           "toddler",
-                                           "practical_life"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_towel_road",
-                          "title":  "Towel road",
-                          "summary":  "Fold a towel into a soft road for small toys or cars.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Imaginative play",
-                          "neededItems":  [
-                                              "Towel",
-                                              "Small toy car",
-                                              "Small toy animal"
-                                          ],
-                          "steps":  [
-                                        "Fold a towel into a long strip on the floor.",
-                                        "Place one small toy at the start of the road.",
-                                        "Invite your child to move the toy slowly, quickly, or around a bend."
-                                    ],
-                          "whatToExpect":  "A low-mess pretend setup that can last one minute or longer. Narrate softly, then let your child take the road wherever it goes.",
-                          "parentNote":  "A towel can become a road, river, bridge, or path.",
-                          "safetyNote":  "Keep the towel flat so it does not become a tripping spot.",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "low_setup"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_sock_puppet_hello",
-                          "title":  "Sock puppet hello",
-                          "summary":  "Turn a clean sock into a simple hello puppet.",
-                          "ageGroup":  "18 months-3 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Language",
-                          "neededItems":  [
-                                              "Clean sock"
-                                          ],
-                          "steps":  [
-                                        "Put a clean sock over your hand.",
-                                        "Make the puppet say hello in a soft voice.",
-                                        "Pause and let your child answer, point, or simply watch."
-                                    ],
-                          "whatToExpect":  "A small connection moment shaped by your gentle participation. Keep the voice simple and follow your child\u0027s response.",
-                          "parentNote":  "The puppet does not need a story; a tiny hello is enough.",
-                          "safetyNote":  "Use a clean sock without loose threads or small decorations.",
-                          "contexts":  [
-                                           "home",
-                                           "connection",
-                                           "toddler"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_gentle_animal_walks",
-                          "title":  "Gentle animal walks",
-                          "summary":  "Move like quiet animals across a small safe space.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Movement",
-                          "neededItems":  [
-                                              "Clear floor space"
-                                          ],
-                          "steps":  [
-                                        "Choose one gentle animal, like a cat, turtle, or bear.",
-                                        "Move slowly across the room together.",
-                                        "Try a quiet version and a slightly bigger version.",
-                                        "Rest when the movement feels done."
-                                    ],
-                          "whatToExpect":  "A movement idea that does not need a big setup. Join for a few rounds, then let the pace soften when the room feels ready.",
-                          "parentNote":  "Quiet animals can still be playful.",
-                          "safetyNote":  "Clear the floor and avoid fast movement near furniture.",
-                          "contexts":  [
-                                           "home",
-                                           "movement",
-                                           "preschool"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_water_brush_painting",
-                          "title":  "Water brush painting",
-                          "summary":  "Paint temporary marks with water on cardboard or an outdoor surface.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Outside",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Sensory",
-                          "neededItems":  [
-                                              "Small bowl of water",
-                                              "Paintbrush",
-                                              "Cardboard or patio space"
-                                          ],
-                          "steps":  [
-                                        "Pour a small amount of water into a bowl.",
-                                        "Show how the brush makes a mark on cardboard or patio.",
-                                        "Let your child make lines, dots, or soft shapes.",
-                                        "Watch the marks fade as they dry."
-                                    ],
-                          "whatToExpect":  "Creative, temporary marks without paint or lasting cleanup. Stay close with the water bowl and keep the activity small.",
-                          "parentNote":  "Fading marks can be part of the calm rhythm.",
-                          "safetyNote":  "Use only a little water and choose a non-slippery surface.",
-                          "contexts":  [
-                                           "outside",
-                                           "sensory",
-                                           "movement"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_spoon_cup_transfer",
-                          "title":  "Spoon and cup transfer",
-                          "summary":  "Move dry items from one cup to another with a spoon.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Table",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Practical life",
-                          "neededItems":  [
-                                              "Two cups",
-                                              "Spoon",
-                                              "Large dry pasta or cotton balls"
-                                          ],
-                          "steps":  [
-                                        "Place a few large dry items in one cup.",
-                                        "Show how to scoop one item with the spoon.",
-                                        "Invite your child to move items to the other cup.",
-                                        "Pause whenever the table needs a quick reset."
-                                    ],
-                          "whatToExpect":  "A focused table activity where a little cleanup may happen. Use only a handful of items so it stays manageable.",
-                          "parentNote":  "Spills are part of the activity and can be kept small.",
-                          "safetyNote":  "Choose items that are safe for your child\u0027s age and supervise closely.",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "toddler"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_laundry_texture_naming",
-                          "title":  "Laundry texture naming",
-                          "summary":  "Touch clean laundry together and name how it feels.",
-                          "ageGroup":  "6-18 months",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sensory",
-                          "neededItems":  [
-                                              "Clean towel",
-                                              "Clean shirt",
-                                              "Clean sock"
-                                          ],
-                          "steps":  [
-                                        "Choose two or three clean laundry items.",
-                                        "Offer one item at a time.",
-                                        "Use simple words like soft, warm, smooth, or bumpy.",
-                                        "Let your child touch, hold, or look."
-                                    ],
-                          "whatToExpect":  "A gentle sensory pause with almost no setup. Name one or two textures, then let the laundry return to the day.",
-                          "parentNote":  "You can do this while folding or sitting nearby.",
-                          "safetyNote":  "Avoid items with loose strings, buttons, or small parts.",
-                          "contexts":  [
-                                           "home",
-                                           "baby",
-                                           "sensory"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  6,
-                                                 "max":  18
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_shadow_watching",
-                          "title":  "Shadow watching",
-                          "summary":  "Notice simple shadows on a wall, floor, or curtain.",
-                          "ageGroup":  "18 months-3 years",
-                          "place":  "Window",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "neededItems":  [
-                                              "Natural light",
-                                              "Wall or floor"
-                                          ],
-                          "steps":  [
-                                        "Find a place where a shadow is easy to see.",
-                                        "Point to one shadow and name it simply.",
-                                        "Move your hand slowly and notice what changes."
-                                    ],
-                          "whatToExpect":  "A quiet observation moment for a slower part of the day. Stay curious, keep it brief, and follow what your child notices.",
-                          "parentNote":  "No setup is needed if the light is already there.",
-                          "safetyNote":  "Avoid looking directly at bright sunlight.",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "low_setup"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_blanket_toy_rescue",
-                          "title":  "Blanket toy rescue",
-                          "summary":  "Hide part of a toy under a blanket and invite a gentle rescue.",
-                          "ageGroup":  "12 months-3 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "neededItems":  [
-                                              "Small soft toy",
-                                              "Light blanket"
-                                          ],
-                          "steps":  [
-                                        "Place a soft toy partly under the blanket.",
-                                        "Say that the toy is waiting to be found.",
-                                        "Let your child lift the blanket or point to the toy.",
-                                        "Celebrate softly and try again if they want."
-                                    ],
-                          "whatToExpect":  "A small shared rescue with very little cleanup. Keep the hiding easy so it feels comforting rather than tricky.",
-                          "parentNote":  "The toy can stay partly visible.",
-                          "safetyNote":  "Use a light blanket and keep fabric away from faces.",
-                          "contexts":  [
-                                           "home",
-                                           "toddler",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  12,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_tiny_stuffed_picnic",
-                          "title":  "Tiny stuffed picnic",
-                          "summary":  "Set up a small pretend picnic for stuffed animals.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Imaginative play",
-                          "neededItems":  [
-                                              "Small cloth",
-                                              "Stuffed animals",
-                                              "Toy cups or empty cups"
-                                          ],
-                          "steps":  [
-                                        "Lay a small cloth on the table or floor.",
-                                        "Invite one or two stuffed animals to sit nearby.",
-                                        "Offer pretend cups or plates.",
-                                        "Ask what the animals might like today."
-                                    ],
-                          "whatToExpect":  "Gentle pretend play with a cozy feeling. Join long enough to start the scene, then let your child lead the picnic.",
-                          "parentNote":  "One animal and one cup can carry the whole picnic.",
-                          "safetyNote":  "Use unbreakable cups and keep small pretend pieces away from younger children.",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_soft_cleanup_song",
-                          "title":  "Soft cleanup song",
-                          "summary":  "Use a short gentle tune while putting a few items away together.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Practical life",
-                          "neededItems":  [
-                                              "Three toys",
-                                              "Basket or shelf"
-                                          ],
-                          "steps":  [
-                                        "Choose only a few items to put away.",
-                                        "Hum or sing a short soft tune.",
-                                        "Put one item away together.",
-                                        "Stop after the small reset feels done."
-                                    ],
-                          "whatToExpect":  "A tiny reset becomes a connected moment without pressure. Keep the number of items small so it feels doable.",
-                          "parentNote":  "Aim for a softer transition, not a perfect room.",
-                          "safetyNote":  "Keep pathways clear and avoid rushing while carrying toys.",
-                          "contexts":  [
-                                           "home",
-                                           "transition",
-                                           "practical_life"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_paper_bag_discovery",
-                          "title":  "Paper bag discovery",
-                          "summary":  "Place one safe object in a paper bag for a quiet guessing moment.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "neededItems":  [
-                                              "Paper bag",
-                                              "Safe household object"
-                                          ],
-                          "steps":  [
-                                        "Place one familiar object inside the bag.",
-                                        "Invite your child to feel the outside of the bag.",
-                                        "Offer one gentle hint if they want it.",
-                                        "Open the bag together."
-                                    ],
-                          "whatToExpect":  "A quiet curiosity moment with almost no cleanup. Keep the object familiar so the guessing stays light.",
-                          "parentNote":  "You can skip guessing and simply discover the object together.",
-                          "safetyNote":  "Do not place the bag over anyone\u0027s head and use only safe objects.",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "preschool"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_soft_ball_roll_pause",
-                          "title":  "Soft ball roll and pause",
-                          "summary":  "Roll a soft ball back and forth with gentle pauses.",
-                          "ageGroup":  "6-18 months",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "neededItems":  [
-                                              "Soft ball",
-                                              "Clear floor space"
-                                          ],
-                          "steps":  [
-                                        "Sit on the floor facing your child.",
-                                        "Roll the ball slowly toward them.",
-                                        "Pause and wait to see what they do.",
-                                        "Roll it again if the moment still feels good."
-                                    ],
-                          "whatToExpect":  "A low-mess connection idea with a steady rhythm. The pauses matter as much as the rolling.",
-                          "parentNote":  "Your child may watch, touch, or push the ball in their own way.",
-                          "safetyNote":  "Use a soft ball and keep the floor clear.",
-                          "contexts":  [
-                                           "home",
-                                           "baby",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  6,
-                                                 "max":  18
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_blanket_boat",
-                          "title":  "Blanket boat",
-                          "summary":  "Pretend a blanket on the floor is a small boat.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Imaginative play",
-                          "neededItems":  [
-                                              "Blanket",
-                                              "Small soft toy"
-                                          ],
-                          "steps":  [
-                                        "Lay a blanket flat on the floor.",
-                                        "Sit beside it or place a soft toy on it.",
-                                        "Pretend the blanket is a boat moving slowly.",
-                                        "Name what you see on the gentle trip."
-                                    ],
-                          "whatToExpect":  "Pretend play feels soft and contained here. Join for the first idea, then let the boat stay as simple as your child wants.",
-                          "parentNote":  "The boat can stay still; imagination can do the moving.",
-                          "safetyNote":  "Keep the blanket flat and do not pull a child on it.",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_bathroom_mirror_faces",
-                          "title":  "Bathroom mirror faces",
-                          "summary":  "Make a few gentle faces together in the mirror.",
-                          "ageGroup":  "18 months-3 years",
-                          "place":  "Bathroom",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "neededItems":  [
-                                              "Mirror"
-                                          ],
-                          "steps":  [
-                                        "Stand together where the mirror is easy to see.",
-                                        "Make one gentle face, like sleepy, surprised, or happy.",
-                                        "Pause and let your child look or copy.",
-                                        "End after a few faces."
-                                    ],
-                          "whatToExpect":  "A brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
-                          "parentNote":  "Two faces can be plenty.",
-                          "safetyNote":  "Keep your child steady and away from wet or slippery areas.",
-                          "contexts":  [
-                                           "bathroom",
-                                           "quiet",
-                                           "connection"
-                                       ],
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_towel_peek_path",
-                          "title":  "Towel peek path",
-                          "summary":  "Lay two towels on the floor for a soft path with little peek stops.",
-                          "ageGroup":  "12 months-3 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Movement",
-                          "contexts":  [
-                                           "home",
-                                           "toddler",
-                                           "movement",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Two towels"
-                                          ],
-                          "steps":  [
-                                        "Lay two towels in a short path on the floor.",
-                                        "Pause at each towel edge and peek underneath together.",
-                                        "Invite your child to step, crawl, or pat the path at their own pace."
-                                    ],
-                          "whatToExpect":  "A soft movement idea with almost no setup or cleanup. Keep the path short, pause often, and let the rhythm stay gentle.",
-                          "parentNote":  "A short path can help the day move without asking much from you.",
-                          "safetyNote":  "Keep towels flat so they do not slide or bunch under little feet.",
-                          "ageRangeMonths":  {
-                                                 "min":  12,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_soft_block_knockdown",
-                          "title":  "Soft block knockdown",
-                          "summary":  "Stack a small tower of soft blocks and invite an easy knockdown.",
-                          "ageGroup":  "12 months-3 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Movement",
-                          "contexts":  [
-                                           "home",
-                                           "toddler",
-                                           "movement"
-                                       ],
-                          "neededItems":  [
-                                              "Soft blocks"
-                                          ],
-                          "steps":  [
-                                        "Stack two or three soft blocks into a short tower.",
-                                        "Pause so your child can look before knocking it down.",
-                                        "Build it again only if the moment still feels fun."
-                                    ],
-                          "whatToExpect":  "A quick burst of energy can still stay small. Keep the tower low and the reset simple.",
-                          "parentNote":  "Stopping after one or two towers still counts as a good moment.",
-                          "safetyNote":  "Use soft blocks only and keep the tower low enough to stay safe if it tips.",
-                          "ageRangeMonths":  {
-                                                 "min":  12,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_kitchen_bowl_nesting",
-                          "title":  "Kitchen bowl nesting",
-                          "summary":  "Set out a few bowls for simple stacking and nesting together.",
-                          "ageGroup":  "12 months-3 years",
-                          "place":  "Kitchen",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Practical life",
-                          "contexts":  [
-                                           "kitchen",
-                                           "toddler",
-                                           "practical_life",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Three lightweight bowls"
-                                          ],
-                          "steps":  [
-                                        "Place a few clean bowls on the floor or table.",
-                                        "Show one bowl resting inside another.",
-                                        "Let your child stack, nest, or separate them in their own way."
-                                    ],
-                          "whatToExpect":  "A quiet kitchen moment with easy cleanup and familiar objects. It can stay calm even if the bowls end up spread around you.",
-                          "parentNote":  "There is no need to teach the right order for the bowls.",
-                          "safetyNote":  "Use lightweight bowls without sharp edges and stay close during play.",
-                          "ageRangeMonths":  {
-                                                 "min":  12,
-                                                 "max":  36
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_bath_cup_pour",
-                          "title":  "Bath cup pour",
-                          "summary":  "Pour small amounts of bath water from one cup to another.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Bathroom",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sensory",
-                          "contexts":  [
-                                           "bathroom",
-                                           "sensory",
-                                           "toddler"
-                                       ],
-                          "neededItems":  [
-                                              "Two bath cups"
-                                          ],
-                          "steps":  [
-                                        "Offer one cup with a little water in it.",
-                                        "Show a slow pour into the second cup.",
-                                        "Let your child try pouring, filling, and pouring again."
-                                    ],
-                          "whatToExpect":  "Bath time can focus on one simple action instead of lots of stimulation. A little splashing is normal, so keep the setup small.",
-                          "parentNote":  "One cup may be enough to give bath time a fresh rhythm.",
-                          "safetyNote":  "Stay within arm\u0027s reach in the bath and keep the floor dry around the tub.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_couch_island_pretend",
-                          "title":  "Couch island pretend",
-                          "summary":  "Pretend the couch is a small island with safe places to land nearby.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Sofa",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Imaginative play",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "movement"
-                                       ],
-                          "neededItems":  [
-                                              "Couch",
-                                              "One pillow"
-                                          ],
-                          "steps":  [
-                                        "Name the couch as the island and the floor as water.",
-                                        "Place one pillow nearby as a safe landing spot.",
-                                        "Invite your child to climb, sit, and imagine a tiny island story."
-                                    ],
-                          "whatToExpect":  "Pretend play in a familiar space with only a little setup. Stay close enough to guide the movement and let the story stay simple.",
-                          "parentNote":  "A short island story can feel just as satisfying as a long one.",
-                          "safetyNote":  "Keep movement slow and supervise closely around furniture edges.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_stuffed_animal_bedtime",
-                          "title":  "Stuffed animal bedtime",
-                          "summary":  "Help a stuffed animal settle for a tiny bedtime routine.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Bedroom",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Connection",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "pretend",
-                                           "transition"
-                                       ],
-                          "neededItems":  [
-                                              "Stuffed animal",
-                                              "Small cloth or doll blanket"
-                                          ],
-                          "steps":  [
-                                        "Choose one stuffed animal together.",
-                                        "Cover it with a cloth and say goodnight in a soft voice.",
-                                        "Add one tiny bedtime step, like a cuddle or a yawn."
-                                    ],
-                          "whatToExpect":  "A calm pretend moment that can gently soften a busy part of the day. Keep the routine tiny so it feels comforting, not like a task.",
-                          "parentNote":  "Let the pretend routine be tiny; it does not need to mirror real bedtime.",
-                          "safetyNote":  "Use light fabric only and keep it away from a child\u0027s face during play.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_window_bird_watch",
-                          "title":  "Window bird watch",
-                          "summary":  "Pause at the window and notice birds or other small outdoor movement.",
-                          "ageGroup":  "18 months-5 years",
-                          "place":  "Window",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Window view"
-                                          ],
-                          "steps":  [
-                                        "Stand or sit where the outside view is easy to see.",
-                                        "Point out one bird, flutter, or movement outdoors.",
-                                        "Name only what you notice and let silence be part of the moment."
-                                    ],
-                          "whatToExpect":  "A low-pressure pause for slower energy. You may only notice one small thing, and that can be plenty.",
-                          "parentNote":  "No birds today is fine; clouds, branches, or passing light still work.",
-                          "safetyNote":  "Keep windows locked and supervise closely around window areas.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_paper_towel_roll_tunnel",
-                          "title":  "Paper towel roll tunnel",
-                          "summary":  "Roll small toys through a paper towel tube for a quick surprise moment.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "contexts":  [
-                                           "home",
-                                           "low_setup",
-                                           "pretend"
-                                       ],
-                          "neededItems":  [
-                                              "Paper towel roll",
-                                              "Small soft toy or large pom"
-                                          ],
-                          "steps":  [
-                                        "Hold the roll over a tray, table, or your hand.",
-                                        "Drop one toy through and listen for it to land.",
-                                        "Let your child take turns dropping and retrieving the toy."
-                                    ],
-                          "whatToExpect":  "A tiny repeatable activity that feels fresh with very little effort. Keep the pieces few so setup and cleanup stay easy.",
-                          "parentNote":  "One roll and one toy can carry the whole activity.",
-                          "safetyNote":  "Use items large enough for your child\u0027s age and avoid cardboard edges that feel rough.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_sock_matching_basket",
-                          "title":  "Sock matching basket",
-                          "summary":  "Gather a few socks in a basket and look for simple pairs together.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Practical life",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Four to six socks",
-                                              "Small basket"
-                                          ],
-                          "steps":  [
-                                        "Place a few socks in a basket.",
-                                        "Pull out two at a time and notice color or size.",
-                                        "Let your child pair them, stack them, or simply sort by feel."
-                                    ],
-                          "whatToExpect":  "A familiar home task can become a calm shared moment. It still works if the pairs stay imperfect.",
-                          "parentNote":  "There is no need to correct every mismatch.",
-                          "safetyNote":  "Use clean socks only and keep the basket light enough to move safely.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_soft_toy_hide_find",
-                          "title":  "Soft toy hide and find",
-                          "summary":  "Hide one soft toy in an easy spot and invite a gentle search.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "contexts":  [
-                                           "home",
-                                           "connection",
-                                           "toddler"
-                                       ],
-                          "neededItems":  [
-                                              "Soft toy"
-                                          ],
-                          "steps":  [
-                                        "Choose one soft toy your child knows well.",
-                                        "Hide it where part of it still peeks out.",
-                                        "Invite your child to look, point, or pick it up."
-                                    ],
-                          "whatToExpect":  "A light search game with almost no cleanup. Keep the hiding spots easy to reach and let the toy be partly visible if that feels better.",
-                          "parentNote":  "Seeing a little bit of the toy can make the game feel safer and sweeter.",
-                          "safetyNote":  "Avoid hiding toys in high, tight, or hard-to-reach places.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_gentle_hallway_parade",
-                          "title":  "Gentle hallway parade",
-                          "summary":  "Take a slow little parade down the hallway with soft steps and simple sounds.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Hallway",
-                          "messLevel":  "Low",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Movement",
-                          "contexts":  [
-                                           "home",
-                                           "movement",
-                                           "transition"
-                                       ],
-                          "neededItems":  [
-                                              "Clear hallway"
-                                          ],
-                          "steps":  [
-                                        "Choose a slow walking rhythm together.",
-                                        "March softly down the hallway once or twice.",
-                                        "Add a wave, a turn, or a quiet hum if it feels fun."
-                                    ],
-                          "whatToExpect":  "A short movement break for a transition moment. Keep the parade brief and let the energy settle as you finish.",
-                          "parentNote":  "One lap can be plenty when the day already feels loud.",
-                          "safetyNote":  "Keep the hallway clear and use soft voices if others are nearby.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_picnic_blanket_sorting",
-                          "title":  "Picnic blanket sorting",
-                          "summary":  "Sort a few safe household items onto a blanket in simple groups.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Floor",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sorting",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "pretend"
-                                       ],
-                          "neededItems":  [
-                                              "Small blanket",
-                                              "Three safe household items"
-                                          ],
-                          "steps":  [
-                                        "Spread a blanket on the floor.",
-                                        "Place a few safe items beside it.",
-                                        "Invite your child to group them by color, size, or where they belong."
-                                    ],
-                          "whatToExpect":  "A familiar sorting moment that feels a little special on a blanket. Keep the groups loose and let curiosity lead.",
-                          "parentNote":  "The blanket makes the moment feel new even if the items are ordinary.",
-                          "safetyNote":  "Choose sturdy items without sharp edges or small loose pieces.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_sponge_squeeze_outside",
-                          "title":  "Sponge squeeze outside",
-                          "summary":  "Squeeze water from a sponge outdoors for a simple sensory reset.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Outside",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sensory",
-                          "contexts":  [
-                                           "outside",
-                                           "sensory",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Sponge",
-                                              "Small bowl of water"
-                                          ],
-                          "steps":  [
-                                        "Wet the sponge with a little water.",
-                                        "Show how to squeeze it over the ground or a bucket.",
-                                        "Let your child soak, squeeze, and pause as they like."
-                                    ],
-                          "whatToExpect":  "A contained sensory moment with a little splash and easy outdoor cleanup. Use a small amount of water and stop while it still feels good.",
-                          "parentNote":  "Using just a small amount of water helps the activity stay light.",
-                          "safetyNote":  "Choose a non-slippery surface and supervise around water.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_chair_train_pretend",
-                          "title":  "Chair train pretend",
-                          "summary":  "Line up a couple of chairs for a small pretend train ride.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "High",
-                          "parentInvolvement":  "High",
-                          "activityType":  "Imaginative play",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "movement",
-                                           "preschool"
-                                       ],
-                          "neededItems":  [
-                                              "Two chairs",
-                                              "Soft toy or bag"
-                                          ],
-                          "steps":  [
-                                        "Place two chairs in a short line.",
-                                        "Choose who or what is taking the train ride.",
-                                        "Pretend to start, stop, and arrive at one simple destination."
-                                    ],
-                          "whatToExpect":  "This can feel exciting, so a little structure helps it stay calm. Set a gentle pace and keep the route short.",
-                          "parentNote":  "You do not need a long storyline to make the train feel real.",
-                          "safetyNote":  "Use sturdy chairs and stay close so climbing and leaning stay safe.",
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_calm_hand_tracing",
-                          "title":  "Calm hand tracing",
-                          "summary":  "Trace hands slowly on paper or in the air for a quiet settling moment.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Quiet time",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "transition",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Paper",
-                                              "Crayon or finger"
-                                          ],
-                          "steps":  [
-                                        "Place a hand on the table or in your lap.",
-                                        "Trace around the fingers slowly with a crayon or fingertip.",
-                                        "Pause to notice the shape and trace once more if it feels good."
-                                    ],
-                          "whatToExpect":  "A very simple quiet idea for a moment that needs soft edges. Trace slowly and let one outline be enough.",
-                          "parentNote":  "Tracing in the air works too if paper feels like too much.",
-                          "safetyNote":  "Use age-safe drawing tools and supervise closely with younger children.",
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_toy_wash_station",
-                          "title":  "Toy wash station",
-                          "summary":  "Wash a few sturdy toys with water and a cloth or sponge.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Outside",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Practical life",
-                          "contexts":  [
-                                           "outside",
-                                           "practical_life",
-                                           "sensory"
-                                       ],
-                          "neededItems":  [
-                                              "Small bucket of water",
-                                              "Cloth or sponge",
-                                              "Two sturdy toys"
-                                          ],
-                          "steps":  [
-                                        "Choose one or two washable toys.",
-                                        "Dip the cloth or sponge in a little water.",
-                                        "Wipe the toys slowly and set them aside to dry."
-                                    ],
-                          "whatToExpect":  "Practical-life play with a gentle sensory feel and a contained reset afterward. Use only a couple of toys so it stays manageable.",
-                          "parentNote":  "The wiping matters more than getting the toys perfectly clean.",
-                          "safetyNote":  "Use only a small amount of water and choose toys without batteries or electronics.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_napkin_folding_helper",
-                          "title":  "Napkin folding helper",
-                          "summary":  "Fold a few napkins together for a calm table helper moment.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Practical life",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "quiet"
-                                       ],
-                          "neededItems":  [
-                                              "Two or three napkins"
-                                          ],
-                          "steps":  [
-                                        "Place a small stack of napkins on the table.",
-                                        "Show one simple fold in half.",
-                                        "Let your child try folding, stacking, or smoothing them."
-                                    ],
-                          "whatToExpect":  "A quiet helper activity with almost no preparation. A small stack keeps the rhythm calm and easy.",
-                          "parentNote":  "Crooked folds are fine; the rhythm is more important than the result.",
-                          "safetyNote":  "Use clean cloth or paper napkins and keep the area dry.",
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_animal_sound_pause",
-                          "title":  "Animal sound pause",
-                          "summary":  "Take turns making one gentle animal sound at a time.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Connection",
-                          "contexts":  [
-                                           "home",
-                                           "connection",
-                                           "transition"
-                                       ],
-                          "neededItems":  [
-                                              "No items needed"
-                                          ],
-                          "steps":  [
-                                        "Choose one animal together, like a cat or duck.",
-                                        "Make the sound once in a gentle voice.",
-                                        "Pause to listen before choosing another animal."
-                                    ],
-                          "whatToExpect":  "Connection stays simple when the sounds are gentle and spaced out. The pause between animals helps the moment stay calm.",
-                          "parentNote":  "You can stop after one or two animals if that feels best.",
-                          "safetyNote":  "Keep voices soft and avoid animal jumps or rough movement in small spaces.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_quiet_basket_rotation",
-                          "title":  "Quiet basket rotation",
-                          "summary":  "Bring out one small basket of calm toys and rotate it for a fresh pause.",
-                          "ageGroup":  "18 months-5 years",
-                          "place":  "Any quiet spot",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Quiet time",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Small basket",
-                                              "Two or three calm toys"
-                                          ],
-                          "steps":  [
-                                        "Choose one basket with only a few calm items.",
-                                        "Set it down and let your child explore in their own order.",
-                                        "Put it away when the quiet moment feels finished."
-                                    ],
-                          "whatToExpect":  "A touch of novelty without more clutter or stimulation. Keep the basket small so the choice feels gentle.",
-                          "parentNote":  "Rotating only one basket at a time helps the room feel calmer too.",
-                          "safetyNote":  "Use safe, familiar toys without loose parts for your child\u0027s age.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_big_small_match",
-                          "title":  "Big-small household match",
-                          "summary":  "Match one big household item with one small one in simple pairs.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Sorting",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "One big spoon",
-                                              "One small spoon",
-                                              "One big cup",
-                                              "One small cup"
-                                          ],
-                          "steps":  [
-                                        "Place one big and one small version of two household items nearby.",
-                                        "Name big and small once or twice.",
-                                        "Let your child match, compare, or line them up."
-                                    ],
-                          "whatToExpect":  "An easy home activity that stays light and tidy. Guide a little, then step back and watch what your child notices.",
-                          "parentNote":  "Two simple pairs are plenty to hold the idea together.",
-                          "safetyNote":  "Use safe household items without sharp edges or breakable parts.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_blanket_cave_reading",
-                          "title":  "Blanket cave reading",
-                          "summary":  "Drape a blanket over a low spot for a tiny reading nook.",
-                          "ageGroup":  "2-5 years",
-                          "place":  "Bedroom",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Quiet time",
-                          "contexts":  [
-                                           "home",
-                                           "quiet",
-                                           "pretend"
-                                       ],
-                          "neededItems":  [
-                                              "Light blanket",
-                                              "One book"
-                                          ],
-                          "steps":  [
-                                        "Drape a light blanket over a low safe surface or your knees.",
-                                        "Bring one book inside or beside the blanket.",
-                                        "Read a page or two, or simply sit together in the small space."
-                                    ],
-                          "whatToExpect":  "A cozy reading nook with only a little setup. Keep the cave open and airy so the moment stays comfortable.",
-                          "parentNote":  "Looking at the cover together can be enough for today.",
-                          "safetyNote":  "Keep blankets light, openings visible, and never block a child inside the space.",
-                          "ageRangeMonths":  {
-                                                 "min":  24,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      },
-                      {
-                          "id":  "play_spoon_mirror_tap",
-                          "title":  "Spoon mirror tap",
-                          "summary":  "Tap a spoon softly beside a mirror and notice the sound and reflection.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Bathroom",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "contexts":  [
-                                           "bathroom",
-                                           "quiet",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Wooden spoon",
-                                              "Mirror"
-                                          ],
-                          "steps":  [
-                                        "Stand or sit near the mirror together.",
-                                        "Tap the spoon gently against your hand or sink edge.",
-                                        "Watch the movement in the reflection and keep the sound soft."
-                                    ],
-                          "whatToExpect":  "A tiny sensory-observation moment that works best with a gentle pace. One or two soft taps may be plenty.",
-                          "parentNote":  "Soft taps keep the activity interesting without making it sharp or loud.",
-                          "safetyNote":  "Avoid tapping directly on glass and keep the area dry and supervised.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_soft_rain"
-                      },
-                      {
-                          "id":  "play_pretend_shop_with_cups",
-                          "title":  "Pretend shop with cups",
-                          "summary":  "Turn a few cups into a tiny pretend shop for serving and choosing.",
-                          "ageGroup":  "3-6 years",
-                          "place":  "Table",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Medium",
-                          "activityType":  "Imaginative play",
-                          "contexts":  [
-                                           "home",
-                                           "pretend",
-                                           "preschool"
-                                       ],
-                          "neededItems":  [
-                                              "Two or three cups",
-                                              "Small cloth"
-                                          ],
-                          "steps":  [
-                                        "Set two or three cups on the table like shop items.",
-                                        "Invite your child to choose, serve, or pretend to sell one.",
-                                        "Take turns asking for one simple thing from the shop."
-                                    ],
-                          "whatToExpect":  "Gentle pretend play that feels social without needing many props. Keep the choices few so the scene stays calm.",
-                          "parentNote":  "You can let your child lead the whole shop after the first turn.",
-                          "safetyNote":  "Use unbreakable cups and keep the play surface stable.",
-                          "ageRangeMonths":  {
-                                                 "min":  36,
-                                                 "max":  72
-                                             },
-                          "suggestedSoundId":  "sound_warm_noise"
-                      },
-                      {
-                          "id":  "play_outdoor_leaf_noticing",
-                          "title":  "Outdoor leaf noticing",
-                          "summary":  "Notice a few leaves outdoors and talk about shape, color, or texture.",
-                          "ageGroup":  "18 months-5 years",
-                          "place":  "Outside",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Low",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Observation",
-                          "contexts":  [
-                                           "outside",
-                                           "quiet",
-                                           "sensory"
-                                       ],
-                          "neededItems":  [
-                                              "A safe outdoor spot"
-                                          ],
-                          "steps":  [
-                                        "Choose a safe outdoor place with leaves or plants nearby.",
-                                        "Pick up or point to one leaf at a time.",
-                                        "Notice color, size, or texture together without rushing."
-                                    ],
-                          "whatToExpect":  "A calm outside pause for lower-energy moments. A minute or two of noticing can be enough.",
-                          "parentNote":  "The quiet pace is part of what makes this useful.",
-                          "safetyNote":  "Stay on safe ground and avoid unfamiliar plants.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_evening_crickets"
-                      },
-                      {
-                          "id":  "play_bath_toy_rescue",
-                          "title":  "Bath toy rescue",
-                          "summary":  "Rescue one bath toy at a time from a small bowl or bath edge.",
-                          "ageGroup":  "18 months-4 years",
-                          "place":  "Bathroom",
-                          "messLevel":  "Medium",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Connection",
-                          "contexts":  [
-                                           "bathroom",
-                                           "sensory",
-                                           "toddler"
-                                       ],
-                          "neededItems":  [
-                                              "Bath toy",
-                                              "Cup or bowl"
-                                          ],
-                          "steps":  [
-                                        "Place one bath toy in a small bowl or at the bath edge.",
-                                        "Invite your child to scoop or lift it out.",
-                                        "Let the toy go back in and rescue it again if they want."
-                                    ],
-                          "whatToExpect":  "Bath play stays simple and focused with one toy at a time. Expect a little splash and an easy reset.",
-                          "parentNote":  "One toy is enough to make the rescue feel real.",
-                          "safetyNote":  "Stay within arm\u0027s reach in the bath and keep water play small.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  48
-                                             },
-                          "suggestedSoundId":  "sound_dishwasher_hum"
-                      },
-                      {
-                          "id":  "play_clean_cloth_wipe_helper",
-                          "title":  "Clean cloth wipe helper",
-                          "summary":  "Offer a clean cloth for wiping one safe surface together.",
-                          "ageGroup":  "18 months-5 years",
-                          "place":  "Home",
-                          "messLevel":  "Low",
-                          "childEngagement":  "Medium",
-                          "parentInvolvement":  "Low",
-                          "activityType":  "Practical life",
-                          "contexts":  [
-                                           "home",
-                                           "practical_life",
-                                           "transition",
-                                           "low_setup"
-                                       ],
-                          "neededItems":  [
-                                              "Clean damp cloth"
-                                          ],
-                          "steps":  [
-                                        "Choose one small safe surface, like a table edge or tray.",
-                                        "Show one slow wiping motion.",
-                                        "Let your child wipe a little, then stop while it still feels good."
-                                    ],
-                          "whatToExpect":  "A tiny household task can become a steady, connected moment. Keeping the surface small helps it feel calming instead of like work.",
-                          "parentNote":  "A few slow wipes can make the helper role feel real.",
-                          "safetyNote":  "Use only water or a plain damp cloth and avoid cleaning products during play.",
-                          "ageRangeMonths":  {
-                                                 "min":  18,
-                                                 "max":  60
-                                             },
-                          "suggestedSoundId":  "sound_quiet_stream"
-                      }
-                  ],
-    "playFilters":  [
-                        {
-                            "id":  "low_effort",
-                            "label":  "Low effort",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "parentInvolvement",
-                                              "operator":  "equals",
-                                              "value":  "Low"
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "low_mess",
-                            "label":  "Low mess",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "messLevel",
-                                              "operator":  "equals",
-                                              "value":  "Low"
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "for_babies",
-                            "label":  "For babies",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "ageRangeMonths",
-                                              "operator":  "overlaps",
-                                              "min":  0,
-                                              "max":  18
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "toddlers",
-                            "label":  "Toddlers",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "ageRangeMonths",
-                                              "operator":  "overlaps",
-                                              "min":  12,
-                                              "max":  36
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "preschool",
-                            "label":  "Preschool",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "ageRangeMonths",
-                                              "operator":  "overlaps",
-                                              "min":  36,
-                                              "max":  72
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "movement",
-                            "label":  "Movement",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "contexts",
-                                              "operator":  "contains",
-                                              "value":  "movement"
-                                          }
-                                      ]
-                        },
-                        {
-                            "id":  "quiet",
-                            "label":  "Quiet",
-                            "matchMode":  "all",
-                            "rules":  [
-                                          {
-                                              "field":  "contexts",
-                                              "operator":  "contains",
-                                              "value":  "quiet"
-                                          }
-                                      ]
-                        }
-                    ],
-    "sounds":  [
-                   {
-                       "id":  "sound_soft_rain",
-                       "title":  "Soft rain",
-                       "category":  "Nature",
-                       "summary":  "A calm rain placeholder for future sound content.",
-                       "assetPath":  "placeholder://sounds/soft_rain",
-                       "unlockType":  "free"
-                   },
-                   {
-                       "id":  "sound_warm_noise",
-                       "title":  "Warm noise",
-                       "category":  "White noise",
-                       "summary":  "A steady noise placeholder for quiet routines.",
-                       "assetPath":  "placeholder://sounds/warm_noise",
-                       "unlockType":  "free"
-                   },
-                   {
-                       "id":  "sound_evening_crickets",
-                       "title":  "Evening crickets",
-                       "category":  "Nature",
-                       "summary":  "A soft outdoor evening placeholder.",
-                       "assetPath":  "placeholder://sounds/evening_crickets",
-                       "unlockType":  "free"
-                   },
-                   {
-                       "id":  "sound_dishwasher_hum",
-                       "title":  "Dishwasher hum",
-                       "category":  "Home",
-                       "summary":  "A gentle home hum placeholder for familiar background sound.",
-                       "assetPath":  "placeholder://sounds/dishwasher_hum",
-                       "unlockType":  "free"
-                   },
-                   {
-                       "id":  "sound_quiet_stream",
-                       "title":  "Quiet stream",
-                       "category":  "Calm",
-                       "summary":  "A simple flowing water placeholder for future sound content.",
-                       "assetPath":  "placeholder://sounds/quiet_stream",
-                       "unlockType":  "free"
-                   }
-               ]
+  "metadata": {
+    "packageId": "nurtly-core-en",
+    "schemaVersion": 1,
+    "version": "1.6.0",
+    "locale": "en",
+    "publishedAt": "2026-05-18",
+    "minAppVersion": "0.1.0"
+  },
+  "playIdeas": [
+    {
+      "id": "play_soft_treasure_basket",
+      "title": "Soft treasure basket",
+      "summary": "Offer a few safe household textures to explore together.",
+      "ageGroup": "6-18 months",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sensory",
+      "neededItems": [
+        "Soft cloth",
+        "Wooden spoon",
+        "Large safe container"
+      ],
+      "steps": [
+        "Place the items in the container.",
+        "Sit nearby and let your child choose what to touch.",
+        "Name textures calmly as they explore."
+      ],
+      "whatToExpect": "A low-mess, gently engaging pause with very little setup. Stay nearby, offer simple guidance, and let your child explore at their own pace.",
+      "parentNote": "Use only what feels easy to gather; two textures can be plenty.",
+      "safetyNote": "Use only large, clean items that cannot be swallowed.",
+      "contexts": [
+        "home",
+        "baby",
+        "sensory",
+        "low_setup"
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_couch_cushion_tunnel",
+      "title": "Couch cushion tunnel",
+      "summary": "Make a small tunnel for crawling, peeking, or passing a toy through.",
+      "ageGroup": "12 months-3 years",
+      "place": "Living room",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Movement",
+      "neededItems": [
+        "Couch cushions",
+        "Small soft toy"
+      ],
+      "steps": [
+        "Place cushions on the floor with a low open space between them.",
+        "Invite your child to crawl, peek, or pass the toy through.",
+        "Stay nearby and change the tunnel if it starts to wobble."
+      ],
+      "whatToExpect": "Expect more movement and a little room reset afterward. Join for a few minutes, then keep the tunnel as simple as your space allows.",
+      "parentNote": "A short setup can turn familiar furniture into a fresh play space.",
+      "safetyNote": "Keep the tunnel low, stable, and away from sharp furniture edges.",
+      "contexts": [
+        "home",
+        "toddler",
+        "movement"
+      ],
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_kitchen_spoon_rhythm",
+      "title": "Kitchen spoon rhythm",
+      "summary": "Tap gentle patterns with safe kitchen items.",
+      "ageGroup": "18 months-4 years",
+      "place": "Kitchen",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Music",
+      "neededItems": [
+        "Wooden spoon",
+        "Plastic bowl",
+        "Tea towel"
+      ],
+      "steps": [
+        "Place the bowl on a tea towel to soften the sound.",
+        "Tap a slow pattern and pause for your child to answer.",
+        "Try quiet taps, soft scrapes, and gentle beats."
+      ],
+      "whatToExpect": "It can become lively, but the setup stays small and easy to put away. Keep the rhythm soft and join only as much as feels good.",
+      "parentNote": "Keep the sound level comfortable for everyone nearby.",
+      "safetyNote": "Use sturdy, clean items and supervise while your child holds the spoon.",
+      "contexts": [
+        "kitchen",
+        "toddler",
+        "movement"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_laundry_color_sorting",
+      "title": "Laundry color sorting",
+      "summary": "Sort a small pile of clean laundry by color or type.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sorting",
+      "neededItems": [
+        "Clean laundry",
+        "Two or three baskets"
+      ],
+      "steps": [
+        "Choose a small pile of clean laundry.",
+        "Pick one simple sorting idea, like socks and shirts or light and dark.",
+        "Let your child place each item in a basket."
+      ],
+      "whatToExpect": "A low-mess way to turn a familiar chore into a small shared moment. Stay close, name what you notice, and let the sorting stay imperfect.",
+      "parentNote": "It is fine if the sorting is imperfect; keep the moment easy.",
+      "safetyNote": "Avoid items with loose cords, small parts, or laundry products nearby.",
+      "contexts": [
+        "home",
+        "practical_life",
+        "low_setup"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_window_weather_watch",
+      "title": "Window weather watch",
+      "summary": "Look outside and talk about what you notice.",
+      "ageGroup": "18 months-3 years",
+      "place": "Window",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Medium",
+      "activityType": "Language",
+      "neededItems": [
+        "Window view"
+      ],
+      "steps": [
+        "Sit or stand together near a window.",
+        "Point to one thing you notice outside.",
+        "Use short calm words like cloudy, bright, windy, or quiet."
+      ],
+      "whatToExpect": "A quiet, low-mess pause for a full day. Offer a few words, follow your child's attention, and let the window do most of the work.",
+      "parentNote": "Even thirty seconds of noticing can soften the pace.",
+      "safetyNote": "Keep windows locked and supervise closely.",
+      "contexts": [
+        "home",
+        "quiet",
+        "transition"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_sticker_rescue",
+      "title": "Sticker rescue",
+      "summary": "Place a few stickers on paper and invite your child to peel them away.",
+      "ageGroup": "2-5 years",
+      "place": "Table",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Fine motor",
+      "neededItems": [
+        "Large stickers",
+        "Plain paper"
+      ],
+      "steps": [
+        "Place a few large stickers on the paper with one edge slightly lifted.",
+        "Invite your child to peel each sticker and move it somewhere new.",
+        "Talk about where each sticker lands."
+      ],
+      "whatToExpect": "A focused table moment with a little peel-and-place curiosity. Set out only a few stickers so the activity stays light.",
+      "parentNote": "Starting with two or three stickers keeps the choice gentle.",
+      "safetyNote": "Use large stickers and keep small backing pieces out of reach.",
+      "contexts": [
+        "home",
+        "toddler",
+        "sensory"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_pillow_path",
+      "title": "Pillow path",
+      "summary": "Lay pillows on the floor for stepping, crawling, or balancing with help.",
+      "ageGroup": "2-4 years",
+      "place": "Bedroom",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "High",
+      "activityType": "Movement",
+      "neededItems": [
+        "Pillows",
+        "Clear floor space"
+      ],
+      "steps": [
+        "Place pillows in a short path on the floor.",
+        "Hold your child's hand if they want support.",
+        "Try stepping, crawling, or moving a soft toy along the path."
+      ],
+      "whatToExpect": "A more active idea for a moment when you can join in closely. Keep the path short so it feels playful, not like a big setup.",
+      "parentNote": "Adjust the path to your energy and the space you already have.",
+      "safetyNote": "Use a clear floor area and stop if pillows start to slide.",
+      "contexts": [
+        "home",
+        "movement",
+        "preschool"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_quiet_book_basket",
+      "title": "Quiet book basket",
+      "summary": "Set out a small basket of books for a calm shared pause.",
+      "ageGroup": "0-5 years",
+      "place": "Any quiet spot",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "neededItems": [
+        "Two or three sturdy books",
+        "Small basket"
+      ],
+      "steps": [
+        "Place a few books in a basket within easy reach.",
+        "Let your child choose one book.",
+        "Look at pictures, name one detail, or sit quietly together."
+      ],
+      "whatToExpect": "A low-effort, low-mess pause when everyone needs something softer. Let your child choose the pace, even if that means only looking at one page.",
+      "parentNote": "This can be a calm pause, not a full reading session.",
+      "safetyNote": "Use sturdy books without torn pages or loose pieces for younger children.",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ],
+      "ageRangeMonths": {
+        "min": 0,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_soft_scarf_peekaboo",
+      "title": "Soft scarf peekaboo",
+      "summary": "Use a light scarf or cloth for a gentle peekaboo moment.",
+      "ageGroup": "0-12 months",
+      "place": "Sofa",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "neededItems": [
+        "Light scarf",
+        "Soft cloth"
+      ],
+      "steps": [
+        "Sit close where your baby can see your face.",
+        "Hold the scarf near your face and lower it slowly.",
+        "Pause, smile, and repeat only while it feels welcome."
+      ],
+      "whatToExpect": "A soft, low-mess way to share attention with almost no preparation. Keep your voice gentle and stop whenever your baby seems ready for a break.",
+      "parentNote": "One slow peek can be just right.",
+      "safetyNote": "Keep fabric away from your baby's nose and mouth and supervise closely.",
+      "contexts": [
+        "home",
+        "baby",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 0,
+        "max": 12
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_container_matching",
+      "title": "Container matching",
+      "summary": "Match safe lids and containers from the kitchen.",
+      "ageGroup": "18 months-3 years",
+      "place": "Kitchen",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Practical life",
+      "neededItems": [
+        "Plastic containers",
+        "Matching lids"
+      ],
+      "steps": [
+        "Set out two or three clean containers and lids.",
+        "Show one lid and wonder aloud where it might fit.",
+        "Let your child try matches, stack pieces, or simply explore."
+      ],
+      "whatToExpect": "A quiet kitchen activity with easy cleanup. Matching may turn into stacking or sorting, and that still fits the moment.",
+      "parentNote": "Let the containers be interesting without needing a correct answer.",
+      "safetyNote": "Use clean, lightweight items without sharp edges or small loose parts.",
+      "contexts": [
+        "kitchen",
+        "toddler",
+        "practical_life"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_towel_road",
+      "title": "Towel road",
+      "summary": "Fold a towel into a soft road for small toys or cars.",
+      "ageGroup": "2-5 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Imaginative play",
+      "neededItems": [
+        "Towel",
+        "Small toy car",
+        "Small toy animal"
+      ],
+      "steps": [
+        "Fold a towel into a long strip on the floor.",
+        "Place one small toy at the start of the road.",
+        "Invite your child to move the toy slowly, quickly, or around a bend."
+      ],
+      "whatToExpect": "A low-mess pretend setup that can last one minute or longer. Narrate softly, then let your child take the road wherever it goes.",
+      "parentNote": "A towel can become a road, river, bridge, or path.",
+      "safetyNote": "Keep the towel flat so it does not become a tripping spot.",
+      "contexts": [
+        "home",
+        "pretend",
+        "low_setup"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_sock_puppet_hello",
+      "title": "Sock puppet hello",
+      "summary": "Turn a clean sock into a simple hello puppet.",
+      "ageGroup": "18 months-3 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Language",
+      "neededItems": [
+        "Clean sock"
+      ],
+      "steps": [
+        "Put a clean sock over your hand.",
+        "Make the puppet say hello in a soft voice.",
+        "Pause and let your child answer, point, or simply watch."
+      ],
+      "whatToExpect": "A small connection moment shaped by your gentle participation. Keep the voice simple and follow your child's response.",
+      "parentNote": "The puppet does not need a story; a tiny hello is enough.",
+      "safetyNote": "Use a clean sock without loose threads or small decorations.",
+      "contexts": [
+        "home",
+        "connection",
+        "toddler"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_gentle_animal_walks",
+      "title": "Gentle animal walks",
+      "summary": "Move like quiet animals across a small safe space.",
+      "ageGroup": "3-6 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Movement",
+      "neededItems": [
+        "Clear floor space"
+      ],
+      "steps": [
+        "Choose one gentle animal, like a cat, turtle, or bear.",
+        "Move slowly across the room together.",
+        "Try a quiet version and a slightly bigger version.",
+        "Rest when the movement feels done."
+      ],
+      "whatToExpect": "A movement idea that does not need a big setup. Join for a few rounds, then let the pace soften when the room feels ready.",
+      "parentNote": "Quiet animals can still be playful.",
+      "safetyNote": "Clear the floor and avoid fast movement near furniture.",
+      "contexts": [
+        "home",
+        "movement",
+        "preschool"
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_water_brush_painting",
+      "title": "Water brush painting",
+      "summary": "Paint temporary marks with water on cardboard or an outdoor surface.",
+      "ageGroup": "2-5 years",
+      "place": "Outside",
+      "messLevel": "Medium",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Sensory",
+      "neededItems": [
+        "Small bowl of water",
+        "Paintbrush",
+        "Cardboard or patio space"
+      ],
+      "steps": [
+        "Pour a small amount of water into a bowl.",
+        "Show how the brush makes a mark on cardboard or patio.",
+        "Let your child make lines, dots, or soft shapes.",
+        "Watch the marks fade as they dry."
+      ],
+      "whatToExpect": "Creative, temporary marks without paint or lasting cleanup. Stay close with the water bowl and keep the activity small.",
+      "parentNote": "Fading marks can be part of the calm rhythm.",
+      "safetyNote": "Use only a little water and choose a non-slippery surface.",
+      "contexts": [
+        "outside",
+        "sensory",
+        "movement"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_spoon_cup_transfer",
+      "title": "Spoon and cup transfer",
+      "summary": "Move dry items from one cup to another with a spoon.",
+      "ageGroup": "2-5 years",
+      "place": "Table",
+      "messLevel": "Medium",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Practical life",
+      "neededItems": [
+        "Two cups",
+        "Spoon",
+        "Large dry pasta or cotton balls"
+      ],
+      "steps": [
+        "Place a few large dry items in one cup.",
+        "Show how to scoop one item with the spoon.",
+        "Invite your child to move items to the other cup.",
+        "Pause whenever the table needs a quick reset."
+      ],
+      "whatToExpect": "A focused table activity where a little cleanup may happen. Use only a handful of items so it stays manageable.",
+      "parentNote": "Spills are part of the activity and can be kept small.",
+      "safetyNote": "Choose items that are safe for your child's age and supervise closely.",
+      "contexts": [
+        "home",
+        "practical_life",
+        "toddler"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_laundry_texture_naming",
+      "title": "Laundry texture naming",
+      "summary": "Touch clean laundry together and name how it feels.",
+      "ageGroup": "6-18 months",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Sensory",
+      "neededItems": [
+        "Clean towel",
+        "Clean shirt",
+        "Clean sock"
+      ],
+      "steps": [
+        "Choose two or three clean laundry items.",
+        "Offer one item at a time.",
+        "Use simple words like soft, warm, smooth, or bumpy.",
+        "Let your child touch, hold, or look."
+      ],
+      "whatToExpect": "A gentle sensory pause with almost no setup. Name one or two textures, then let the laundry return to the day.",
+      "parentNote": "You can do this while folding or sitting nearby.",
+      "safetyNote": "Avoid items with loose strings, buttons, or small parts.",
+      "contexts": [
+        "home",
+        "baby",
+        "sensory"
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_shadow_watching",
+      "title": "Shadow watching",
+      "summary": "Notice simple shadows on a wall, floor, or curtain.",
+      "ageGroup": "18 months-3 years",
+      "place": "Window",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "neededItems": [
+        "Natural light",
+        "Wall or floor"
+      ],
+      "steps": [
+        "Find a place where a shadow is easy to see.",
+        "Point to one shadow and name it simply.",
+        "Move your hand slowly and notice what changes."
+      ],
+      "whatToExpect": "A quiet observation moment for a slower part of the day. Stay curious, keep it brief, and follow what your child notices.",
+      "parentNote": "No setup is needed if the light is already there.",
+      "safetyNote": "Avoid looking directly at bright sunlight.",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_blanket_toy_rescue",
+      "title": "Blanket toy rescue",
+      "summary": "Hide part of a toy under a blanket and invite a gentle rescue.",
+      "ageGroup": "12 months-3 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "neededItems": [
+        "Small soft toy",
+        "Light blanket"
+      ],
+      "steps": [
+        "Place a soft toy partly under the blanket.",
+        "Say that the toy is waiting to be found.",
+        "Let your child lift the blanket or point to the toy.",
+        "Celebrate softly and try again if they want."
+      ],
+      "whatToExpect": "A small shared rescue with very little cleanup. Keep the hiding easy so it feels comforting rather than tricky.",
+      "parentNote": "The toy can stay partly visible.",
+      "safetyNote": "Use a light blanket and keep fabric away from faces.",
+      "contexts": [
+        "home",
+        "toddler",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_tiny_stuffed_picnic",
+      "title": "Tiny stuffed picnic",
+      "summary": "Set up a small pretend picnic for stuffed animals.",
+      "ageGroup": "3-6 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Imaginative play",
+      "neededItems": [
+        "Small cloth",
+        "Stuffed animals",
+        "Toy cups or empty cups"
+      ],
+      "steps": [
+        "Lay a small cloth on the table or floor.",
+        "Invite one or two stuffed animals to sit nearby.",
+        "Offer pretend cups or plates.",
+        "Ask what the animals might like today."
+      ],
+      "whatToExpect": "Gentle pretend play with a cozy feeling. Join long enough to start the scene, then let your child lead the picnic.",
+      "parentNote": "One animal and one cup can carry the whole picnic.",
+      "safetyNote": "Use unbreakable cups and keep small pretend pieces away from younger children.",
+      "contexts": [
+        "home",
+        "pretend",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_soft_cleanup_song",
+      "title": "Soft cleanup song",
+      "summary": "Use a short gentle tune while putting a few items away together.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Practical life",
+      "neededItems": [
+        "Three toys",
+        "Basket or shelf"
+      ],
+      "steps": [
+        "Choose only a few items to put away.",
+        "Hum or sing a short soft tune.",
+        "Put one item away together.",
+        "Stop after the small reset feels done."
+      ],
+      "whatToExpect": "A tiny reset becomes a connected moment without pressure. Keep the number of items small so it feels doable.",
+      "parentNote": "Aim for a softer transition, not a perfect room.",
+      "safetyNote": "Keep pathways clear and avoid rushing while carrying toys.",
+      "contexts": [
+        "home",
+        "transition",
+        "practical_life"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_paper_bag_discovery",
+      "title": "Paper bag discovery",
+      "summary": "Place one safe object in a paper bag for a quiet guessing moment.",
+      "ageGroup": "3-6 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "neededItems": [
+        "Paper bag",
+        "Safe household object"
+      ],
+      "steps": [
+        "Place one familiar object inside the bag.",
+        "Invite your child to feel the outside of the bag.",
+        "Offer one gentle hint if they want it.",
+        "Open the bag together."
+      ],
+      "whatToExpect": "A quiet curiosity moment with almost no cleanup. Keep the object familiar so the guessing stays light.",
+      "parentNote": "You can skip guessing and simply discover the object together.",
+      "safetyNote": "Do not place the bag over anyone's head and use only safe objects.",
+      "contexts": [
+        "home",
+        "quiet",
+        "preschool"
+      ],
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_soft_ball_roll_pause",
+      "title": "Soft ball roll and pause",
+      "summary": "Roll a soft ball back and forth with gentle pauses.",
+      "ageGroup": "6-18 months",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "neededItems": [
+        "Soft ball",
+        "Clear floor space"
+      ],
+      "steps": [
+        "Sit on the floor facing your child.",
+        "Roll the ball slowly toward them.",
+        "Pause and wait to see what they do.",
+        "Roll it again if the moment still feels good."
+      ],
+      "whatToExpect": "A low-mess connection idea with a steady rhythm. The pauses matter as much as the rolling.",
+      "parentNote": "Your child may watch, touch, or push the ball in their own way.",
+      "safetyNote": "Use a soft ball and keep the floor clear.",
+      "contexts": [
+        "home",
+        "baby",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 6,
+        "max": 18
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_blanket_boat",
+      "title": "Blanket boat",
+      "summary": "Pretend a blanket on the floor is a small boat.",
+      "ageGroup": "2-5 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Imaginative play",
+      "neededItems": [
+        "Blanket",
+        "Small soft toy"
+      ],
+      "steps": [
+        "Lay a blanket flat on the floor.",
+        "Sit beside it or place a soft toy on it.",
+        "Pretend the blanket is a boat moving slowly.",
+        "Name what you see on the gentle trip."
+      ],
+      "whatToExpect": "Pretend play feels soft and contained here. Join for the first idea, then let the boat stay as simple as your child wants.",
+      "parentNote": "The boat can stay still; imagination can do the moving.",
+      "safetyNote": "Keep the blanket flat and do not pull a child on it.",
+      "contexts": [
+        "home",
+        "pretend",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_bathroom_mirror_faces",
+      "title": "Bathroom mirror faces",
+      "summary": "Make a few gentle faces together in the mirror.",
+      "ageGroup": "18 months-3 years",
+      "place": "Bathroom",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "neededItems": [
+        "Mirror"
+      ],
+      "steps": [
+        "Stand together where the mirror is easy to see.",
+        "Make one gentle face, like sleepy, surprised, or happy.",
+        "Pause and let your child look or copy.",
+        "End after a few faces."
+      ],
+      "whatToExpect": "A brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
+      "parentNote": "Two faces can be plenty.",
+      "safetyNote": "Keep your child steady and away from wet or slippery areas.",
+      "contexts": [
+        "bathroom",
+        "quiet",
+        "connection"
+      ],
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_towel_peek_path",
+      "title": "Towel peek path",
+      "summary": "Lay two towels on the floor for a soft path with little peek stops.",
+      "ageGroup": "12 months-3 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Movement",
+      "contexts": [
+        "home",
+        "toddler",
+        "movement",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Two towels"
+      ],
+      "steps": [
+        "Lay two towels in a short path on the floor.",
+        "Pause at each towel edge and peek underneath together.",
+        "Invite your child to step, crawl, or pat the path at their own pace."
+      ],
+      "whatToExpect": "A soft movement idea with almost no setup or cleanup. Keep the path short, pause often, and let the rhythm stay gentle.",
+      "parentNote": "A short path can help the day move without asking much from you.",
+      "safetyNote": "Keep towels flat so they do not slide or bunch under little feet.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_soft_block_knockdown",
+      "title": "Soft block knockdown",
+      "summary": "Stack a small tower of soft blocks and invite an easy knockdown.",
+      "ageGroup": "12 months-3 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "Low",
+      "activityType": "Movement",
+      "contexts": [
+        "home",
+        "toddler",
+        "movement"
+      ],
+      "neededItems": [
+        "Soft blocks"
+      ],
+      "steps": [
+        "Stack two or three soft blocks into a short tower.",
+        "Pause so your child can look before knocking it down.",
+        "Build it again only if the moment still feels fun."
+      ],
+      "whatToExpect": "A quick burst of energy can still stay small. Keep the tower low and the reset simple.",
+      "parentNote": "Stopping after one or two towers still counts as a good moment.",
+      "safetyNote": "Use soft blocks only and keep the tower low enough to stay safe if it tips.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_kitchen_bowl_nesting",
+      "title": "Kitchen bowl nesting",
+      "summary": "Set out a few bowls for simple stacking and nesting together.",
+      "ageGroup": "12 months-3 years",
+      "place": "Kitchen",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Practical life",
+      "contexts": [
+        "kitchen",
+        "toddler",
+        "practical_life",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Three lightweight bowls"
+      ],
+      "steps": [
+        "Place a few clean bowls on the floor or table.",
+        "Show one bowl resting inside another.",
+        "Let your child stack, nest, or separate them in their own way."
+      ],
+      "whatToExpect": "A quiet kitchen moment with easy cleanup and familiar objects. It can stay calm even if the bowls end up spread around you.",
+      "parentNote": "There is no need to teach the right order for the bowls.",
+      "safetyNote": "Use lightweight bowls without sharp edges and stay close during play.",
+      "ageRangeMonths": {
+        "min": 12,
+        "max": 36
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_bath_cup_pour",
+      "title": "Bath cup pour",
+      "summary": "Pour small amounts of bath water from one cup to another.",
+      "ageGroup": "18 months-4 years",
+      "place": "Bathroom",
+      "messLevel": "Medium",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sensory",
+      "contexts": [
+        "bathroom",
+        "sensory",
+        "toddler"
+      ],
+      "neededItems": [
+        "Two bath cups"
+      ],
+      "steps": [
+        "Offer one cup with a little water in it.",
+        "Show a slow pour into the second cup.",
+        "Let your child try pouring, filling, and pouring again."
+      ],
+      "whatToExpect": "Bath time can focus on one simple action instead of lots of stimulation. A little splashing is normal, so keep the setup small.",
+      "parentNote": "One cup may be enough to give bath time a fresh rhythm.",
+      "safetyNote": "Stay within arm's reach in the bath and keep the floor dry around the tub.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_couch_island_pretend",
+      "title": "Couch island pretend",
+      "summary": "Pretend the couch is a small island with safe places to land nearby.",
+      "ageGroup": "2-5 years",
+      "place": "Sofa",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Imaginative play",
+      "contexts": [
+        "home",
+        "pretend",
+        "movement"
+      ],
+      "neededItems": [
+        "Couch",
+        "One pillow"
+      ],
+      "steps": [
+        "Name the couch as the island and the floor as water.",
+        "Place one pillow nearby as a safe landing spot.",
+        "Invite your child to climb, sit, and imagine a tiny island story."
+      ],
+      "whatToExpect": "Pretend play in a familiar space with only a little setup. Stay close enough to guide the movement and let the story stay simple.",
+      "parentNote": "A short island story can feel just as satisfying as a long one.",
+      "safetyNote": "Keep movement slow and supervise closely around furniture edges.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_stuffed_animal_bedtime",
+      "title": "Stuffed animal bedtime",
+      "summary": "Help a stuffed animal settle for a tiny bedtime routine.",
+      "ageGroup": "2-5 years",
+      "place": "Bedroom",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Medium",
+      "activityType": "Connection",
+      "contexts": [
+        "home",
+        "quiet",
+        "pretend",
+        "transition"
+      ],
+      "neededItems": [
+        "Stuffed animal",
+        "Small cloth or doll blanket"
+      ],
+      "steps": [
+        "Choose one stuffed animal together.",
+        "Cover it with a cloth and say goodnight in a soft voice.",
+        "Add one tiny bedtime step, like a cuddle or a yawn."
+      ],
+      "whatToExpect": "A calm pretend moment that can gently soften a busy part of the day. Keep the routine tiny so it feels comforting, not like a task.",
+      "parentNote": "Let the pretend routine be tiny; it does not need to mirror real bedtime.",
+      "safetyNote": "Use light fabric only and keep it away from a child's face during play.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_window_bird_watch",
+      "title": "Window bird watch",
+      "summary": "Pause at the window and notice birds or other small outdoor movement.",
+      "ageGroup": "18 months-5 years",
+      "place": "Window",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Window view"
+      ],
+      "steps": [
+        "Stand or sit where the outside view is easy to see.",
+        "Point out one bird, flutter, or movement outdoors.",
+        "Name only what you notice and let silence be part of the moment."
+      ],
+      "whatToExpect": "A low-pressure pause for slower energy. You may only notice one small thing, and that can be plenty.",
+      "parentNote": "No birds today is fine; clouds, branches, or passing light still work.",
+      "safetyNote": "Keep windows locked and supervise closely around window areas.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_paper_towel_roll_tunnel",
+      "title": "Paper towel roll tunnel",
+      "summary": "Roll small toys through a paper towel tube for a quick surprise moment.",
+      "ageGroup": "2-5 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "contexts": [
+        "home",
+        "low_setup",
+        "pretend"
+      ],
+      "neededItems": [
+        "Paper towel roll",
+        "Small soft toy or large pom"
+      ],
+      "steps": [
+        "Hold the roll over a tray, table, or your hand.",
+        "Drop one toy through and listen for it to land.",
+        "Let your child take turns dropping and retrieving the toy."
+      ],
+      "whatToExpect": "A tiny repeatable activity that feels fresh with very little effort. Keep the pieces few so setup and cleanup stay easy.",
+      "parentNote": "One roll and one toy can carry the whole activity.",
+      "safetyNote": "Use items large enough for your child's age and avoid cardboard edges that feel rough.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_sock_matching_basket",
+      "title": "Sock matching basket",
+      "summary": "Gather a few socks in a basket and look for simple pairs together.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Practical life",
+      "contexts": [
+        "home",
+        "practical_life",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Four to six socks",
+        "Small basket"
+      ],
+      "steps": [
+        "Place a few socks in a basket.",
+        "Pull out two at a time and notice color or size.",
+        "Let your child pair them, stack them, or simply sort by feel."
+      ],
+      "whatToExpect": "A familiar home task can become a calm shared moment. It still works if the pairs stay imperfect.",
+      "parentNote": "There is no need to correct every mismatch.",
+      "safetyNote": "Use clean socks only and keep the basket light enough to move safely.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_soft_toy_hide_find",
+      "title": "Soft toy hide and find",
+      "summary": "Hide one soft toy in an easy spot and invite a gentle search.",
+      "ageGroup": "18 months-4 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "contexts": [
+        "home",
+        "connection",
+        "toddler"
+      ],
+      "neededItems": [
+        "Soft toy"
+      ],
+      "steps": [
+        "Choose one soft toy your child knows well.",
+        "Hide it where part of it still peeks out.",
+        "Invite your child to look, point, or pick it up."
+      ],
+      "whatToExpect": "A light search game with almost no cleanup. Keep the hiding spots easy to reach and let the toy be partly visible if that feels better.",
+      "parentNote": "Seeing a little bit of the toy can make the game feel safer and sweeter.",
+      "safetyNote": "Avoid hiding toys in high, tight, or hard-to-reach places.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_gentle_hallway_parade",
+      "title": "Gentle hallway parade",
+      "summary": "Take a slow little parade down the hallway with soft steps and simple sounds.",
+      "ageGroup": "2-5 years",
+      "place": "Hallway",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "Medium",
+      "activityType": "Movement",
+      "contexts": [
+        "home",
+        "movement",
+        "transition"
+      ],
+      "neededItems": [
+        "Clear hallway"
+      ],
+      "steps": [
+        "Choose a slow walking rhythm together.",
+        "March softly down the hallway once or twice.",
+        "Add a wave, a turn, or a quiet hum if it feels fun."
+      ],
+      "whatToExpect": "A short movement break for a transition moment. Keep the parade brief and let the energy settle as you finish.",
+      "parentNote": "One lap can be plenty when the day already feels loud.",
+      "safetyNote": "Keep the hallway clear and use soft voices if others are nearby.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_picnic_blanket_sorting",
+      "title": "Picnic blanket sorting",
+      "summary": "Sort a few safe household items onto a blanket in simple groups.",
+      "ageGroup": "2-5 years",
+      "place": "Floor",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sorting",
+      "contexts": [
+        "home",
+        "practical_life",
+        "pretend"
+      ],
+      "neededItems": [
+        "Small blanket",
+        "Three safe household items"
+      ],
+      "steps": [
+        "Spread a blanket on the floor.",
+        "Place a few safe items beside it.",
+        "Invite your child to group them by color, size, or where they belong."
+      ],
+      "whatToExpect": "A familiar sorting moment that feels a little special on a blanket. Keep the groups loose and let curiosity lead.",
+      "parentNote": "The blanket makes the moment feel new even if the items are ordinary.",
+      "safetyNote": "Choose sturdy items without sharp edges or small loose pieces.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_sponge_squeeze_outside",
+      "title": "Sponge squeeze outside",
+      "summary": "Squeeze water from a sponge outdoors for a simple sensory reset.",
+      "ageGroup": "2-5 years",
+      "place": "Outside",
+      "messLevel": "Medium",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sensory",
+      "contexts": [
+        "outside",
+        "sensory",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Sponge",
+        "Small bowl of water"
+      ],
+      "steps": [
+        "Wet the sponge with a little water.",
+        "Show how to squeeze it over the ground or a bucket.",
+        "Let your child soak, squeeze, and pause as they like."
+      ],
+      "whatToExpect": "A contained sensory moment with a little splash and easy outdoor cleanup. Use a small amount of water and stop while it still feels good.",
+      "parentNote": "Using just a small amount of water helps the activity stay light.",
+      "safetyNote": "Choose a non-slippery surface and supervise around water.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_chair_train_pretend",
+      "title": "Chair train pretend",
+      "summary": "Line up a couple of chairs for a small pretend train ride.",
+      "ageGroup": "3-6 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "High",
+      "parentInvolvement": "High",
+      "activityType": "Imaginative play",
+      "contexts": [
+        "home",
+        "pretend",
+        "movement",
+        "preschool"
+      ],
+      "neededItems": [
+        "Two chairs",
+        "Soft toy or bag"
+      ],
+      "steps": [
+        "Place two chairs in a short line.",
+        "Choose who or what is taking the train ride.",
+        "Pretend to start, stop, and arrive at one simple destination."
+      ],
+      "whatToExpect": "This can feel exciting, so a little structure helps it stay calm. Set a gentle pace and keep the route short.",
+      "parentNote": "You do not need a long storyline to make the train feel real.",
+      "safetyNote": "Use sturdy chairs and stay close so climbing and leaning stay safe.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_calm_hand_tracing",
+      "title": "Calm hand tracing",
+      "summary": "Trace hands slowly on paper or in the air for a quiet settling moment.",
+      "ageGroup": "3-6 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": [
+        "home",
+        "quiet",
+        "transition",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Paper",
+        "Crayon or finger"
+      ],
+      "steps": [
+        "Place a hand on the table or in your lap.",
+        "Trace around the fingers slowly with a crayon or fingertip.",
+        "Pause to notice the shape and trace once more if it feels good."
+      ],
+      "whatToExpect": "A very simple quiet idea for a moment that needs soft edges. Trace slowly and let one outline be enough.",
+      "parentNote": "Tracing in the air works too if paper feels like too much.",
+      "safetyNote": "Use age-safe drawing tools and supervise closely with younger children.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_toy_wash_station",
+      "title": "Toy wash station",
+      "summary": "Wash a few sturdy toys with water and a cloth or sponge.",
+      "ageGroup": "2-5 years",
+      "place": "Outside",
+      "messLevel": "Medium",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Practical life",
+      "contexts": [
+        "outside",
+        "practical_life",
+        "sensory"
+      ],
+      "neededItems": [
+        "Small bucket of water",
+        "Cloth or sponge",
+        "Two sturdy toys"
+      ],
+      "steps": [
+        "Choose one or two washable toys.",
+        "Dip the cloth or sponge in a little water.",
+        "Wipe the toys slowly and set them aside to dry."
+      ],
+      "whatToExpect": "Practical-life play with a gentle sensory feel and a contained reset afterward. Use only a couple of toys so it stays manageable.",
+      "parentNote": "The wiping matters more than getting the toys perfectly clean.",
+      "safetyNote": "Use only a small amount of water and choose toys without batteries or electronics.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_napkin_folding_helper",
+      "title": "Napkin folding helper",
+      "summary": "Fold a few napkins together for a calm table helper moment.",
+      "ageGroup": "3-6 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Practical life",
+      "contexts": [
+        "home",
+        "practical_life",
+        "quiet"
+      ],
+      "neededItems": [
+        "Two or three napkins"
+      ],
+      "steps": [
+        "Place a small stack of napkins on the table.",
+        "Show one simple fold in half.",
+        "Let your child try folding, stacking, or smoothing them."
+      ],
+      "whatToExpect": "A quiet helper activity with almost no preparation. A small stack keeps the rhythm calm and easy.",
+      "parentNote": "Crooked folds are fine; the rhythm is more important than the result.",
+      "safetyNote": "Use clean cloth or paper napkins and keep the area dry.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_animal_sound_pause",
+      "title": "Animal sound pause",
+      "summary": "Take turns making one gentle animal sound at a time.",
+      "ageGroup": "18 months-4 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Connection",
+      "contexts": [
+        "home",
+        "connection",
+        "transition"
+      ],
+      "neededItems": [
+        "No items needed"
+      ],
+      "steps": [
+        "Choose one animal together, like a cat or duck.",
+        "Make the sound once in a gentle voice.",
+        "Pause to listen before choosing another animal."
+      ],
+      "whatToExpect": "Connection stays simple when the sounds are gentle and spaced out. The pause between animals helps the moment stay calm.",
+      "parentNote": "You can stop after one or two animals if that feels best.",
+      "safetyNote": "Keep voices soft and avoid animal jumps or rough movement in small spaces.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_quiet_basket_rotation",
+      "title": "Quiet basket rotation",
+      "summary": "Bring out one small basket of calm toys and rotate it for a fresh pause.",
+      "ageGroup": "18 months-5 years",
+      "place": "Any quiet spot",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Quiet time",
+      "contexts": [
+        "home",
+        "quiet",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Small basket",
+        "Two or three calm toys"
+      ],
+      "steps": [
+        "Choose one basket with only a few calm items.",
+        "Set it down and let your child explore in their own order.",
+        "Put it away when the quiet moment feels finished."
+      ],
+      "whatToExpect": "A touch of novelty without more clutter or stimulation. Keep the basket small so the choice feels gentle.",
+      "parentNote": "Rotating only one basket at a time helps the room feel calmer too.",
+      "safetyNote": "Use safe, familiar toys without loose parts for your child's age.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_big_small_match",
+      "title": "Big-small household match",
+      "summary": "Match one big household item with one small one in simple pairs.",
+      "ageGroup": "2-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Sorting",
+      "contexts": [
+        "home",
+        "practical_life",
+        "low_setup"
+      ],
+      "neededItems": [
+        "One big spoon",
+        "One small spoon",
+        "One big cup",
+        "One small cup"
+      ],
+      "steps": [
+        "Place one big and one small version of two household items nearby.",
+        "Name big and small once or twice.",
+        "Let your child match, compare, or line them up."
+      ],
+      "whatToExpect": "An easy home activity that stays light and tidy. Guide a little, then step back and watch what your child notices.",
+      "parentNote": "Two simple pairs are plenty to hold the idea together.",
+      "safetyNote": "Use safe household items without sharp edges or breakable parts.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_blanket_cave_reading",
+      "title": "Blanket cave reading",
+      "summary": "Drape a blanket over a low spot for a tiny reading nook.",
+      "ageGroup": "2-5 years",
+      "place": "Bedroom",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Medium",
+      "activityType": "Quiet time",
+      "contexts": [
+        "home",
+        "quiet",
+        "pretend"
+      ],
+      "neededItems": [
+        "Light blanket",
+        "One book"
+      ],
+      "steps": [
+        "Drape a light blanket over a low safe surface or your knees.",
+        "Bring one book inside or beside the blanket.",
+        "Read a page or two, or simply sit together in the small space."
+      ],
+      "whatToExpect": "A cozy reading nook with only a little setup. Keep the cave open and airy so the moment stays comfortable.",
+      "parentNote": "Looking at the cover together can be enough for today.",
+      "safetyNote": "Keep blankets light, openings visible, and never block a child inside the space.",
+      "ageRangeMonths": {
+        "min": 24,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    },
+    {
+      "id": "play_spoon_mirror_tap",
+      "title": "Spoon mirror tap",
+      "summary": "Tap a spoon softly beside a mirror and notice the sound and reflection.",
+      "ageGroup": "18 months-4 years",
+      "place": "Bathroom",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "contexts": [
+        "bathroom",
+        "quiet",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Wooden spoon",
+        "Mirror"
+      ],
+      "steps": [
+        "Stand or sit near the mirror together.",
+        "Tap the spoon gently against your hand or sink edge.",
+        "Watch the movement in the reflection and keep the sound soft."
+      ],
+      "whatToExpect": "A tiny sensory-observation moment that works best with a gentle pace. One or two soft taps may be plenty.",
+      "parentNote": "Soft taps keep the activity interesting without making it sharp or loud.",
+      "safetyNote": "Avoid tapping directly on glass and keep the area dry and supervised.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_soft_rain"
+    },
+    {
+      "id": "play_pretend_shop_with_cups",
+      "title": "Pretend shop with cups",
+      "summary": "Turn a few cups into a tiny pretend shop for serving and choosing.",
+      "ageGroup": "3-6 years",
+      "place": "Table",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Medium",
+      "activityType": "Imaginative play",
+      "contexts": [
+        "home",
+        "pretend",
+        "preschool"
+      ],
+      "neededItems": [
+        "Two or three cups",
+        "Small cloth"
+      ],
+      "steps": [
+        "Set two or three cups on the table like shop items.",
+        "Invite your child to choose, serve, or pretend to sell one.",
+        "Take turns asking for one simple thing from the shop."
+      ],
+      "whatToExpect": "Gentle pretend play that feels social without needing many props. Keep the choices few so the scene stays calm.",
+      "parentNote": "You can let your child lead the whole shop after the first turn.",
+      "safetyNote": "Use unbreakable cups and keep the play surface stable.",
+      "ageRangeMonths": {
+        "min": 36,
+        "max": 72
+      },
+      "suggestedSoundId": "sound_warm_noise"
+    },
+    {
+      "id": "play_outdoor_leaf_noticing",
+      "title": "Outdoor leaf noticing",
+      "summary": "Notice a few leaves outdoors and talk about shape, color, or texture.",
+      "ageGroup": "18 months-5 years",
+      "place": "Outside",
+      "messLevel": "Low",
+      "childEngagement": "Low",
+      "parentInvolvement": "Low",
+      "activityType": "Observation",
+      "contexts": [
+        "outside",
+        "quiet",
+        "sensory"
+      ],
+      "neededItems": [
+        "A safe outdoor spot"
+      ],
+      "steps": [
+        "Choose a safe outdoor place with leaves or plants nearby.",
+        "Pick up or point to one leaf at a time.",
+        "Notice color, size, or texture together without rushing."
+      ],
+      "whatToExpect": "A calm outside pause for lower-energy moments. A minute or two of noticing can be enough.",
+      "parentNote": "The quiet pace is part of what makes this useful.",
+      "safetyNote": "Stay on safe ground and avoid unfamiliar plants.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_evening_crickets"
+    },
+    {
+      "id": "play_bath_toy_rescue",
+      "title": "Bath toy rescue",
+      "summary": "Rescue one bath toy at a time from a small bowl or bath edge.",
+      "ageGroup": "18 months-4 years",
+      "place": "Bathroom",
+      "messLevel": "Medium",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Connection",
+      "contexts": [
+        "bathroom",
+        "sensory",
+        "toddler"
+      ],
+      "neededItems": [
+        "Bath toy",
+        "Cup or bowl"
+      ],
+      "steps": [
+        "Place one bath toy in a small bowl or at the bath edge.",
+        "Invite your child to scoop or lift it out.",
+        "Let the toy go back in and rescue it again if they want."
+      ],
+      "whatToExpect": "Bath play stays simple and focused with one toy at a time. Expect a little splash and an easy reset.",
+      "parentNote": "One toy is enough to make the rescue feel real.",
+      "safetyNote": "Stay within arm's reach in the bath and keep water play small.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 48
+      },
+      "suggestedSoundId": "sound_dishwasher_hum"
+    },
+    {
+      "id": "play_clean_cloth_wipe_helper",
+      "title": "Clean cloth wipe helper",
+      "summary": "Offer a clean cloth for wiping one safe surface together.",
+      "ageGroup": "18 months-5 years",
+      "place": "Home",
+      "messLevel": "Low",
+      "childEngagement": "Medium",
+      "parentInvolvement": "Low",
+      "activityType": "Practical life",
+      "contexts": [
+        "home",
+        "practical_life",
+        "transition",
+        "low_setup"
+      ],
+      "neededItems": [
+        "Clean damp cloth"
+      ],
+      "steps": [
+        "Choose one small safe surface, like a table edge or tray.",
+        "Show one slow wiping motion.",
+        "Let your child wipe a little, then stop while it still feels good."
+      ],
+      "whatToExpect": "A tiny household task can become a steady, connected moment. Keeping the surface small helps it feel calming instead of like work.",
+      "parentNote": "A few slow wipes can make the helper role feel real.",
+      "safetyNote": "Use only water or a plain damp cloth and avoid cleaning products during play.",
+      "ageRangeMonths": {
+        "min": 18,
+        "max": 60
+      },
+      "suggestedSoundId": "sound_quiet_stream"
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    },
+    {
+      "id": "low_mess",
+      "label": "Low mess",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "messLevel",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    },
+    {
+      "id": "for_babies",
+      "label": "For babies",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 0,
+          "max": 18
+        }
+      ]
+    },
+    {
+      "id": "toddlers",
+      "label": "Toddlers",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 12,
+          "max": 36
+        }
+      ]
+    },
+    {
+      "id": "preschool",
+      "label": "Preschool",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "ageRangeMonths",
+          "operator": "overlaps",
+          "min": 36,
+          "max": 72
+        }
+      ]
+    },
+    {
+      "id": "movement",
+      "label": "Movement",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "contexts",
+          "operator": "contains",
+          "value": "movement"
+        }
+      ]
+    },
+    {
+      "id": "quiet",
+      "label": "Quiet",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "contexts",
+          "operator": "contains",
+          "value": "quiet"
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "id": "sound_soft_rain",
+      "title": "Soft rain",
+      "category": "Nature",
+      "summary": "A calm rain placeholder for future sound content.",
+      "assetPath": "placeholder://sounds/soft_rain",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_warm_noise",
+      "title": "Warm noise",
+      "category": "White noise",
+      "summary": "A steady noise placeholder for quiet routines.",
+      "assetPath": "placeholder://sounds/warm_noise",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_evening_crickets",
+      "title": "Evening crickets",
+      "category": "Nature",
+      "summary": "A soft outdoor evening placeholder.",
+      "assetPath": "placeholder://sounds/evening_crickets",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_dishwasher_hum",
+      "title": "Dishwasher hum",
+      "category": "Home",
+      "summary": "A gentle home hum placeholder for familiar background sound.",
+      "assetPath": "placeholder://sounds/dishwasher_hum",
+      "unlockType": "free"
+    },
+    {
+      "id": "sound_quiet_stream",
+      "title": "Quiet stream",
+      "category": "Calm",
+      "summary": "A simple flowing water placeholder for future sound content.",
+      "assetPath": "placeholder://sounds/quiet_stream",
+      "unlockType": "free"
+    }
+  ]
 }

@@ -85,7 +85,7 @@ class PlayIdea {
       steps: readStringList(json, 'steps'),
       whatToExpect: readString(json, 'whatToExpect'),
       suggestedSoundId: json.containsKey('suggestedSoundId')
-          ? (json['suggestedSoundId'] as String?)
+          ? readString(json, 'suggestedSoundId')
           : null,
       parentNote: readString(json, 'parentNote'),
       safetyNote: readString(json, 'safetyNote'),
