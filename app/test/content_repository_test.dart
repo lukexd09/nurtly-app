@@ -146,6 +146,20 @@ String _packageJson({
       "safetyNote": "Use safe items."
     }
   ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    }
+  ],
   "sounds": [
     {
       "id": "sound_test_sound",

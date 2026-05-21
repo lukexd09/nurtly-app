@@ -1,4 +1,5 @@
 import 'json_readers.dart';
+import 'play_filter.dart';
 import 'play_idea.dart';
 import 'sound_item.dart';
 
@@ -6,17 +7,20 @@ class ContentPackage {
   const ContentPackage({
     required this.metadata,
     required this.playIdeas,
+    required this.playFilters,
     required this.sounds,
   });
 
   final ContentMetadata metadata;
   final List<PlayIdea> playIdeas;
+  final List<PlayFilter> playFilters;
   final List<SoundItem> sounds;
 
   factory ContentPackage.fromJson(Map<String, Object?> json) {
     return ContentPackage(
       metadata: ContentMetadata.fromJson(readMap(json, 'metadata')),
       playIdeas: readItems(json, 'playIdeas', PlayIdea.fromJson),
+      playFilters: readItems(json, 'playFilters', PlayFilter.fromJson),
       sounds: readItems(json, 'sounds', SoundItem.fromJson),
     );
   }

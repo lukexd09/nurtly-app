@@ -2,7 +2,7 @@
   "metadata": {
     "packageId": "nurtly-core-en",
     "schemaVersion": 1,
-    "version": "1.1.0",
+    "version": "1.2.0",
     "locale": "en",
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
@@ -573,6 +573,95 @@
       "whatToExpect": "This is a brief, low-effort connection idea for a transition moment. Keep it soft and stop before it becomes too silly or loud.",
       "parentNote": "Two faces can be plenty.",
       "safetyNote": "Keep your child steady and away from wet or slippery areas."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    },
+    {
+      "id": "low_mess",
+      "label": "Low mess",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "messLevel",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
+    },
+    {
+      "id": "for_babies",
+      "label": "For babies",
+      "matchMode": "any",
+      "rules": [
+        {
+          "field": "ageGroup",
+          "operator": "contains",
+          "value": "0-12 months"
+        },
+        {
+          "field": "ageGroup",
+          "operator": "contains",
+          "value": "6-18 months"
+        }
+      ]
+    },
+    {
+      "id": "toddlers",
+      "label": "Toddlers",
+      "matchMode": "any",
+      "rules": [
+        {
+          "field": "ageGroup",
+          "operator": "contains",
+          "value": "18 months-3 years"
+        },
+        {
+          "field": "ageGroup",
+          "operator": "contains",
+          "value": "2-5 years"
+        }
+      ]
+    },
+    {
+      "id": "movement",
+      "label": "Movement",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "activityType",
+          "operator": "equals",
+          "value": "Movement"
+        }
+      ]
+    },
+    {
+      "id": "quiet",
+      "label": "Quiet",
+      "matchMode": "any",
+      "rules": [
+        {
+          "field": "activityType",
+          "operator": "equals",
+          "value": "Quiet time"
+        },
+        {
+          "field": "childEngagement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
     }
   ],
   "sounds": [

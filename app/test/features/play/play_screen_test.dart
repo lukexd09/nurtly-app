@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_package.dart';
+import 'package:nurtly/core/content/play_filter.dart';
 import 'package:nurtly/core/content/play_idea.dart';
 import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/features/play/play_screen.dart';
@@ -225,6 +226,95 @@ class _PlayFilterContentLoader extends ContentLoader {
         publishedAt: '2026-05-18',
         minAppVersion: '0.1.0',
       ),
+      playFilters: [
+        PlayFilter(
+          id: 'low_effort',
+          label: 'Low effort',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'parentInvolvement',
+              operator: 'equals',
+              value: 'Low',
+            ),
+          ],
+        ),
+        PlayFilter(
+          id: 'low_mess',
+          label: 'Low mess',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'messLevel',
+              operator: 'equals',
+              value: 'Low',
+            ),
+          ],
+        ),
+        PlayFilter(
+          id: 'for_babies',
+          label: 'For babies',
+          matchMode: PlayFilterMatchMode.any,
+          rules: [
+            PlayFilterRule(
+              field: 'ageGroup',
+              operator: 'contains',
+              value: '0-12 months',
+            ),
+            PlayFilterRule(
+              field: 'ageGroup',
+              operator: 'contains',
+              value: '6-18 months',
+            ),
+          ],
+        ),
+        PlayFilter(
+          id: 'toddlers',
+          label: 'Toddlers',
+          matchMode: PlayFilterMatchMode.any,
+          rules: [
+            PlayFilterRule(
+              field: 'ageGroup',
+              operator: 'contains',
+              value: '18 months-3 years',
+            ),
+            PlayFilterRule(
+              field: 'ageGroup',
+              operator: 'contains',
+              value: '2-5 years',
+            ),
+          ],
+        ),
+        PlayFilter(
+          id: 'movement',
+          label: 'Movement',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'activityType',
+              operator: 'equals',
+              value: 'Movement',
+            ),
+          ],
+        ),
+        PlayFilter(
+          id: 'quiet',
+          label: 'Quiet',
+          matchMode: PlayFilterMatchMode.any,
+          rules: [
+            PlayFilterRule(
+              field: 'activityType',
+              operator: 'equals',
+              value: 'Quiet time',
+            ),
+            PlayFilterRule(
+              field: 'childEngagement',
+              operator: 'equals',
+              value: 'Low',
+            ),
+          ],
+        ),
+      ],
       playIdeas: [
         PlayIdea(
           id: 'play_soft_treasure_basket',

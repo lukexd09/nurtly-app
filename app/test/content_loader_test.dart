@@ -10,12 +10,13 @@ void main() {
 
     expect(package.metadata.packageId, 'nurtly-core-en');
     expect(package.metadata.schemaVersion, 1);
-    expect(package.metadata.version, '1.1.0');
+    expect(package.metadata.version, '1.2.0');
     expect(package.metadata.locale, 'en');
     expect(_isNotBlank(package.metadata.publishedAt), isTrue);
     expect(DateTime.tryParse(package.metadata.publishedAt), isNotNull);
     expect(_isNotBlank(package.metadata.minAppVersion), isTrue);
     expect(package.playIdeas, hasLength(24));
+    expect(package.playFilters, hasLength(6));
     expect(package.sounds, hasLength(5));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
@@ -42,6 +43,7 @@ void main() {
 
     expect(package.metadata.packageId, 'test-package');
     expect(package.playIdeas.single.id, 'play_test_idea');
+    expect(package.playFilters.single.id, 'low_effort');
     expect(package.sounds.single.id, 'sound_test_sound');
   });
 
@@ -65,6 +67,52 @@ void main() {
     for (final id in ids) {
       expect(id, startsWith('play_'));
       expect(id, id.toLowerCase());
+    }
+  });
+
+  test('play filters are valid and include expected labels', () async {
+    final package = await const ContentLoader().load();
+    const supportedFields = {
+      'parentInvolvement',
+      'messLevel',
+      'ageGroup',
+      'activityType',
+      'childEngagement',
+      'place',
+    };
+    const supportedOperators = {'equals', 'contains'};
+    const expectedLabels = {
+      'Low effort',
+      'Low mess',
+      'For babies',
+      'Toddlers',
+      'Movement',
+      'Quiet',
+    };
+
+    expect(package.playFilters, isNotEmpty);
+
+    final ids = package.playFilters.map((filter) => filter.id).toList();
+    final labels = package.playFilters.map((filter) => filter.label).toSet();
+
+    expect(ids.toSet(), hasLength(ids.length));
+    for (final id in ids) {
+      expect(id, id.toLowerCase());
+      expect(id, matches(r'^[a-z0-9_]+$'));
+    }
+    expect(labels, containsAll(expectedLabels));
+
+    for (final filter in package.playFilters) {
+      expect(_isNotBlank(filter.label), isTrue, reason: '${filter.id} label');
+      expect(filter.rules, isNotEmpty, reason: '${filter.id} rules');
+      expect(filter.matchMode.name, anyOf('all', 'any'));
+      for (final rule in filter.rules) {
+        expect(supportedFields, contains(rule.field),
+            reason: '${filter.id} field');
+        expect(supportedOperators, contains(rule.operator),
+            reason: '${filter.id} operator');
+        expect(_isNotBlank(rule.value), isTrue, reason: '${filter.id} value');
+      }
     }
   });
 
@@ -246,6 +294,20 @@ const _minimalContentPackageJson = '''
       "whatToExpect": "A simple test note for content loading.",
       "parentNote": "Keep it simple.",
       "safetyNote": "Use safe items."
+    }
+  ],
+  "playFilters": [
+    {
+      "id": "low_effort",
+      "label": "Low effort",
+      "matchMode": "all",
+      "rules": [
+        {
+          "field": "parentInvolvement",
+          "operator": "equals",
+          "value": "Low"
+        }
+      ]
     }
   ],
   "sounds": [
