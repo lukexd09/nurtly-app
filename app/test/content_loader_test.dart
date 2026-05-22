@@ -349,6 +349,14 @@ void main() {
 
   test('sounds have local mp3 assets and non-placeholder copy', () async {
     final package = await const ContentLoader().load();
+    const expectedArtworkPathsById = {
+      'sound_soft_rain': 'assets/images/sounds/soft_rain.webp',
+      'sound_warm_noise': 'assets/images/sounds/warm_noise.webp',
+      'sound_quiet_stream': 'assets/images/sounds/quiet_stream.webp',
+      'sound_evening_crickets': 'assets/images/sounds/evening_crickets.webp',
+      'sound_room_fan': 'assets/images/sounds/room_fan.webp',
+      'sound_dishwasher_hum': 'assets/images/sounds/dishwasher_hum.webp',
+    };
 
     expect(package.sounds, isNotEmpty);
     for (final sound in package.sounds) {
@@ -362,7 +370,11 @@ void main() {
           reason: '${sound.id} unlockType');
       expect(sound.assetPath, startsWith('assets/audio/'));
       expect(sound.assetPath, endsWith('.mp3'));
-      expect(sound.artworkAssetPath, isNull);
+      expect(sound.artworkAssetPath, isNotNull,
+          reason: '${sound.id} artworkAssetPath');
+      expect(sound.artworkAssetPath, startsWith('assets/images/sounds/'));
+      expect(sound.artworkAssetPath, endsWith('.webp'));
+      expect(sound.artworkAssetPath, expectedArtworkPathsById[sound.id]);
       expect(sound.summary.toLowerCase(), isNot(contains('placeholder')));
       expect(sound.summary.toLowerCase(), isNot(contains('future')));
       expect(sound.unlockType, 'free');

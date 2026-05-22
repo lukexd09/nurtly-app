@@ -1768,7 +1768,7 @@
       "category": "Nature",
       "summary": "Gentle rain for a calmer background.",
       "assetPath": "assets/audio/soft_rain.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/soft_rain.webp",
       "unlockType": "free"
     },
     {
@@ -1777,7 +1777,7 @@
       "category": "White noise",
       "summary": "A steady warm noise for quieter routines.",
       "assetPath": "assets/audio/warm_noise.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/warm_noise.webp",
       "unlockType": "free"
     },
     {
@@ -1786,7 +1786,7 @@
       "category": "Calm",
       "summary": "Soft flowing water for a peaceful pause.",
       "assetPath": "assets/audio/quiet_stream.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/quiet_stream.webp",
       "unlockType": "free"
     },
     {
@@ -1795,7 +1795,7 @@
       "category": "Nature",
       "summary": "A calm evening sound for winding down.",
       "assetPath": "assets/audio/evening_crickets.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/evening_crickets.webp",
       "unlockType": "free"
     },
     {
@@ -1804,7 +1804,7 @@
       "category": "Home",
       "summary": "A soft fan sound for steady background calm.",
       "assetPath": "assets/audio/room_fan.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/room_fan.webp",
       "unlockType": "free"
     },
     {
@@ -1813,7 +1813,7 @@
       "category": "Home",
       "summary": "A gentle household hum for everyday routines.",
       "assetPath": "assets/audio/dishwasher_hum.mp3",
-      "artworkAssetPath": null,
+      "artworkAssetPath": "assets/images/sounds/dishwasher_hum.webp",
       "unlockType": "free"
     }
   ]
