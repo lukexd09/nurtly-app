@@ -404,6 +404,23 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Material(
+                color: AppColors.surface,
+                shape: const CircleBorder(
+                  side: BorderSide(color: AppColors.borderSoft),
+                ),
+                child: IconButton(
+                  key: const ValueKey('sound-detail-back-button'),
+                  tooltip: 'Back',
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
             _buildArtworkMoodPanel(),
             const SizedBox(height: AppSpacing.sm),
             Text(
@@ -466,23 +483,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       ),
       child: Stack(
         children: [
-          Positioned(
-            top: 6,
-            left: 6,
-            child: Material(
-              color: AppColors.surface,
-              shape: const CircleBorder(
-                side: BorderSide(color: AppColors.borderSoft),
-              ),
-              child: IconButton(
-                key: const ValueKey('sound-detail-back-button'),
-                tooltip: 'Back',
-                color: AppColors.primary,
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
           Positioned(
             top: 12,
             right: 16,
