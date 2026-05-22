@@ -7,6 +7,7 @@ class SoundItem {
     required this.category,
     required this.summary,
     required this.assetPath,
+    this.artworkAssetPath,
     required this.unlockType,
   });
 
@@ -15,6 +16,7 @@ class SoundItem {
   final String category;
   final String summary;
   final String assetPath;
+  final String? artworkAssetPath;
   final String unlockType;
 
   factory SoundItem.fromJson(Map<String, Object?> json) {
@@ -24,6 +26,9 @@ class SoundItem {
       category: readString(json, 'category'),
       summary: readString(json, 'summary'),
       assetPath: readString(json, 'assetPath'),
+      artworkAssetPath: json['artworkAssetPath'] == null
+          ? null
+          : readString(json, 'artworkAssetPath'),
       unlockType: readString(json, 'unlockType'),
     );
   }

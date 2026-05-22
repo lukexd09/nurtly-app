@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/features/sounds/sounds_screen.dart';
 
 import '../../test_fakes/fake_content_loader.dart';
@@ -36,6 +37,7 @@ void main() {
     expect(find.text('Ready'), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-artwork')), findsOneWidget);
+    expect(find.byIcon(Icons.waves_rounded), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-progress')), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-session-options')),
         findsOneWidget);
@@ -68,5 +70,34 @@ void main() {
         findsOneWidget);
     expect(find.textContaining('placeholder'), findsNothing);
     expect(find.textContaining('future'), findsNothing);
+  });
+
+  testWidgets('renders configured sound artwork asset when present',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SoundDetailScreen(
+          sound: SoundItem(
+            id: 'sound_artwork_test',
+            title: 'Artwork sound',
+            category: 'Nature',
+            summary: 'A sound with artwork.',
+            assetPath: 'assets/audio/soft_rain.mp3',
+            artworkAssetPath: 'assets/images/sounds/artwork_test.webp',
+            unlockType: 'free',
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('sound-player-artwork')), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((widget) {
+        final image = widget is Image ? widget.image : null;
+        return image is AssetImage &&
+            image.assetName == 'assets/images/sounds/artwork_test.webp';
+      }),
+      findsOneWidget,
+    );
   });
 }

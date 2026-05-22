@@ -468,14 +468,32 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildArtworkMoodPanel() {
+    final artworkAssetPath = widget.sound.artworkAssetPath?.trim();
     return Container(
       key: const ValueKey('sound-player-artwork'),
       height: 132,
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      child: Semantics(
+        label: '${widget.sound.title} artwork',
+        image: true,
+        child: artworkAssetPath == null || artworkAssetPath.isEmpty
+            ? _buildFallbackArtwork()
+            : Image.asset(
+                artworkAssetPath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildFallbackArtwork(),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackArtwork() {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
