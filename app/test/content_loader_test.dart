@@ -45,6 +45,16 @@ void main() {
     expect(package.playIdeas.single.id, 'play_test_idea');
     expect(package.playFilters.single.id, 'low_effort');
     expect(package.sounds.single.id, 'sound_test_sound');
+    expect(package.sounds.single.artworkAssetPath,
+        'assets/images/sounds/test_sound.webp');
+  });
+
+  test('missing sound artworkAssetPath parses as null', () async {
+    final package = await const ContentLoader(
+      source: _RawContentSource(_minimalContentPackageWithoutFiltersJson),
+    ).load();
+
+    expect(package.sounds.single.artworkAssetPath, isNull);
   });
 
   test('missing contexts parses as an empty list', () async {
@@ -352,6 +362,7 @@ void main() {
           reason: '${sound.id} unlockType');
       expect(sound.assetPath, startsWith('assets/audio/'));
       expect(sound.assetPath, endsWith('.mp3'));
+      expect(sound.artworkAssetPath, isNull);
       expect(sound.summary.toLowerCase(), isNot(contains('placeholder')));
       expect(sound.summary.toLowerCase(), isNot(contains('future')));
       expect(sound.unlockType, 'free');
@@ -424,6 +435,7 @@ const _minimalContentPackageJson = '''
       "category": "Calm",
       "summary": "A placeholder sound.",
       "assetPath": "placeholder://sounds/test_sound",
+      "artworkAssetPath": "assets/images/sounds/test_sound.webp",
       "unlockType": "free"
     }
   ]
