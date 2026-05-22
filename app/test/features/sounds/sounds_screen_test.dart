@@ -42,7 +42,8 @@ void main() {
     expect(find.text('15 min'), findsOneWidget);
     expect(find.text('30 min'), findsOneWidget);
     expect(find.text('60 min'), findsOneWidget);
-    expect(find.text('Infinity'), findsWidgets);
+    expect(find.text('Infinity'), findsOneWidget);
+    expect(find.text('∞'), findsOneWidget);
     expect(
         find.byKey(const ValueKey('sound-player-auto-fade')), findsOneWidget);
     expect(find.text('Auto-fade for timed sessions'), findsOneWidget);
