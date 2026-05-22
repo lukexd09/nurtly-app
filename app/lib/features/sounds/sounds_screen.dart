@@ -467,6 +467,23 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       child: Stack(
         children: [
           Positioned(
+            top: 6,
+            left: 6,
+            child: Material(
+              color: AppColors.surface,
+              shape: const CircleBorder(
+                side: BorderSide(color: AppColors.borderSoft),
+              ),
+              child: IconButton(
+                key: const ValueKey('sound-detail-back-button'),
+                tooltip: 'Back',
+                color: AppColors.primary,
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+          Positioned(
             top: 12,
             right: 16,
             child: Container(
@@ -553,6 +570,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                     _selectSessionDuration(const Duration(minutes: 60)),
               ),
               _SessionSegment(
+                key: const ValueKey('sound-player-timer-infinity'),
                 label: '\u221E',
                 selected: _selectedSessionDuration == null,
                 onSelected: () => _selectSessionDuration(null),
@@ -722,23 +740,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Material(
-                color: AppColors.surface,
-                shape: const CircleBorder(
-                  side: BorderSide(color: AppColors.borderSoft),
-                ),
-                child: IconButton(
-                  key: const ValueKey('sound-detail-back-button'),
-                  tooltip: 'Back',
-                  color: AppColors.primary,
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
             _buildPlayerPanel(),
           ],
         ),
@@ -771,6 +772,7 @@ class _SoundMetadata extends StatelessWidget {
 
 class _SessionSegment extends StatelessWidget {
   const _SessionSegment({
+    super.key,
     required this.label,
     required this.selected,
     required this.onSelected,
