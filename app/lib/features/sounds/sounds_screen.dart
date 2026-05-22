@@ -366,7 +366,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   String _sessionLabel() {
     final selected = _selectedSessionDuration;
     if (selected == null) {
-      return 'Infinity';
+      return 'Continuous play';
     }
     final remaining = _remainingSessionDuration ?? selected;
     return '${_formatDuration(remaining)} left';
@@ -405,7 +405,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildArtworkMoodPanel(),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               widget.sound.title,
               textAlign: TextAlign.center,
@@ -433,13 +433,13 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             _buildProgressControl(),
-            const SizedBox(height: AppSpacing.md),
-            _buildSessionOptions(),
             const SizedBox(height: AppSpacing.sm),
+            _buildSessionOptions(),
+            const SizedBox(height: AppSpacing.xs),
             _buildAutoFadeIndicator(),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.sm),
             _buildControls(),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.sm),
             _buildSafetyNote(),
           ],
         ),
@@ -450,7 +450,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   Widget _buildArtworkMoodPanel() {
     return Container(
       key: const ValueKey('sound-player-artwork'),
-      height: 164,
+      height: 146,
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -524,35 +524,41 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            _SessionChip(
-              label: '15 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 15),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 15)),
-            ),
-            _SessionChip(
-              label: '30 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 30),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 30)),
-            ),
-            _SessionChip(
-              label: '60 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 60),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 60)),
-            ),
-            _SessionChip(
-              label: '∞',
-              selected: _selectedSessionDuration == null,
-              onSelected: () => _selectSessionDuration(null),
-            ),
-          ],
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: AppRadii.chipRadius,
+            border: Border.all(color: AppColors.borderSoft),
+          ),
+          child: Row(
+            children: [
+              _SessionSegment(
+                label: '15',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 15),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 15)),
+              ),
+              _SessionSegment(
+                label: '30',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 30),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 30)),
+              ),
+              _SessionSegment(
+                label: '60',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 60),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 60)),
+              ),
+              _SessionSegment(
+                label: '\u221E',
+                selected: _selectedSessionDuration == null,
+                onSelected: () => _selectSessionDuration(null),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -566,14 +572,14 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       children: [
         Icon(
           Icons.spa_outlined,
-          size: 16,
+          size: 14,
           color: finiteTimerSelected ? AppColors.primary : AppColors.textMuted,
         ),
         const SizedBox(width: AppSpacing.xs),
         Text(
           finiteTimerSelected
               ? 'Auto-fade enabled'
-              : 'Auto-fade for timed sessions',
+              : 'Auto-fade available with timer',
           style: AppTextStyles.caption.copyWith(
             color:
                 finiteTimerSelected ? AppColors.primary : AppColors.textMuted,
@@ -590,14 +596,17 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       children: [
         const Icon(
           Icons.volume_down_outlined,
-          size: 16,
+          size: 14,
           color: AppColors.textMuted,
         ),
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
             'Keep volume comfortable and device away from child.',
-            style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textMuted,
+              height: 1.2,
+            ),
           ),
         ),
       ],
@@ -760,8 +769,8 @@ class _SoundMetadata extends StatelessWidget {
   }
 }
 
-class _SessionChip extends StatelessWidget {
-  const _SessionChip({
+class _SessionSegment extends StatelessWidget {
+  const _SessionSegment({
     required this.label,
     required this.selected,
     required this.onSelected,
@@ -773,17 +782,25 @@ class _SessionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      selectedColor: AppColors.primarySoft,
-      backgroundColor: AppColors.surface,
-      side: const BorderSide(color: AppColors.borderSoft),
-      showCheckmark: false,
-      labelStyle: AppTextStyles.caption.copyWith(
-        color: selected ? AppColors.primary : AppColors.textSecondary,
-        fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+    return Expanded(
+      child: InkWell(
+        onTap: onSelected,
+        borderRadius: AppRadii.chipRadius,
+        child: Container(
+          height: 34,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primarySoft : Colors.transparent,
+            borderRadius: AppRadii.chipRadius,
+          ),
+          child: Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              color: selected ? AppColors.primary : AppColors.textSecondary,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }
