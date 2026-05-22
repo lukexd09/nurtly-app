@@ -10,7 +10,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/detail_note.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
@@ -364,10 +363,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
-  String _sessionLabel() {
+  String? _sessionLabel() {
     final selected = _selectedSessionDuration;
     if (selected == null) {
-      return 'Infinity';
+      return null;
     }
     final remaining = _remainingSessionDuration ?? selected;
     return '${_formatDuration(remaining)} left';
@@ -392,7 +391,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     await _player.seek(target);
   }
 
-  Widget _buildHeroCard() {
+  Widget _buildPlayerPanel() {
     return DecoratedBox(
       key: const ValueKey('sound-player-card'),
       decoration: BoxDecoration(
@@ -405,23 +404,62 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Material(
+                color: AppColors.surface,
+                shape: const CircleBorder(
+                  side: BorderSide(color: AppColors.borderSoft),
+                ),
+                child: IconButton(
+                  key: const ValueKey('sound-detail-back-button'),
+                  tooltip: 'Back',
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
             _buildArtworkMoodPanel(),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: 4),
             Text(
               widget.sound.title,
               textAlign: TextAlign.center,
               style: AppTextStyles.screenTitle,
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 2),
             Text(
               widget.sound.summary,
               textAlign: TextAlign.center,
               style: AppTextStyles.body,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: 2),
             _SoundMetadata(
               sound: widget.sound,
               showUnlockType: false,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _statusText(),
+              key: const ValueKey('sound-player-status'),
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            _buildProgressControl(),
+            const SizedBox(height: 4),
+            _buildSessionOptions(),
+            const SizedBox(height: 2),
+            _buildAutoFadeIndicator(),
+            const SizedBox(height: 4),
+            _buildControls(),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: _buildSafetyNote(),
             ),
           ],
         ),
@@ -432,11 +470,11 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   Widget _buildArtworkMoodPanel() {
     return Container(
       key: const ValueKey('sound-player-artwork'),
-      height: 204,
+      height: 132,
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -449,11 +487,11 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       child: Stack(
         children: [
           Positioned(
-            top: 16,
-            right: 18,
+            top: 12,
+            right: 16,
             child: Container(
-              width: 64,
-              height: 64,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.10),
                 shape: BoxShape.circle,
@@ -461,11 +499,11 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             ),
           ),
           Positioned(
-            bottom: 18,
-            left: 22,
+            bottom: 14,
+            left: 18,
             child: Container(
-              width: 36,
-              height: 36,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
@@ -474,17 +512,17 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           ),
           Center(
             child: Container(
-              width: 88,
-              height: 88,
+              width: 78,
+              height: 78,
               decoration: BoxDecoration(
                 color: AppColors.primarySoft,
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.surfaceBright, width: 6),
+                border: Border.all(color: AppColors.surfaceBright, width: 5),
               ),
               child: const Icon(
                 Icons.waves_rounded,
                 color: AppColors.primary,
-                size: 42,
+                size: 38,
               ),
             ),
           ),
@@ -493,85 +531,58 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     );
   }
 
-  Widget _buildPlaybackCard() {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: AppRadii.panelRadius,
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                    child: Text('Playback', style: AppTextStyles.cardTitle)),
-                Text(
-                  _statusText(),
-                  key: const ValueKey('sound-player-status'),
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _buildProgressControl(),
-            const SizedBox(height: AppSpacing.lg),
-            _buildSessionOptions(),
-            const SizedBox(height: AppSpacing.md),
-            _buildAutoFadeIndicator(),
-            const SizedBox(height: AppSpacing.lg),
-            _buildControls(),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildSessionOptions() {
+    final sessionLabel = _sessionLabel();
     return Column(
       key: const ValueKey('sound-player-session-options'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          _sessionLabel(),
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            _SessionChip(
-              label: '15 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 15),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 15)),
+        if (sessionLabel != null)
+          Center(
+            child: Text(
+              sessionLabel,
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
-            _SessionChip(
-              label: '30 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 30),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 30)),
-            ),
-            _SessionChip(
-              label: '60 min',
-              selected: _selectedSessionDuration == const Duration(minutes: 60),
-              onSelected: () =>
-                  _selectSessionDuration(const Duration(minutes: 60)),
-            ),
-            _SessionChip(
-              label: 'Infinity',
-              selected: _selectedSessionDuration == null,
-              onSelected: () => _selectSessionDuration(null),
-            ),
-          ],
+          ),
+        if (sessionLabel != null) const SizedBox(height: AppSpacing.xs),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: AppRadii.chipRadius,
+            border: Border.all(color: AppColors.borderSoft),
+          ),
+          child: Row(
+            children: [
+              _SessionSegment(
+                label: '15',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 15),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 15)),
+              ),
+              _SessionSegment(
+                label: '30',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 30),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 30)),
+              ),
+              _SessionSegment(
+                label: '60',
+                selected:
+                    _selectedSessionDuration == const Duration(minutes: 60),
+                onSelected: () =>
+                    _selectSessionDuration(const Duration(minutes: 60)),
+              ),
+              _SessionSegment(
+                key: const ValueKey('sound-player-timer-infinity'),
+                label: '\u221E',
+                selected: _selectedSessionDuration == null,
+                onSelected: () => _selectSessionDuration(null),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -579,24 +590,50 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Widget _buildAutoFadeIndicator() {
     final finiteTimerSelected = _selectedSessionDuration != null;
-    return Container(
+    return Row(
       key: const ValueKey('sound-player-auto-fade'),
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.primarySoft,
-        borderRadius: AppRadii.chipRadius,
-      ),
-      child: Text(
-        finiteTimerSelected
-            ? 'Auto-fade enabled'
-            : 'Auto-fade for timed sessions',
-        textAlign: TextAlign.center,
-        style: AppTextStyles.caption.copyWith(color: AppColors.primary),
-      ),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.spa_outlined,
+          size: 14,
+          color: finiteTimerSelected ? AppColors.primary : AppColors.textMuted,
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          finiteTimerSelected
+              ? 'Auto-fade enabled'
+              : 'Auto-fade available with timer',
+          style: AppTextStyles.caption.copyWith(
+            color:
+                finiteTimerSelected ? AppColors.primary : AppColors.textMuted,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSafetyNote() {
+    return Row(
+      key: const ValueKey('sound-player-safety-note'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(
+          Icons.volume_down_outlined,
+          size: 14,
+          color: AppColors.textMuted,
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Expanded(
+          child: Text(
+            'Keep volume comfortable and device away from child.',
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textMuted,
+              height: 1.1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -709,32 +746,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Material(
-                color: AppColors.surface,
-                shape: const CircleBorder(
-                  side: BorderSide(color: AppColors.borderSoft),
-                ),
-                child: IconButton(
-                  key: const ValueKey('sound-detail-back-button'),
-                  tooltip: 'Back',
-                  color: AppColors.primary,
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            _buildHeroCard(),
-            const SizedBox(height: AppSpacing.lg),
-            _buildPlaybackCard(),
-            const SizedBox(height: AppSpacing.lg),
-            const DetailNote(
-              key: ValueKey('sound-player-safety-note'),
-              title: 'Safety note',
-              text: 'Keep volume comfortable and device away from child.',
-            ),
+            _buildPlayerPanel(),
           ],
         ),
       ),
@@ -764,8 +776,9 @@ class _SoundMetadata extends StatelessWidget {
   }
 }
 
-class _SessionChip extends StatelessWidget {
-  const _SessionChip({
+class _SessionSegment extends StatelessWidget {
+  const _SessionSegment({
+    super.key,
     required this.label,
     required this.selected,
     required this.onSelected,
@@ -777,17 +790,25 @@ class _SessionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      selectedColor: AppColors.primarySoft,
-      backgroundColor: AppColors.surface,
-      side: const BorderSide(color: AppColors.borderSoft),
-      showCheckmark: false,
-      labelStyle: AppTextStyles.caption.copyWith(
-        color: selected ? AppColors.primary : AppColors.textSecondary,
-        fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+    return Expanded(
+      child: InkWell(
+        onTap: onSelected,
+        borderRadius: AppRadii.chipRadius,
+        child: Container(
+          height: 32,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primarySoft : Colors.transparent,
+            borderRadius: AppRadii.chipRadius,
+          ),
+          child: Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              color: selected ? AppColors.primary : AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }
