@@ -363,10 +363,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
-  String _sessionLabel() {
+  String? _sessionLabel() {
     final selected = _selectedSessionDuration;
     if (selected == null) {
-      return 'Continuous play';
+      return null;
     }
     final remaining = _remainingSessionDuration ?? selected;
     return '${_formatDuration(remaining)} left';
@@ -420,9 +420,9 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: 6),
             _buildArtworkMoodPanel(),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               widget.sound.title,
               textAlign: TextAlign.center,
@@ -434,12 +434,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
               textAlign: TextAlign.center,
               style: AppTextStyles.body,
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             _SoundMetadata(
               sound: widget.sound,
               showUnlockType: false,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               _statusText(),
               key: const ValueKey('sound-player-status'),
@@ -448,15 +448,15 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             _buildProgressControl(),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             _buildSessionOptions(),
             const SizedBox(height: AppSpacing.xs),
             _buildAutoFadeIndicator(),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             _buildControls(),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.xs),
             _buildSafetyNote(),
           ],
         ),
@@ -467,7 +467,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   Widget _buildArtworkMoodPanel() {
     return Container(
       key: const ValueKey('sound-player-artwork'),
-      height: 146,
+      height: 134,
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -529,18 +529,21 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildSessionOptions() {
+    final sessionLabel = _sessionLabel();
     return Column(
       key: const ValueKey('sound-player-session-options'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Text(
-            _sessionLabel(),
-            style:
-                AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        if (sessionLabel != null)
+          Center(
+            child: Text(
+              sessionLabel,
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
+        if (sessionLabel != null) const SizedBox(height: AppSpacing.xs),
         Container(
           decoration: BoxDecoration(
             borderRadius: AppRadii.chipRadius,
@@ -623,7 +626,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             'Keep volume comfortable and device away from child.',
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textMuted,
-              height: 1.2,
+              height: 1.1,
             ),
           ),
         ),
