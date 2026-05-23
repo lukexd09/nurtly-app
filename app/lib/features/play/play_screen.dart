@@ -4,6 +4,7 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/play_filter.dart';
 import '../../core/content/play_idea.dart';
+import '../../core/content/sound_item.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
@@ -14,6 +15,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
+import '../sounds/sounds_screen.dart' show SuggestedSoundMiniPlayer;
 
 PlayIdea selectDailyPlayIdea(List<PlayIdea> ideas, DateTime date) {
   final dayOfYear = DateTime(date.year, date.month, date.day)
@@ -105,6 +107,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 ..._filteredPlayIdeaSection(
                   playIdeas,
                   package?.playFilters ?? const <PlayFilter>[],
+                  package?.sounds ?? const <SoundItem>[],
                 ),
               ],
             ],
@@ -117,6 +120,7 @@ class _PlayScreenState extends State<PlayScreen> {
   List<Widget> _filteredPlayIdeaSection(
     List<PlayIdea> playIdeas,
     List<PlayFilter> filters,
+    List<SoundItem> sounds,
   ) {
     final filtered = _applyQuickFilters(
       playIdeas,
@@ -133,7 +137,7 @@ class _PlayScreenState extends State<PlayScreen> {
       ];
     }
     return [
-      ..._playIdeaCards(filtered),
+      ..._playIdeaCards(filtered, sounds),
     ];
   }
 
@@ -157,23 +161,45 @@ class _PlayScreenState extends State<PlayScreen> {
         .toList();
   }
 
-  List<Widget> _playIdeaCards(List<PlayIdea> playIdeas) {
+  List<Widget> _playIdeaCards(
+      List<PlayIdea> playIdeas, List<SoundItem> sounds) {
     return [
       for (var index = 0; index < playIdeas.length; index++) ...[
         if (index > 0) const SizedBox(height: AppSpacing.md),
         _PlayIdeaCard(
           idea: playIdeas[index],
           onTap: () {
+            final suggestedSound = _resolveSuggestedSound(
+              playIdeas[index],
+              sounds,
+            );
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) =>
-                    PlayActivityDetailScreen(idea: playIdeas[index]),
+                builder: (_) => PlayActivityDetailScreen(
+                  idea: playIdeas[index],
+                  suggestedSound: suggestedSound,
+                ),
               ),
             );
           },
         ),
       ],
     ];
+  }
+
+  SoundItem? _resolveSuggestedSound(PlayIdea idea, List<SoundItem> sounds) {
+    final suggestedSoundId = idea.suggestedSoundId;
+    if (suggestedSoundId == null || suggestedSoundId.trim().isEmpty) {
+      return null;
+    }
+
+    for (final sound in sounds) {
+      if (sound.id == suggestedSoundId) {
+        return sound;
+      }
+    }
+
+    return null;
   }
 }
 
@@ -371,10 +397,12 @@ class _PlayIdeaCard extends StatelessWidget {
 class PlayActivityDetailScreen extends StatelessWidget {
   const PlayActivityDetailScreen({
     required this.idea,
+    this.suggestedSound,
     super.key,
   });
 
   final PlayIdea idea;
+  final SoundItem? suggestedSound;
 
   @override
   Widget build(BuildContext context) {
@@ -383,12 +411,15 @@ class PlayActivityDetailScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            _DetailBackButton(
-              onPressed: () => Navigator.of(context).pop(),
+            _PlayDetailHero(
+              idea: idea,
+              onBackPressed: () => Navigator.of(context).pop(),
             ),
-            const SizedBox(height: AppSpacing.md),
-            _PlayDetailHero(idea: idea),
             const SizedBox(height: AppSpacing.lg),
+            if (suggestedSound != null) ...[
+              SuggestedSoundMiniPlayer(sound: suggestedSound!),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             _ExpectationSection(idea: idea),
             const SizedBox(height: AppSpacing.md),
             DetailSection(
@@ -451,9 +482,13 @@ class _DetailBackButton extends StatelessWidget {
 }
 
 class _PlayDetailHero extends StatelessWidget {
-  const _PlayDetailHero({required this.idea});
+  const _PlayDetailHero({
+    required this.idea,
+    required this.onBackPressed,
+  });
 
   final PlayIdea idea;
+  final VoidCallback onBackPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -475,12 +510,8 @@ class _PlayDetailHero extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.auto_awesome,
-              color: AppColors.primary,
-              size: 24,
-            ),
-            const SizedBox(height: AppSpacing.md),
+            _DetailBackButton(onPressed: onBackPressed),
+            const SizedBox(height: AppSpacing.sm),
             Text(idea.title, style: AppTextStyles.screenTitle),
             const SizedBox(height: AppSpacing.xs),
             Text(idea.summary, style: AppTextStyles.body),

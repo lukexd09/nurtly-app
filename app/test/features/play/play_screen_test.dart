@@ -254,6 +254,11 @@ void main() {
       ),
       findsOneWidget,
     );
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soft treasure basket'), findsOneWidget);
   });
 
   testWidgets('renders play detail artwork and hero hierarchy', (tester) async {
@@ -288,11 +293,6 @@ void main() {
     expect(find.text('What to expect'), findsOneWidget);
     expect(find.text('What you\'ll need'), findsOneWidget);
     expect(find.text('Steps'), findsOneWidget);
-    expect(find.text('Artwork idea'), findsOneWidget);
-    expect(
-      find.text('A gentle play idea with rich hierarchy.'),
-      findsOneWidget,
-    );
     expect(find.byTooltip('Back'), findsOneWidget);
 
     await tester.scrollUntilVisible(find.text('Parent note'), 120);
@@ -301,6 +301,159 @@ void main() {
     expect(find.text('Parent note'), findsOneWidget);
     expect(find.text('Safety note'), findsOneWidget);
   });
+
+  testWidgets(
+    'renders suggested sound mini player with artwork when available',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayActivityDetailScreen(
+            idea: PlayIdea(
+              id: 'play_artwork_test',
+              title: 'Artwork idea',
+              summary: 'A gentle play idea with rich hierarchy.',
+              ageGroup: '2-5 years',
+              ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+              place: 'Home',
+              messLevel: 'Low',
+              childEngagement: 'Low',
+              parentInvolvement: 'Low',
+              activityType: 'Quiet time',
+              contexts: ['home', 'quiet'],
+              neededItems: ['Soft cloth'],
+              steps: ['Place the item nearby.'],
+              whatToExpect: 'A calm test note for content loading.',
+              suggestedSoundId: 'sound_soft_rain',
+              parentNote: 'Keep it simple.',
+              safetyNote: 'Use safe items.',
+            ),
+            suggestedSound: SoundItem(
+              id: 'sound_soft_rain',
+              title: 'Soft rain',
+              category: 'Nature',
+              summary: 'Gentle rain for a calmer background.',
+              assetPath: 'assets/audio/soft_rain.mp3',
+              artworkAssetPath: 'assets/images/sounds/soft_rain.webp',
+              unlockType: 'free',
+            ),
+          ),
+        ),
+      );
+
+      expect(
+          find.byKey(const ValueKey('play-suggested-sound')), findsOneWidget);
+      expect(find.text('Suggested sound'), findsOneWidget);
+      expect(find.text('Soft rain'), findsOneWidget);
+      expect(find.byKey(const ValueKey('play-suggested-sound-control')),
+          findsOneWidget);
+      expect(find.byKey(const ValueKey('play-suggested-sound-artwork')),
+          findsOneWidget);
+      expect(
+        find.byWidgetPredicate((widget) {
+          final image = widget is Image ? widget.image : null;
+          return image is AssetImage &&
+              image.assetName == 'assets/images/sounds/soft_rain.webp';
+        }),
+        findsOneWidget,
+      );
+      expect(find.byTooltip('Back'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'hides suggested sound mini player when no matching sound exists',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayScreen(contentLoader: _MissingSuggestedSoundLoader()),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.text('Suggested soundless play'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('play-suggested-sound')), findsNothing);
+      expect(find.text('Suggested sound'), findsNothing);
+      expect(find.text('What to expect'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'hides suggested sound mini player when suggested sound is absent',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayActivityDetailScreen(
+            idea: PlayIdea(
+              id: 'play_without_sound',
+              title: 'Soundless play',
+              summary: 'A gentle play idea without a suggested sound.',
+              ageGroup: '2-5 years',
+              ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+              place: 'Home',
+              messLevel: 'Low',
+              childEngagement: 'Low',
+              parentInvolvement: 'Low',
+              activityType: 'Quiet time',
+              contexts: ['home', 'quiet'],
+              neededItems: ['Soft cloth'],
+              steps: ['Place the item nearby.'],
+              whatToExpect: 'A calm test note for content loading.',
+              parentNote: 'Keep it simple.',
+              safetyNote: 'Use safe items.',
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('play-suggested-sound')), findsNothing);
+      expect(find.text('Suggested sound'), findsNothing);
+      expect(find.text('What to expect'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'renders suggested sound fallback artwork when artwork is missing',
+    (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayActivityDetailScreen(
+            idea: PlayIdea(
+              id: 'play_fallback_test',
+              title: 'Fallback idea',
+              summary: 'A gentle play idea with fallback artwork.',
+              ageGroup: '2-5 years',
+              ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+              place: 'Home',
+              messLevel: 'Low',
+              childEngagement: 'Low',
+              parentInvolvement: 'Low',
+              activityType: 'Quiet time',
+              contexts: ['home', 'quiet'],
+              neededItems: ['Soft cloth'],
+              steps: ['Place the item nearby.'],
+              whatToExpect: 'A calm test note for content loading.',
+              parentNote: 'Keep it simple.',
+              safetyNote: 'Use safe items.',
+            ),
+            suggestedSound: SoundItem(
+              id: 'sound_soft_rain',
+              title: 'Soft rain',
+              category: 'Nature',
+              summary: 'Gentle rain for a calmer background.',
+              assetPath: 'assets/audio/soft_rain.mp3',
+              unlockType: 'free',
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('play-suggested-sound-artwork')),
+          findsOneWidget);
+      expect(find.byIcon(Icons.waves_rounded), findsOneWidget);
+    },
+  );
 }
 
 class _PlayFilterContentLoader extends ContentLoader {
@@ -496,6 +649,56 @@ class _PlayFilterContentLoader extends ContentLoader {
           category: 'Nature',
           summary: 'A calm rain placeholder for future sound content.',
           assetPath: 'placeholder://sounds/soft_rain',
+          unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+class _MissingSuggestedSoundLoader extends ContentLoader {
+  const _MissingSuggestedSoundLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      playFilters: [],
+      playIdeas: [
+        PlayIdea(
+          id: 'play_missing_sound',
+          title: 'Suggested soundless play',
+          summary: 'A play idea whose sound is not available in content.',
+          ageGroup: '2-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+          place: 'Home',
+          messLevel: 'Low',
+          childEngagement: 'Low',
+          parentInvolvement: 'Low',
+          activityType: 'Quiet time',
+          contexts: ['home', 'quiet'],
+          neededItems: ['Soft cloth'],
+          steps: ['Place the item nearby.'],
+          whatToExpect: 'A calm test note for content loading.',
+          suggestedSoundId: 'missing_sound',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
           unlockType: 'free',
         ),
       ],

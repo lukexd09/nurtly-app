@@ -244,10 +244,16 @@ void main() {
         isTrue,
         reason: '${idea.id} safetyNote',
       );
-      if (idea.suggestedSoundId != null) {
-        expect(soundIds, contains(idea.suggestedSoundId),
-            reason: '${idea.id} suggestedSoundId exists');
-      }
+      expect(
+        _isNotBlank(idea.suggestedSoundId ?? ''),
+        isTrue,
+        reason: '${idea.id} suggestedSoundId required',
+      );
+      expect(
+        soundIds,
+        contains(idea.suggestedSoundId),
+        reason: '${idea.id} suggestedSoundId exists',
+      );
     }
   });
 
