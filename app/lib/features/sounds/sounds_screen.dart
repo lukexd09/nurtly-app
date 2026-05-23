@@ -16,6 +16,7 @@ import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
 import 'widgets/sound_artwork.dart';
+import 'audio/looping_sound_loader.dart';
 
 class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
@@ -159,7 +160,6 @@ class SoundDetailScreen extends StatefulWidget {
 }
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
-  static const int _loopPlaylistCopies = 3;
   static const double _normalVolume = 1;
   late final AudioPlayer _player;
   late final StreamSubscription<PlayerState> _playerSubscription;
@@ -262,17 +262,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Future<void> _loadGaplessLoopPlaylist() async {
-    // Use repeated identical sources to spike a smoother loop boundary than
-    // single-source LoopMode.one, which has shown an audible gap on devices.
-    await _player.setAudioSources(
-      List<AudioSource>.generate(
-        _loopPlaylistCopies,
-        (_) => AudioSource.asset(widget.sound.assetPath),
-      ),
-      initialIndex: 0,
-      initialPosition: Duration.zero,
-    );
-    await _player.setLoopMode(LoopMode.all);
+    await loadLoopingSoundAsset(_player, widget.sound.assetPath);
   }
 
   void _selectSessionDuration(Duration? duration) {

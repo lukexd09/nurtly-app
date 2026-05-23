@@ -120,7 +120,8 @@ function Test-IsAllowedJustAudioUsage {
         "app/pubspec.yaml",
         "app/pubspec.lock",
         "app/lib/features/sounds/sounds_screen.dart",
-        "app/lib/features/sounds/widgets/suggested_sound_mini_player.dart"
+        "app/lib/features/sounds/widgets/suggested_sound_mini_player.dart",
+        "app/lib/features/sounds/audio/looping_sound_loader.dart"
     )
 }
 

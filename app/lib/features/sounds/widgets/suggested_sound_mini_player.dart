@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../audio/looping_sound_loader.dart';
 import 'sound_artwork.dart';
 
 class SuggestedSoundMiniPlayer extends StatefulWidget {
@@ -21,7 +22,6 @@ class SuggestedSoundMiniPlayer extends StatefulWidget {
 }
 
 class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
-  static const int _loopPlaylistCopies = 3;
   late final AudioPlayer _player;
   late final StreamSubscription<PlayerState> _playerSubscription;
   bool _isLoading = false;
@@ -101,16 +101,7 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
   }
 
   Future<void> _loadLoopingPlaylist() async {
-    final sources = List<AudioSource>.generate(
-      _loopPlaylistCopies,
-      (_) => AudioSource.asset(widget.sound.assetPath),
-    );
-    await _player.setAudioSources(
-      sources,
-      initialIndex: 0,
-      initialPosition: Duration.zero,
-    );
-    await _player.setLoopMode(LoopMode.all);
+    await loadLoopingSoundAsset(_player, widget.sound.assetPath);
   }
 
   @override
