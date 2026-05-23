@@ -5,6 +5,7 @@ import '../../core/content/content_package.dart';
 import '../../core/content/play_filter.dart';
 import '../../core/content/play_idea.dart';
 import '../../core/content/sound_item.dart';
+import '../../core/content/suggested_sound_resolver.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
@@ -169,10 +170,8 @@ class _PlayScreenState extends State<PlayScreen> {
         _PlayIdeaCard(
           idea: playIdeas[index],
           onTap: () {
-            final suggestedSound = _resolveSuggestedSound(
-              playIdeas[index],
-              sounds,
-            );
+            final suggestedSound =
+                resolveSuggestedSound(playIdeas[index], sounds);
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => PlayActivityDetailScreen(
@@ -185,21 +184,6 @@ class _PlayScreenState extends State<PlayScreen> {
         ),
       ],
     ];
-  }
-
-  SoundItem? _resolveSuggestedSound(PlayIdea idea, List<SoundItem> sounds) {
-    final suggestedSoundId = idea.suggestedSoundId;
-    if (suggestedSoundId == null || suggestedSoundId.trim().isEmpty) {
-      return null;
-    }
-
-    for (final sound in sounds) {
-      if (sound.id == suggestedSoundId) {
-        return sound;
-      }
-    }
-
-    return null;
   }
 }
 

@@ -7,6 +7,7 @@ import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
 import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
+import '../content/suggested_sound_resolver.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -38,9 +39,13 @@ class _AppShellState extends State<AppShell> {
         return;
       }
       final idea = selectDailyPlayIdea(package.playIdeas, DateTime.now());
+      final suggestedSound = resolveSuggestedSound(idea, package.sounds);
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => PlayActivityDetailScreen(idea: idea),
+          builder: (_) => PlayActivityDetailScreen(
+            idea: idea,
+            suggestedSound: suggestedSound,
+          ),
         ),
       );
     } catch (_) {
