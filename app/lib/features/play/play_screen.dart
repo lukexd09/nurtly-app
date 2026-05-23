@@ -16,7 +16,7 @@ import '../../core/widgets/empty_state.dart';
 import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
-import '../sounds/sounds_screen.dart' show SuggestedSoundMiniPlayer;
+import '../sounds/widgets/suggested_sound_mini_player.dart';
 
 PlayIdea selectDailyPlayIdea(List<PlayIdea> ideas, DateTime date) {
   final dayOfYear = DateTime(date.year, date.month, date.day)
