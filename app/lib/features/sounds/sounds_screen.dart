@@ -46,7 +46,12 @@ class _SoundsScreenState extends State<SoundsScreen> {
           final sounds = snapshot.data?.sounds;
 
           return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.lg,
+              AppSpacing.lg,
+              AppSpacing.xxl,
+            ),
             children: [
               const SectionHeader(
                 title: 'Sounds',
@@ -108,16 +113,22 @@ class _SoundCard extends StatelessWidget {
       semanticLabel: 'Open ${sound.title}',
       onTap: onTap,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(sound.title, style: AppTextStyles.cardTitle),
                 const SizedBox(height: AppSpacing.xs),
-                Text(sound.summary, style: AppTextStyles.body),
-                const SizedBox(height: AppSpacing.md),
+                Text(
+                  sound.summary,
+                  style: AppTextStyles.body,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: AppSpacing.sm),
                 _SoundMetadata(sound: sound),
               ],
             ),
@@ -145,6 +156,7 @@ class _SoundCardArtwork extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.borderSoft),
       ),
       child: artworkAssetPath == null || artworkAssetPath.isEmpty
           ? _buildFallbackArtwork()
