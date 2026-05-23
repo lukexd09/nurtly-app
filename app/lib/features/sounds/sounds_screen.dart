@@ -15,6 +15,7 @@ import '../../core/widgets/loading_card.dart';
 import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
+import 'widgets/sound_artwork.dart';
 
 class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
@@ -134,68 +135,12 @@ class _SoundCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.md),
-          _SoundCardArtwork(sound: sound),
+          SoundArtwork(
+            sound: sound,
+            variant: SoundArtworkVariant.card,
+            valueKey: ValueKey('sound-card-artwork-${sound.id}'),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _SoundCardArtwork extends StatelessWidget {
-  const _SoundCardArtwork({required this.sound});
-
-  final SoundItem sound;
-
-  @override
-  Widget build(BuildContext context) {
-    final artworkAssetPath = sound.artworkAssetPath?.trim();
-    return Container(
-      key: ValueKey('sound-card-artwork-${sound.id}'),
-      width: 76,
-      height: 76,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: artworkAssetPath == null || artworkAssetPath.isEmpty
-          ? _buildFallbackArtwork()
-          : Image.asset(
-              artworkAssetPath,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  _buildFallbackArtwork(),
-            ),
-    );
-  }
-
-  Widget _buildFallbackArtwork() {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFF3F8F4),
-            Color(0xFFE9F3EC),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.primarySoft,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.surfaceBright, width: 3),
-          ),
-          child: const Icon(
-            Icons.waves_rounded,
-            color: AppColors.primary,
-            size: 20,
-          ),
-        ),
       ),
     );
   }
@@ -548,84 +493,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildArtworkMoodPanel() {
-    final artworkAssetPath = widget.sound.artworkAssetPath?.trim();
-    return Container(
-      key: const ValueKey('sound-player-artwork'),
-      height: 132,
-      width: double.infinity,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-      child: Semantics(
-        label: '${widget.sound.title} artwork',
-        image: true,
-        child: artworkAssetPath == null || artworkAssetPath.isEmpty
-            ? _buildFallbackArtwork()
-            : Image.asset(
-                artworkAssetPath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    _buildFallbackArtwork(),
-              ),
-      ),
-    );
-  }
-
-  Widget _buildFallbackArtwork() {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFF3F8F4),
-            Color(0xFFE9F3EC),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 12,
-            right: 16,
-            child: Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.10),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 14,
-            left: 18,
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Center(
-            child: Container(
-              width: 78,
-              height: 78,
-              decoration: BoxDecoration(
-                color: AppColors.primarySoft,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.surfaceBright, width: 5),
-              ),
-              child: const Icon(
-                Icons.waves_rounded,
-                color: AppColors.primary,
-                size: 38,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return SoundArtwork(
+      sound: widget.sound,
+      variant: SoundArtworkVariant.detail,
+      valueKey: const ValueKey('sound-player-artwork'),
     );
   }
 

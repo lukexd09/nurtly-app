@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
+import 'sound_artwork.dart';
 
 class SuggestedSoundMiniPlayer extends StatefulWidget {
   const SuggestedSoundMiniPlayer({required this.sound, super.key});
@@ -178,7 +179,11 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
-                _SuggestedSoundArtwork(sound: widget.sound),
+                SoundArtwork(
+                  sound: widget.sound,
+                  variant: SoundArtworkVariant.mini,
+                  valueKey: const ValueKey('play-suggested-sound-artwork'),
+                ),
               ],
             ),
             if (_errorMessage != null) ...[
@@ -191,74 +196,6 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
               ),
             ],
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SuggestedSoundArtwork extends StatelessWidget {
-  const _SuggestedSoundArtwork({required this.sound});
-
-  final SoundItem sound;
-
-  @override
-  Widget build(BuildContext context) {
-    final artworkAssetPath = sound.artworkAssetPath?.trim();
-    return Container(
-      key: const ValueKey('play-suggested-sound-artwork'),
-      width: 56,
-      height: 56,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: Semantics(
-        label: '${sound.title} artwork',
-        child: artworkAssetPath == null || artworkAssetPath.isEmpty
-            ? const _SuggestedSoundFallbackArtwork()
-            : Image.asset(
-                artworkAssetPath,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    const _SuggestedSoundFallbackArtwork(),
-              ),
-      ),
-    );
-  }
-}
-
-class _SuggestedSoundFallbackArtwork extends StatelessWidget {
-  const _SuggestedSoundFallbackArtwork();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFF3F8F4),
-            Color(0xFFE9F3EC),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: AppColors.primarySoft,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.surfaceBright, width: 2),
-          ),
-          child: const Icon(
-            Icons.waves_rounded,
-            color: AppColors.primary,
-            size: 14,
-          ),
         ),
       ),
     );
