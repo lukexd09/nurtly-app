@@ -17,7 +17,12 @@ void main() {
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
-    expect(find.text('free'), findsOneWidget);
+    expect(find.text('Free'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('sound-card-artwork-sound_soft_rain')),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.waves_rounded), findsOneWidget);
   });
 
   testWidgets('opens sound detail from the sounds list', (tester) async {
@@ -58,6 +63,7 @@ void main() {
     expect(find.text('Soft rain'), findsOneWidget);
     expect(find.text('Gentle rain for a calmer background.'), findsOneWidget);
     expect(find.text('Nature'), findsOneWidget);
+    expect(find.text('Free'), findsNothing);
     expect(find.text('free'), findsNothing);
 
     await tester.scrollUntilVisible(

@@ -107,15 +107,83 @@ class _SoundCard extends StatelessWidget {
     return TappableNurtlyCard(
       semanticLabel: 'Open ${sound.title}',
       onTap: onTap,
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(sound.title, style: AppTextStyles.cardTitle),
-          const SizedBox(height: AppSpacing.xs),
-          Text(sound.summary, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.md),
-          _SoundMetadata(sound: sound),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(sound.title, style: AppTextStyles.cardTitle),
+                const SizedBox(height: AppSpacing.xs),
+                Text(sound.summary, style: AppTextStyles.body),
+                const SizedBox(height: AppSpacing.md),
+                _SoundMetadata(sound: sound),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          _SoundCardArtwork(sound: sound),
         ],
+      ),
+    );
+  }
+}
+
+class _SoundCardArtwork extends StatelessWidget {
+  const _SoundCardArtwork({required this.sound});
+
+  final SoundItem sound;
+
+  @override
+  Widget build(BuildContext context) {
+    final artworkAssetPath = sound.artworkAssetPath?.trim();
+    return Container(
+      key: ValueKey('sound-card-artwork-${sound.id}'),
+      width: 76,
+      height: 76,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: artworkAssetPath == null || artworkAssetPath.isEmpty
+          ? _buildFallbackArtwork()
+          : Image.asset(
+              artworkAssetPath,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildFallbackArtwork(),
+            ),
+    );
+  }
+
+  Widget _buildFallbackArtwork() {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFF3F8F4),
+            Color(0xFFE9F3EC),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: AppColors.primarySoft,
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.surfaceBright, width: 3),
+          ),
+          child: const Icon(
+            Icons.waves_rounded,
+            color: AppColors.primary,
+            size: 20,
+          ),
+        ),
       ),
     );
   }
@@ -788,9 +856,16 @@ class _SoundMetadata extends StatelessWidget {
       runSpacing: AppSpacing.xs,
       children: [
         NurtlyChip(label: sound.category),
-        if (showUnlockType) NurtlyChip(label: sound.unlockType),
+        if (showUnlockType) NurtlyChip(label: _displayUnlockType(sound)),
       ],
     );
+  }
+
+  String _displayUnlockType(SoundItem sound) {
+    if (sound.unlockType.toLowerCase() == 'free') {
+      return 'Free';
+    }
+    return sound.unlockType;
   }
 }
 
