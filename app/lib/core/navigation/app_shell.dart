@@ -7,6 +7,8 @@ import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
 import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
+import '../content/play_idea.dart';
+import '../content/sound_item.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -38,9 +40,13 @@ class _AppShellState extends State<AppShell> {
         return;
       }
       final idea = selectDailyPlayIdea(package.playIdeas, DateTime.now());
+      final suggestedSound = _resolveSuggestedSound(idea, package.sounds);
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (_) => PlayActivityDetailScreen(idea: idea),
+          builder: (_) => PlayActivityDetailScreen(
+            idea: idea,
+            suggestedSound: suggestedSound,
+          ),
         ),
       );
     } catch (_) {
@@ -105,6 +111,21 @@ class _AppShellState extends State<AppShell> {
         ],
       ),
     );
+  }
+
+  SoundItem? _resolveSuggestedSound(PlayIdea idea, List<SoundItem> sounds) {
+    final suggestedSoundId = idea.suggestedSoundId;
+    if (suggestedSoundId == null || suggestedSoundId.trim().isEmpty) {
+      return null;
+    }
+
+    for (final sound in sounds) {
+      if (sound.id == suggestedSoundId) {
+        return sound;
+      }
+    }
+
+    return null;
   }
 }
 

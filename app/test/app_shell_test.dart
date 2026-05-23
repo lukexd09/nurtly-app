@@ -57,6 +57,10 @@ void main() {
       ['What to expect', "What you'll need"],
     );
 
+    expect(find.byKey(const ValueKey('play-suggested-sound')), findsOneWidget);
+    expect(find.text('Suggested sound'), findsOneWidget);
+    expect(find.text('Soft rain'), findsOneWidget);
+
     expect(find.text('What to expect'), findsOneWidget);
     expect(find.text("What you'll need"), findsOneWidget);
 
