@@ -103,6 +103,35 @@ void main() {
     expect(find.textContaining('placeholder'), findsNothing);
     expect(find.textContaining('future'), findsNothing);
   });
+
+  testWidgets('renders configured sound artwork asset when present',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SoundDetailScreen(
+          sound: SoundItem(
+            id: 'sound_artwork_test',
+            title: 'Artwork sound',
+            category: 'Nature',
+            summary: 'A sound with artwork.',
+            assetPath: 'assets/audio/soft_rain.mp3',
+            artworkAssetPath: 'assets/images/sounds/artwork_test.webp',
+            unlockType: 'free',
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('sound-player-artwork')), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((widget) {
+        final image = widget is Image ? widget.image : null;
+        return image is AssetImage &&
+            image.assetName == 'assets/images/sounds/artwork_test.webp';
+      }),
+      findsOneWidget,
+    );
+  });
 }
 
 class _SoundsArtworkFallbackLoader extends ContentLoader {
