@@ -255,6 +255,52 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('renders play detail artwork and hero hierarchy', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayActivityDetailScreen(
+          idea: PlayIdea(
+            id: 'play_artwork_test',
+            title: 'Artwork idea',
+            summary: 'A gentle play idea with rich hierarchy.',
+            ageGroup: '2-5 years',
+            ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+            place: 'Home',
+            messLevel: 'Low',
+            childEngagement: 'Low',
+            parentInvolvement: 'Low',
+            activityType: 'Quiet time',
+            contexts: ['home', 'quiet'],
+            neededItems: ['Soft cloth'],
+            steps: ['Place the item nearby.'],
+            whatToExpect: 'A calm test note for content loading.',
+            parentNote: 'Keep it simple.',
+            safetyNote: 'Use safe items.',
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Artwork idea'), findsOneWidget);
+    expect(
+        find.text('A gentle play idea with rich hierarchy.'), findsOneWidget);
+    expect(find.text('What to expect'), findsOneWidget);
+    expect(find.text('What you\'ll need'), findsOneWidget);
+    expect(find.text('Steps'), findsOneWidget);
+    expect(find.text('Artwork idea'), findsOneWidget);
+    expect(
+      find.text('A gentle play idea with rich hierarchy.'),
+      findsOneWidget,
+    );
+    expect(find.byTooltip('Back'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Parent note'), 120);
+    await tester.pump();
+
+    expect(find.text('Parent note'), findsOneWidget);
+    expect(find.text('Safety note'), findsOneWidget);
+  });
 }
 
 class _PlayFilterContentLoader extends ContentLoader {
