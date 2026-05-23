@@ -261,7 +261,7 @@ void main() {
     expect(find.text('Soft treasure basket'), findsOneWidget);
   });
 
-  testWidgets('renders play detail artwork and hero hierarchy', (tester) async {
+  testWidgets('renders play detail content and hero hierarchy', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: PlayActivityDetailScreen(
