@@ -128,6 +128,7 @@ String _packageJson({
     "publishedAt": "2026-05-18",
     "minAppVersion": "0.1.0"
   },
+  "taxonomy": $_taxonomyJson,
   "playIdeas": [
     {
       "id": "play_test_idea",
@@ -178,3 +179,72 @@ String _packageJson({
 }
 ''';
 }
+
+const _taxonomyJson = '''
+{
+  "places": [
+    { "id": "place_home", "label": "Home" },
+    { "id": "place_floor", "label": "Floor" },
+    { "id": "place_kitchen", "label": "Kitchen" },
+    { "id": "place_living_room", "label": "Living room" },
+    { "id": "place_bedroom", "label": "Bedroom" },
+    { "id": "place_outside", "label": "Outside" },
+    { "id": "place_bathroom", "label": "Bathroom" },
+    { "id": "place_table", "label": "Table" },
+    { "id": "place_sofa", "label": "Sofa" },
+    { "id": "place_window", "label": "Window" },
+    { "id": "place_any_quiet_spot", "label": "Any quiet spot" },
+    { "id": "place_hallway", "label": "Hallway" }
+  ],
+  "messLevels": [
+    { "id": "mess_low", "label": "Low" },
+    { "id": "mess_medium", "label": "Medium" }
+  ],
+  "childEngagementLevels": [
+    { "id": "child_engagement_low", "label": "Low" },
+    { "id": "child_engagement_medium", "label": "Medium" },
+    { "id": "child_engagement_high", "label": "High" }
+  ],
+  "parentInvolvementLevels": [
+    { "id": "parent_involvement_low", "label": "Low" },
+    { "id": "parent_involvement_medium", "label": "Medium" },
+    { "id": "parent_involvement_high", "label": "High" }
+  ],
+  "activityTypes": [
+    { "id": "activity_connection", "label": "Connection" },
+    { "id": "activity_fine_motor", "label": "Fine motor" },
+    { "id": "activity_imaginative_play", "label": "Imaginative play" },
+    { "id": "activity_language", "label": "Language" },
+    { "id": "activity_movement", "label": "Movement" },
+    { "id": "activity_music", "label": "Music" },
+    { "id": "activity_observation", "label": "Observation" },
+    { "id": "activity_practical_life", "label": "Practical life" },
+    { "id": "activity_quiet_time", "label": "Quiet time" },
+    { "id": "activity_sensory", "label": "Sensory" },
+    { "id": "activity_sorting", "label": "Sorting" }
+  ],
+  "contexts": [
+    { "id": "context_home", "label": "home" },
+    { "id": "context_baby", "label": "baby" },
+    { "id": "context_sensory", "label": "sensory" },
+    { "id": "context_low_setup", "label": "low_setup" },
+    { "id": "context_toddler", "label": "toddler" },
+    { "id": "context_movement", "label": "movement" },
+    { "id": "context_kitchen", "label": "kitchen" },
+    { "id": "context_practical_life", "label": "practical_life" },
+    { "id": "context_quiet", "label": "quiet" },
+    { "id": "context_transition", "label": "transition" },
+    { "id": "context_preschool", "label": "preschool" },
+    { "id": "context_pretend", "label": "pretend" },
+    { "id": "context_connection", "label": "connection" },
+    { "id": "context_outside", "label": "outside" },
+    { "id": "context_bathroom", "label": "bathroom" }
+  ],
+  "soundCategories": [
+    { "id": "sound_category_calm", "label": "Calm" },
+    { "id": "sound_category_home", "label": "Home" },
+    { "id": "sound_category_nature", "label": "Nature" },
+    { "id": "sound_category_white_noise", "label": "White noise" }
+  ]
+}
+''';

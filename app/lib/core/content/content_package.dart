@@ -1,6 +1,7 @@
 import 'json_readers.dart';
 import 'play_filter.dart';
 import 'play_idea.dart';
+import 'content_taxonomy.dart';
 import 'sound_item.dart';
 
 class ContentPackage {
@@ -9,12 +10,14 @@ class ContentPackage {
     required this.playIdeas,
     required this.playFilters,
     required this.sounds,
+    required this.taxonomy,
   });
 
   final ContentMetadata metadata;
   final List<PlayIdea> playIdeas;
   final List<PlayFilter> playFilters;
   final List<SoundItem> sounds;
+  final ContentTaxonomy taxonomy;
 
   factory ContentPackage.fromJson(Map<String, Object?> json) {
     final playFilters = json.containsKey('playFilters')
@@ -26,6 +29,7 @@ class ContentPackage {
       playIdeas: readItems(json, 'playIdeas', PlayIdea.fromJson),
       playFilters: playFilters,
       sounds: readItems(json, 'sounds', SoundItem.fromJson),
+      taxonomy: ContentTaxonomy.fromJson(readMap(json, 'taxonomy')),
     );
   }
 }
