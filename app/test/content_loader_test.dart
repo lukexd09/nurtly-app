@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/content/content_loader.dart';
+import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/content_source.dart';
 import 'package:nurtly/core/content/content_taxonomy.dart';
 import 'package:nurtly/core/content/play_idea.dart';
@@ -223,38 +224,62 @@ void main() {
     expect(polishChipLabels, isNot(contains('?rednio')));
   });
 
-  test('Polish bundled content avoids obvious machine translation phrases',
+  test('Polish bundled content stays free of corrupted user-facing strings',
       () async {
     final package = await const ContentLoader(
       source: BundledContentSource(language: AppLanguage.polish),
     ).load();
+    final strings = _collectPolishUserFacingStrings(package).toList();
+    final joined = strings.join('\n');
 
-    final searchableText = [
-      ...package.playIdeas.expand(
-        (idea) => [
-          idea.title,
-          idea.summary,
-          idea.whatToExpect,
-          idea.parentNote,
-          idea.safetyNote,
-          ...idea.neededItems,
-          ...idea.steps,
-        ],
-      ),
-      ...package.sounds.expand((sound) => [sound.title, sound.summary]),
-      ...package.playFilters.map((filter) => filter.label),
-    ].join('\\n');
+    expect(strings, isNotEmpty);
+    for (final value in strings) {
+      expect(value.contains('?'), isFalse, reason: value);
+      for (final fragment in [
+        'mi?',
+        '?ciere',
+        '?y?',
+        '??',
+        'P??',
+        '?cie',
+        'ksi??',
+        'cze??',
+      ]) {
+        expect(value.contains(fragment), isFalse, reason: value);
+      }
+    }
 
     for (final phrase in [
+      'Koszyk miękkich skarbów',
+      'Miękka ściereczka',
+      'Drewniana łyżka',
+      'Umieść',
+      'Usiądź',
+      'Ścieżka z poduszek',
+      'Cichy kosz z książkami',
+      'Droga z ręcznika',
+      'Skarpetkowa pacynka mówi cześć',
+      'Tunel z poduszek',
+      'Obserwowanie pogody przez okno',
+      'Ratowanie naklejek',
+      'Przekładanie łyżką do kubka',
+      'Nazywanie faktur prania',
+      'Obserwowanie cieni',
+      'Ratowanie zabawki spod koca',
+    ]) {
+      expect(joined, contains(phrase), reason: phrase);
+    }
+
+    for (final phrase in [
+      'zapałek',
+      'tabela wymaga',
       'Ręcznik do herbaty',
       'Okno zegarka',
       'Oferuj udane',
       'Obserwuje cień',
       'małą ilością ustawień',
-      'tabela wymaga',
-      'zapałek',
     ]) {
-      expect(searchableText.contains(phrase), isFalse, reason: phrase);
+      expect(joined, isNot(contains(phrase)), reason: phrase);
     }
   });
 
@@ -751,6 +776,72 @@ Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
       for (final sound in sounds)
         sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
     };
+
+Iterable<String> _collectPolishUserFacingStrings(ContentPackage package) sync* {
+  for (final term in package.taxonomy.places) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.messLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.childEngagementLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.parentInvolvementLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.activityTypes) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.contexts) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.soundCategories) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final filter in package.playFilters) {
+    yield filter.label;
+  }
+  for (final idea in package.playIdeas) {
+    yield idea.title;
+    yield idea.summary;
+    yield idea.ageGroup;
+    for (final item in idea.neededItems) {
+      yield item;
+    }
+    for (final item in idea.steps) {
+      yield item;
+    }
+    yield idea.whatToExpect;
+    yield idea.parentNote;
+    yield idea.safetyNote;
+  }
+  for (final sound in package.sounds) {
+    yield sound.title;
+    yield sound.summary;
+  }
+}
 
 class _RawContentSource implements ContentSource {
   const _RawContentSource(this.content);
