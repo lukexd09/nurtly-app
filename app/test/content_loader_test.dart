@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_source.dart';
+import 'package:nurtly/core/content/bundled_content_source.dart';
+import 'package:nurtly/core/localization/app_language.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,40 @@ void main() {
     expect(package.taxonomy.soundCategories, hasLength(4));
     expect(package.playIdeas.first.neededItems, contains('Soft cloth'));
     expect(package.playIdeas.first.steps, hasLength(3));
+  });
+
+  test('bundled content asset path resolves English content for English', () {
+    expect(
+      bundledContentAssetPathFor(AppLanguage.english),
+      'assets/content/nurtly_content_en_v1.json',
+    );
+  });
+
+  test('bundled content asset path keeps Polish on English fallback for now',
+      () {
+    expect(
+      bundledContentAssetPathFor(AppLanguage.polish),
+      'assets/content/nurtly_content_en_v1.json',
+    );
+  });
+
+  test('bundled content source loads English content for English', () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.english),
+    ).load();
+
+    expect(package.metadata.locale, 'en');
+    expect(package.metadata.packageId, 'nurtly-core-en');
+  });
+
+  test('bundled content source falls back to English for Polish for now',
+      () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    expect(package.metadata.locale, 'en');
+    expect(package.metadata.packageId, 'nurtly-core-en');
   });
 
   test('content metadata fields are production ready', () async {
