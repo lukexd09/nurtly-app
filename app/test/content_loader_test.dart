@@ -582,6 +582,7 @@ void main() {
       expect(
         idea.ageGroup,
         _polishAgeGroupForRange(
+          idea.id,
           idea.ageRangeMonths.min,
           idea.ageRangeMonths.max,
         ),
@@ -794,7 +795,7 @@ Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
         sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
     };
 
-String _polishAgeGroupForRange(int min, int max) {
+String _polishAgeGroupForRange(String ideaId, int min, int max) {
   return switch ((min, max)) {
     (0, 12) => '0–12 miesięcy',
     (6, 18) => '6–18 miesięcy',
@@ -807,7 +808,9 @@ String _polishAgeGroupForRange(int min, int max) {
     (24, 72) => '2–6 lat',
     (36, 72) => '3–6 lat',
     (0, 60) => '0–5 lat',
-    _ => throw StateError('Unsupported Polish age range: $min-$max'),
+    _ => throw StateError(
+        'Unsupported Polish age range for $ideaId: $min-$max',
+      ),
   };
 }
 
