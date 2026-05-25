@@ -31,12 +31,20 @@ class SoundsScreen extends StatefulWidget {
 }
 
 class _SoundsScreenState extends State<SoundsScreen> {
-  late final Future<ContentPackage> _contentFuture;
+  late Future<ContentPackage> _contentFuture;
 
   @override
   void initState() {
     super.initState();
     _contentFuture = widget.contentLoader.load();
+  }
+
+  @override
+  void didUpdateWidget(covariant SoundsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.contentLoader != widget.contentLoader) {
+      _contentFuture = widget.contentLoader.load();
+    }
   }
 
   @override

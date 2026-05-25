@@ -13,7 +13,8 @@ void main() {
     expect(find.text('Play'), findsWidgets);
     expect(find.text('Journal'), findsWidgets);
     expect(find.text('Sounds'), findsWidgets);
-    expect(find.byTooltip('Privacy & Data'), findsOneWidget);
+    expect(find.byTooltip('Settings'), findsOneWidget);
+    expect(find.byTooltip('Privacy & Data'), findsNothing);
 
     expect(find.text('Start with one small moment'), findsOneWidget);
     expect(find.text('Soft treasure basket'), findsNothing);
@@ -68,6 +69,74 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.text('Start with one small moment'), findsOneWidget);
+  });
+
+  testWidgets('Settings sheet shows language options and privacy entry',
+      (tester) async {
+    await _pumpNurtlyApp(tester);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('Language'), findsOneWidget);
+    expect(find.text('Use phone language'), findsOneWidget);
+    expect(find.text('Polski'), findsOneWidget);
+    expect(find.text('English'), findsOneWidget);
+    expect(find.text('Privacy & Data'), findsOneWidget);
+  });
+
+  testWidgets('Settings language selection updates the in-session preference',
+      (tester) async {
+    await _pumpNurtlyApp(tester);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Polski'));
+    await tester.pump();
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('language-choice-polish')),
+        matching: find.byIcon(Icons.radio_button_checked),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('English'));
+    await tester.pump();
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('language-choice-english')),
+        matching: find.byIcon(Icons.radio_button_checked),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Use phone language'));
+    await tester.pump();
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('language-choice-system')),
+        matching: find.byIcon(Icons.radio_button_checked),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('Settings Privacy & Data opens the privacy screen',
+      (tester) async {
+    await _pumpNurtlyApp(tester);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Privacy & Data'));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.text('What Nurtly does with data in this MVP.'), findsOneWidget);
+    expect(find.text('Current MVP behavior'), findsOneWidget);
   });
 
   testWidgets('Home quick link navigates to Journal', (tester) async {

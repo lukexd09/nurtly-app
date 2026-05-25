@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
+import '../localization/app_language.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
@@ -15,11 +17,11 @@ import 'app_tab.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({
-    this.contentLoader = const ContentLoader(),
+    this.contentLoader,
     super.key,
   });
 
-  final ContentLoader contentLoader;
+  final ContentLoader? contentLoader;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -27,6 +29,34 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
+  var _languagePreference = AppLanguagePreference.system;
+  AppLanguage? _localizedContentLoaderLanguage;
+  ContentLoader? _localizedContentLoader;
+
+  AppLanguage get _effectiveLanguage {
+    return const AppLocaleResolver().resolve(
+      preference: _languagePreference,
+      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+    );
+  }
+
+  ContentLoader _contentLoaderForCurrentLanguage() {
+    final loader = widget.contentLoader;
+    if (loader != null) {
+      return loader;
+    }
+
+    final language = _effectiveLanguage;
+    if (_localizedContentLoaderLanguage != language ||
+        _localizedContentLoader == null) {
+      _localizedContentLoaderLanguage = language;
+      _localizedContentLoader = ContentLoader(
+        source: BundledContentSource(language: language),
+      );
+    }
+
+    return _localizedContentLoader!;
+  }
 
   void _selectTab(AppTab tab) {
     setState(() => _currentIndex = AppTab.values.indexOf(tab));
@@ -34,7 +64,7 @@ class _AppShellState extends State<AppShell> {
 
   Future<void> _openTodaysIdea() async {
     try {
-      final package = await widget.contentLoader.load();
+      final package = await _contentLoaderForCurrentLanguage().load();
       if (!mounted || package.playIdeas.isEmpty) {
         return;
       }
@@ -59,6 +89,127 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
+  void _openSettings() {
+    final navigator = Navigator.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            Future<void> selectLanguage(
+                AppLanguagePreference preference) async {
+              setState(() => _languagePreference = preference);
+              setSheetState(() {});
+            }
+
+            return SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.md,
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 44,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.borderSoft,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'Settings',
+                        style: AppTextStyles.cardTitle.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        'Privacy',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Material(
+                        color: AppColors.surface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          side: const BorderSide(color: AppColors.borderSoft),
+                        ),
+                        child: ListTile(
+                          key: const ValueKey('settings-privacy-data'),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                          ),
+                          title: const Text('Privacy & Data'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            Navigator.of(sheetContext).pop();
+                            navigator.push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const PrivacyDataScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
+                        'Language',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _LanguageChoiceTile(
+                        title: 'Use phone language',
+                        value: AppLanguagePreference.system,
+                        selected:
+                            _languagePreference == AppLanguagePreference.system,
+                        onChanged: selectLanguage,
+                      ),
+                      _LanguageChoiceTile(
+                        title: 'Polski',
+                        value: AppLanguagePreference.polish,
+                        selected:
+                            _languagePreference == AppLanguagePreference.polish,
+                        onChanged: selectLanguage,
+                      ),
+                      _LanguageChoiceTile(
+                        title: 'English',
+                        value: AppLanguagePreference.english,
+                        selected: _languagePreference ==
+                            AppLanguagePreference.english,
+                        onChanged: selectLanguage,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -66,15 +217,18 @@ class _AppShellState extends State<AppShell> {
         onSelectTab: _selectTab,
         onOpenTodaysIdea: _openTodaysIdea,
       ),
-      PlayScreen(contentLoader: widget.contentLoader),
+      PlayScreen(contentLoader: _contentLoaderForCurrentLanguage()),
       const JournalScreen(),
-      const SoundsScreen(),
+      SoundsScreen(contentLoader: _contentLoaderForCurrentLanguage()),
     ];
 
     return Scaffold(
       body: Column(
         children: [
-          _ShellTopBar(currentTab: AppTab.values[_currentIndex]),
+          _ShellTopBar(
+            currentTab: AppTab.values[_currentIndex],
+            onSettingsTap: _openSettings,
+          ),
           Expanded(
             child: IndexedStack(
               index: _currentIndex,
@@ -115,9 +269,13 @@ class _AppShellState extends State<AppShell> {
 }
 
 class _ShellTopBar extends StatelessWidget {
-  const _ShellTopBar({required this.currentTab});
+  const _ShellTopBar({
+    required this.currentTab,
+    required this.onSettingsTap,
+  });
 
   final AppTab currentTab;
+  final VoidCallback onSettingsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -159,19 +317,59 @@ class _ShellTopBar extends StatelessWidget {
                 side: BorderSide(color: AppColors.borderSoft),
               ),
               child: IconButton(
-                tooltip: 'Privacy & Data',
+                tooltip: 'Settings',
                 color: AppColors.primary,
-                icon: const Icon(Icons.shield_outlined),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const PrivacyDataScreen(),
-                    ),
-                  );
-                },
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: onSettingsTap,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageChoiceTile extends StatelessWidget {
+  const _LanguageChoiceTile({
+    required this.title,
+    required this.value,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final String title;
+  final AppLanguagePreference value;
+  final bool selected;
+  final ValueChanged<AppLanguagePreference> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: AppColors.borderSoft),
+      ),
+      child: InkWell(
+        key: ValueKey('language-choice-${value.name}'),
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => onChanged(value),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                selected ? Icons.radio_button_checked : Icons.radio_button_off,
+                color: selected ? AppColors.primary : AppColors.textMuted,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(child: Text(title)),
+            ],
+          ),
         ),
       ),
     );

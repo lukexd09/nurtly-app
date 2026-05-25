@@ -39,7 +39,7 @@ class PlayScreen extends StatefulWidget {
 }
 
 class _PlayScreenState extends State<PlayScreen> {
-  late final Future<ContentPackage> _contentFuture;
+  late Future<ContentPackage> _contentFuture;
   bool _filtersExpanded = false;
   final Set<String> _selectedFilterIds = <String>{};
 
@@ -47,6 +47,14 @@ class _PlayScreenState extends State<PlayScreen> {
   void initState() {
     super.initState();
     _contentFuture = widget.contentLoader.load();
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.contentLoader != widget.contentLoader) {
+      _contentFuture = widget.contentLoader.load();
+    }
   }
 
   @override
