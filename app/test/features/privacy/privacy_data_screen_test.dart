@@ -1,12 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nurtly/main.dart';
+import 'package:nurtly/features/privacy/privacy_data_screen.dart';
 
 void main() {
-  testWidgets('opens Privacy & Data from the app shell', (tester) async {
-    await tester.pumpWidget(const NurtlyApp());
-
-    await tester.tap(find.byTooltip('Privacy & Data'));
-    await tester.pumpAndSettle();
+  testWidgets('shows privacy data screen content', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PrivacyDataScreen(),
+      ),
+    );
 
     expect(find.text('Privacy & Data'), findsOneWidget);
     expect(find.text('- No account is used.'), findsOneWidget);

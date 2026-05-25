@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
+import '../localization/app_language.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
@@ -15,11 +17,11 @@ import 'app_tab.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({
-    this.contentLoader = const ContentLoader(),
+    this.contentLoader,
     super.key,
   });
 
-  final ContentLoader contentLoader;
+  final ContentLoader? contentLoader;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -27,14 +29,52 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
+  late AppLanguage _selectedLanguage;
+  ContentLoader? _localizedContentLoader;
+  AppLanguage? _localizedContentLoaderLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = const AppLocaleResolver().resolve(
+      preference: AppLanguagePreference.system,
+      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+    );
+  }
+
+  ContentLoader _contentLoaderForCurrentLanguage() {
+    // Polish copy and app chrome localization are still in progress.
+    // Runtime switching is enabled intentionally to support early localization QA.
+    final loader = widget.contentLoader;
+    if (loader != null) {
+      return loader;
+    }
+
+    if (_localizedContentLoader == null ||
+        _localizedContentLoaderLanguage != _selectedLanguage) {
+      _localizedContentLoaderLanguage = _selectedLanguage;
+      _localizedContentLoader = ContentLoader(
+        source: BundledContentSource(language: _selectedLanguage),
+      );
+    }
+
+    return _localizedContentLoader!;
+  }
 
   void _selectTab(AppTab tab) {
     setState(() => _currentIndex = AppTab.values.indexOf(tab));
   }
 
+  void selectLanguage(AppLanguage language) {
+    setState(() {
+      _selectedLanguage = language;
+      _localizedContentLoader = null;
+    });
+  }
+
   Future<void> _openTodaysIdea() async {
     try {
-      final package = await widget.contentLoader.load();
+      final package = await _contentLoaderForCurrentLanguage().load();
       if (!mounted || package.playIdeas.isEmpty) {
         return;
       }
@@ -59,6 +99,147 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
+  void _openSettings() {
+    final navigator = Navigator.of(context);
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 420),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return SafeArea(
+              child: ListView(
+                key: const ValueKey('settings-sheet-scroll'),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                ),
+                children: [
+                  Text(
+                    'Settings',
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'General',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-language-row'),
+                    title: 'Language',
+                    value: _selectedLanguage.displayName,
+                    onTap: () async {
+                      final selected = await _openLanguageSheet(
+                        sheetContext,
+                      );
+                      if (selected == null) {
+                        return;
+                      }
+                      selectLanguage(selected);
+                      setSheetState(() {});
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Privacy',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-privacy-data'),
+                    title: 'Privacy & Data',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      navigator.push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const PrivacyDataScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<AppLanguage?> _openLanguageSheet(
+    BuildContext settingsSheetContext,
+  ) {
+    return showModalBottomSheet<AppLanguage>(
+      context: settingsSheetContext,
+      backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 360),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (languageSheetContext) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            key: const ValueKey('language-sheet-scroll'),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.xs,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Language',
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _LanguageChoiceRow(
+                    key: const ValueKey('language-choice-polish'),
+                    title: 'Polski',
+                    selected: _selectedLanguage == AppLanguage.polish,
+                    onTap: () {
+                      Navigator.of(languageSheetContext)
+                          .pop(AppLanguage.polish);
+                    },
+                  ),
+                  _LanguageChoiceRow(
+                    key: const ValueKey('language-choice-english'),
+                    title: 'English',
+                    selected: _selectedLanguage == AppLanguage.english,
+                    onTap: () {
+                      Navigator.of(languageSheetContext)
+                          .pop(AppLanguage.english);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -66,15 +247,18 @@ class _AppShellState extends State<AppShell> {
         onSelectTab: _selectTab,
         onOpenTodaysIdea: _openTodaysIdea,
       ),
-      PlayScreen(contentLoader: widget.contentLoader),
+      PlayScreen(contentLoader: _contentLoaderForCurrentLanguage()),
       const JournalScreen(),
-      const SoundsScreen(),
+      SoundsScreen(contentLoader: _contentLoaderForCurrentLanguage()),
     ];
 
     return Scaffold(
       body: Column(
         children: [
-          _ShellTopBar(currentTab: AppTab.values[_currentIndex]),
+          _ShellTopBar(
+            currentTab: AppTab.values[_currentIndex],
+            onSettingsTap: _openSettings,
+          ),
           Expanded(
             child: IndexedStack(
               index: _currentIndex,
@@ -115,9 +299,13 @@ class _AppShellState extends State<AppShell> {
 }
 
 class _ShellTopBar extends StatelessWidget {
-  const _ShellTopBar({required this.currentTab});
+  const _ShellTopBar({
+    required this.currentTab,
+    required this.onSettingsTap,
+  });
 
   final AppTab currentTab;
+  final VoidCallback onSettingsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -159,19 +347,98 @@ class _ShellTopBar extends StatelessWidget {
                 side: BorderSide(color: AppColors.borderSoft),
               ),
               child: IconButton(
-                tooltip: 'Privacy & Data',
+                tooltip: 'Settings',
                 color: AppColors.primary,
-                icon: const Icon(Icons.shield_outlined),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const PrivacyDataScreen(),
-                    ),
-                  );
-                },
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: onSettingsTap,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({
+    super.key,
+    required this.title,
+    this.value,
+    required this.onTap,
+  });
+
+  final String title;
+  final String? value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: AppColors.borderSoft),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        dense: true,
+        visualDensity: VisualDensity.compact,
+        minVerticalPadding: 0,
+        title: Text(title),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (value != null) ...[
+              Text(
+                value!,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textMuted,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+            ],
+            const Icon(Icons.chevron_right),
+          ],
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _LanguageChoiceRow extends StatelessWidget {
+  const _LanguageChoiceRow({
+    super.key,
+    required this.title,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Material(
+        color: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: AppColors.borderSoft),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          dense: true,
+          visualDensity: VisualDensity.compact,
+          minVerticalPadding: 0,
+          title: Text(title),
+          trailing: selected
+              ? const Icon(Icons.check_rounded, color: AppColors.primary)
+              : null,
+          onTap: onTap,
         ),
       ),
     );
