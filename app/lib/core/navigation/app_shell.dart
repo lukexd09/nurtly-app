@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
@@ -11,6 +13,7 @@ import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
 import '../content/suggested_sound_resolver.dart';
 import '../localization/app_strings.dart';
+import '../localization/language_preference_store.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -19,10 +22,13 @@ import 'app_tab.dart';
 class AppShell extends StatefulWidget {
   const AppShell({
     this.contentLoader,
+    this.languagePreferenceStore =
+        const SharedPreferencesLanguagePreferenceStore(),
     super.key,
   });
 
   final ContentLoader? contentLoader;
+  final LanguagePreferenceStore languagePreferenceStore;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -31,6 +37,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
   late AppLanguage _selectedLanguage;
+  var _isReady = false;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
 
@@ -43,6 +50,30 @@ class _AppShellState extends State<AppShell> {
       preference: AppLanguagePreference.system,
       systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
     );
+    unawaited(_bootstrapLanguagePreference());
+  }
+
+  Future<void> _bootstrapLanguagePreference() async {
+    var language = _selectedLanguage;
+    try {
+      final savedLanguage = await widget.languagePreferenceStore.load();
+      if (savedLanguage != null) {
+        language = savedLanguage;
+      }
+    } catch (_) {
+      language = _selectedLanguage;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _selectedLanguage = language;
+      _localizedContentLoader = null;
+      _localizedContentLoaderLanguage = null;
+      _isReady = true;
+    });
   }
 
   ContentLoader _contentLoaderForCurrentLanguage() {
@@ -73,6 +104,11 @@ class _AppShellState extends State<AppShell> {
       _selectedLanguage = language;
       _localizedContentLoader = null;
     });
+    unawaited(() async {
+      try {
+        await widget.languagePreferenceStore.save(language);
+      } catch (_) {}
+    }());
   }
 
   Future<void> _openTodaysIdea() async {
@@ -115,7 +151,7 @@ class _AppShellState extends State<AppShell> {
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final strings = _strings;
+            final strings = AppStrings.forLanguage(_selectedLanguage);
             return SafeArea(
               child: ListView(
                 key: const ValueKey('settings-sheet-scroll'),
@@ -250,6 +286,14 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isReady) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final screens = [
       HomeScreen(
         strings: _strings,
