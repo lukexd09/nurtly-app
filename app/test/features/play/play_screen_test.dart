@@ -304,6 +304,50 @@ void main() {
     expect(find.text('Safety note'), findsOneWidget);
   });
 
+  testWidgets('uses taxonomy labels in fallback expectation summary', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayActivityDetailScreen(
+          idea: PlayIdea(
+            id: 'play_fallback_expectation',
+            title: 'Fallback expectation idea',
+            summary: 'A gentle play idea with taxonomy-driven fallback copy.',
+            ageGroup: '2-5 years',
+            ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+            place: 'place_home',
+            messLevel: 'mess_low',
+            childEngagement: 'child_engagement_low',
+            parentInvolvement: 'parent_involvement_low',
+            activityType: 'activity_quiet_time',
+            contexts: ['context_home', 'context_quiet'],
+            neededItems: ['Soft cloth'],
+            steps: ['Place the item nearby.'],
+            whatToExpect: '',
+            parentNote: 'Keep it simple.',
+            safetyNote: 'Use safe items.',
+          ),
+          taxonomy: _testTaxonomy,
+        ),
+      ),
+    );
+
+    expect(find.text('What to expect'), findsOneWidget);
+    expect(
+      find.text(
+        'A quiet, low-mess activity that does not need much setup. Stay nearby, offer gentle guidance, and let your child explore at their own pace.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('mess_low'), findsNothing);
+    expect(find.textContaining('child_engagement_low'), findsNothing);
+    expect(find.textContaining('parent_involvement_low'), findsNothing);
+    expect(find.textContaining('place_home'), findsNothing);
+    expect(find.textContaining('activity_quiet_time'), findsNothing);
+    expect(find.textContaining('context_quiet'), findsNothing);
+  });
+
   testWidgets(
     'renders suggested sound mini player with artwork when available',
     (tester) async {

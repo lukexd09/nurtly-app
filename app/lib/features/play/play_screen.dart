@@ -417,7 +417,7 @@ class PlayActivityDetailScreen extends StatelessWidget {
               SuggestedSoundMiniPlayer(sound: suggestedSound!),
               const SizedBox(height: AppSpacing.lg),
             ],
-            _ExpectationSection(idea: idea),
+            _ExpectationSection(idea: idea, taxonomy: taxonomy),
             const SizedBox(height: AppSpacing.md),
             DetailSection(
               title: "What you'll need",
@@ -524,30 +524,37 @@ class _PlayDetailHero extends StatelessWidget {
 }
 
 class _ExpectationSection extends StatelessWidget {
-  const _ExpectationSection({required this.idea});
+  const _ExpectationSection({
+    required this.idea,
+    required this.taxonomy,
+  });
 
   final PlayIdea idea;
+  final ContentTaxonomy taxonomy;
 
   @override
   Widget build(BuildContext context) {
     return DetailSection(
       title: 'What to expect',
       children: [
-        Text(_expectationSummary(idea), style: AppTextStyles.body),
+        Text(_expectationSummary(idea, taxonomy), style: AppTextStyles.body),
       ],
     );
   }
 }
 
-String _expectationSummary(PlayIdea idea) {
+String _expectationSummary(PlayIdea idea, ContentTaxonomy taxonomy) {
   if (idea.whatToExpect.trim().isNotEmpty) {
     return idea.whatToExpect;
   }
 
-  final mess = _messPhrase(idea.messLevel);
-  final childEnergy = _childEnergyPhrase(idea.childEngagement);
-  final parentEffort = _parentEffortPhrase(idea.parentInvolvement);
-  final guidance = _parentGuidance(idea.parentInvolvement);
+  final mess = _messPhrase(taxonomy.labelForMessLevel(idea.messLevel));
+  final childEnergy = _childEnergyPhrase(
+      taxonomy.labelForChildEngagement(idea.childEngagement));
+  final parentEffort = _parentEffortPhrase(
+      taxonomy.labelForParentInvolvement(idea.parentInvolvement));
+  final guidance = _parentGuidance(
+      taxonomy.labelForParentInvolvement(idea.parentInvolvement));
 
   if (mess == null ||
       childEnergy == null ||
