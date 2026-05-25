@@ -167,6 +167,23 @@ void main() {
       isNot(equals(_labels(polish.taxonomy.soundCategories))),
     );
 
+    final englishChipLabels = [
+      ..._chipLabels(english.taxonomy.messLevels),
+      ..._chipLabels(english.taxonomy.childEngagementLevels),
+      ..._chipLabels(english.taxonomy.parentInvolvementLevels),
+    ];
+    expect(englishChipLabels, contains('Mess: low'));
+    expect(englishChipLabels, contains('Mess: medium'));
+    expect(englishChipLabels, contains('Child: low'));
+    expect(englishChipLabels, contains('Child: medium'));
+    expect(englishChipLabels, contains('Child: high'));
+    expect(englishChipLabels, contains('Parent: low'));
+    expect(englishChipLabels, contains('Parent: medium'));
+    expect(englishChipLabels, contains('Parent: high'));
+    expect(englishChipLabels.any((label) => label.contains('?')), isFalse);
+    expect(englishChipLabels, isNot(contains('Low mess')));
+    expect(englishChipLabels, isNot(contains('Medium mess')));
+
     final polishLabels = [
       ..._labels(polish.taxonomy.places),
       ..._labels(polish.taxonomy.messLevels),
@@ -190,10 +207,20 @@ void main() {
       ..._chipLabels(polish.taxonomy.parentInvolvementLevels),
     ];
     expect(polishChipLabels.any((label) => label.contains('?')), isFalse);
-    expect(polishChipLabels, contains('Mały bałagan'));
-    expect(polishChipLabels, contains('Średni bałagan'));
-    expect(polishChipLabels, contains('Dziecko: średnie'));
-    expect(polishChipLabels, contains('Rodzic: średnie'));
+    expect(polishChipLabels, contains('Bałagan: mały'));
+    expect(polishChipLabels, contains('Bałagan: średni'));
+    expect(polishChipLabels, contains('Dziecko: mało'));
+    expect(polishChipLabels, contains('Dziecko: średnio'));
+    expect(polishChipLabels, contains('Dziecko: dużo'));
+    expect(polishChipLabels, contains('Rodzic: mało'));
+    expect(polishChipLabels, contains('Rodzic: średnio'));
+    expect(polishChipLabels, contains('Rodzic: dużo'));
+    expect(polishChipLabels, isNot(contains('Mały bałagan')));
+    expect(polishChipLabels, isNot(contains('Średni bałagan')));
+    expect(polishChipLabels, isNot(contains('Dziecko: niskie')));
+    expect(polishChipLabels, isNot(contains('Rodzic: niskie')));
+    expect(polishChipLabels, isNot(contains('Ba?agan')));
+    expect(polishChipLabels, isNot(contains('?rednio')));
   });
 
   test('bundled content asset path resolves English content for English', () {

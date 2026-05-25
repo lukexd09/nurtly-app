@@ -62,12 +62,12 @@
       {
         "id": "mess_low",
         "label": "Low",
-        "chipLabel": "Low mess"
+        "chipLabel": "Mess: low"
       },
       {
         "id": "mess_medium",
         "label": "Medium",
-        "chipLabel": "Medium mess"
+        "chipLabel": "Mess: medium"
       }
     ],
     "childEngagementLevels": [

@@ -276,12 +276,13 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Low mess'), findsOneWidget);
+    expect(find.text('Mess: low'), findsOneWidget);
     expect(find.text('Child: medium'), findsOneWidget);
     expect(find.text('Parent: low'), findsOneWidget);
-    expect(find.textContaining(' mess'), findsOneWidget);
-    expect(find.textContaining('Child:'), findsOneWidget);
-    expect(find.textContaining('Parent:'), findsOneWidget);
+    expect(find.text('Low mess'), findsNothing);
+    expect(find.text('Medium mess'), findsNothing);
+    expect(find.text('Child: low'), findsNothing);
+    expect(find.text('Parent: medium'), findsNothing);
   });
 
   testWidgets('renders Polish metadata chips without mixed fragments', (
@@ -298,12 +299,13 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('Mały bałagan'), findsOneWidget);
-    expect(find.text('Dziecko: średnie'), findsOneWidget);
-    expect(find.text('Rodzic: niskie'), findsOneWidget);
-    expect(find.textContaining(' mess'), findsNothing);
-    expect(find.textContaining('Child:'), findsNothing);
-    expect(find.textContaining('Parent:'), findsNothing);
+    expect(find.text('Bałagan: mały'), findsOneWidget);
+    expect(find.text('Dziecko: średnio'), findsOneWidget);
+    expect(find.text('Rodzic: mało'), findsOneWidget);
+    expect(find.text('Mały bałagan'), findsNothing);
+    expect(find.text('Średni bałagan'), findsNothing);
+    expect(find.text('Dziecko: niskie'), findsNothing);
+    expect(find.text('Rodzic: niskie'), findsNothing);
   });
 
   testWidgets('renders play detail content and hero hierarchy', (tester) async {
@@ -881,7 +883,12 @@ const _englishMetadataTaxonomy = ContentTaxonomy(
     TaxonomyTerm(
       id: 'mess_low',
       label: 'Low',
-      chipLabel: 'Low mess',
+      chipLabel: 'Mess: low',
+    ),
+    TaxonomyTerm(
+      id: 'mess_medium',
+      label: 'Medium',
+      chipLabel: 'Mess: medium',
     ),
   ],
   childEngagementLevels: [
@@ -890,12 +897,32 @@ const _englishMetadataTaxonomy = ContentTaxonomy(
       label: 'Medium',
       chipLabel: 'Child: medium',
     ),
+    TaxonomyTerm(
+      id: 'child_engagement_low',
+      label: 'Low',
+      chipLabel: 'Child: low',
+    ),
+    TaxonomyTerm(
+      id: 'child_engagement_high',
+      label: 'High',
+      chipLabel: 'Child: high',
+    ),
   ],
   parentInvolvementLevels: [
     TaxonomyTerm(
       id: 'parent_involvement_low',
       label: 'Low',
       chipLabel: 'Parent: low',
+    ),
+    TaxonomyTerm(
+      id: 'parent_involvement_medium',
+      label: 'Medium',
+      chipLabel: 'Parent: medium',
+    ),
+    TaxonomyTerm(
+      id: 'parent_involvement_high',
+      label: 'High',
+      chipLabel: 'Parent: high',
     ),
   ],
   activityTypes: [
@@ -917,21 +944,46 @@ const _polishMetadataTaxonomy = ContentTaxonomy(
     TaxonomyTerm(
       id: 'mess_low',
       label: 'Mały bałagan',
-      chipLabel: 'Mały bałagan',
+      chipLabel: 'Bałagan: mały',
+    ),
+    TaxonomyTerm(
+      id: 'mess_medium',
+      label: 'Średni bałagan',
+      chipLabel: 'Bałagan: średni',
     ),
   ],
   childEngagementLevels: [
     TaxonomyTerm(
       id: 'child_engagement_medium',
       label: 'Średnie',
-      chipLabel: 'Dziecko: średnie',
+      chipLabel: 'Dziecko: średnio',
+    ),
+    TaxonomyTerm(
+      id: 'child_engagement_low',
+      label: 'Niskie',
+      chipLabel: 'Dziecko: mało',
+    ),
+    TaxonomyTerm(
+      id: 'child_engagement_high',
+      label: 'Wysokie',
+      chipLabel: 'Dziecko: dużo',
     ),
   ],
   parentInvolvementLevels: [
     TaxonomyTerm(
       id: 'parent_involvement_low',
       label: 'Niskie',
-      chipLabel: 'Rodzic: niskie',
+      chipLabel: 'Rodzic: mało',
+    ),
+    TaxonomyTerm(
+      id: 'parent_involvement_medium',
+      label: 'Średnie',
+      chipLabel: 'Rodzic: średnio',
+    ),
+    TaxonomyTerm(
+      id: 'parent_involvement_high',
+      label: 'Wysokie',
+      chipLabel: 'Rodzic: dużo',
     ),
   ],
   activityTypes: [
