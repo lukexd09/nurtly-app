@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
-import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
 import '../localization/app_language.dart';
 import '../../features/home/home_screen.dart';
@@ -30,32 +29,11 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
   var _languagePreference = AppLanguagePreference.system;
-  AppLanguage? _localizedContentLoaderLanguage;
-  ContentLoader? _localizedContentLoader;
-
-  AppLanguage get _effectiveLanguage {
-    return const AppLocaleResolver().resolve(
-      preference: _languagePreference,
-      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
-    );
-  }
 
   ContentLoader _contentLoaderForCurrentLanguage() {
-    final loader = widget.contentLoader;
-    if (loader != null) {
-      return loader;
-    }
-
-    final language = _effectiveLanguage;
-    if (_localizedContentLoaderLanguage != language ||
-        _localizedContentLoader == null) {
-      _localizedContentLoaderLanguage = language;
-      _localizedContentLoader = ContentLoader(
-        source: BundledContentSource(language: language),
-      );
-    }
-
-    return _localizedContentLoader!;
+    // TODO: Wire this preference to localized content and UI once Polish
+    // copy and app strings are release-ready.
+    return widget.contentLoader ?? const ContentLoader();
   }
 
   void _selectTab(AppTab tab) {
