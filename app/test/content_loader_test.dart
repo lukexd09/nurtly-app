@@ -573,6 +573,23 @@ void main() {
     }
   });
 
+  test('Polish play ageGroup values match ageRangeMonths', () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    for (final idea in package.playIdeas) {
+      expect(
+        idea.ageGroup,
+        _polishAgeGroupForRange(
+          idea.ageRangeMonths.min,
+          idea.ageRangeMonths.max,
+        ),
+        reason: '${idea.id} ageGroup',
+      );
+    }
+  });
+
   test('play idea engagement values are controlled', () async {
     final package = await const ContentLoader().load();
     const allowedLevels = {
@@ -776,6 +793,23 @@ Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
       for (final sound in sounds)
         sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
     };
+
+String _polishAgeGroupForRange(int min, int max) {
+  return switch ((min, max)) {
+    (0, 12) => '0–12 miesięcy',
+    (6, 18) => '6–18 miesięcy',
+    (12, 36) => '12 miesięcy–3 lata',
+    (18, 36) => '18 miesięcy–3 lata',
+    (18, 48) => '18 miesięcy–4 lata',
+    (18, 60) => '18 miesięcy–5 lat',
+    (24, 48) => '2–4 lata',
+    (24, 60) => '2–5 lat',
+    (24, 72) => '2–6 lat',
+    (36, 72) => '3–6 lat',
+    (0, 60) => '0–5 lat',
+    _ => throw StateError('Unsupported Polish age range: $min-$max'),
+  };
+}
 
 Iterable<String> _collectPolishUserFacingStrings(ContentPackage package) sync* {
   for (final term in package.taxonomy.places) {
