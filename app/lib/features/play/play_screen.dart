@@ -631,15 +631,17 @@ class _PlayIdeaMetadata extends StatelessWidget {
           label: taxonomy.labelForPlace(idea.place),
         ),
         NurtlyChip(
-          label: '${taxonomy.labelForMessLevel(idea.messLevel)} mess',
+          label: taxonomy.chipLabelForMessLevel(idea.messLevel),
         ),
         NurtlyChip(
-          label:
-              'Child: ${_lowercaseLabel(taxonomy.labelForChildEngagement(idea.childEngagement))}',
+          label: taxonomy.chipLabelForChildEngagement(
+            idea.childEngagement,
+          ),
         ),
         NurtlyChip(
-          label:
-              'Parent: ${_lowercaseLabel(taxonomy.labelForParentInvolvement(idea.parentInvolvement))}',
+          label: taxonomy.chipLabelForParentInvolvement(
+            idea.parentInvolvement,
+          ),
         ),
         NurtlyChip(
           label: taxonomy.labelForActivityType(idea.activityType),
@@ -648,8 +650,6 @@ class _PlayIdeaMetadata extends StatelessWidget {
     );
   }
 }
-
-String _lowercaseLabel(String value) => value.toLowerCase();
 
 class _BulletText extends StatelessWidget {
   const _BulletText(this.text);

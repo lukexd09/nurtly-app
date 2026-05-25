@@ -6,15 +6,18 @@ class TaxonomyTerm {
   const TaxonomyTerm({
     required this.id,
     required this.label,
+    this.chipLabel,
   });
 
   final String id;
   final String label;
+  final String? chipLabel;
 
   factory TaxonomyTerm.fromJson(Map<String, Object?> json) {
     return TaxonomyTerm(
       id: _readTaxonomyString(json, 'id'),
       label: _readTaxonomyString(json, 'label'),
+      chipLabel: _readOptionalTaxonomyString(json, 'chipLabel'),
     );
   }
 }
@@ -65,6 +68,14 @@ class ContentTaxonomy {
   String labelForContext(String id) => _labelFor(contexts, id);
 
   String labelForSoundCategory(String id) => _labelFor(soundCategories, id);
+
+  String chipLabelForMessLevel(String id) => _chipLabelFor(messLevels, id);
+
+  String chipLabelForChildEngagement(String id) =>
+      _chipLabelFor(childEngagementLevels, id);
+
+  String chipLabelForParentInvolvement(String id) =>
+      _chipLabelFor(parentInvolvementLevels, id);
 
   void validatePlayIdeasAndFilters({
     required List<PlayIdea> playIdeas,
@@ -147,10 +158,37 @@ String _readTaxonomyString(Map<String, Object?> json, String key) {
   return value;
 }
 
+String? _readOptionalTaxonomyString(
+  Map<String, Object?> json,
+  String key,
+) {
+  final value = json[key];
+  if (value == null) {
+    return null;
+  }
+  if (value is! String) {
+    throw FormatException("Expected string taxonomy '$key'.");
+  }
+  final trimmed = value.trim();
+  if (trimmed.isEmpty) {
+    throw FormatException("Expected non-blank taxonomy '$key'.");
+  }
+  return trimmed;
+}
+
 String _labelFor(List<TaxonomyTerm> terms, String id) {
   for (final term in terms) {
     if (term.id == id) {
       return term.label;
+    }
+  }
+  return id;
+}
+
+String _chipLabelFor(List<TaxonomyTerm> terms, String id) {
+  for (final term in terms) {
+    if (term.id == id) {
+      return term.chipLabel ?? term.label;
     }
   }
   return id;
