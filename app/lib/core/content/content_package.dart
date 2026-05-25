@@ -23,13 +23,21 @@ class ContentPackage {
     final playFilters = json.containsKey('playFilters')
         ? readItems(json, 'playFilters', PlayFilter.fromJson)
         : const <PlayFilter>[];
+    final playIdeas = readItems(json, 'playIdeas', PlayIdea.fromJson);
+    final sounds = readItems(json, 'sounds', SoundItem.fromJson);
+    final taxonomy = ContentTaxonomy.fromJson(readMap(json, 'taxonomy'));
+
+    taxonomy.validatePlayIdeasAndFilters(
+      playIdeas: playIdeas,
+      playFilters: playFilters,
+    );
 
     return ContentPackage(
       metadata: ContentMetadata.fromJson(readMap(json, 'metadata')),
-      playIdeas: readItems(json, 'playIdeas', PlayIdea.fromJson),
+      playIdeas: playIdeas,
       playFilters: playFilters,
-      sounds: readItems(json, 'sounds', SoundItem.fromJson),
-      taxonomy: ContentTaxonomy.fromJson(readMap(json, 'taxonomy')),
+      sounds: sounds,
+      taxonomy: taxonomy,
     );
   }
 }

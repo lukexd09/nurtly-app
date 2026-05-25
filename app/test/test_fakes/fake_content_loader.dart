@@ -28,7 +28,7 @@ class FakeContentLoader extends ContentLoader {
             PlayFilterRule(
               field: 'parentInvolvement',
               operator: 'equals',
-              value: 'Low',
+              value: 'parent_involvement_low',
             ),
           ],
         ),
@@ -41,12 +41,17 @@ class FakeContentLoader extends ContentLoader {
           summary: 'Offer a few safe household textures to explore together.',
           ageGroup: '6-18 months',
           ageRangeMonths: AgeRangeMonths(min: 6, max: 18),
-          place: 'Home',
-          messLevel: 'Low',
-          childEngagement: 'Medium',
-          parentInvolvement: 'Low',
-          activityType: 'Sensory',
-          contexts: ['home', 'baby', 'sensory', 'low_setup'],
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_medium',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_sensory',
+          contexts: [
+            'context_home',
+            'context_baby',
+            'context_sensory',
+            'context_low_setup'
+          ],
           neededItems: [
             'Soft cloth',
             'Wooden spoon',
