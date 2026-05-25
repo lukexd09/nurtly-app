@@ -125,6 +125,25 @@ function Test-IsAllowedJustAudioUsage {
     )
 }
 
+function Test-IsAllowedSharedPreferencesUsage {
+    param(
+        [string] $Path,
+        [string] $Pattern
+    )
+
+    if ($Pattern -ne "shared_preferences") {
+        return $false
+    }
+
+    $normalized = $Path -replace "\\", "/"
+    return $normalized -in @(
+        "app/pubspec.yaml",
+        "app/pubspec.lock",
+        "app/lib/core/localization/language_preference_store.dart",
+        "app/test/core/localization/language_preference_store_test.dart"
+    )
+}
+
 function Test-ForbiddenPatternMatch {
     param(
         [string] $Content,
@@ -173,6 +192,9 @@ try {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
+                    continue
+                }
+                if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) {
                     continue
                 }
                 if (Test-ForbiddenPatternMatch $content $pattern) {

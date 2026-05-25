@@ -3,10 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/navigation/app_shell.dart';
+import 'package:nurtly/core/localization/language_preference_store.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 
 import 'test_fakes/fake_content_loader.dart';
+import 'test_fakes/fake_language_preference_store.dart';
 
 void main() {
   testWidgets('shows Home as the initial app shell tab', (tester) async {
@@ -169,14 +171,60 @@ void main() {
     expect(find.text('Current MVP behavior'), findsOneWidget);
   });
 
+  testWidgets('saved Polish language overrides system locale on startup',
+      (tester) async {
+    await _pumpNurtlyApp(
+      tester,
+      systemLocale: const Locale('en'),
+      languagePreferenceStore: FakeLanguagePreferenceStore(
+        saved: AppLanguage.polish,
+      ),
+    );
+
+    expect(find.text('Spokojniejszy start'), findsOneWidget);
+    expect(find.text('Dźwięki'), findsOneWidget);
+  });
+
+  testWidgets('saved English language overrides system locale on startup',
+      (tester) async {
+    await _pumpNurtlyApp(
+      tester,
+      systemLocale: const Locale('pl'),
+      languagePreferenceStore: FakeLanguagePreferenceStore(
+        saved: AppLanguage.english,
+      ),
+    );
+
+    expect(find.text('A quieter start'), findsOneWidget);
+    expect(find.text('Sounds'), findsOneWidget);
+  });
+
+  testWidgets('load errors fall back to system locale', (tester) async {
+    await _pumpNurtlyApp(
+      tester,
+      systemLocale: const Locale('pl'),
+      languagePreferenceStore: _ThrowingLanguagePreferenceStore(
+        failOnLoad: true,
+      ),
+    );
+
+    expect(find.text('Spokojniejszy start'), findsOneWidget);
+  });
+
   testWidgets('Switching language reloads bundled content', (tester) async {
-    await _pumpRealNurtlyApp(tester, size: const Size(600, 4000));
+    final store = FakeLanguagePreferenceStore();
+    await _pumpRealNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      languagePreferenceStore: store,
+    );
 
     await _selectLanguageFromSettings(
       tester,
       choiceKey: const ValueKey('language-choice-polish'),
       expectedLabel: 'Polski',
     );
+    expect(store.savedValues, contains(AppLanguage.polish));
     final polishPlayScreen = tester.widget<PlayScreen>(
       find.byType(PlayScreen, skipOffstage: false),
     );
@@ -189,6 +237,7 @@ void main() {
       choiceKey: const ValueKey('language-choice-english'),
       expectedLabel: 'English',
     );
+    expect(store.savedValues, contains(AppLanguage.english));
     final englishPlayScreen = tester.widget<PlayScreen>(
       find.byType(PlayScreen, skipOffstage: false),
     );
@@ -219,6 +268,42 @@ void main() {
       isTrue,
     );
   });
+
+  testWidgets('language selection persists through store save', (tester) async {
+    final store = FakeLanguagePreferenceStore();
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      languagePreferenceStore: store,
+    );
+
+    await _selectLanguageFromSettings(
+      tester,
+      choiceKey: const ValueKey('language-choice-polish'),
+      expectedLabel: 'Polski',
+    );
+    expect(store.saved, AppLanguage.polish);
+    expect(store.savedValues.last, AppLanguage.polish);
+  });
+
+  testWidgets('save errors do not block in-session language updates',
+      (tester) async {
+    final store = _ThrowingLanguagePreferenceStore(failOnSave: true);
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      languagePreferenceStore: store,
+    );
+
+    await _selectLanguageFromSettings(
+      tester,
+      choiceKey: const ValueKey('language-choice-polish'),
+      expectedLabel: 'Polski',
+    );
+
+    expect(find.text('Spokojniejszy start'), findsOneWidget);
+    expect(store.savedValues, contains(AppLanguage.polish));
+  });
 }
 
 Future<void> _pumpUntilAnyText(
@@ -237,19 +322,31 @@ Future<void> _pumpUntilAnyText(
 Future<void> _pumpNurtlyApp(
   WidgetTester tester, {
   Size size = const Size(600, 1200),
+  Locale? systemLocale,
+  LanguagePreferenceStore? languagePreferenceStore,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
+  if (systemLocale != null) {
+    tester.binding.platformDispatcher.localeTestValue = systemLocale;
+    addTearDown(tester.binding.platformDispatcher.clearLocaleTestValue);
+  }
 
   await tester.pumpWidget(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const AppShell(contentLoader: FakeContentLoader()),
+      home: AppShell(
+        contentLoader: const FakeContentLoader(),
+        languagePreferenceStore:
+            languagePreferenceStore ?? FakeLanguagePreferenceStore(),
+      ),
     ),
   );
+  await tester.pump(const Duration(milliseconds: 100));
+  await tester.pump(const Duration(milliseconds: 100));
 }
 
 Future<void> _selectLanguageFromSettings(
@@ -284,6 +381,7 @@ Future<void> _selectLanguageFromSettings(
 Future<void> _pumpRealNurtlyApp(
   WidgetTester tester, {
   Size size = const Size(600, 1200),
+  LanguagePreferenceStore? languagePreferenceStore,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -294,9 +392,14 @@ Future<void> _pumpRealNurtlyApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const AppShell(),
+      home: AppShell(
+        languagePreferenceStore:
+            languagePreferenceStore ?? FakeLanguagePreferenceStore(),
+      ),
     ),
   );
+  await tester.pump(const Duration(milliseconds: 100));
+  await tester.pump(const Duration(milliseconds: 100));
 }
 
 bool _hasText(WidgetTester tester, String text) {
@@ -306,4 +409,31 @@ bool _hasText(WidgetTester tester, String text) {
 Future<void> _pumpTabChange(WidgetTester tester) async {
   await tester.pump();
   await tester.pump();
+}
+
+class _ThrowingLanguagePreferenceStore implements LanguagePreferenceStore {
+  _ThrowingLanguagePreferenceStore({
+    this.failOnLoad = false,
+    this.failOnSave = false,
+  });
+
+  final bool failOnLoad;
+  final bool failOnSave;
+  final List<AppLanguage> savedValues = [];
+
+  @override
+  Future<AppLanguage?> load() async {
+    if (failOnLoad) {
+      throw StateError('load failed');
+    }
+    return null;
+  }
+
+  @override
+  Future<void> save(AppLanguage language) async {
+    savedValues.add(language);
+    if (failOnSave) {
+      throw StateError('save failed');
+    }
+  }
 }
