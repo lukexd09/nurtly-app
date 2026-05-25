@@ -162,11 +162,13 @@ void main() {
   });
 
   testWidgets('Switching language reloads bundled content', (tester) async {
-    await _pumpRealNurtlyApp(tester);
-    final shellState = tester.state(find.byType(AppShell)) as dynamic;
+    await _pumpRealNurtlyApp(tester, size: const Size(600, 4000));
 
-    shellState.selectLanguage(AppLanguage.polish);
-    await tester.pump();
+    await _selectLanguageFromSettings(
+      tester,
+      choiceKey: const ValueKey('language-choice-polish'),
+      expectedLabel: 'Polski',
+    );
     final polishPlayScreen = tester.widget<PlayScreen>(
       find.byType(PlayScreen, skipOffstage: false),
     );
@@ -174,8 +176,11 @@ void main() {
         polishPlayScreen.contentLoader.source as BundledContentSource;
     expect(polishSource.language, AppLanguage.polish);
 
-    shellState.selectLanguage(AppLanguage.english);
-    await tester.pump();
+    await _selectLanguageFromSettings(
+      tester,
+      choiceKey: const ValueKey('language-choice-english'),
+      expectedLabel: 'English',
+    );
     final englishPlayScreen = tester.widget<PlayScreen>(
       find.byType(PlayScreen, skipOffstage: false),
     );
@@ -236,6 +241,35 @@ Future<void> _pumpNurtlyApp(
       theme: AppTheme.light,
       home: const AppShell(contentLoader: FakeContentLoader()),
     ),
+  );
+}
+
+Future<void> _selectLanguageFromSettings(
+  WidgetTester tester, {
+  required ValueKey<String> choiceKey,
+  required String expectedLabel,
+}) async {
+  if (find.byKey(const ValueKey('settings-language-row')).evaluate().isEmpty) {
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pump(const Duration(milliseconds: 600));
+  }
+  await tester.ensureVisible(
+    find.byKey(const ValueKey('settings-language-row')),
+  );
+  await tester.pump(const Duration(milliseconds: 100));
+  await tester.tap(find.byKey(const ValueKey('settings-language-row')));
+  await tester.pump(const Duration(milliseconds: 600));
+  await tester.ensureVisible(find.byKey(choiceKey));
+  await tester.pump(const Duration(milliseconds: 100));
+  await tester.tap(find.byKey(choiceKey));
+  await tester.pump(const Duration(milliseconds: 600));
+
+  expect(
+    find.descendant(
+      of: find.byKey(const ValueKey('settings-language-row')),
+      matching: find.text(expectedLabel),
+    ),
+    findsOneWidget,
   );
 }
 
