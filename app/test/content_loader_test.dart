@@ -110,6 +110,25 @@ void main() {
       _labels(english.taxonomy.soundCategories),
       isNot(equals(_labels(polish.taxonomy.soundCategories))),
     );
+
+    final polishLabels = [
+      ..._labels(polish.taxonomy.places),
+      ..._labels(polish.taxonomy.messLevels),
+      ..._labels(polish.taxonomy.childEngagementLevels),
+      ..._labels(polish.taxonomy.parentInvolvementLevels),
+      ..._labels(polish.taxonomy.activityTypes),
+      ..._labels(polish.taxonomy.contexts),
+      ..._labels(polish.taxonomy.soundCategories),
+    ];
+    expect(polishLabels.any((label) => label.contains('?')), isFalse);
+    expect(polishLabels, contains('Łazienka'));
+    expect(polishLabels, contains('Podłoga'));
+    expect(polishLabels, contains('Średni bałagan'));
+    expect(polishLabels, contains('Bliskość'));
+    expect(polishLabels, contains('Język'));
+    expect(polishLabels, contains('Codzienność'));
+    expect(polishLabels, contains('niemowlę'));
+    expect(polishLabels, contains('mało przygotowań'));
   });
 
   test('bundled content asset path resolves English content for English', () {

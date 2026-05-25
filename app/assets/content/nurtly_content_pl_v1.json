@@ -15,7 +15,7 @@
       },
       {
         "id": "place_bathroom",
-        "label": "?azienka"
+        "label": "Łazienka"
       },
       {
         "id": "place_bedroom",
@@ -23,11 +23,11 @@
       },
       {
         "id": "place_floor",
-        "label": "Pod?oga"
+        "label": "Podłoga"
       },
       {
         "id": "place_hallway",
-        "label": "Przedpok?j"
+        "label": "Przedpokój"
       },
       {
         "id": "place_home",
@@ -43,7 +43,7 @@
       },
       {
         "id": "place_outside",
-        "label": "Na zewn?trz"
+        "label": "Na zewnątrz"
       },
       {
         "id": "place_sofa",
@@ -51,7 +51,7 @@
       },
       {
         "id": "place_table",
-        "label": "St??"
+        "label": "Stół"
       },
       {
         "id": "place_window",
@@ -61,11 +61,11 @@
     "messLevels": [
       {
         "id": "mess_low",
-        "label": "Ma?y ba?agan"
+        "label": "Mały bałagan"
       },
       {
         "id": "mess_medium",
-        "label": "?redni ba?agan"
+        "label": "Średni bałagan"
       }
     ],
     "childEngagementLevels": [
@@ -75,7 +75,7 @@
       },
       {
         "id": "child_engagement_medium",
-        "label": "?rednie"
+        "label": "Średnie"
       },
       {
         "id": "child_engagement_high",
@@ -89,7 +89,7 @@
       },
       {
         "id": "parent_involvement_medium",
-        "label": "?rednie"
+        "label": "Średnie"
       },
       {
         "id": "parent_involvement_high",
@@ -99,11 +99,11 @@
     "activityTypes": [
       {
         "id": "activity_connection",
-        "label": "Blisko??"
+        "label": "Bliskość"
       },
       {
         "id": "activity_fine_motor",
-        "label": "Motoryka ma?a"
+        "label": "Motoryka mała"
       },
       {
         "id": "activity_imaginative_play",
@@ -111,7 +111,7 @@
       },
       {
         "id": "activity_language",
-        "label": "J?zyk"
+        "label": "Język"
       },
       {
         "id": "activity_movement",
@@ -127,7 +127,7 @@
       },
       {
         "id": "activity_practical_life",
-        "label": "Codzienno??"
+        "label": "Codzienność"
       },
       {
         "id": "activity_quiet_time",
@@ -145,15 +145,15 @@
     "contexts": [
       {
         "id": "context_baby",
-        "label": "niemowl?"
+        "label": "niemowlę"
       },
       {
         "id": "context_bathroom",
-        "label": "?azienka"
+        "label": "łazienka"
       },
       {
         "id": "context_connection",
-        "label": "blisko??"
+        "label": "bliskość"
       },
       {
         "id": "context_home",
@@ -165,7 +165,7 @@
       },
       {
         "id": "context_low_setup",
-        "label": "ma?o przygotowa?"
+        "label": "mało przygotowań"
       },
       {
         "id": "context_movement",
@@ -173,11 +173,11 @@
       },
       {
         "id": "context_outside",
-        "label": "na zewn?trz"
+        "label": "na zewnątrz"
       },
       {
         "id": "context_practical_life",
-        "label": "codzienno??"
+        "label": "codzienność"
       },
       {
         "id": "context_preschool",
@@ -201,7 +201,7 @@
       },
       {
         "id": "context_transition",
-        "label": "przej?cie"
+        "label": "przejście"
       }
     ],
     "soundCategories": [
@@ -1891,7 +1891,7 @@
   "playFilters": [
     {
       "id": "low_effort",
-      "label": "Ma?y wysi?ek",
+      "label": "Mały wysiłek",
       "matchMode": "all",
       "rules": [
         {
@@ -1903,7 +1903,7 @@
     },
     {
       "id": "low_mess",
-      "label": "Ma?y ba?agan",
+      "label": "Mały bałagan",
       "matchMode": "all",
       "rules": [
         {
@@ -1915,7 +1915,7 @@
     },
     {
       "id": "for_babies",
-      "label": "Dla niemowl?t",
+      "label": "Dla niemowląt",
       "matchMode": "all",
       "rules": [
         {
@@ -1928,7 +1928,7 @@
     },
     {
       "id": "toddlers",
-      "label": "Dla maluch?w",
+      "label": "Dla maluchów",
       "matchMode": "all",
       "rules": [
         {
@@ -1941,7 +1941,7 @@
     },
     {
       "id": "preschool",
-      "label": "Dla przedszkolak?w",
+      "label": "Dla przedszkolaków",
       "matchMode": "all",
       "rules": [
         {
