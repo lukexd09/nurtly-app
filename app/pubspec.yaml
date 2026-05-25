@@ -20,5 +20,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/content/nurtly_content_en_v1.json
+    - assets/content/nurtly_content_pl_v1.json
     - assets/audio/
     - assets/images/sounds/

@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_source.dart';
-import 'package:nurtly/core/content/bundled_content_source.dart';
+import 'package:nurtly/core/content/content_taxonomy.dart';
+import 'package:nurtly/core/content/play_idea.dart';
+import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 
 void main() {
@@ -26,6 +29,89 @@ void main() {
     expect(package.playIdeas.first.steps, hasLength(3));
   });
 
+  test('bundled content asset path resolves English and Polish assets', () {
+    expect(
+      bundledContentAssetPathFor(AppLanguage.english),
+      'assets/content/nurtly_content_en_v1.json',
+    );
+    expect(
+      bundledContentAssetPathFor(AppLanguage.polish),
+      'assets/content/nurtly_content_pl_v1.json',
+    );
+  });
+
+  test('bundled content source loads English and Polish packages', () async {
+    final english = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.english),
+    ).load();
+    final polish = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    expect(english.metadata.packageId, 'nurtly-core-en');
+    expect(english.metadata.locale, 'en');
+    expect(polish.metadata.packageId, 'nurtly-core-pl');
+    expect(polish.metadata.locale, 'pl');
+  });
+
+  test('English and Polish bundled packages keep stable IDs aligned', () async {
+    final english = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.english),
+    ).load();
+    final polish = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    expect(english.playIdeas.length, polish.playIdeas.length);
+    expect(
+      _ids(english.playIdeas.map((idea) => idea.id)),
+      _ids(polish.playIdeas.map((idea) => idea.id)),
+    );
+    expect(english.sounds.length, polish.sounds.length);
+    expect(
+      _ids(english.sounds.map((sound) => sound.id)),
+      _ids(polish.sounds.map((sound) => sound.id)),
+    );
+    expect(
+      _taxonomyIds(english.taxonomy),
+      _taxonomyIds(polish.taxonomy),
+    );
+    expect(
+      _suggestedSoundIds(english.playIdeas),
+      _suggestedSoundIds(polish.playIdeas),
+    );
+    expect(
+      _soundAssetMap(english.sounds),
+      _soundAssetMap(polish.sounds),
+    );
+  });
+
+  test('Polish taxonomy labels are localized while IDs stay stable', () async {
+    final english = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.english),
+    ).load();
+    final polish = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    expect(
+      _labels(english.taxonomy.places),
+      isNot(equals(_labels(polish.taxonomy.places))),
+    );
+    expect(
+      _labels(english.taxonomy.messLevels),
+      isNot(equals(_labels(polish.taxonomy.messLevels))),
+    );
+    expect(
+      _labels(english.taxonomy.activityTypes),
+      isNot(equals(_labels(polish.taxonomy.activityTypes))),
+    );
+    expect(
+      _labels(english.taxonomy.soundCategories),
+      isNot(equals(_labels(polish.taxonomy.soundCategories))),
+    );
+  });
+
   test('bundled content asset path resolves English content for English', () {
     expect(
       bundledContentAssetPathFor(AppLanguage.english),
@@ -33,11 +119,11 @@ void main() {
     );
   });
 
-  test('bundled content asset path keeps Polish on English fallback for now',
+  test('bundled content asset path resolves Polish content to the PL asset',
       () {
     expect(
       bundledContentAssetPathFor(AppLanguage.polish),
-      'assets/content/nurtly_content_en_v1.json',
+      'assets/content/nurtly_content_pl_v1.json',
     );
   });
 
@@ -50,14 +136,13 @@ void main() {
     expect(package.metadata.packageId, 'nurtly-core-en');
   });
 
-  test('bundled content source falls back to English for Polish for now',
-      () async {
+  test('bundled content source loads Polish content for Polish', () async {
     final package = await const ContentLoader(
       source: BundledContentSource(language: AppLanguage.polish),
     ).load();
 
-    expect(package.metadata.locale, 'en');
-    expect(package.metadata.packageId, 'nurtly-core-en');
+    expect(package.metadata.locale, 'pl');
+    expect(package.metadata.packageId, 'nurtly-core-pl');
   });
 
   test('content metadata fields are production ready', () async {
@@ -494,6 +579,31 @@ void main() {
 }
 
 bool _isNotBlank(String value) => value.trim().isNotEmpty;
+
+List<String> _ids(Iterable<String> values) => values.toList();
+
+List<String> _labels(Iterable<TaxonomyTerm> terms) =>
+    terms.map((term) => term.label).toList();
+
+List<String> _taxonomyIds(ContentTaxonomy taxonomy) {
+  return [
+    ..._ids(taxonomy.places.map((term) => term.id)),
+    ..._ids(taxonomy.messLevels.map((term) => term.id)),
+    ..._ids(taxonomy.childEngagementLevels.map((term) => term.id)),
+    ..._ids(taxonomy.parentInvolvementLevels.map((term) => term.id)),
+    ..._ids(taxonomy.activityTypes.map((term) => term.id)),
+    ..._ids(taxonomy.contexts.map((term) => term.id)),
+    ..._ids(taxonomy.soundCategories.map((term) => term.id)),
+  ];
+}
+
+List<String?> _suggestedSoundIds(Iterable<PlayIdea> ideas) =>
+    ideas.map((idea) => idea.suggestedSoundId).toList();
+
+Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
+      for (final sound in sounds)
+        sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
+    };
 
 class _RawContentSource implements ContentSource {
   const _RawContentSource(this.content);
