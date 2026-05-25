@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
 import '../localization/app_language.dart';
 import '../../features/home/home_screen.dart';
@@ -28,16 +29,47 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
-  var _languagePreference = AppLanguagePreference.system;
+  late AppLanguage _selectedLanguage;
+  ContentLoader? _localizedContentLoader;
+  AppLanguage? _localizedContentLoaderLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = const AppLocaleResolver().resolve(
+      preference: AppLanguagePreference.system,
+      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+    );
+  }
 
   ContentLoader _contentLoaderForCurrentLanguage() {
-    // TODO: Wire this preference to localized content and UI once Polish
-    // copy and app strings are release-ready.
-    return widget.contentLoader ?? const ContentLoader();
+    // Polish copy and app chrome localization are still in progress.
+    // Runtime switching is enabled intentionally to support early localization QA.
+    final loader = widget.contentLoader;
+    if (loader != null) {
+      return loader;
+    }
+
+    if (_localizedContentLoader == null ||
+        _localizedContentLoaderLanguage != _selectedLanguage) {
+      _localizedContentLoaderLanguage = _selectedLanguage;
+      _localizedContentLoader = ContentLoader(
+        source: BundledContentSource(language: _selectedLanguage),
+      );
+    }
+
+    return _localizedContentLoader!;
   }
 
   void _selectTab(AppTab tab) {
     setState(() => _currentIndex = AppTab.values.indexOf(tab));
+  }
+
+  void selectLanguage(AppLanguage language) {
+    setState(() {
+      _selectedLanguage = language;
+      _localizedContentLoader = null;
+    });
   }
 
   Future<void> _openTodaysIdea() async {
@@ -71,20 +103,14 @@ class _AppShellState extends State<AppShell> {
     final navigator = Navigator.of(context);
     showModalBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
       backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 420),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            Future<void> selectLanguage(
-                AppLanguagePreference preference) async {
-              setState(() => _languagePreference = preference);
-              setSheetState(() {});
-            }
-
             return SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -117,6 +143,30 @@ class _AppShellState extends State<AppShell> {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
+                        'General',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _SettingsRow(
+                        key: const ValueKey('settings-language-row'),
+                        title: 'Language',
+                        value: _selectedLanguage.displayName,
+                        onTap: () async {
+                          final selected = await _openLanguageSheet(
+                            sheetContext,
+                          );
+                          if (selected == null) {
+                            return;
+                          }
+                          selectLanguage(selected);
+                          setSheetState(() {});
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
                         'Privacy',
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.textMuted,
@@ -124,58 +174,17 @@ class _AppShellState extends State<AppShell> {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      Material(
-                        color: AppColors.surface,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          side: const BorderSide(color: AppColors.borderSoft),
-                        ),
-                        child: ListTile(
-                          key: const ValueKey('settings-privacy-data'),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md,
-                          ),
-                          title: const Text('Privacy & Data'),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {
-                            Navigator.of(sheetContext).pop();
-                            navigator.push(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const PrivacyDataScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        'Language',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      _LanguageChoiceTile(
-                        title: 'Use phone language',
-                        value: AppLanguagePreference.system,
-                        selected:
-                            _languagePreference == AppLanguagePreference.system,
-                        onChanged: selectLanguage,
-                      ),
-                      _LanguageChoiceTile(
-                        title: 'Polski',
-                        value: AppLanguagePreference.polish,
-                        selected:
-                            _languagePreference == AppLanguagePreference.polish,
-                        onChanged: selectLanguage,
-                      ),
-                      _LanguageChoiceTile(
-                        title: 'English',
-                        value: AppLanguagePreference.english,
-                        selected: _languagePreference ==
-                            AppLanguagePreference.english,
-                        onChanged: selectLanguage,
+                      _SettingsRow(
+                        key: const ValueKey('settings-privacy-data'),
+                        title: 'Privacy & Data',
+                        onTap: () {
+                          Navigator.of(sheetContext).pop();
+                          navigator.push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const PrivacyDataScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -183,6 +192,71 @@ class _AppShellState extends State<AppShell> {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  Future<AppLanguage?> _openLanguageSheet(
+    BuildContext settingsSheetContext,
+  ) {
+    return showModalBottomSheet<AppLanguage>(
+      context: settingsSheetContext,
+      backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 360),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (languageSheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.lg,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.borderSoft,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  'Language',
+                  style: AppTextStyles.cardTitle.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                _LanguageChoiceRow(
+                  key: const ValueKey('language-choice-polish'),
+                  title: 'Polski',
+                  selected: _selectedLanguage == AppLanguage.polish,
+                  onTap: () {
+                    Navigator.of(languageSheetContext).pop(AppLanguage.polish);
+                  },
+                ),
+                _LanguageChoiceRow(
+                  key: const ValueKey('language-choice-english'),
+                  title: 'English',
+                  selected: _selectedLanguage == AppLanguage.english,
+                  onTap: () {
+                    Navigator.of(languageSheetContext).pop(AppLanguage.english);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -308,18 +382,17 @@ class _ShellTopBar extends StatelessWidget {
   }
 }
 
-class _LanguageChoiceTile extends StatelessWidget {
-  const _LanguageChoiceTile({
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({
+    super.key,
     required this.title,
-    required this.value,
-    required this.selected,
-    required this.onChanged,
+    this.value,
+    required this.onTap,
   });
 
   final String title;
-  final AppLanguagePreference value;
-  final bool selected;
-  final ValueChanged<AppLanguagePreference> onChanged;
+  final String? value;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -329,25 +402,59 @@ class _LanguageChoiceTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         side: const BorderSide(color: AppColors.borderSoft),
       ),
-      child: InkWell(
-        key: ValueKey('language-choice-${value.name}'),
-        borderRadius: BorderRadius.circular(18),
-        onTap: () => onChanged(value),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                selected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: selected ? AppColors.primary : AppColors.textMuted,
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        title: Text(title),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (value != null) ...[
+              Text(
+                value!,
+                style: AppTextStyles.body.copyWith(
+                  color: AppColors.textMuted,
+                ),
               ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(child: Text(title)),
+              const SizedBox(width: AppSpacing.xs),
             ],
-          ),
+            const Icon(Icons.chevron_right),
+          ],
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _LanguageChoiceRow extends StatelessWidget {
+  const _LanguageChoiceRow({
+    super.key,
+    required this.title,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Material(
+        color: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: AppColors.borderSoft),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          title: Text(title),
+          trailing: selected
+              ? const Icon(Icons.check_rounded, color: AppColors.primary)
+              : null,
+          onTap: onTap,
         ),
       ),
     );

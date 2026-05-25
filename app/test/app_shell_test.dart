@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/core/localization/app_language.dart';
+import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/navigation/app_shell.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
+import 'package:nurtly/features/play/play_screen.dart';
 
 import 'test_fakes/fake_content_loader.dart';
 
@@ -15,6 +18,7 @@ void main() {
     expect(find.text('Sounds'), findsWidgets);
     expect(find.byTooltip('Settings'), findsOneWidget);
     expect(find.byTooltip('Privacy & Data'), findsNothing);
+    expect(find.byKey(const ValueKey('settings-language-row')), findsNothing);
 
     expect(find.text('Start with one small moment'), findsOneWidget);
     expect(find.text('Soft treasure basket'), findsNothing);
@@ -71,54 +75,67 @@ void main() {
     expect(find.text('Start with one small moment'), findsOneWidget);
   });
 
-  testWidgets('Settings sheet shows language options and privacy entry',
+  testWidgets('Settings sheet shows language row and privacy entry',
       (tester) async {
-    await _pumpNurtlyApp(tester);
+    await _pumpNurtlyApp(tester, size: const Size(600, 4000));
 
     await tester.tap(find.byTooltip('Settings'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('General'), findsOneWidget);
     expect(find.text('Language'), findsOneWidget);
-    expect(find.text('Use phone language'), findsOneWidget);
-    expect(find.text('Polski'), findsOneWidget);
-    expect(find.text('English'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('settings-language-row')),
+        matching: find.text('English'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Use phone language'), findsNothing);
+    expect(find.text('Polski'), findsNothing);
     expect(find.text('Privacy & Data'), findsOneWidget);
   });
 
-  testWidgets('Settings language selection updates the in-session preference',
+  testWidgets('Tapping Language opens language selector and updates row',
       (tester) async {
-    await _pumpNurtlyApp(tester);
+    await _pumpNurtlyApp(tester, size: const Size(600, 4000));
 
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('settings-language-row')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-language-row')));
+    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Polski'));
-    await tester.pump();
+    expect(find.text('Language'), findsWidgets);
+    expect(
+        find.byKey(const ValueKey('language-choice-polish')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('language-choice-english')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('language-choice-polish')));
+    await tester.pumpAndSettle();
     expect(
       find.descendant(
-        of: find.byKey(const ValueKey('language-choice-polish')),
-        matching: find.byIcon(Icons.radio_button_checked),
+        of: find.byKey(const ValueKey('settings-language-row')),
+        matching: find.text('Polski'),
       ),
       findsOneWidget,
     );
 
-    await tester.tap(find.text('English'));
-    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('settings-language-row')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('language-choice-english')));
+    await tester.pumpAndSettle();
     expect(
       find.descendant(
-        of: find.byKey(const ValueKey('language-choice-english')),
-        matching: find.byIcon(Icons.radio_button_checked),
-      ),
-      findsOneWidget,
-    );
-
-    await tester.tap(find.text('Use phone language'));
-    await tester.pump();
-    expect(
-      find.descendant(
-        of: find.byKey(const ValueKey('language-choice-system')),
-        matching: find.byIcon(Icons.radio_button_checked),
+        of: find.byKey(const ValueKey('settings-language-row')),
+        matching: find.text('English'),
       ),
       findsOneWidget,
     );
@@ -130,13 +147,41 @@ void main() {
 
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Privacy & Data'));
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('settings-privacy-data')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
 
     expect(
-        find.text('What Nurtly does with data in this MVP.'), findsOneWidget);
+      find.text('What Nurtly does with data in this MVP.'),
+      findsOneWidget,
+    );
     expect(find.text('Current MVP behavior'), findsOneWidget);
+  });
+
+  testWidgets('Switching language reloads bundled content', (tester) async {
+    await _pumpRealNurtlyApp(tester);
+    final shellState = tester.state(find.byType(AppShell)) as dynamic;
+
+    shellState.selectLanguage(AppLanguage.polish);
+    await tester.pump();
+    final polishPlayScreen = tester.widget<PlayScreen>(
+      find.byType(PlayScreen, skipOffstage: false),
+    );
+    final polishSource =
+        polishPlayScreen.contentLoader.source as BundledContentSource;
+    expect(polishSource.language, AppLanguage.polish);
+
+    shellState.selectLanguage(AppLanguage.english);
+    await tester.pump();
+    final englishPlayScreen = tester.widget<PlayScreen>(
+      find.byType(PlayScreen, skipOffstage: false),
+    );
+    final englishSource =
+        englishPlayScreen.contentLoader.source as BundledContentSource;
+    expect(englishSource.language, AppLanguage.english);
   });
 
   testWidgets('Home quick link navigates to Journal', (tester) async {
@@ -190,6 +235,24 @@ Future<void> _pumpNurtlyApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: const AppShell(contentLoader: FakeContentLoader()),
+    ),
+  );
+}
+
+Future<void> _pumpRealNurtlyApp(
+  WidgetTester tester, {
+  Size size = const Size(600, 1200),
+}) async {
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+
+  await tester.pumpWidget(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      home: const AppShell(),
     ),
   );
 }
