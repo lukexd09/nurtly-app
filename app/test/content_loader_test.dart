@@ -143,6 +143,14 @@ void main() {
       'place',
       'contexts',
     };
+    const taxonomyFields = {
+      'parentInvolvement',
+      'messLevel',
+      'activityType',
+      'childEngagement',
+      'place',
+      'contexts',
+    };
     const supportedOperators = {'equals', 'contains', 'overlaps'};
     const expectedLabels = {
       'Low effort',
@@ -181,6 +189,12 @@ void main() {
         } else {
           expect(_isNotBlank(rule.value ?? ''), isTrue,
               reason: '${filter.id} value');
+          if (taxonomyFields.contains(rule.field)) {
+            expect(rule.value, isNotNull,
+                reason: '${filter.id} taxonomy value');
+            expect(rule.value, matches(r'^[a-z0-9_]+$'),
+                reason: '${filter.id} taxonomy id');
+          }
         }
       }
     }
@@ -269,7 +283,16 @@ void main() {
 
   test('play idea engagement values are controlled', () async {
     final package = await const ContentLoader().load();
-    const allowedLevels = {'Low', 'Medium', 'High'};
+    const allowedLevels = {
+      'mess_low',
+      'mess_medium',
+      'child_engagement_low',
+      'child_engagement_medium',
+      'child_engagement_high',
+      'parent_involvement_low',
+      'parent_involvement_medium',
+      'parent_involvement_high'
+    };
 
     for (final idea in package.playIdeas) {
       expect(allowedLevels, contains(idea.messLevel),
@@ -284,21 +307,21 @@ void main() {
   test('play idea contexts are controlled and well formed', () async {
     final package = await const ContentLoader().load();
     const allowedContexts = {
-      'home',
-      'baby',
-      'toddler',
-      'preschool',
-      'low_setup',
-      'quiet',
-      'movement',
-      'sensory',
-      'connection',
-      'practical_life',
-      'outside',
-      'bathroom',
-      'kitchen',
-      'transition',
-      'pretend',
+      'context_home',
+      'context_baby',
+      'context_toddler',
+      'context_preschool',
+      'context_low_setup',
+      'context_quiet',
+      'context_movement',
+      'context_sensory',
+      'context_connection',
+      'context_practical_life',
+      'context_outside',
+      'context_bathroom',
+      'context_kitchen',
+      'context_transition',
+      'context_pretend',
     };
 
     for (final idea in package.playIdeas) {
@@ -401,33 +424,29 @@ void main() {
     final package = await const ContentLoader().load();
     final taxonomy = package.taxonomy;
 
-    final placeLabels = taxonomy.places.map((term) => term.label).toSet();
-    final messLabels = taxonomy.messLevels.map((term) => term.label).toSet();
-    final childEngagementLabels =
-        taxonomy.childEngagementLevels.map((term) => term.label).toSet();
-    final parentInvolvementLabels =
-        taxonomy.parentInvolvementLevels.map((term) => term.label).toSet();
-    final activityTypeLabels =
-        taxonomy.activityTypes.map((term) => term.label).toSet();
-    final contextValues = {
-      ...taxonomy.contexts.map((term) => term.id),
-      ...taxonomy.contexts.map((term) => term.label),
-    };
+    final placeIds = taxonomy.places.map((term) => term.id).toSet();
+    final messIds = taxonomy.messLevels.map((term) => term.id).toSet();
+    final childEngagementIds =
+        taxonomy.childEngagementLevels.map((term) => term.id).toSet();
+    final parentInvolvementIds =
+        taxonomy.parentInvolvementLevels.map((term) => term.id).toSet();
+    final activityTypeIds =
+        taxonomy.activityTypes.map((term) => term.id).toSet();
+    final contextIds = taxonomy.contexts.map((term) => term.id).toSet();
     final soundCategoryLabels =
         taxonomy.soundCategories.map((term) => term.label).toSet();
 
     for (final idea in package.playIdeas) {
-      expect(placeLabels, contains(idea.place), reason: '${idea.id} place');
-      expect(messLabels, contains(idea.messLevel),
-          reason: '${idea.id} messLevel');
-      expect(childEngagementLabels, contains(idea.childEngagement),
+      expect(placeIds, contains(idea.place), reason: '${idea.id} place');
+      expect(messIds, contains(idea.messLevel), reason: '${idea.id} messLevel');
+      expect(childEngagementIds, contains(idea.childEngagement),
           reason: '${idea.id} childEngagement');
-      expect(parentInvolvementLabels, contains(idea.parentInvolvement),
+      expect(parentInvolvementIds, contains(idea.parentInvolvement),
           reason: '${idea.id} parentInvolvement');
-      expect(activityTypeLabels, contains(idea.activityType),
+      expect(activityTypeIds, contains(idea.activityType),
           reason: '${idea.id} activityType');
       for (final context in idea.contexts) {
-        expect(contextValues, contains(context), reason: '${idea.id} context');
+        expect(contextIds, contains(context), reason: '${idea.id} context');
       }
     }
 
@@ -470,12 +489,12 @@ const _minimalContentPackageJson = '''
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -492,7 +511,7 @@ const _minimalContentPackageJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
@@ -532,12 +551,12 @@ const _minimalContentPackageWithoutFiltersJson = '''
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -579,11 +598,11 @@ const _minimalContentPackageWithoutContextsJson = '''
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -600,7 +619,7 @@ const _minimalContentPackageWithoutContextsJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
@@ -635,12 +654,12 @@ const _minimalContentPackageWithoutAgeRangeMonthsJson = '''
       "title": "Test idea",
       "summary": "A calm test idea.",
       "ageGroup": "2-5 years",
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -657,7 +676,7 @@ const _minimalContentPackageWithoutAgeRangeMonthsJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
@@ -696,12 +715,12 @@ const _minimalContentPackageWithoutSuggestedSoundJson = '''
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -718,7 +737,7 @@ const _minimalContentPackageWithoutSuggestedSoundJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
@@ -756,12 +775,12 @@ const _minimalContentPackageWithoutTaxonomyJson = '''
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -778,7 +797,7 @@ const _minimalContentPackageWithoutTaxonomyJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
@@ -817,12 +836,12 @@ const _minimalContentPackageWithInvalidAgeRangeJson = '''
         "min": 36,
         "max": 24
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -839,7 +858,7 @@ const _minimalContentPackageWithInvalidAgeRangeJson = '''
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }

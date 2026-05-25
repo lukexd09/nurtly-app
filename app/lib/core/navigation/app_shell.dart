@@ -44,6 +44,7 @@ class _AppShellState extends State<AppShell> {
         MaterialPageRoute<void>(
           builder: (_) => PlayActivityDetailScreen(
             idea: idea,
+            taxonomy: package.taxonomy,
             suggestedSound: suggestedSound,
           ),
         ),

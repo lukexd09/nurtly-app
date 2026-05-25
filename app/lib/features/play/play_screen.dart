@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
+import '../../core/content/content_taxonomy.dart';
 import '../../core/content/play_filter.dart';
 import '../../core/content/play_idea.dart';
 import '../../core/content/sound_item.dart';
@@ -109,6 +110,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   playIdeas,
                   package?.playFilters ?? const <PlayFilter>[],
                   package?.sounds ?? const <SoundItem>[],
+                  package!.taxonomy,
                 ),
               ],
             ],
@@ -122,6 +124,7 @@ class _PlayScreenState extends State<PlayScreen> {
     List<PlayIdea> playIdeas,
     List<PlayFilter> filters,
     List<SoundItem> sounds,
+    ContentTaxonomy taxonomy,
   ) {
     final filtered = _applyQuickFilters(
       playIdeas,
@@ -138,7 +141,7 @@ class _PlayScreenState extends State<PlayScreen> {
       ];
     }
     return [
-      ..._playIdeaCards(filtered, sounds),
+      ..._playIdeaCards(filtered, sounds, taxonomy),
     ];
   }
 
@@ -163,12 +166,16 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   List<Widget> _playIdeaCards(
-      List<PlayIdea> playIdeas, List<SoundItem> sounds) {
+    List<PlayIdea> playIdeas,
+    List<SoundItem> sounds,
+    ContentTaxonomy taxonomy,
+  ) {
     return [
       for (var index = 0; index < playIdeas.length; index++) ...[
         if (index > 0) const SizedBox(height: AppSpacing.md),
         _PlayIdeaCard(
           idea: playIdeas[index],
+          taxonomy: taxonomy,
           onTap: () {
             final suggestedSound =
                 resolveSuggestedSound(playIdeas[index], sounds);
@@ -176,6 +183,7 @@ class _PlayScreenState extends State<PlayScreen> {
               MaterialPageRoute<void>(
                 builder: (_) => PlayActivityDetailScreen(
                   idea: playIdeas[index],
+                  taxonomy: taxonomy,
                   suggestedSound: suggestedSound,
                 ),
               ),
@@ -352,10 +360,12 @@ class _PlayHeader extends StatelessWidget {
 class _PlayIdeaCard extends StatelessWidget {
   const _PlayIdeaCard({
     required this.idea,
+    required this.taxonomy,
     required this.onTap,
   });
 
   final PlayIdea idea;
+  final ContentTaxonomy taxonomy;
   final VoidCallback onTap;
 
   @override
@@ -371,7 +381,7 @@ class _PlayIdeaCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(idea.summary, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.md),
-          _PlayIdeaMetadata(idea: idea),
+          _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
         ],
       ),
     );
@@ -381,11 +391,13 @@ class _PlayIdeaCard extends StatelessWidget {
 class PlayActivityDetailScreen extends StatelessWidget {
   const PlayActivityDetailScreen({
     required this.idea,
+    required this.taxonomy,
     this.suggestedSound,
     super.key,
   });
 
   final PlayIdea idea;
+  final ContentTaxonomy taxonomy;
   final SoundItem? suggestedSound;
 
   @override
@@ -397,6 +409,7 @@ class PlayActivityDetailScreen extends StatelessWidget {
           children: [
             _PlayDetailHero(
               idea: idea,
+              taxonomy: taxonomy,
               onBackPressed: () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -468,10 +481,12 @@ class _DetailBackButton extends StatelessWidget {
 class _PlayDetailHero extends StatelessWidget {
   const _PlayDetailHero({
     required this.idea,
+    required this.taxonomy,
     required this.onBackPressed,
   });
 
   final PlayIdea idea;
+  final ContentTaxonomy taxonomy;
   final VoidCallback onBackPressed;
 
   @override
@@ -500,7 +515,7 @@ class _PlayDetailHero extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(idea.summary, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.md),
-            _PlayIdeaMetadata(idea: idea),
+            _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
           ],
         ),
       ),
@@ -582,9 +597,13 @@ String? _parentGuidance(String value) {
 }
 
 class _PlayIdeaMetadata extends StatelessWidget {
-  const _PlayIdeaMetadata({required this.idea});
+  const _PlayIdeaMetadata({
+    required this.idea,
+    required this.taxonomy,
+  });
 
   final PlayIdea idea;
+  final ContentTaxonomy taxonomy;
 
   @override
   Widget build(BuildContext context) {
@@ -593,11 +612,23 @@ class _PlayIdeaMetadata extends StatelessWidget {
       runSpacing: AppSpacing.xs,
       children: [
         NurtlyChip(label: idea.ageGroup),
-        NurtlyChip(label: idea.place),
-        NurtlyChip(label: '${idea.messLevel} mess'),
-        NurtlyChip(label: 'Child: ${_lowercaseLabel(idea.childEngagement)}'),
-        NurtlyChip(label: 'Parent: ${_lowercaseLabel(idea.parentInvolvement)}'),
-        NurtlyChip(label: idea.activityType),
+        NurtlyChip(
+          label: taxonomy.labelForPlace(idea.place),
+        ),
+        NurtlyChip(
+          label: '${taxonomy.labelForMessLevel(idea.messLevel)} mess',
+        ),
+        NurtlyChip(
+          label:
+              'Child: ${_lowercaseLabel(taxonomy.labelForChildEngagement(idea.childEngagement))}',
+        ),
+        NurtlyChip(
+          label:
+              'Parent: ${_lowercaseLabel(taxonomy.labelForParentInvolvement(idea.parentInvolvement))}',
+        ),
+        NurtlyChip(
+          label: taxonomy.labelForActivityType(idea.activityType),
+        ),
       ],
     );
   }

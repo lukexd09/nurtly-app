@@ -139,12 +139,12 @@ String _packageJson({
         "min": 24,
         "max": 60
       },
-      "place": "Home",
-      "messLevel": "Low",
-      "childEngagement": "Low",
-      "parentInvolvement": "Low",
-      "activityType": "Quiet time",
-      "contexts": ["home", "quiet"],
+      "place": "place_home",
+      "messLevel": "mess_low",
+      "childEngagement": "child_engagement_low",
+      "parentInvolvement": "parent_involvement_low",
+      "activityType": "activity_quiet_time",
+      "contexts": ["context_home", "context_quiet"],
       "neededItems": ["Soft cloth"],
       "steps": ["Place the item nearby."],
       "whatToExpect": "A simple test note for content loading.",
@@ -161,7 +161,7 @@ String _packageJson({
         {
           "field": "parentInvolvement",
           "operator": "equals",
-          "value": "Low"
+          "value": "parent_involvement_low"
         }
       ]
     }
