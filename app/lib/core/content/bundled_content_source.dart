@@ -8,7 +8,7 @@ const defaultContentAssetPath = 'assets/content/nurtly_content_en_v1.json';
 String bundledContentAssetPathFor(AppLanguage language) {
   return switch (language) {
     AppLanguage.english => 'assets/content/nurtly_content_en_v1.json',
-    AppLanguage.polish => 'assets/content/nurtly_content_en_v1.json',
+    AppLanguage.polish => 'assets/content/nurtly_content_pl_v1.json',
   };
 }
 
