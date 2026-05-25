@@ -61,39 +61,47 @@
     "messLevels": [
       {
         "id": "mess_low",
-        "label": "Mały bałagan"
+        "label": "Mały bałagan",
+        "chipLabel": "Ma?y ba?agan"
       },
       {
         "id": "mess_medium",
-        "label": "Średni bałagan"
+        "label": "Średni bałagan",
+        "chipLabel": "?redni ba?agan"
       }
     ],
     "childEngagementLevels": [
       {
         "id": "child_engagement_low",
-        "label": "Niskie"
+        "label": "Niskie",
+        "chipLabel": "Dziecko: niskie"
       },
       {
         "id": "child_engagement_medium",
-        "label": "Średnie"
+        "label": "Średnie",
+        "chipLabel": "Dziecko: ?rednie"
       },
       {
         "id": "child_engagement_high",
-        "label": "Wysokie"
+        "label": "Wysokie",
+        "chipLabel": "Dziecko: wysokie"
       }
     ],
     "parentInvolvementLevels": [
       {
         "id": "parent_involvement_low",
-        "label": "Niskie"
+        "label": "Niskie",
+        "chipLabel": "Rodzic: niskie"
       },
       {
         "id": "parent_involvement_medium",
-        "label": "Średnie"
+        "label": "Średnie",
+        "chipLabel": "Rodzic: ?rednie"
       },
       {
         "id": "parent_involvement_high",
-        "label": "Wysokie"
+        "label": "Wysokie",
+        "chipLabel": "Rodzic: wysokie"
       }
     ],
     "activityTypes": [

@@ -54,6 +54,62 @@ void main() {
     expect(polish.metadata.locale, 'pl');
   });
 
+  test('taxonomy term parses optional chipLabel and trims it', () {
+    final term = TaxonomyTerm.fromJson({
+      'id': 'mess_low',
+      'label': 'Low',
+      'chipLabel': '  Low mess  ',
+    });
+
+    expect(term.id, 'mess_low');
+    expect(term.label, 'Low');
+    expect(term.chipLabel, 'Low mess');
+  });
+
+  test('taxonomy helper falls back to label when chipLabel is missing', () {
+    const taxonomy = ContentTaxonomy(
+      places: [
+        TaxonomyTerm(id: 'place_home', label: 'Home'),
+      ],
+      messLevels: [
+        TaxonomyTerm(id: 'mess_low', label: 'Low'),
+      ],
+      childEngagementLevels: [
+        TaxonomyTerm(id: 'child_engagement_low', label: 'Low'),
+      ],
+      parentInvolvementLevels: [
+        TaxonomyTerm(id: 'parent_involvement_low', label: 'Low'),
+      ],
+      activityTypes: [
+        TaxonomyTerm(id: 'activity_quiet_time', label: 'Quiet time'),
+      ],
+      contexts: [
+        TaxonomyTerm(id: 'context_home', label: 'home'),
+      ],
+      soundCategories: [
+        TaxonomyTerm(id: 'sound_category_calm', label: 'Calm'),
+      ],
+    );
+
+    expect(taxonomy.chipLabelForMessLevel('mess_low'), 'Low');
+    expect(taxonomy.chipLabelForChildEngagement('child_engagement_low'), 'Low');
+    expect(
+      taxonomy.chipLabelForParentInvolvement('parent_involvement_low'),
+      'Low',
+    );
+  });
+
+  test('blank taxonomy chipLabel throws FormatException', () {
+    expect(
+      () => TaxonomyTerm.fromJson({
+        'id': 'mess_low',
+        'label': 'Low',
+        'chipLabel': '   ',
+      }),
+      throwsFormatException,
+    );
+  });
+
   test('English and Polish bundled packages keep stable IDs aligned', () async {
     final english = await const ContentLoader(
       source: BundledContentSource(language: AppLanguage.english),

@@ -262,6 +262,50 @@ void main() {
     expect(find.text('Soft treasure basket'), findsOneWidget);
   });
 
+  testWidgets('renders English metadata chips without mixed fragments', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(
+          contentLoader: _LocalizedMetadataContentLoader(
+            taxonomy: _englishMetadataTaxonomy,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Low mess'), findsOneWidget);
+    expect(find.text('Child: medium'), findsOneWidget);
+    expect(find.text('Parent: low'), findsOneWidget);
+    expect(find.textContaining(' mess'), findsOneWidget);
+    expect(find.textContaining('Child:'), findsOneWidget);
+    expect(find.textContaining('Parent:'), findsOneWidget);
+  });
+
+  testWidgets('renders Polish metadata chips without mixed fragments', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: PlayScreen(
+          contentLoader: _LocalizedMetadataContentLoader(
+            taxonomy: _polishMetadataTaxonomy,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Mały bałagan'), findsOneWidget);
+    expect(find.text('Dziecko: średnie'), findsOneWidget);
+    expect(find.text('Rodzic: niskie'), findsOneWidget);
+    expect(find.textContaining(' mess'), findsNothing);
+    expect(find.textContaining('Child:'), findsNothing);
+    expect(find.textContaining('Parent:'), findsNothing);
+  });
+
   testWidgets('renders play detail content and hero hierarchy', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -828,3 +872,120 @@ const _testTaxonomy = ContentTaxonomy(
     TaxonomyTerm(id: 'sound_category_white_noise', label: 'White noise'),
   ],
 );
+
+const _englishMetadataTaxonomy = ContentTaxonomy(
+  places: [
+    TaxonomyTerm(id: 'place_home', label: 'Home'),
+  ],
+  messLevels: [
+    TaxonomyTerm(
+      id: 'mess_low',
+      label: 'Low',
+      chipLabel: 'Low mess',
+    ),
+  ],
+  childEngagementLevels: [
+    TaxonomyTerm(
+      id: 'child_engagement_medium',
+      label: 'Medium',
+      chipLabel: 'Child: medium',
+    ),
+  ],
+  parentInvolvementLevels: [
+    TaxonomyTerm(
+      id: 'parent_involvement_low',
+      label: 'Low',
+      chipLabel: 'Parent: low',
+    ),
+  ],
+  activityTypes: [
+    TaxonomyTerm(id: 'activity_quiet_time', label: 'Quiet time'),
+  ],
+  contexts: [
+    TaxonomyTerm(id: 'context_home', label: 'home'),
+  ],
+  soundCategories: [
+    TaxonomyTerm(id: 'sound_category_calm', label: 'Calm'),
+  ],
+);
+
+const _polishMetadataTaxonomy = ContentTaxonomy(
+  places: [
+    TaxonomyTerm(id: 'place_home', label: 'Dom'),
+  ],
+  messLevels: [
+    TaxonomyTerm(
+      id: 'mess_low',
+      label: 'Mały bałagan',
+      chipLabel: 'Mały bałagan',
+    ),
+  ],
+  childEngagementLevels: [
+    TaxonomyTerm(
+      id: 'child_engagement_medium',
+      label: 'Średnie',
+      chipLabel: 'Dziecko: średnie',
+    ),
+  ],
+  parentInvolvementLevels: [
+    TaxonomyTerm(
+      id: 'parent_involvement_low',
+      label: 'Niskie',
+      chipLabel: 'Rodzic: niskie',
+    ),
+  ],
+  activityTypes: [
+    TaxonomyTerm(id: 'activity_quiet_time', label: 'Wyciszenie'),
+  ],
+  contexts: [
+    TaxonomyTerm(id: 'context_home', label: 'dom'),
+  ],
+  soundCategories: [
+    TaxonomyTerm(id: 'sound_category_calm', label: 'Wyciszenie'),
+  ],
+);
+
+class _LocalizedMetadataContentLoader extends ContentLoader {
+  const _LocalizedMetadataContentLoader({
+    required this.taxonomy,
+  });
+
+  final ContentTaxonomy taxonomy;
+
+  @override
+  Future<ContentPackage> load() async {
+    return ContentPackage(
+      metadata: const ContentMetadata(
+        packageId: 'localized-test',
+        schemaVersion: 1,
+        version: '1.0.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: taxonomy,
+      playFilters: const [],
+      playIdeas: const [
+        PlayIdea(
+          id: 'play_metadata_test',
+          title: 'Soft treasure basket',
+          summary: 'Offer a few safe household textures to explore together.',
+          ageGroup: '6-18 months',
+          ageRangeMonths: AgeRangeMonths(min: 6, max: 18),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_medium',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home'],
+          neededItems: ['Soft cloth'],
+          steps: ['Offer a few safe household textures to explore together.'],
+          whatToExpect: 'A calm, simple activity.',
+          parentNote: 'Stay nearby.',
+          safetyNote: 'Keep items safe.',
+        ),
+      ],
+      sounds: const [],
+    );
+  }
+}
