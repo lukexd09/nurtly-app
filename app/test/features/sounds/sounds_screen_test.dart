@@ -4,6 +4,7 @@ import 'package:nurtly/core/content/content_loader.dart';
 import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/content_taxonomy.dart';
 import 'package:nurtly/core/content/sound_item.dart';
+import 'package:nurtly/core/localization/app_strings.dart';
 import 'package:nurtly/features/sounds/sounds_screen.dart';
 
 void main() {
@@ -110,6 +111,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: SoundDetailScreen(
+          strings: AppStrings.english,
           sound: SoundItem(
             id: 'sound_artwork_test',
             title: 'Artwork sound',

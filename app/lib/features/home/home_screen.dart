@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/localization/app_strings.dart';
 import '../../core/navigation/app_tab.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
@@ -160,11 +161,13 @@ class _HomeDensity {
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
+    required this.strings,
     required this.onSelectTab,
     required this.onOpenTodaysIdea,
     super.key,
   });
 
+  final AppStrings strings;
   final ValueChanged<AppTab> onSelectTab;
   final VoidCallback onOpenTodaysIdea;
 
@@ -177,26 +180,28 @@ class HomeScreen extends StatelessWidget {
       children: [
         _HomeHero(
           density: density,
+          strings: strings,
           onTap: () => onSelectTab(AppTab.play),
         ),
         SizedBox(height: density.afterHeroGap),
         _GentleStartCard(
           density: density,
+          strings: strings,
           onTap: onOpenTodaysIdea,
         ),
         SizedBox(height: density.afterGentleStartGap),
         _HomeQuickLink(
           density: density,
-          title: 'Save a small note',
-          subtitle: 'Keep the moment without overthinking it.',
+          title: strings.saveSmallNote,
+          subtitle: strings.saveSmallNoteSubtitle,
           icon: Icons.event_note_outlined,
           onTap: () => onSelectTab(AppTab.journal),
         ),
         const SizedBox(height: AppSpacing.md),
         _HomeQuickLink(
           density: density,
-          title: 'Start a calming sound',
-          subtitle: 'A quiet background for a softer pause.',
+          title: strings.startCalmingSound,
+          subtitle: strings.startCalmingSoundSubtitle,
           icon: Icons.graphic_eq,
           onTap: () => onSelectTab(AppTab.sounds),
         ),
@@ -208,10 +213,12 @@ class HomeScreen extends StatelessWidget {
 class _HomeHero extends StatelessWidget {
   const _HomeHero({
     required this.density,
+    required this.strings,
     required this.onTap,
   });
 
   final _HomeDensity density;
+  final AppStrings strings;
   final VoidCallback onTap;
 
   @override
@@ -259,23 +266,24 @@ class _HomeHero extends StatelessWidget {
                 ),
                 SizedBox(height: density.heroTopGap),
                 Text(
-                  'Start with one small moment',
+                  strings.startWithOneSmallMoment,
                   style: density.heroTitle,
                 ),
                 SizedBox(height: density.heroContentGap),
                 Text(
-                  'Choose a gentle idea, save a quiet note, or add a calming sound when the day feels full.',
+                  strings.homeHeroSubtitle,
                   style: density.heroSubtitle,
                 ),
                 SizedBox(height: density.heroBottomGap),
                 _HeroPillButton(
                   density: density,
+                  strings: strings,
                   onPressed: onTap,
                 ),
                 SizedBox(height: density.heroBottomGap),
                 Center(
                   child: Text(
-                    'NO PRESSURE, NO STREAKS, NO GOALS',
+                    strings.noPressureNoStreaksNoGoals,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.secondary.withAlpha(190),
@@ -296,10 +304,12 @@ class _HomeHero extends StatelessWidget {
 class _HeroPillButton extends StatelessWidget {
   const _HeroPillButton({
     required this.density,
+    required this.strings,
     required this.onPressed,
   });
 
   final _HomeDensity density;
+  final AppStrings strings;
   final VoidCallback onPressed;
 
   @override
@@ -315,12 +325,12 @@ class _HeroPillButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: density.heroCtaHorizontalPadding,
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
                 child: Text(
-                  'Find a play idea',
+                  strings.findAPlayIdea,
                   style: _HomeTypography.heroCta,
                 ),
               ),
@@ -337,17 +347,19 @@ class _HeroPillButton extends StatelessWidget {
 class _GentleStartCard extends StatelessWidget {
   const _GentleStartCard({
     required this.density,
+    required this.strings,
     required this.onTap,
   });
 
   final _HomeDensity density;
+  final AppStrings strings;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: "Open today's idea",
+      label: strings.openTodaysIdea,
       child: Material(
         color: AppColors.surface,
         shape: RoundedRectangleBorder(
@@ -380,17 +392,17 @@ class _GentleStartCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'A gentle start for now',
+                        strings.homeStartTitle,
                         style: AppTextStyles.cardTitle,
                       ),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(
-                        'Try one simple, screen-free moment before the day gets louder.',
+                        strings.homeStartDescription,
                         style: AppTextStyles.caption,
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        "Open today's idea",
+                        strings.openTodaysIdea,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w700,

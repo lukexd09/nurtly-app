@@ -127,6 +127,10 @@ void main() {
       ),
       findsOneWidget,
     );
+    expect(find.text('Ustawienia'), findsOneWidget);
+    expect(find.text('Ogólne'), findsOneWidget);
+    expect(find.text('Język'), findsWidgets);
+    expect(find.text('Prywatność i dane'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('settings-language-row')));
     await tester.pumpAndSettle();
@@ -139,6 +143,10 @@ void main() {
       ),
       findsOneWidget,
     );
+    expect(find.text('Settings'), findsOneWidget);
+    expect(find.text('General'), findsOneWidget);
+    expect(find.text('Language'), findsWidgets);
+    expect(find.text('Privacy & Data'), findsOneWidget);
   });
 
   testWidgets('Settings Privacy & Data opens the privacy screen',

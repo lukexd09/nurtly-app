@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/content/content_loader.dart';
+import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/content_source.dart';
 import 'package:nurtly/core/content/content_taxonomy.dart';
 import 'package:nurtly/core/content/play_idea.dart';
@@ -221,6 +222,65 @@ void main() {
     expect(polishChipLabels, isNot(contains('Rodzic: niskie')));
     expect(polishChipLabels, isNot(contains('Ba?agan')));
     expect(polishChipLabels, isNot(contains('?rednio')));
+  });
+
+  test('Polish bundled content stays free of corrupted user-facing strings',
+      () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+    final strings = _collectPolishUserFacingStrings(package).toList();
+    final joined = strings.join('\n');
+
+    expect(strings, isNotEmpty);
+    for (final value in strings) {
+      expect(value.contains('?'), isFalse, reason: value);
+      for (final fragment in [
+        'mi?',
+        '?ciere',
+        '?y?',
+        '??',
+        'P??',
+        '?cie',
+        'ksi??',
+        'cze??',
+      ]) {
+        expect(value.contains(fragment), isFalse, reason: value);
+      }
+    }
+
+    for (final phrase in [
+      'Koszyk miękkich skarbów',
+      'Miękka ściereczka',
+      'Drewniana łyżka',
+      'Umieść',
+      'Usiądź',
+      'Ścieżka z poduszek',
+      'Cichy kosz z książkami',
+      'Droga z ręcznika',
+      'Skarpetkowa pacynka mówi cześć',
+      'Tunel z poduszek',
+      'Obserwowanie pogody przez okno',
+      'Ratowanie naklejek',
+      'Przekładanie łyżką do kubka',
+      'Nazywanie faktur prania',
+      'Obserwowanie cieni',
+      'Ratowanie zabawki spod koca',
+    ]) {
+      expect(joined, contains(phrase), reason: phrase);
+    }
+
+    for (final phrase in [
+      'zapałek',
+      'tabela wymaga',
+      'Ręcznik do herbaty',
+      'Okno zegarka',
+      'Oferuj udane',
+      'Obserwuje cień',
+      'małą ilością ustawień',
+    ]) {
+      expect(joined, isNot(contains(phrase)), reason: phrase);
+    }
   });
 
   test('bundled content asset path resolves English content for English', () {
@@ -513,6 +573,20 @@ void main() {
     }
   });
 
+  test('Polish play ageGroup labels match ageRangeMonths', () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    for (final idea in package.playIdeas) {
+      expect(
+        idea.ageGroup,
+        _expectedPolishAgeGroupFor(idea),
+        reason: '${idea.id} ageGroup',
+      );
+    }
+  });
+
   test('play idea engagement values are controlled', () async {
     final package = await const ContentLoader().load();
     const allowedLevels = {
@@ -716,6 +790,93 @@ Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
       for (final sound in sounds)
         sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
     };
+
+String _expectedPolishAgeGroupFor(PlayIdea idea) {
+  final min = idea.ageRangeMonths.min;
+  final max = idea.ageRangeMonths.max;
+
+  return switch ((min, max)) {
+    (0, 12) => '0–12 miesięcy',
+    (0, 60) => '0–5 lat',
+    (6, 18) => '6–18 miesięcy',
+    (12, 36) => '12 miesięcy–3 lata',
+    (18, 36) => '18 miesięcy–3 lata',
+    (18, 48) => '18 miesięcy–4 lata',
+    (18, 60) => '18 miesięcy–5 lat',
+    (24, 48) => '2–4 lata',
+    (24, 60) => '2–5 lat',
+    (36, 72) => '3–6 lat',
+    _ => throw StateError(
+        'Unsupported Polish age range for ${idea.id}: $min–$max',
+      ),
+  };
+}
+
+Iterable<String> _collectPolishUserFacingStrings(ContentPackage package) sync* {
+  for (final term in package.taxonomy.places) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.messLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.childEngagementLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.parentInvolvementLevels) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.activityTypes) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.contexts) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final term in package.taxonomy.soundCategories) {
+    yield term.label;
+    if (term.chipLabel != null) {
+      yield term.chipLabel!;
+    }
+  }
+  for (final filter in package.playFilters) {
+    yield filter.label;
+  }
+  for (final idea in package.playIdeas) {
+    yield idea.title;
+    yield idea.summary;
+    yield idea.ageGroup;
+    for (final item in idea.neededItems) {
+      yield item;
+    }
+    for (final item in idea.steps) {
+      yield item;
+    }
+    yield idea.whatToExpect;
+    yield idea.parentNote;
+    yield idea.safetyNote;
+  }
+  for (final sound in package.sounds) {
+    yield sound.title;
+    yield sound.summary;
+  }
+}
 
 class _RawContentSource implements ContentSource {
   const _RawContentSource(this.content);

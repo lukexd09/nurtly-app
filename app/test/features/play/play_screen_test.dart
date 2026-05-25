@@ -6,6 +6,7 @@ import 'package:nurtly/core/content/content_taxonomy.dart';
 import 'package:nurtly/core/content/play_filter.dart';
 import 'package:nurtly/core/content/play_idea.dart';
 import 'package:nurtly/core/content/sound_item.dart';
+import 'package:nurtly/core/localization/app_strings.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 
 import '../../test_fakes/fake_content_loader.dart';
@@ -312,6 +313,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         home: PlayActivityDetailScreen(
+          strings: AppStrings.english,
           idea: PlayIdea(
             id: 'play_artwork_test',
             title: 'Artwork idea',
@@ -356,6 +358,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: PlayActivityDetailScreen(
+          strings: AppStrings.english,
           idea: PlayIdea(
             id: 'play_fallback_expectation',
             title: 'Fallback expectation idea',
@@ -400,6 +403,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: PlayActivityDetailScreen(
+            strings: AppStrings.english,
             idea: PlayIdea(
               id: 'play_artwork_test',
               title: 'Artwork idea',
@@ -478,6 +482,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: PlayActivityDetailScreen(
+            strings: AppStrings.english,
             idea: PlayIdea(
               id: 'play_without_sound',
               title: 'Soundless play',
@@ -513,6 +518,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: PlayActivityDetailScreen(
+            strings: AppStrings.english,
             idea: PlayIdea(
               id: 'play_fallback_test',
               title: 'Fallback idea',
