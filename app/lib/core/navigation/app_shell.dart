@@ -10,6 +10,7 @@ import '../../features/play/play_screen.dart';
 import '../../features/privacy/privacy_data_screen.dart';
 import '../../features/sounds/sounds_screen.dart';
 import '../content/suggested_sound_resolver.dart';
+import '../localization/app_strings.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -32,6 +33,8 @@ class _AppShellState extends State<AppShell> {
   late AppLanguage _selectedLanguage;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
+
+  AppStrings get _strings => AppStrings.forLanguage(_selectedLanguage);
 
   @override
   void initState() {
@@ -86,6 +89,7 @@ class _AppShellState extends State<AppShell> {
             idea: idea,
             taxonomy: package.taxonomy,
             suggestedSound: suggestedSound,
+            strings: _strings,
           ),
         ),
       );
@@ -94,13 +98,14 @@ class _AppShellState extends State<AppShell> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Today\'s idea is not available yet.')),
+        SnackBar(content: Text(_strings.todaysIdeaUnavailable)),
       );
     }
   }
 
   void _openSettings() {
     final navigator = Navigator.of(context);
+    final strings = _strings;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -122,14 +127,14 @@ class _AppShellState extends State<AppShell> {
                 ),
                 children: [
                   Text(
-                    'Settings',
+                    strings.settings,
                     style: AppTextStyles.cardTitle.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'General',
+                    strings.general,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w700,
@@ -138,7 +143,7 @@ class _AppShellState extends State<AppShell> {
                   const SizedBox(height: AppSpacing.xs),
                   _SettingsRow(
                     key: const ValueKey('settings-language-row'),
-                    title: 'Language',
+                    title: strings.languageLabel,
                     value: _selectedLanguage.displayName,
                     onTap: () async {
                       final selected = await _openLanguageSheet(
@@ -153,7 +158,7 @@ class _AppShellState extends State<AppShell> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Privacy',
+                    strings.privacy,
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w700,
@@ -162,12 +167,12 @@ class _AppShellState extends State<AppShell> {
                   const SizedBox(height: AppSpacing.xs),
                   _SettingsRow(
                     key: const ValueKey('settings-privacy-data'),
-                    title: 'Privacy & Data',
+                    title: strings.privacyData,
                     onTap: () {
                       Navigator.of(sheetContext).pop();
                       navigator.push(
                         MaterialPageRoute<void>(
-                          builder: (_) => const PrivacyDataScreen(),
+                          builder: (_) => PrivacyDataScreen(strings: strings),
                         ),
                       );
                     },
@@ -184,6 +189,7 @@ class _AppShellState extends State<AppShell> {
   Future<AppLanguage?> _openLanguageSheet(
     BuildContext settingsSheetContext,
   ) {
+    final strings = _strings;
     return showModalBottomSheet<AppLanguage>(
       context: settingsSheetContext,
       backgroundColor: AppColors.surface,
@@ -207,7 +213,7 @@ class _AppShellState extends State<AppShell> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Language',
+                    strings.languageLabel,
                     style: AppTextStyles.cardTitle.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -244,12 +250,19 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final screens = [
       HomeScreen(
+        strings: _strings,
         onSelectTab: _selectTab,
         onOpenTodaysIdea: _openTodaysIdea,
       ),
-      PlayScreen(contentLoader: _contentLoaderForCurrentLanguage()),
+      PlayScreen(
+        strings: _strings,
+        contentLoader: _contentLoaderForCurrentLanguage(),
+      ),
       const JournalScreen(),
-      SoundsScreen(contentLoader: _contentLoaderForCurrentLanguage()),
+      SoundsScreen(
+        strings: _strings,
+        contentLoader: _contentLoaderForCurrentLanguage(),
+      ),
     ];
 
     return Scaffold(
@@ -257,6 +270,7 @@ class _AppShellState extends State<AppShell> {
         children: [
           _ShellTopBar(
             currentTab: AppTab.values[_currentIndex],
+            strings: _strings,
             onSettingsTap: _openSettings,
           ),
           Expanded(
@@ -290,7 +304,7 @@ class _AppShellState extends State<AppShell> {
                 tab.selectedIcon,
                 color: AppColors.primary,
               ),
-              label: tab.label,
+              label: _strings.tabLabel(tab),
             ),
         ],
       ),
@@ -301,10 +315,12 @@ class _AppShellState extends State<AppShell> {
 class _ShellTopBar extends StatelessWidget {
   const _ShellTopBar({
     required this.currentTab,
+    required this.strings,
     required this.onSettingsTap,
   });
 
   final AppTab currentTab;
+  final AppStrings strings;
   final VoidCallback onSettingsTap;
 
   @override
@@ -331,8 +347,8 @@ class _ShellTopBar extends StatelessWidget {
             Expanded(
               child: Text(
                 currentTab == AppTab.home
-                    ? 'A quieter start'
-                    : currentTab.label,
+                    ? strings.homeShellSubtitle
+                    : strings.tabLabel(currentTab),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.body.copyWith(
@@ -347,7 +363,7 @@ class _ShellTopBar extends StatelessWidget {
                 side: BorderSide(color: AppColors.borderSoft),
               ),
               child: IconButton(
-                tooltip: 'Settings',
+                tooltip: strings.settingsTooltip,
                 color: AppColors.primary,
                 icon: const Icon(Icons.settings_outlined),
                 onPressed: onSettingsTap,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/localization/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -8,7 +9,12 @@ import '../../core/widgets/detail_section.dart';
 import '../../core/widgets/section_header.dart';
 
 class PrivacyDataScreen extends StatelessWidget {
-  const PrivacyDataScreen({super.key});
+  const PrivacyDataScreen({
+    super.key,
+    this.strings = AppStrings.english,
+  });
+
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -20,38 +26,35 @@ class PrivacyDataScreen extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                tooltip: 'Back',
+                tooltip: strings.back,
                 color: AppColors.primary,
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
-            const SectionHeader(
-              title: 'Privacy & Data',
-              subtitle: 'What Nurtly does with data in this MVP.',
+            SectionHeader(
+              title: strings.privacyTitle,
+              subtitle: strings.privacySubtitle,
             ),
             const SizedBox(height: AppSpacing.lg),
-            const DetailSection(
-              title: 'Current MVP behavior',
+            DetailSection(
+              title: strings.currentMvpBehavior,
               children: [
-                _PrivacyLine('No account is used.'),
+                _PrivacyLine(strings.noAccount),
                 _PrivacyLine(
-                  'Journal notes are currently kept only in this app session as a local in-memory prototype.',
+                  strings.noJournalCloudSync,
                 ),
-                _PrivacyLine('No cloud sync is currently enabled.'),
-                _PrivacyLine('No analytics are currently enabled.'),
-                _PrivacyLine('No ads are currently enabled.'),
-                _PrivacyLine(
-                  'Bundled sample content is included in the app.',
-                ),
+                _PrivacyLine(strings.noCloudSync),
+                _PrivacyLine(strings.noAnalytics),
+                _PrivacyLine(strings.noAds),
+                _PrivacyLine(strings.bundledSampleContent),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            const DetailNote(
-              title: 'Future changes',
-              text:
-                  'Future data-related changes should be introduced clearly before they are enabled.',
+            DetailNote(
+              title: strings.futureChangesTitle,
+              text: strings.futureChanges,
             ),
           ],
         ),

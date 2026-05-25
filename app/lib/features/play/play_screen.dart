@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/localization/app_strings.dart';
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/content_taxonomy.dart';
@@ -30,9 +31,11 @@ class PlayScreen extends StatefulWidget {
   const PlayScreen({
     super.key,
     this.contentLoader = const ContentLoader(),
+    this.strings = AppStrings.english,
   });
 
   final ContentLoader contentLoader;
+  final AppStrings strings;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -69,22 +72,23 @@ class _PlayScreenState extends State<PlayScreen> {
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.lg),
             children: [
-              const _PlayHeader(),
+              _PlayHeader(strings: widget.strings),
               const SizedBox(height: AppSpacing.lg),
               if (snapshot.connectionState != ConnectionState.done)
-                const LoadingCard(label: 'Loading play ideas...')
+                LoadingCard(label: widget.strings.loadingPlayIdeas)
               else if (snapshot.hasError)
-                const EmptyState(
-                  title: 'Play ideas could not be loaded.',
-                  message: 'Please try again in a moment.',
+                EmptyState(
+                  title: widget.strings.playIdeasCouldNotBeLoaded,
+                  message: widget.strings.pleaseTryAgain,
                 )
               else if (playIdeas == null || playIdeas.isEmpty)
-                const EmptyState(
-                  title: 'No play ideas available yet.',
-                  message: 'More simple ideas will appear here later.',
+                EmptyState(
+                  title: widget.strings.noPlayIdeasTitle,
+                  message: widget.strings.noPlayIdeasMessage,
                 )
               else ...[
                 _QuickFiltersModule(
+                  strings: widget.strings,
                   expanded: _filtersExpanded,
                   filters: package?.playFilters ?? const <PlayFilter>[],
                   selectedFilterIds: _selectedFilterIds,
@@ -111,7 +115,13 @@ class _PlayScreenState extends State<PlayScreen> {
                         },
                   activeCountLabel: _selectedFilterIds.isEmpty
                       ? null
-                      : '${_applyQuickFilters(playIdeas, package?.playFilters ?? const <PlayFilter>[], _selectedFilterIds).length} gentle ideas',
+                      : widget.strings.quickIdeasCount(
+                          _applyQuickFilters(
+                            playIdeas,
+                            package?.playFilters ?? const <PlayFilter>[],
+                            _selectedFilterIds,
+                          ).length,
+                        ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 ..._filteredPlayIdeaSection(
@@ -119,6 +129,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   package?.playFilters ?? const <PlayFilter>[],
                   package?.sounds ?? const <SoundItem>[],
                   package!.taxonomy,
+                  widget.strings,
                 ),
               ],
             ],
@@ -133,6 +144,7 @@ class _PlayScreenState extends State<PlayScreen> {
     List<PlayFilter> filters,
     List<SoundItem> sounds,
     ContentTaxonomy taxonomy,
+    AppStrings strings,
   ) {
     final filtered = _applyQuickFilters(
       playIdeas,
@@ -140,16 +152,15 @@ class _PlayScreenState extends State<PlayScreen> {
       _selectedFilterIds,
     );
     if (filtered.isEmpty) {
-      return const [
+      return [
         EmptyState(
-          title: 'Nothing here yet',
-          message:
-              'Try removing one filter for now. More gentle ideas are coming.',
+          title: strings.nothingHereYetTitle,
+          message: strings.nothingHereYetMessage,
         ),
       ];
     }
     return [
-      ..._playIdeaCards(filtered, sounds, taxonomy),
+      ..._playIdeaCards(filtered, sounds, taxonomy, strings),
     ];
   }
 
@@ -177,6 +188,7 @@ class _PlayScreenState extends State<PlayScreen> {
     List<PlayIdea> playIdeas,
     List<SoundItem> sounds,
     ContentTaxonomy taxonomy,
+    AppStrings strings,
   ) {
     return [
       for (var index = 0; index < playIdeas.length; index++) ...[
@@ -193,6 +205,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   idea: playIdeas[index],
                   taxonomy: taxonomy,
                   suggestedSound: suggestedSound,
+                  strings: strings,
                 ),
               ),
             );
@@ -205,6 +218,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
 class _QuickFiltersModule extends StatelessWidget {
   const _QuickFiltersModule({
+    required this.strings,
     required this.expanded,
     required this.filters,
     required this.selectedFilterIds,
@@ -214,6 +228,7 @@ class _QuickFiltersModule extends StatelessWidget {
     required this.activeCountLabel,
   });
 
+  final AppStrings strings;
   final bool expanded;
   final List<PlayFilter> filters;
   final Set<String> selectedFilterIds;
@@ -246,7 +261,7 @@ class _QuickFiltersModule extends StatelessWidget {
                   size: 18,
                 ),
                 label: Text(
-                  'Find the right fit',
+                  strings.findTheRightFit,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w700,
@@ -266,7 +281,7 @@ class _QuickFiltersModule extends StatelessWidget {
                   minimumSize: const Size(0, 0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: Text('Clear', style: AppTextStyles.caption),
+                child: Text(strings.clearFilters, style: AppTextStyles.caption),
               ),
           ],
         ),
@@ -313,7 +328,9 @@ class _QuickFiltersModule extends StatelessWidget {
 }
 
 class _PlayHeader extends StatelessWidget {
-  const _PlayHeader();
+  const _PlayHeader({required this.strings});
+
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -347,12 +364,12 @@ class _PlayHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Choose a gentle play idea',
+                    strings.chooseGentlePlayIdea,
                     style: AppTextStyles.screenTitle,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Simple screen-free moments for connection, calm, and everyday family rhythm.',
+                    strings.playSubtitle,
                     style: AppTextStyles.body,
                   ),
                 ],
@@ -400,12 +417,14 @@ class PlayActivityDetailScreen extends StatelessWidget {
   const PlayActivityDetailScreen({
     required this.idea,
     required this.taxonomy,
+    required this.strings,
     this.suggestedSound,
     super.key,
   });
 
   final PlayIdea idea;
   final ContentTaxonomy taxonomy;
+  final AppStrings strings;
   final SoundItem? suggestedSound;
 
   @override
@@ -418,24 +437,28 @@ class PlayActivityDetailScreen extends StatelessWidget {
             _PlayDetailHero(
               idea: idea,
               taxonomy: taxonomy,
+              strings: strings,
               onBackPressed: () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: AppSpacing.lg),
             if (suggestedSound != null) ...[
-              SuggestedSoundMiniPlayer(sound: suggestedSound!),
+              SuggestedSoundMiniPlayer(
+                sound: suggestedSound!,
+                strings: strings,
+              ),
               const SizedBox(height: AppSpacing.lg),
             ],
-            _ExpectationSection(idea: idea, taxonomy: taxonomy),
+            _ExpectationSection(idea: idea, strings: strings),
             const SizedBox(height: AppSpacing.md),
             DetailSection(
-              title: "What you'll need",
+              title: strings.whatYouNeed,
               children: [
                 for (final item in idea.neededItems) _BulletText(item),
               ],
             ),
             const SizedBox(height: AppSpacing.md),
             DetailSection(
-              title: 'Steps',
+              title: strings.steps,
               children: [
                 for (var index = 0; index < idea.steps.length; index++)
                   _NumberedText(
@@ -446,12 +469,12 @@ class PlayActivityDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             DetailNote(
-              title: 'Parent note',
+              title: strings.parentNote,
               text: idea.parentNote,
             ),
             const SizedBox(height: AppSpacing.md),
             DetailNote(
-              title: 'Safety note',
+              title: strings.safetyNote,
               text: idea.safetyNote,
             ),
           ],
@@ -462,9 +485,10 @@ class PlayActivityDetailScreen extends StatelessWidget {
 }
 
 class _DetailBackButton extends StatelessWidget {
-  const _DetailBackButton({required this.onPressed});
+  const _DetailBackButton({required this.onPressed, required this.strings});
 
   final VoidCallback onPressed;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -476,7 +500,7 @@ class _DetailBackButton extends StatelessWidget {
           side: BorderSide(color: AppColors.borderSoft),
         ),
         child: IconButton(
-          tooltip: 'Back',
+          tooltip: strings.back,
           color: AppColors.primary,
           icon: const Icon(Icons.arrow_back),
           onPressed: onPressed,
@@ -490,11 +514,13 @@ class _PlayDetailHero extends StatelessWidget {
   const _PlayDetailHero({
     required this.idea,
     required this.taxonomy,
+    required this.strings,
     required this.onBackPressed,
   });
 
   final PlayIdea idea;
   final ContentTaxonomy taxonomy;
+  final AppStrings strings;
   final VoidCallback onBackPressed;
 
   @override
@@ -517,7 +543,7 @@ class _PlayDetailHero extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _DetailBackButton(onPressed: onBackPressed),
+            _DetailBackButton(onPressed: onBackPressed, strings: strings),
             const SizedBox(height: AppSpacing.sm),
             Text(idea.title, style: AppTextStyles.screenTitle),
             const SizedBox(height: AppSpacing.xs),
@@ -534,81 +560,33 @@ class _PlayDetailHero extends StatelessWidget {
 class _ExpectationSection extends StatelessWidget {
   const _ExpectationSection({
     required this.idea,
-    required this.taxonomy,
+    required this.strings,
   });
 
   final PlayIdea idea;
-  final ContentTaxonomy taxonomy;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     return DetailSection(
-      title: 'What to expect',
+      title: strings.whatToExpect,
       children: [
-        Text(_expectationSummary(idea, taxonomy), style: AppTextStyles.body),
+        Text(_expectationSummary(idea, strings), style: AppTextStyles.body),
       ],
     );
   }
 }
 
-String _expectationSummary(PlayIdea idea, ContentTaxonomy taxonomy) {
+String _expectationSummary(PlayIdea idea, AppStrings strings) {
   if (idea.whatToExpect.trim().isNotEmpty) {
     return idea.whatToExpect;
   }
 
-  final mess = _messPhrase(taxonomy.labelForMessLevel(idea.messLevel));
-  final childEnergy = _childEnergyPhrase(
-      taxonomy.labelForChildEngagement(idea.childEngagement));
-  final parentEffort = _parentEffortPhrase(
-      taxonomy.labelForParentInvolvement(idea.parentInvolvement));
-  final guidance = _parentGuidance(
-      taxonomy.labelForParentInvolvement(idea.parentInvolvement));
-
-  if (mess == null ||
-      childEnergy == null ||
-      parentEffort == null ||
-      guidance == null) {
-    return 'Choose this when it feels like a good fit for your space, your child, and the energy you have available.';
-  }
-
-  return 'A $childEnergy, $mess activity that $parentEffort. $guidance';
-}
-
-String? _messPhrase(String value) {
-  return switch (value) {
-    'Low' => 'low-mess',
-    'Medium' => 'slightly messy',
-    'High' => 'more hands-on cleanup',
-    _ => null,
-  };
-}
-
-String? _childEnergyPhrase(String value) {
-  return switch (value) {
-    'Low' => 'quiet',
-    'Medium' => 'gently engaging',
-    'High' => 'more active',
-    _ => null,
-  };
-}
-
-String? _parentEffortPhrase(String value) {
-  return switch (value) {
-    'Low' => 'does not need much setup',
-    'Medium' => 'works best with a little shared attention',
-    'High' => 'works best when you have energy to join in',
-    _ => null,
-  };
-}
-
-String? _parentGuidance(String value) {
-  return switch (value) {
-    'Low' =>
-      'Stay nearby, offer gentle guidance, and let your child explore at their own pace.',
-    'Medium' => 'Join in for a few moments and keep the play easy.',
-    'High' => 'Choose it when active participation feels available.',
-    _ => null,
-  };
+  return strings.expectationFallback(
+    messId: idea.messLevel,
+    childId: idea.childEngagement,
+    parentId: idea.parentInvolvement,
+  );
 }
 
 class _PlayIdeaMetadata extends StatelessWidget {

@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
+import '../../core/localization/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
@@ -22,9 +23,11 @@ class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
     super.key,
     this.contentLoader = const ContentLoader(),
+    this.strings = AppStrings.english,
   });
 
   final ContentLoader contentLoader;
+  final AppStrings strings;
 
   @override
   State<SoundsScreen> createState() => _SoundsScreenState();
@@ -63,22 +66,22 @@ class _SoundsScreenState extends State<SoundsScreen> {
               AppSpacing.xxl,
             ),
             children: [
-              const SectionHeader(
-                title: 'Sounds',
-                subtitle: 'Choose a sound for a quiet moment.',
+              SectionHeader(
+                title: widget.strings.soundsTitle,
+                subtitle: widget.strings.soundsSubtitle,
               ),
               const SizedBox(height: AppSpacing.lg),
               if (snapshot.connectionState != ConnectionState.done)
-                const LoadingCard(label: 'Loading sounds...')
+                LoadingCard(label: widget.strings.loadingSounds)
               else if (snapshot.hasError)
-                const EmptyState(
-                  title: 'Sounds could not be loaded.',
-                  message: 'Please try again in a moment.',
+                EmptyState(
+                  title: widget.strings.soundsCouldNotBeLoaded,
+                  message: widget.strings.pleaseTryAgain,
                 )
               else if (sounds == null || sounds.isEmpty)
-                const EmptyState(
-                  title: 'No sounds available yet.',
-                  message: 'Quiet sound options will appear here later.',
+                EmptyState(
+                  title: widget.strings.noSoundsTitle,
+                  message: widget.strings.noSoundsMessage,
                 )
               else
                 ..._soundCards(sounds),
@@ -95,10 +98,14 @@ class _SoundsScreenState extends State<SoundsScreen> {
         if (index > 0) const SizedBox(height: AppSpacing.md),
         _SoundCard(
           sound: sounds[index],
+          strings: widget.strings,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => SoundDetailScreen(sound: sounds[index]),
+                builder: (_) => SoundDetailScreen(
+                  sound: sounds[index],
+                  strings: widget.strings,
+                ),
               ),
             );
           },
@@ -111,10 +118,12 @@ class _SoundsScreenState extends State<SoundsScreen> {
 class _SoundCard extends StatelessWidget {
   const _SoundCard({
     required this.sound,
+    required this.strings,
     required this.onTap,
   });
 
   final SoundItem sound;
+  final AppStrings strings;
   final VoidCallback onTap;
 
   @override
@@ -139,7 +148,7 @@ class _SoundCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                _SoundMetadata(sound: sound),
+                _SoundMetadata(sound: sound, strings: strings),
               ],
             ),
           ),
@@ -158,10 +167,12 @@ class _SoundCard extends StatelessWidget {
 class SoundDetailScreen extends StatefulWidget {
   const SoundDetailScreen({
     required this.sound,
+    required this.strings,
     super.key,
   });
 
   final SoundItem sound;
+  final AppStrings strings;
 
   @override
   State<SoundDetailScreen> createState() => _SoundDetailScreenState();
@@ -243,7 +254,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             return;
           }
           setState(() {
-            _errorMessage = 'Could not play';
+            _errorMessage = widget.strings.couldNotPlay;
             _isLoading = false;
             _draggingProgress = null;
           });
@@ -259,12 +270,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         return;
       }
       setState(() {
-        _errorMessage = 'Could not play';
+        _errorMessage = widget.strings.couldNotPlay;
         _isLoading = false;
         _draggingProgress = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not play this sound.')),
+        SnackBar(content: Text(widget.strings.couldNotPlaySound)),
       );
     }
   }
@@ -362,21 +373,21 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   String _statusText() {
     if (_errorMessage != null) {
-      return 'Could not play';
+      return widget.strings.couldNotPlay;
     }
     if (_isLoading) {
-      return 'Loading';
+      return widget.strings.loading;
     }
     if (_player.playing) {
-      return 'Playing';
+      return widget.strings.playing;
     }
     if (_player.position == Duration.zero) {
-      return 'Ready';
+      return widget.strings.ready;
     }
     if (_player.processingState == ProcessingState.ready) {
-      return 'Paused';
+      return widget.strings.paused;
     }
-    return 'Ready';
+    return widget.strings.ready;
   }
 
   String _formatDuration(Duration duration) {
@@ -392,7 +403,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       return null;
     }
     final remaining = _remainingSessionDuration ?? selected;
-    return '${_formatDuration(remaining)} left';
+    return '${_formatDuration(remaining)} ${widget.strings.left}';
   }
 
   Duration _durationOrZero() {
@@ -436,7 +447,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
                 ),
                 child: IconButton(
                   key: const ValueKey('sound-detail-back-button'),
-                  tooltip: 'Back',
+                  tooltip: widget.strings.back,
                   color: AppColors.primary,
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),
@@ -460,6 +471,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
             const SizedBox(height: 2),
             _SoundMetadata(
               sound: widget.sound,
+              strings: widget.strings,
               showUnlockType: false,
             ),
             const SizedBox(height: 4),
@@ -569,8 +581,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         const SizedBox(width: AppSpacing.xs),
         Text(
           finiteTimerSelected
-              ? 'Auto-fade enabled'
-              : 'Auto-fade available with timer',
+              ? widget.strings.autoFadeEnabled
+              : widget.strings.autoFadeAvailableWithTimer,
           style: AppTextStyles.caption.copyWith(
             color:
                 finiteTimerSelected ? AppColors.primary : AppColors.textMuted,
@@ -593,7 +605,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
-            'Keep volume comfortable and device away from child.',
+            widget.strings.soundSafetyNote,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textMuted,
               height: 1.1,
@@ -695,7 +707,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
           ),
           onPressed: _togglePlayPause,
           child: Tooltip(
-            message: isPlaying ? 'Pause' : 'Play',
+            message: isPlaying ? widget.strings.pause : widget.strings.play,
             child: Icon(
               isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
               size: 44,
@@ -724,10 +736,12 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 class _SoundMetadata extends StatelessWidget {
   const _SoundMetadata({
     required this.sound,
+    required this.strings,
     this.showUnlockType = true,
   });
 
   final SoundItem sound;
+  final AppStrings strings;
   final bool showUnlockType;
 
   @override
@@ -744,7 +758,7 @@ class _SoundMetadata extends StatelessWidget {
 
   String _displayUnlockType(SoundItem sound) {
     if (sound.unlockType.toLowerCase() == 'free') {
-      return 'Free';
+      return strings.free;
     }
     return sound.unlockType;
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../../core/content/sound_item.dart';
+import '../../../core/localization/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radii.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -12,9 +13,14 @@ import '../audio/looping_sound_loader.dart';
 import 'sound_artwork.dart';
 
 class SuggestedSoundMiniPlayer extends StatefulWidget {
-  const SuggestedSoundMiniPlayer({required this.sound, super.key});
+  const SuggestedSoundMiniPlayer({
+    required this.sound,
+    required this.strings,
+    super.key,
+  });
 
   final SoundItem sound;
+  final AppStrings strings;
 
   @override
   State<SuggestedSoundMiniPlayer> createState() =>
@@ -84,7 +90,7 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
           await _player.pause();
           if (mounted) {
             setState(() {
-              _errorMessage = 'Could not start this sound.';
+              _errorMessage = widget.strings.couldNotPlaySound;
             });
           }
         }),
@@ -95,7 +101,7 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
       }
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Could not start this sound.';
+        _errorMessage = widget.strings.couldNotPlaySound;
       });
     }
   }
@@ -121,7 +127,7 @@ class _SuggestedSoundMiniPlayerState extends State<SuggestedSoundMiniPlayer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Suggested sound',
+              widget.strings.suggestedSound,
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w700,
