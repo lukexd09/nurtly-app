@@ -102,7 +102,7 @@ void main() {
     await _pumpNurtlyApp(tester, size: const Size(600, 4000));
 
     await tester.tap(find.byTooltip('Settings'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 600));
     await tester.ensureVisible(
       find.byKey(const ValueKey('settings-language-row')),
     );

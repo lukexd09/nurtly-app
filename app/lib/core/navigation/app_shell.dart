@@ -112,83 +112,67 @@ class _AppShellState extends State<AppShell> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.lg,
-                    AppSpacing.md,
-                    AppSpacing.lg,
-                    AppSpacing.lg,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 44,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: AppColors.borderSoft,
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        'Settings',
-                        style: AppTextStyles.cardTitle.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        'General',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      _SettingsRow(
-                        key: const ValueKey('settings-language-row'),
-                        title: 'Language',
-                        value: _selectedLanguage.displayName,
-                        onTap: () async {
-                          final selected = await _openLanguageSheet(
-                            sheetContext,
-                          );
-                          if (selected == null) {
-                            return;
-                          }
-                          selectLanguage(selected);
-                          setSheetState(() {});
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        'Privacy',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      _SettingsRow(
-                        key: const ValueKey('settings-privacy-data'),
-                        title: 'Privacy & Data',
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          navigator.push(
-                            MaterialPageRoute<void>(
-                              builder: (_) => const PrivacyDataScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+              child: ListView(
+                key: const ValueKey('settings-sheet-scroll'),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
                 ),
+                children: [
+                  Text(
+                    'Settings',
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'General',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-language-row'),
+                    title: 'Language',
+                    value: _selectedLanguage.displayName,
+                    onTap: () async {
+                      final selected = await _openLanguageSheet(
+                        sheetContext,
+                      );
+                      if (selected == null) {
+                        return;
+                      }
+                      selectLanguage(selected);
+                      setSheetState(() {});
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Privacy',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-privacy-data'),
+                    title: 'Privacy & Data',
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      navigator.push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const PrivacyDataScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             );
           },
@@ -209,52 +193,46 @@ class _AppShellState extends State<AppShell> {
       ),
       builder: (languageSheetContext) {
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.md,
-              AppSpacing.lg,
-              AppSpacing.lg,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 44,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.borderSoft,
-                      borderRadius: BorderRadius.circular(999),
+          child: SingleChildScrollView(
+            key: const ValueKey('language-sheet-scroll'),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.xs,
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Language',
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  'Language',
-                  style: AppTextStyles.cardTitle.copyWith(
-                    fontWeight: FontWeight.w800,
+                  const SizedBox(height: AppSpacing.xs),
+                  _LanguageChoiceRow(
+                    key: const ValueKey('language-choice-polish'),
+                    title: 'Polski',
+                    selected: _selectedLanguage == AppLanguage.polish,
+                    onTap: () {
+                      Navigator.of(languageSheetContext)
+                          .pop(AppLanguage.polish);
+                    },
                   ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                _LanguageChoiceRow(
-                  key: const ValueKey('language-choice-polish'),
-                  title: 'Polski',
-                  selected: _selectedLanguage == AppLanguage.polish,
-                  onTap: () {
-                    Navigator.of(languageSheetContext).pop(AppLanguage.polish);
-                  },
-                ),
-                _LanguageChoiceRow(
-                  key: const ValueKey('language-choice-english'),
-                  title: 'English',
-                  selected: _selectedLanguage == AppLanguage.english,
-                  onTap: () {
-                    Navigator.of(languageSheetContext).pop(AppLanguage.english);
-                  },
-                ),
-              ],
+                  _LanguageChoiceRow(
+                    key: const ValueKey('language-choice-english'),
+                    title: 'English',
+                    selected: _selectedLanguage == AppLanguage.english,
+                    onTap: () {
+                      Navigator.of(languageSheetContext)
+                          .pop(AppLanguage.english);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -404,6 +382,9 @@ class _SettingsRow extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        dense: true,
+        visualDensity: VisualDensity.compact,
+        minVerticalPadding: 0,
         title: Text(title),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -450,6 +431,9 @@ class _LanguageChoiceRow extends StatelessWidget {
         ),
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          dense: true,
+          visualDensity: VisualDensity.compact,
+          minVerticalPadding: 0,
           title: Text(title),
           trailing: selected
               ? const Icon(Icons.check_rounded, color: AppColors.primary)
