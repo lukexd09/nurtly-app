@@ -11,8 +11,8 @@ class TaxonomyTerm {
 
   factory TaxonomyTerm.fromJson(Map<String, Object?> json) {
     return TaxonomyTerm(
-      id: readString(json, 'id'),
-      label: readString(json, 'label'),
+      id: _readTaxonomyString(json, 'id'),
+      label: _readTaxonomyString(json, 'label'),
     );
   }
 }
@@ -62,4 +62,12 @@ List<TaxonomyTerm> _readTerms(Map<String, Object?> json, String key) {
   }
 
   return terms;
+}
+
+String _readTaxonomyString(Map<String, Object?> json, String key) {
+  final value = readString(json, key).trim();
+  if (value.isEmpty) {
+    throw FormatException("Expected non-blank taxonomy '$key'.");
+  }
+  return value;
 }
