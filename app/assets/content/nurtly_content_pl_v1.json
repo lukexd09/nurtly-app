@@ -234,8 +234,8 @@
   "playIdeas": [
     {
       "id": "play_soft_treasure_basket",
-      "title": "Miękki kosz na skarby",
-      "summary": "Zaproponuj kilka bezpiecznych tekstur domowych do wspólnego odkrywania.",
+      "title": "Koszyk mi?kkich skarb?w",
+      "summary": "Zaproponuj kilka bezpiecznych domowych faktur do wsp?lnego odkrywania.",
       "ageGroup": "6-18 miesięcy",
       "place": "place_home",
       "messLevel": "mess_low",
@@ -243,18 +243,17 @@
       "parentInvolvement": "parent_involvement_low",
       "activityType": "activity_sensory",
       "neededItems": [
-        "Miękka ściereczka",
-        "Drewniana łyżka",
-        "Duży bezpieczny pojemnik"
+        "Mi?kka ?ciereczka",
+        "Drewniana ?y?ka",
+        "Du?y bezpieczny pojemnik"
       ],
       "steps": [
-        "Umieść elementy w pojemniku.",
-        "Usiądź w pobliżu i pozwól dziecku wybrać, czego dotknąć.",
-        "Nazywaj tekstury podczas ich eksploracji."
+        "Umie?? przedmioty w pojemniku.",
+        "Usi?d? obok i pozw?l dziecku wybra?, czego dotkn??."
       ],
-      "whatToExpect": "Niewielka ilość bałaganu, delikatnie wciągająca pauza z bardzo małą ilością ustawień. Pozostań w pobliżu, udzielaj prostych wskazówek i pozwól dziecku odkrywać świat we własnym tempie.",
-      "parentNote": "Używaj tylko tego, co wydaje się łatwe do zebrania; dwie tekstury mogą wystarczyć.",
-      "safetyNote": "Używaj wyłącznie dużych, czystych przedmiotów, których nie można połknąć.",
+      "whatToExpect": "Niewielki ba?agan i spokojna, wci?gaj?ca chwila z bardzo ma?? ilo?ci? przygotowa?. Zosta? w pobli?u, dawaj proste wskaz?wki i pozw?l dziecku odkrywa? ?wiat we w?asnym tempie.",
+      "parentNote": "U?yj tylko tego, co ?atwo zebra?; dwie faktury mog? wystarczy?.",
+      "safetyNote": "U?ywaj wy??cznie du?ych, czystych przedmiot?w, kt?rych nie mo?na po?kn??.",
       "contexts": [
         "context_home",
         "context_baby",
@@ -269,8 +268,8 @@
     },
     {
       "id": "play_couch_cushion_tunnel",
-      "title": "Tunel pod kanapę",
-      "summary": "Zrób mały tunel, w którym będzie mógł się czołgać, podglądać lub przepuszczać zabawkę.",
+      "title": "Tunel z poduszek",
+      "summary": "Zbuduj ma?y tunel, przez kt?ry dziecko mo?e si? czo?ga?, zagl?da? albo przepycha? zabawk?.",
       "ageGroup": "12 miesięcy-3 lata",
       "place": "place_living_room",
       "messLevel": "mess_medium",
@@ -282,13 +281,13 @@
         "Mała miękka zabawka"
       ],
       "steps": [
-        "Połóż poduszki na podłodze, pozostawiając między nimi niewielką wolną przestrzeń.",
-        "Poproś dziecko, aby raczkowało, podglądało lub przepuszczało zabawkę.",
-        "Pozostań w pobliżu i zmień tunel, jeśli zacznie się chwiać."
+        "U??? poduszki tak, by stworzy? niski prze?wit.",
+        "Poka? dziecku, jak mo?na pod nim przej?? lub zajrze?.",
+        "W razie potrzeby lekko popraw konstrukcj? i zachowaj prostot?."
       ],
-      "whatToExpect": "Później spodziewaj się więcej ruchu i małego resetu pokoju. Dołącz na kilka minut, a następnie ułóż tunel tak prosty, jak pozwala na to Twoja przestrzeń.",
-      "parentNote": "Krótka konfiguracja może zamienić znajome meble w nową przestrzeń do zabawy.",
-      "safetyNote": "Tunel powinien znajdować się nisko, stabilnie i z dala od ostrych krawędzi mebli.",
+      "whatToExpect": "P??niej mo?e pojawi? si? wi?cej ruchu i ma?e uporz?dkowanie pokoju. Do??cz na kilka minut, a potem zostaw tunel tak prosty, jak pozwala na to wasza przestrze?.",
+      "parentNote": "Kr?tkie przygotowanie mo?e zamieni? znajome meble w now? przestrze? do zabawy.",
+      "safetyNote": "Tunel powinien by? niski, stabilny i z dala od ostrych kraw?dzi mebli.",
       "contexts": [
         "context_home",
         "context_toddler",
@@ -302,8 +301,8 @@
     },
     {
       "id": "play_kitchen_spoon_rhythm",
-      "title": "Rytm łyżki kuchennej",
-      "summary": "Stukaj delikatne wzory bezpiecznymi przedmiotami kuchennymi.",
+      "title": "Rytm kuchennej ?y?ki",
+      "summary": "Stukaj cicho prosty rytm bezpiecznymi przedmiotami kuchennymi.",
       "ageGroup": "18 miesięcy-4 lata",
       "place": "place_kitchen",
       "messLevel": "mess_low",
@@ -311,18 +310,15 @@
       "parentInvolvement": "parent_involvement_medium",
       "activityType": "activity_music",
       "neededItems": [
-        "Drewniana łyżka",
-        "Plastikowa miska",
-        "Ręcznik do herbaty"
+        "Drewniana ?y?ka"
       ],
       "steps": [
-        "Połóż miskę na ściereczce, aby złagodzić dźwięk.",
-        "Stuknij powolny wzór i wstrzymaj, aż dziecko odpowie.",
-        "Wypróbuj ciche stukanie, delikatne zadrapania i delikatne uderzenia."
+        "Poka? prosty rytm i pozw?l go powt?rzy?.",
+        "Zatrzymajcie si?, gdy dziecko straci zainteresowanie."
       ],
-      "whatToExpect": "Może stać się żywy, ale konfiguracja pozostaje mała i łatwa do odłożenia. Utrzymuj miękki rytm i dołączaj tylko na tyle, na ile czujesz się dobrze.",
-      "parentNote": "Utrzymuj poziom dźwięku komfortowy dla wszystkich w pobliżu.",
-      "safetyNote": "Używaj solidnych, czystych przedmiotów i nadzoruj, gdy dziecko trzyma łyżkę.",
+      "whatToExpect": "Mo?e zrobi? si? ?ywiej, ale przygotowanie pozostaje ma?e i ?atwe do od?o?enia. Zosta? przy delikatnym rytmie i do??czaj tylko na tyle, na ile masz ochot?.",
+      "parentNote": "Utrzymuj poziom d?wi?ku komfortowy dla wszystkich w pobli?u.",
+      "safetyNote": "U?ywaj solidnych, czystych przedmiot?w i nadzoruj, gdy dziecko trzyma ?y?k?.",
       "contexts": [
         "context_kitchen",
         "context_toddler",
@@ -336,8 +332,8 @@
     },
     {
       "id": "play_laundry_color_sorting",
-      "title": "Sortowanie kolorów prania",
-      "summary": "Posortuj mały stos czystego prania według koloru lub rodzaju.",
+      "title": "Sortowanie kolor?w prania",
+      "summary": "Posortuj ma?y stos czystego prania wed?ug koloru lub rodzaju.",
       "ageGroup": "2-5 lat",
       "place": "place_home",
       "messLevel": "mess_low",
@@ -353,9 +349,9 @@
         "Wybierz jeden prosty pomysł na sortowanie, na przykład skarpetki i koszule lub jasne i ciemne.",
         "Pozwól dziecku umieścić każdy przedmiot w koszyku."
       ],
-      "whatToExpect": "Prosty sposób na przekształcenie znanych obowiązków w małą wspólną chwilę. Trzymaj się blisko, nazwij to, co zauważysz i pozwól, aby sortowanie pozostało niedoskonałe.",
-      "parentNote": "Nie ma problemu, jeśli sortowanie jest niedoskonałe; niech ta chwila będzie spokojna.",
-      "safetyNote": "Unikaj przedmiotów z luźnymi sznurkami, małymi częściami lub produktami do prania w pobliżu.",
+      "whatToExpect": "Prosty spos?b na zamian? codziennego obowi?zku w ma?? wsp?ln? chwil?. Zosta? blisko, nazywaj to, co widzisz, i pozw?l, by sortowanie pozosta?o niedoskona?e.",
+      "parentNote": "Nie szkodzi, je?eli sortowanie nie b?dzie idealne; niech to b?dzie spokojna chwila.",
+      "safetyNote": "Unikaj przedmiot?w z lu?nymi sznurkami, ma?ymi cz??ciami lub detergent?w w pobli?u.",
       "contexts": [
         "context_home",
         "context_practical_life",
@@ -369,8 +365,8 @@
     },
     {
       "id": "play_window_weather_watch",
-      "title": "Okno zegarka pogodowego",
-      "summary": "Wyjrzyj na zewnątrz i porozmawiaj o tym, co zauważyłeś.",
+      "title": "Obserwowanie pogody przez okno",
+      "summary": "Wyjrzyj na zewn?trz i porozmawiaj o tym, co zauwa?asz.",
       "ageGroup": "18 miesięcy-3 lata",
       "place": "place_window",
       "messLevel": "mess_low",
@@ -385,9 +381,9 @@
         "Wskaż jedną rzecz, którą zauważyłeś na zewnątrz.",
         "Używaj krótkich, spokojnych słów, takich jak pochmurno, jasno, wietrznie lub cicho."
       ],
-      "whatToExpect": "Cicha, pozbawiona bałaganu przerwa na cały dzień. Powiedz kilka słów, kieruj się uwagą dziecka i pozwól, aby okno wykonało większość pracy.",
-      "parentNote": "Nawet trzydzieści sekund uwagi może złagodzić tempo.",
-      "safetyNote": "Zamykaj okna i uważnie nadzoruj.",
+      "whatToExpect": "Cicha, bezba?aganowa przerwa na ca?y dzie?. Powiedz kilka s??w, pod??aj za uwag? dziecka i pozw?l, by okno wykona?o wi?kszo?? pracy.",
+      "parentNote": "Nawet trzydzie?ci sekund uwagi mo?e spokojnie zwolni? tempo.",
+      "safetyNote": "Zamykaj okna i uwa?nie nadzoruj.",
       "contexts": [
         "context_home",
         "context_quiet",
@@ -401,8 +397,8 @@
     },
     {
       "id": "play_sticker_rescue",
-      "title": "Naklejka ratunkowa",
-      "summary": "Umieść kilka naklejek na papierze i poproś dziecko, aby je odkleiło.",
+      "title": "Ratowanie naklejek",
+      "summary": "Umie?? kilka naklejek na papierze i popro? dziecko, aby je odkleja?o.",
       "ageGroup": "2-5 lat",
       "place": "place_table",
       "messLevel": "mess_medium",
@@ -418,9 +414,9 @@
         "Poproś dziecko, aby odkleiło każdą naklejkę i przeniosło ją w nowe miejsce.",
         "Porozmawiajcie o tym, gdzie ląduje każda naklejka."
       ],
-      "whatToExpect": "Skupiony moment przy stole z odrobiną ciekawości polegającej na odrywaniu i umieszczaniu. Rozmieść tylko kilka naklejek, aby aktywność była niewielka.",
-      "parentNote": "Rozpoczęcie od dwóch lub trzech naklejek sprawia, że ​​wybór jest delikatny.",
-      "safetyNote": "Używaj dużych naklejek i trzymaj małe elementy podkładu poza zasięgiem.",
+      "whatToExpect": "Skupiony moment przy stole z odrobin? rado?ci z odklejania i przyklejania. Roz??? tylko kilka naklejek, aby aktywno?? pozosta?a ma?a.",
+      "parentNote": "Ta zabawa daje troch? ?wiczenia d?oniom i jest ?atwa do zrobienia przy ma?ym stole.",
+      "safetyNote": "Korzystaj z du?ych naklejek i pilnuj, by dziecko nie wk?ada?o ich do ust.",
       "contexts": [
         "context_home",
         "context_toddler",
@@ -434,8 +430,8 @@
     },
     {
       "id": "play_pillow_path",
-      "title": "Ścieżka poduszek",
-      "summary": "Połóż poduszki na podłodze, aby móc chodzić, czołgać się lub balansować z pomocą.",
+      "title": "?cie?ka poduszek",
+      "summary": "Po??? poduszki na pod?odze, aby mo?na by?o po nich chodzi?, czo?ga? si? lub balansowa? z pomoc?.",
       "ageGroup": "2-4 lata",
       "place": "place_bedroom",
       "messLevel": "mess_medium",
@@ -443,17 +439,16 @@
       "parentInvolvement": "parent_involvement_high",
       "activityType": "activity_movement",
       "neededItems": [
-        "Poduszki",
-        "Wyczyść powierzchnię podłogi"
+        "Uprz?tni?ty kawa?ek pod?ogi"
       ],
       "steps": [
         "Umieść poduszki na krótkiej ścieżce na podłodze.",
         "Trzymaj dziecko za rękę, jeśli potrzebuje wsparcia.",
         "Spróbuj chodzić, czołgać się lub przesuwać miękką zabawkę wzdłuż ścieżki."
       ],
-      "whatToExpect": "Bardziej aktywny pomysł na chwilę, kiedy można się ściśle przyłączyć. Staraj się, aby ścieżka była krótka, aby zapewnić zabawę, a nie dużą konfigurację.",
-      "parentNote": "Dostosuj ścieżkę do swojej energii i przestrzeni, którą już posiadasz.",
-      "safetyNote": "Użyj wolnej powierzchni podłogi i zatrzymaj się, jeśli poduszki zaczną się zsuwać.",
+      "whatToExpect": "Troch? wi?cej ruchu i lekkie przestawienie poduszek na koniec. Zosta? przy kr?tkiej ?cie?ce, aby przestrze? pozosta?a spokojna.",
+      "parentNote": "To prosty spos?b na ruch w ?rodku dnia bez wielkiego przygotowania.",
+      "safetyNote": "U?ywaj tylko stabilnych poduszek i uwa?nie obserwuj ka?dy krok.",
       "contexts": [
         "context_home",
         "context_movement",
@@ -467,8 +462,8 @@
     },
     {
       "id": "play_quiet_book_basket",
-      "title": "Cichy kosz na książki",
-      "summary": "Przygotuj mały kosz książek, aby zapewnić sobie spokojną wspólną przerwę.",
+      "title": "Cichy kosz na ksi??ki",
+      "summary": "Przygotuj ma?y kosz ksi??ek, aby zapewni? spokojn? wsp?ln? przerw?.",
       "ageGroup": "0-5 lat",
       "place": "place_any_quiet_spot",
       "messLevel": "mess_low",
@@ -484,9 +479,9 @@
         "Pozwól dziecku wybrać jedną książkę.",
         "Przyjrzyjcie się obrazkom, nazwijcie jeden szczegół lub usiądźcie razem w ciszy."
       ],
-      "whatToExpect": "Pauza niewymagająca wysiłku i bałaganu, gdy każdy potrzebuje czegoś bardziej miękkiego. Pozwól dziecku wybrać tempo, nawet jeśli oznacza to patrzenie tylko na jedną stronę.",
-      "parentNote": "Może to być spokojna przerwa, a nie pełna sesja czytania.",
-      "safetyNote": "Dla młodszych dzieci używaj solidnych książek bez podartych stron i luźnych fragmentów.",
+      "whatToExpect": "Cisza, blisko?? i bardzo ma?e przygotowanie. Wybierz kilka ksi??ek i pozw?l dziecku przewraca? strony we w?asnym tempie.",
+      "parentNote": "To dobry moment na wyciszenie bez ?adnego planu poza byciem razem.",
+      "safetyNote": "Wybieraj trwa?e ksi??ki bez lu?nych element?w.",
       "contexts": [
         "context_home",
         "context_quiet",
@@ -500,8 +495,8 @@
     },
     {
       "id": "play_soft_scarf_peekaboo",
-      "title": "Miękki szalik Peekaboo",
-      "summary": "Użyj lekkiego szalika lub szmatki, aby wykonać delikatną chwilę „akuku”.",
+      "title": "Mi?kki szalik akuku",
+      "summary": "U?yj lekkiego szalika lub szmatki, aby wykona? delikatn? zabaw? w akuku.",
       "ageGroup": "0-12 miesięcy",
       "place": "place_sofa",
       "messLevel": "mess_low",
@@ -517,9 +512,9 @@
         "Przytrzymaj szalik blisko twarzy i powoli go opuść.",
         "Zatrzymaj się, uśmiechnij i powtarzaj tylko wtedy, gdy poczujesz się mile widziany."
       ],
-      "whatToExpect": "Miękki, niebrudzący sposób na dzielenie się uwagą niemal bez przygotowania. Staraj się mówić łagodnym tonem i przestań mówić, gdy dziecko wydaje się gotowe na przerwę.",
-      "parentNote": "Jedno powolne spojrzenie może być w sam raz.",
-      "safetyNote": "Trzymaj materiał z dala od nosa i ust dziecka i uważnie go kontroluj.",
+      "whatToExpect": "Kr?tki, spokojny moment z du?? powtarzalno?ci?. Do??cz tak d?ugo, jak to jest przyjemne, a potem od??? szalik.",
+      "parentNote": "To dobra zabawa, gdy chcesz prostego kontaktu bez du?ego rozgardiaszu.",
+      "safetyNote": "Trzymaj materia? z dala od twarzy dziecka i u?ywaj lekkiej tkaniny.",
       "contexts": [
         "context_home",
         "context_baby",
@@ -533,7 +528,7 @@
     },
     {
       "id": "play_container_matching",
-      "title": "Dopasowanie kontenera",
+      "title": "Dopasowywanie pojemnik?w",
       "summary": "Dopasuj bezpieczne pokrywki i pojemniki z kuchni.",
       "ageGroup": "18 miesięcy-3 lata",
       "place": "place_kitchen",
@@ -548,11 +543,11 @@
       "steps": [
         "Przygotuj dwa lub trzy czyste pojemniki i pokrywki.",
         "Pokaż jedną pokrywkę i zastanów się głośno, gdzie mogłaby się zmieścić.",
-        "Pozwól dziecku próbować zapałek, układać elementy w stosy lub po prostu eksplorować."
+        "Pozw?l dziecku pr?bowa? dopasowywa? elementy, uk?ada? klocki lub po prostu eksplorowa?."
       ],
-      "whatToExpect": "Cicha praca w kuchni z łatwym czyszczeniem. Dopasowywanie może przerodzić się w układanie w stosy lub sortowanie, a to nadal pasuje do tej chwili.",
-      "parentNote": "Niech kontenery będą interesujące, bez konieczności podawania poprawnej odpowiedzi.",
-      "safetyNote": "Używaj czystych, lekkich przedmiotów bez ostrych krawędzi i małych luźnych części.",
+      "whatToExpect": "Ma?e ?wiczenie dopasowywania z codziennych przedmiot?w. Utrzymuj zestaw kr?tki, by ?atwo go zebra?.",
+      "parentNote": "To spokojna zabawa na dopasowywanie i wk?adanie.",
+      "safetyNote": "U?ywaj tylko du?ych, czystych i bezpiecznych pojemnik?w.",
       "contexts": [
         "context_kitchen",
         "context_toddler",
@@ -566,8 +561,8 @@
     },
     {
       "id": "play_towel_road",
-      "title": "Droga na ręczniki",
-      "summary": "Złóż ręcznik na miękką drogę dla małych zabawek lub samochodów.",
+      "title": "Droga z r?cznika",
+      "summary": "Z??? r?cznik w mi?kk? drog? dla ma?ych zabawek lub samochod?w.",
       "ageGroup": "2-5 lat",
       "place": "place_floor",
       "messLevel": "mess_low",
@@ -584,9 +579,9 @@
         "Umieść jedną małą zabawkę na początku drogi.",
         "Poproś dziecko, aby poruszało zabawką powoli, szybko lub po zakręcie."
       ],
-      "whatToExpect": "Konfiguracja pozorowana o niskim poziomie bałaganu, która może trwać minutę lub dłużej. Opowiadaj cicho, a następnie pozwól dziecku podążać drogą, dokądkolwiek zmierza.",
-      "parentNote": "Ręcznik może stać się drogą, rzeką, mostem lub ścieżką.",
-      "safetyNote": "Trzymaj ręcznik płasko, aby nie stał się miejscem potknięcia.",
+      "whatToExpect": "Prosta, spokojna zabawa z du?? przestrzeni? na wyobra?ni?. Po kilku przejazdach mo?esz zwin?? drog? i od?o?y? wszystko.",
+      "parentNote": "To dobry wyb?r, gdy chcesz czego? lekkiego i niewymagaj?cego.",
+      "safetyNote": "Upewnij si?, ?e r?cznik le?y p?asko i nie ?lizga si? po pod?odze.",
       "contexts": [
         "context_home",
         "context_pretend",
@@ -600,8 +595,8 @@
     },
     {
       "id": "play_sock_puppet_hello",
-      "title": "Witam, marionetka skarpetkowa",
-      "summary": "Zamień czystą skarpetkę w prostą marionetkę „cześć”.",
+      "title": "Skarpetkowa pacynka m?wi cze??",
+      "summary": "Zamie? czyst? skarpetk? w prost? pacynk? m?wi?c? ?cze???.",
       "ageGroup": "18 miesięcy-3 lata",
       "place": "place_home",
       "messLevel": "mess_low",
@@ -616,9 +611,9 @@
         "Niech lalka przywita się cichym głosem.",
         "Zatrzymaj się i pozwól dziecku odpowiedzieć, wskazać lub po prostu popatrzeć."
       ],
-      "whatToExpect": "Mały moment połączenia ukształtowany przez Twoje delikatne uczestnictwo. Staraj się mówić prosto i podążaj za reakcją dziecka.",
-      "parentNote": "Lalka nie potrzebuje opowieści; wystarczy małe cześć.",
-      "safetyNote": "Używaj czystej skarpetki bez luźnych nitek i drobnych ozdób.",
+      "whatToExpect": "Kilka ?miech?w i kr?tka zabawa w naprzemienno??. Utrzymuj j? prost? i zako?cz, zanim zrobi si? zbyt g?o?no.",
+      "parentNote": "Wystarczy jeden ruch i jeden g?os; reszta mo?e by? bardzo lekka.",
+      "safetyNote": "U?yj czystej skarpetki bez ma?ych ozd?b.",
       "contexts": [
         "context_home",
         "context_connection",
@@ -632,8 +627,8 @@
     },
     {
       "id": "play_gentle_animal_walks",
-      "title": "Delikatne spacery zwierząt",
-      "summary": "Poruszaj się jak ciche zwierzęta po małej, bezpiecznej przestrzeni.",
+      "title": "Delikatne spacery zwierz?t",
+      "summary": "Poruszajcie si? jak ciche zwierz?ta po ma?ej, bezpiecznej przestrzeni.",
       "ageGroup": "3-6 lat",
       "place": "place_floor",
       "messLevel": "mess_low",
@@ -641,17 +636,17 @@
       "parentInvolvement": "parent_involvement_medium",
       "activityType": "activity_movement",
       "neededItems": [
-        "Wyczyść powierzchnię podłogi"
+        "Uprz?tni?ty kawa?ek pod?ogi"
       ],
       "steps": [
-        "Wybierz jedno łagodne zwierzę, na przykład kota, żółwia lub niedźwiedzia.",
-        "Poruszajcie się razem powoli po pokoju.",
-        "Wypróbuj cichą wersję i nieco większą wersję.",
-        "Odpocznij, gdy uznasz, że ruch został wykonany."
+        "Wybierz jedno ?agodne zwierz?, na przyk?ad kota, ???wia lub nied?wiedzia.",
+        "Poruszajcie si? razem powoli po pokoju.",
+        "Wypr?buj cich? wersj? i nieco ?ywsz? wersj?.",
+        "Zatrzymajcie si?, gdy poczujecie, ?e ruchu ju? wystarczy."
       ],
-      "whatToExpect": "Pomysł na ruch, który nie wymaga dużego ustawienia. Dołączcie do nich na kilka rund, a następnie pozwólcie, aby tempo uległo złagodzeniu, gdy pomieszczenie uzna się za gotowe.",
-      "parentNote": "Ciche zwierzęta nadal mogą być zabawne.",
-      "safetyNote": "Oczyść podłogę i unikaj szybkiego poruszania się w pobliżu mebli.",
+      "whatToExpect": "Troch? wi?cej ruchu i du?o na?ladowania. Zatrzymajcie si?, gdy ruchu ju? wystarczy.",
+      "parentNote": "To mi?y spos?b na wsp?lny ruch bez wielkiej energii.",
+      "safetyNote": "Wybierz woln? od przeszk?d przestrze? i poruszajcie si? powoli.",
       "contexts": [
         "context_home",
         "context_movement",
@@ -700,8 +695,8 @@
     },
     {
       "id": "play_spoon_cup_transfer",
-      "title": "Transfer łyżką i kubkiem",
-      "summary": "Przenieś suche produkty z jednej filiżanki do drugiej za pomocą łyżki.",
+      "title": "Przek?adanie ?y?k? do kubka",
+      "summary": "Przeno? suche produkty z jednego kubka do drugiego za pomoc? ?y?ki.",
       "ageGroup": "2-5 lat",
       "place": "place_table",
       "messLevel": "mess_medium",
@@ -714,13 +709,13 @@
         "Duży suchy makaron lub waciki"
       ],
       "steps": [
-        "Umieść kilka dużych, suchych produktów w jednej filiżance.",
-        "Pokaż, jak nabierać łyżką jeden przedmiot.",
-        "Poproś dziecko, aby przeniosło przedmioty do drugiego kubka.",
-        "Zatrzymaj się, gdy tabela wymaga szybkiego resetu."
+        "Umie?? kilka du?ych, suchych produkt?w w jednej fili?ance.",
+        "Poka?, jak nabiera? ?y?k? jeden przedmiot.",
+        "Popro? dziecko, aby przenios?o przedmioty do drugiego kubka.",
+        "Zatrzymajcie si?, gdy st?? wymaga szybkiego uporz?dkowania."
       ],
-      "whatToExpect": "Skoncentrowana aktywność przy stole, podczas której może nastąpić małe sprzątanie. Używaj tylko kilku przedmiotów, aby było łatwo zarządzać.",
-      "parentNote": "Wycieki stanowią część czynności i można je ograniczyć do niewielkich rozmiarów.",
+      "whatToExpect": "Skupiona aktywno?? przy stole, podczas kt?rej mo?e nast?pi? ma?e sprz?tanie. U?ywaj tylko kilku przedmiot?w, aby ?atwo by?o nad nimi zapanowa?.",
+      "parentNote": "Rozsypanie drobiazg?w jest cz??ci? zabawy i dobrze, gdy zostanie niewielkie.",
       "safetyNote": "Wybieraj przedmioty bezpieczne dla wieku dziecka i uważnie je nadzoruj.",
       "contexts": [
         "context_home",
@@ -749,10 +744,9 @@
         "Czysta skarpeta"
       ],
       "steps": [
-        "Wybierz dwie lub trzy czyste rzeczy do prania.",
-        "Oferuj jeden przedmiot na raz.",
-        "Używaj prostych słów, takich jak miękki, ciepły, gładki lub wyboisty.",
-        "Pozwól dziecku dotykać, trzymać lub patrzeć."
+        "Poka? jeden przedmiot na raz.",
+        "Nazywaj tekstur?: mi?kka, szorstka, g?adka.",
+        "Pozw?l dziecku dotkn?? i odpowiedzie? w?asnym ruchem."
       ],
       "whatToExpect": "Delikatna pauza sensoryczna, prawie bez konfiguracji. Nazwij jedną lub dwie tekstury, a następnie pozwól praniu powrócić do dnia.",
       "parentNote": "Możesz to zrobić, składając lub siedząc w pobliżu.",
@@ -770,8 +764,8 @@
     },
     {
       "id": "play_shadow_watching",
-      "title": "Obserwuje cień",
-      "summary": "Zwróć uwagę na proste cienie na ścianie, podłodze lub zasłonie.",
+      "title": "Obserwowanie cieni",
+      "summary": "Zwr?? uwag? na proste cienie na ?cianie, pod?odze lub zas?onie.",
       "ageGroup": "18 miesięcy-3 lata",
       "place": "place_window",
       "messLevel": "mess_low",
@@ -788,7 +782,7 @@
         "Poruszaj ręką powoli i obserwuj zmiany."
       ],
       "whatToExpect": "Spokojna chwila obserwacji na wolniejszą część dnia. Zachowaj ciekawość, mów krótko i śledź to, co zauważy Twoje dziecko.",
-      "parentNote": "Jeśli światło już jest, nie jest wymagana żadna konfiguracja.",
+      "parentNote": "Je?li ?wiato ju? jest, nie trzeba ?adnego przygotowania.",
       "safetyNote": "Unikaj patrzenia bezpośrednio na jasne światło słoneczne.",
       "contexts": [
         "context_home",
@@ -853,7 +847,7 @@
       "steps": [
         "Połóż małą szmatkę na stole lub podłodze.",
         "Poproś jednego lub dwa pluszaki, aby usiadły w pobliżu.",
-        "Oferuj udane kubki lub talerze.",
+        "Daj im udawane kubki lub talerzyki.",
         "Zapytaj, co mogą dzisiaj spodobać się zwierzętom."
       ],
       "whatToExpect": "Delikatna zabawa w udawanie zapewniająca przytulne uczucie. Dołącz na tyle długo, aby rozpocząć scenę, a następnie pozwól dziecku poprowadzić piknik.",
@@ -919,10 +913,9 @@
         "Bezpieczny przedmiot gospodarstwa domowego"
       ],
       "steps": [
-        "Umieść jeden znajomy przedmiot w torbie.",
-        "Poproś dziecko, aby poczuło zewnętrzną część torby.",
-        "Zaoferuj jedną delikatną wskazówkę, jeśli tego chcą.",
-        "Otwórzcie razem torbę."
+        "Przygotuj jedn? torb? papierow? z kilkoma bezpiecznymi przedmiotami.",
+        "Poka?, jak wyjmowa? rzeczy powoli i po kolei.",
+        "Zaoferuj jedn? delikatn? wskaz?wk?, je?li dziecko tego chce."
       ],
       "whatToExpect": "Chwila spokojnej ciekawości, prawie bez sprzątania. Staraj się, aby obiekt był znajomy, aby zgadywanie było łatwe.",
       "parentNote": "Możesz pominąć zgadywanie i po prostu wspólnie odkryć obiekt.",
@@ -949,14 +942,12 @@
       "parentInvolvement": "parent_involvement_low",
       "activityType": "activity_connection",
       "neededItems": [
-        "Miękka piłka",
-        "Wyczyść powierzchnię podłogi"
+        "Uprz?tni?ty kawa?ek pod?ogi"
       ],
       "steps": [
-        "Usiądź na podłodze twarzą do dziecka.",
-        "Powoli tocz piłkę w ich stronę.",
-        "Zatrzymaj się i poczekaj, co zrobią.",
-        "Rzuć go ponownie, jeśli nadal czujesz się dobrze."
+        "Potocz pi?k? bardzo wolno w stron? dziecka.",
+        "Zatrzymaj si? i pozw?l dziecku j? odsun?? albo potoczy? z powrotem.",
+        "Potocz j? ponownie, je?li nadal czujecie si? dobrze."
       ],
       "whatToExpect": "Pomysł na połączenie bez bałaganu i ze stałym rytmem. Pauzy są równie ważne jak przewijanie.",
       "parentNote": "Twoje dziecko może oglądać, dotykać lub popychać piłkę na swój własny sposób.",
@@ -1156,9 +1147,10 @@
         "Dwa kubki do kąpieli"
       ],
       "steps": [
-        "Zaoferuj jedną filiżankę z odrobiną wody.",
-        "Pokaż powolne nalewanie do drugiej filiżanki.",
-        "Pozwól dziecku próbować nalewać, napełniać i jeszcze raz nalewać."
+        "Daj dziecku jedn? fili?ank? z odrobin? wody.",
+        "Poka? delikatne przelewanie z jednego naczynia do drugiego.",
+        "Pozw?l dziecku spr?bowa? i obserwuj spokojnie.",
+        "Zatrzymajcie si?, gdy ma?y ba?agan zacznie by? zbyt du?y."
       ],
       "whatToExpect": "Czas kąpieli może skupiać się na jednej prostej czynności, a nie na wielu stymulacjach. Niewielkie rozpryskiwanie jest zjawiskiem normalnym, dlatego należy zachować niewielką konfigurację.",
       "parentNote": "Jedna filiżanka może wystarczyć, aby kąpiel nabrała świeżego rytmu.",
@@ -1270,8 +1262,8 @@
     },
     {
       "id": "play_paper_towel_roll_tunnel",
-      "title": "Tunel w rolce po ręcznikach papierowych",
-      "summary": "Przełóż małe zabawki przez tubę po ręczniku papierowym, aby uzyskać szybką niespodziankę.",
+      "title": "Tunel z rolki po r?czniku papierowym",
+      "summary": "Przepuszczaj ma?e zabawki przez tub? po r?czniku papierowym, aby uzyska? szybk? niespodziank?.",
       "ageGroup": "2-5 lat",
       "place": "place_table",
       "messLevel": "mess_low",
@@ -1292,8 +1284,8 @@
         "Wrzuć jedną zabawkę i poczekaj, aż wyląduje.",
         "Pozwól dziecku na zmianę upuszczać i podnosić zabawkę."
       ],
-      "whatToExpect": "Mała, powtarzalna czynność, która daje uczucie świeżości przy niewielkim wysiłku. Zachowaj niewielką liczbę elementów, aby konfiguracja i czyszczenie były łatwe.",
-      "parentNote": "Jedna rolka i jedna zabawka wystarczą na całą zabawę.",
+      "whatToExpect": "Ma?a, powtarzalna czynno??, kt?ra daje poczucie ?wie?o?ci przy niewielkim wysi?ku. Zostaw niewiele element?w, aby przygotowanie i sprz?tanie by?y ?atwe.",
+      "parentNote": "Jedna rolka i jedna zabawka wystarcz? na ca?? zabaw?.",
       "safetyNote": "Używaj przedmiotów odpowiednio dużych dla wieku dziecka i unikaj szorstkich krawędzi tektury.",
       "ageRangeMonths": {
         "min": 24,
@@ -1382,7 +1374,7 @@
         "context_transition"
       ],
       "neededItems": [
-        "Wyczyść korytarz"
+        "Uprz?tni?ty korytarz"
       ],
       "steps": [
         "Wybierzcie razem powolny rytm chodzenia.",
@@ -1879,7 +1871,7 @@
         "context_low_setup"
       ],
       "neededItems": [
-        "Wyczyść wilgotną ściereczkę"
+        "Wilgotna ?ciereczka"
       ],
       "steps": [
         "Wybierz jedną małą, bezpieczną powierzchnię, np. krawędź stołu lub tacę.",
@@ -1899,7 +1891,7 @@
   "playFilters": [
     {
       "id": "low_effort",
-      "label": "Niski wysiłek",
+      "label": "Niski wysi?ek",
       "matchMode": "all",
       "rules": [
         {
@@ -1911,7 +1903,7 @@
     },
     {
       "id": "low_mess",
-      "label": "Niski bałagan",
+      "label": "Ma?o ba?aganu",
       "matchMode": "all",
       "rules": [
         {
@@ -1923,7 +1915,7 @@
     },
     {
       "id": "for_babies",
-      "label": "Dla niemowląt",
+      "label": "Dla niemowl?t",
       "matchMode": "all",
       "rules": [
         {
@@ -1936,7 +1928,7 @@
     },
     {
       "id": "toddlers",
-      "label": "Małe dzieci",
+      "label": "Dla maluch?w",
       "matchMode": "all",
       "rules": [
         {
@@ -1949,7 +1941,7 @@
     },
     {
       "id": "preschool",
-      "label": "Przedszkole",
+      "label": "Przedszkolaki",
       "matchMode": "all",
       "rules": [
         {
@@ -1974,7 +1966,7 @@
     },
     {
       "id": "quiet",
-      "label": "Cichy",
+      "label": "Spok?j",
       "matchMode": "all",
       "rules": [
         {
@@ -1988,36 +1980,36 @@
   "sounds": [
     {
       "id": "sound_soft_rain",
-      "title": "Miękki deszcz",
+      "title": "Mi?kki deszcz",
       "category": "Natura",
-      "summary": "Delikatny deszcz dla spokojniejszego tła.",
+      "summary": "Delikatny deszcz dla spokojniejszego t?a.",
       "assetPath": "assets/audio/soft_rain.mp3",
       "artworkAssetPath": "assets/images/sounds/soft_rain.webp",
       "unlockType": "free"
     },
     {
       "id": "sound_warm_noise",
-      "title": "Ciepły hałas",
+      "title": "Ciep?y szum",
       "category": "Bia?y szum",
-      "summary": "Stały, ciepły dźwięk do cichszych czynności.",
+      "summary": "Sta?y, ciep?y szum do spokojniejszych czynno?ci.",
       "assetPath": "assets/audio/warm_noise.mp3",
       "artworkAssetPath": "assets/images/sounds/warm_noise.webp",
       "unlockType": "free"
     },
     {
       "id": "sound_quiet_stream",
-      "title": "Cichy strumień",
+      "title": "Cichy strumie?",
       "category": "Spok?j",
-      "summary": "Miękka, płynąca woda zapewniająca spokojną przerwę.",
+      "summary": "Mi?kka, p?yn?ca woda daj?ca spokojn? przerw?.",
       "assetPath": "assets/audio/quiet_stream.mp3",
       "artworkAssetPath": "assets/images/sounds/quiet_stream.webp",
       "unlockType": "free"
     },
     {
       "id": "sound_evening_crickets",
-      "title": "Wieczorne świerszcze",
+      "title": "Wieczorne ?wierszcze",
       "category": "Natura",
-      "summary": "Spokojny wieczorny dźwięk na wyciszenie.",
+      "summary": "Spokojny wieczorny d?wi?k do wyciszenia.",
       "assetPath": "assets/audio/evening_crickets.mp3",
       "artworkAssetPath": "assets/images/sounds/evening_crickets.webp",
       "unlockType": "free"
@@ -2026,7 +2018,7 @@
       "id": "sound_room_fan",
       "title": "Wentylator pokojowy",
       "category": "Dom",
-      "summary": "Cichy dźwięk wentylatora zapewniający stabilną ciszę w tle.",
+      "summary": "Cichy d?wi?k wentylatora zapewniaj?cy stabilne t?o.",
       "assetPath": "assets/audio/room_fan.mp3",
       "artworkAssetPath": "assets/images/sounds/room_fan.webp",
       "unlockType": "free"
@@ -2035,7 +2027,7 @@
       "id": "sound_dishwasher_hum",
       "title": "Buczenie zmywarki",
       "category": "Dom",
-      "summary": "Delikatny szum domowy do codziennych czynności.",
+      "summary": "Delikatny domowy szum do codziennych chwil.",
       "assetPath": "assets/audio/dishwasher_hum.mp3",
       "artworkAssetPath": "assets/images/sounds/dishwasher_hum.webp",
       "unlockType": "free"

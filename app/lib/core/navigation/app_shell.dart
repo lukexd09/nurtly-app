@@ -105,7 +105,6 @@ class _AppShellState extends State<AppShell> {
 
   void _openSettings() {
     final navigator = Navigator.of(context);
-    final strings = _strings;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -116,6 +115,7 @@ class _AppShellState extends State<AppShell> {
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
+            final strings = _strings;
             return SafeArea(
               child: ListView(
                 key: const ValueKey('settings-sheet-scroll'),
@@ -172,7 +172,9 @@ class _AppShellState extends State<AppShell> {
                       Navigator.of(sheetContext).pop();
                       navigator.push(
                         MaterialPageRoute<void>(
-                          builder: (_) => PrivacyDataScreen(strings: strings),
+                          builder: (_) => PrivacyDataScreen(
+                            strings: AppStrings.forLanguage(_selectedLanguage),
+                          ),
                         ),
                       );
                     },

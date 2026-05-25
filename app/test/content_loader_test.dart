@@ -223,6 +223,41 @@ void main() {
     expect(polishChipLabels, isNot(contains('?rednio')));
   });
 
+  test('Polish bundled content avoids obvious machine translation phrases',
+      () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.polish),
+    ).load();
+
+    final searchableText = [
+      ...package.playIdeas.expand(
+        (idea) => [
+          idea.title,
+          idea.summary,
+          idea.whatToExpect,
+          idea.parentNote,
+          idea.safetyNote,
+          ...idea.neededItems,
+          ...idea.steps,
+        ],
+      ),
+      ...package.sounds.expand((sound) => [sound.title, sound.summary]),
+      ...package.playFilters.map((filter) => filter.label),
+    ].join('\\n');
+
+    for (final phrase in [
+      'Ręcznik do herbaty',
+      'Okno zegarka',
+      'Oferuj udane',
+      'Obserwuje cień',
+      'małą ilością ustawień',
+      'tabela wymaga',
+      'zapałek',
+    ]) {
+      expect(searchableText.contains(phrase), isFalse, reason: phrase);
+    }
+  });
+
   test('bundled content asset path resolves English content for English', () {
     expect(
       bundledContentAssetPathFor(AppLanguage.english),
