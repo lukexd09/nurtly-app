@@ -174,8 +174,15 @@ void main() {
     ];
     expect(englishChipLabels, contains('Mess: low'));
     expect(englishChipLabels, contains('Mess: medium'));
+    expect(englishChipLabels, contains('Child: low'));
     expect(englishChipLabels, contains('Child: medium'));
+    expect(englishChipLabels, contains('Child: high'));
     expect(englishChipLabels, contains('Parent: low'));
+    expect(englishChipLabels, contains('Parent: medium'));
+    expect(englishChipLabels, contains('Parent: high'));
+    expect(englishChipLabels.any((label) => label.contains('?')), isFalse);
+    expect(englishChipLabels, isNot(contains('Low mess')));
+    expect(englishChipLabels, isNot(contains('Medium mess')));
 
     final polishLabels = [
       ..._labels(polish.taxonomy.places),
@@ -208,6 +215,12 @@ void main() {
     expect(polishChipLabels, contains('Rodzic: mało'));
     expect(polishChipLabels, contains('Rodzic: średnio'));
     expect(polishChipLabels, contains('Rodzic: dużo'));
+    expect(polishChipLabels, isNot(contains('Mały bałagan')));
+    expect(polishChipLabels, isNot(contains('Średni bałagan')));
+    expect(polishChipLabels, isNot(contains('Dziecko: niskie')));
+    expect(polishChipLabels, isNot(contains('Rodzic: niskie')));
+    expect(polishChipLabels, isNot(contains('Ba?agan')));
+    expect(polishChipLabels, isNot(contains('?rednio')));
   });
 
   test('bundled content asset path resolves English content for English', () {

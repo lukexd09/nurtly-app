@@ -279,9 +279,10 @@ void main() {
     expect(find.text('Mess: low'), findsOneWidget);
     expect(find.text('Child: medium'), findsOneWidget);
     expect(find.text('Parent: low'), findsOneWidget);
-    expect(find.text('Low'), findsNothing);
-    expect(find.text('Medium'), findsNothing);
-    expect(find.text('High'), findsNothing);
+    expect(find.text('Low mess'), findsNothing);
+    expect(find.text('Medium mess'), findsNothing);
+    expect(find.text('Child: low'), findsNothing);
+    expect(find.text('Parent: medium'), findsNothing);
   });
 
   testWidgets('renders Polish metadata chips without mixed fragments', (
@@ -301,9 +302,10 @@ void main() {
     expect(find.text('Bałagan: mały'), findsOneWidget);
     expect(find.text('Dziecko: średnio'), findsOneWidget);
     expect(find.text('Rodzic: mało'), findsOneWidget);
-    expect(find.text('Niskie'), findsNothing);
-    expect(find.text('Średnie'), findsNothing);
-    expect(find.text('Wysokie'), findsNothing);
+    expect(find.text('Mały bałagan'), findsNothing);
+    expect(find.text('Średni bałagan'), findsNothing);
+    expect(find.text('Dziecko: niskie'), findsNothing);
+    expect(find.text('Rodzic: niskie'), findsNothing);
   });
 
   testWidgets('renders play detail content and hero hierarchy', (tester) async {
