@@ -62,12 +62,12 @@
       {
         "id": "mess_low",
         "label": "Mały bałagan",
-        "chipLabel": "Ma?y ba?agan"
+        "chipLabel": "Mały bałagan"
       },
       {
         "id": "mess_medium",
         "label": "Średni bałagan",
-        "chipLabel": "?redni ba?agan"
+        "chipLabel": "Średni bałagan"
       }
     ],
     "childEngagementLevels": [
@@ -79,7 +79,7 @@
       {
         "id": "child_engagement_medium",
         "label": "Średnie",
-        "chipLabel": "Dziecko: ?rednie"
+        "chipLabel": "Dziecko: średnie"
       },
       {
         "id": "child_engagement_high",
@@ -96,7 +96,7 @@
       {
         "id": "parent_involvement_medium",
         "label": "Średnie",
-        "chipLabel": "Rodzic: ?rednie"
+        "chipLabel": "Rodzic: średnie"
       },
       {
         "id": "parent_involvement_high",
