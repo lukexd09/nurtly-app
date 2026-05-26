@@ -6,6 +6,11 @@ import '../../app_config.dart';
 import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
 import '../localization/app_language.dart';
+import '../monetization/ad_policy.dart';
+import '../monetization/premium_access_controller.dart';
+import '../monetization/premium_entitlement.dart';
+import '../monetization/premium_entitlement_provider.dart';
+import '../monetization/premium_paywall_sheet.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
@@ -24,11 +29,13 @@ class AppShell extends StatefulWidget {
     this.contentLoader,
     this.languagePreferenceStore =
         const SharedPreferencesLanguagePreferenceStore(),
+    this.premiumEntitlementProvider = const LocalPremiumEntitlementProvider(),
     super.key,
   });
 
   final ContentLoader? contentLoader;
   final LanguagePreferenceStore languagePreferenceStore;
+  final PremiumEntitlementProvider premiumEntitlementProvider;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -37,6 +44,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   var _currentIndex = 0;
   late AppLanguage _selectedLanguage;
+  late final PremiumAccessController _premiumController;
   var _isReady = false;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
@@ -46,14 +54,32 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
+    _premiumController = PremiumAccessController(
+      provider: widget.premiumEntitlementProvider,
+    );
+    _premiumController.addListener(_handlePremiumChanged);
     _selectedLanguage = const AppLocaleResolver().resolve(
       preference: AppLanguagePreference.system,
       systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
     );
-    unawaited(_bootstrapLanguagePreference());
+    unawaited(_bootstrapAppState());
   }
 
-  Future<void> _bootstrapLanguagePreference() async {
+  @override
+  void dispose() {
+    _premiumController.removeListener(_handlePremiumChanged);
+    _premiumController.dispose();
+    super.dispose();
+  }
+
+  void _handlePremiumChanged() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {});
+  }
+
+  Future<void> _bootstrapAppState() async {
     var language = _selectedLanguage;
     try {
       final savedLanguage = await widget.languagePreferenceStore.load();
@@ -64,6 +90,11 @@ class _AppShellState extends State<AppShell> {
       language = _selectedLanguage;
     }
 
+    if (!mounted) {
+      return;
+    }
+
+    await _premiumController.load();
     if (!mounted) {
       return;
     }
@@ -139,6 +170,26 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
+  Future<void> _openPremiumPaywall() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 560),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return PremiumPaywallSheet(
+          strings: _strings,
+          onRestorePurchases: () {
+            Navigator.of(sheetContext).pop();
+            unawaited(_premiumController.restorePurchases());
+          },
+        );
+      },
+    );
+  }
+
   void _openSettings() {
     final navigator = Navigator.of(context);
     showModalBottomSheet<void>(
@@ -152,6 +203,7 @@ class _AppShellState extends State<AppShell> {
         return StatefulBuilder(
           builder: (context, setSheetState) {
             final strings = AppStrings.forLanguage(_selectedLanguage);
+            final entitlement = _premiumController.entitlement;
             return SafeArea(
               child: ListView(
                 key: const ValueKey('settings-sheet-scroll'),
@@ -167,6 +219,39 @@ class _AppShellState extends State<AppShell> {
                     style: AppTextStyles.cardTitle.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    strings.premiumSectionTitle,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-premium-status'),
+                    title: strings.premiumStatusLabel,
+                    value: _premiumStatusText(strings, entitlement),
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-premium-upgrade'),
+                    title: _premiumActionLabel(strings, entitlement),
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      unawaited(_openPremiumPaywall());
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-premium-restore'),
+                    title: strings.restorePurchases,
+                    onTap: () {
+                      Navigator.of(sheetContext).pop();
+                      unawaited(_premiumController.restorePurchases());
+                    },
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -294,20 +379,28 @@ class _AppShellState extends State<AppShell> {
       );
     }
 
+    final adPolicy = AdPolicy(_premiumController.entitlement);
     final screens = [
       HomeScreen(
         strings: _strings,
         onSelectTab: _selectTab,
         onOpenTodaysIdea: _openTodaysIdea,
+        showAdPlaceholder: adPolicy.allows(AdPlacement.homePassiveSlot),
       ),
       PlayScreen(
         strings: _strings,
         contentLoader: _contentLoaderForCurrentLanguage(),
+        premiumEntitlement: _premiumController.entitlement,
+        onOpenPremiumPaywall: _openPremiumPaywall,
+        showAdPlaceholder: adPolicy.allows(AdPlacement.playListPassiveSlot),
       ),
       const JournalScreen(),
       SoundsScreen(
         strings: _strings,
         contentLoader: _contentLoaderForCurrentLanguage(),
+        premiumEntitlement: _premiumController.entitlement,
+        onOpenPremiumPaywall: _openPremiumPaywall,
+        showAdPlaceholder: adPolicy.allows(AdPlacement.soundsListPassiveSlot),
       ),
     ];
 
@@ -355,6 +448,48 @@ class _AppShellState extends State<AppShell> {
         ],
       ),
     );
+  }
+
+  String _premiumStatusText(
+    AppStrings strings,
+    PremiumEntitlement entitlement,
+  ) {
+    if (entitlement.state == PremiumState.free) {
+      return strings.premiumStatusFree;
+    }
+    if (entitlement.state == PremiumState.pending) {
+      return strings.premiumStatusPending;
+    }
+    if (entitlement.state == PremiumState.accountHold ||
+        entitlement.state == PremiumState.expired) {
+      return strings.premiumStatusPaymentIssue;
+    }
+    if (entitlement.state == PremiumState.active &&
+        entitlement.source == PremiumSource.lifetime) {
+      return strings.premiumStatusLifetimeActive;
+    }
+    if (entitlement.state == PremiumState.active &&
+        entitlement.source == PremiumSource.monthly &&
+        entitlement.expiresAt != null) {
+      return strings.premiumStatusActiveUntil(
+        _formatPremiumDate(entitlement.expiresAt!),
+      );
+    }
+    return strings.premiumStatusActive;
+  }
+
+  String _premiumActionLabel(
+    AppStrings strings,
+    PremiumEntitlement entitlement,
+  ) {
+    return entitlement.hasPremiumAccess
+        ? strings.premiumManage
+        : strings.premiumUpgrade;
+  }
+
+  String _formatPremiumDate(DateTime dateTime) {
+    final localDate = dateTime.toLocal();
+    return '${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}';
   }
 }
 

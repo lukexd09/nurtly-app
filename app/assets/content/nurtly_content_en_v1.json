@@ -1791,6 +1791,7 @@
       "whatToExpect": "Gentle pretend play that feels social without needing many props. Keep the choices few so the scene stays calm.",
       "parentNote": "You can let your child lead the whole shop after the first turn.",
       "safetyNote": "Use unbreakable cups and keep the play surface stable.",
+      "unlockType": "premium",
       "ageRangeMonths": {
         "min": 36,
         "max": 72
@@ -2029,7 +2030,7 @@
       "summary": "A soft fan sound for steady background calm.",
       "assetPath": "assets/audio/room_fan.mp3",
       "artworkAssetPath": "assets/images/sounds/room_fan.webp",
-      "unlockType": "free"
+      "unlockType": "premium"
     },
     {
       "id": "sound_dishwasher_hum",

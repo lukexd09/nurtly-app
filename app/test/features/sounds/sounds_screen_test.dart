@@ -5,6 +5,7 @@ import 'package:nurtly/core/content/content_package.dart';
 import 'package:nurtly/core/content/content_taxonomy.dart';
 import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/core/localization/app_strings.dart';
+import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/features/sounds/sounds_screen.dart';
 
 void main() {
@@ -135,6 +136,58 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'premium sound cards open paywall for free users and detail for premium users',
+    (tester) async {
+      var paywallCalls = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SoundsScreen(
+            contentLoader: const _PremiumSoundsContentLoader(),
+            premiumEntitlement: PremiumEntitlement.free(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            onOpenPremiumPaywall: () {
+              paywallCalls++;
+            },
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sponsored space'), findsOneWidget);
+      expect(find.text('Premium'), findsOneWidget);
+
+      await tester.tap(find.text('Premium room fan'));
+      await tester.pumpAndSettle();
+
+      expect(paywallCalls, 1);
+      expect(find.byKey(const ValueKey('sound-player-card')), findsNothing);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SoundsScreen(
+            contentLoader: const _PremiumSoundsContentLoader(),
+            premiumEntitlement: PremiumEntitlement.lifetimeActive(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sponsored space'), findsNothing);
+      await tester.tap(find.text('Premium room fan'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
+      expect(find.text('Premium room fan'), findsWidgets);
+    },
+  );
 }
 
 class _SoundsArtworkFallbackLoader extends ContentLoader {
@@ -172,6 +225,34 @@ class _SoundsArtworkImageLoader extends ContentLoader {
           assetPath: 'assets/audio/soft_rain.mp3',
           artworkAssetPath: 'assets/images/sounds/soft_rain.webp',
           unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+class _PremiumSoundsContentLoader extends ContentLoader {
+  const _PremiumSoundsContentLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return _basePackage(
+      const [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_room_fan',
+          title: 'Premium room fan',
+          category: 'Home',
+          summary: 'A soft fan sound for steady background calm.',
+          assetPath: 'assets/audio/room_fan.mp3',
+          unlockType: 'premium',
         ),
       ],
     );

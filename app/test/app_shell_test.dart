@@ -8,6 +8,7 @@ import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 
 import 'test_fakes/fake_content_loader.dart';
+import 'test_fakes/fake_premium_entitlement_provider.dart';
 import 'test_fakes/fake_language_preference_store.dart';
 
 void main() {
@@ -97,6 +98,30 @@ void main() {
     expect(find.text('Use phone language'), findsNothing);
     expect(find.text('Polski'), findsNothing);
     expect(find.text('Privacy & Data'), findsOneWidget);
+  });
+
+  testWidgets('Settings sheet shows premium section and opens paywall',
+      (tester) async {
+    await _pumpNurtlyApp(tester, size: const Size(600, 4000));
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Premium'), findsOneWidget);
+    expect(find.text('Status'), findsOneWidget);
+    expect(find.text('Free plan'), findsOneWidget);
+    expect(find.text('Upgrade to Premium'), findsOneWidget);
+    expect(find.text('Restore purchases'), findsOneWidget);
+
+    await tester.tap(find.text('Upgrade to Premium'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nurtly Premium'), findsOneWidget);
+    expect(find.text('Remove ads'), findsOneWidget);
+    expect(find.text('Unlock premium play ideas and sounds'), findsOneWidget);
+    expect(find.text('Premium Monthly'), findsOneWidget);
+    expect(find.text('Premium Lifetime'), findsOneWidget);
+    expect(find.text('Billing coming soon'), findsWidgets);
   });
 
   testWidgets('Tapping Language opens language selector and updates row',
@@ -324,6 +349,7 @@ Future<void> _pumpNurtlyApp(
   Size size = const Size(600, 1200),
   Locale? systemLocale,
   LanguagePreferenceStore? languagePreferenceStore,
+  FakePremiumEntitlementProvider? premiumEntitlementProvider,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -342,6 +368,8 @@ Future<void> _pumpNurtlyApp(
         contentLoader: const FakeContentLoader(),
         languagePreferenceStore:
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
+        premiumEntitlementProvider:
+            premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
       ),
     ),
   );
@@ -382,6 +410,7 @@ Future<void> _pumpRealNurtlyApp(
   WidgetTester tester, {
   Size size = const Size(600, 1200),
   LanguagePreferenceStore? languagePreferenceStore,
+  FakePremiumEntitlementProvider? premiumEntitlementProvider,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -395,6 +424,8 @@ Future<void> _pumpRealNurtlyApp(
       home: AppShell(
         languagePreferenceStore:
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
+        premiumEntitlementProvider:
+            premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
       ),
     ),
   );

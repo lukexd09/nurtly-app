@@ -7,6 +7,8 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
 import '../../core/localization/app_strings.dart';
+import '../../core/monetization/ad_placeholder.dart';
+import '../../core/monetization/premium_entitlement.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
 import '../../core/theme/app_spacing.dart';
@@ -24,10 +26,16 @@ class SoundsScreen extends StatefulWidget {
     super.key,
     this.contentLoader = const ContentLoader(),
     this.strings = AppStrings.english,
+    this.premiumEntitlement,
+    this.onOpenPremiumPaywall,
+    this.showAdPlaceholder = false,
   });
 
   final ContentLoader contentLoader;
   final AppStrings strings;
+  final PremiumEntitlement? premiumEntitlement;
+  final VoidCallback? onOpenPremiumPaywall;
+  final bool showAdPlaceholder;
 
   @override
   State<SoundsScreen> createState() => _SoundsScreenState();
@@ -35,10 +43,13 @@ class SoundsScreen extends StatefulWidget {
 
 class _SoundsScreenState extends State<SoundsScreen> {
   late Future<ContentPackage> _contentFuture;
+  late PremiumEntitlement _effectiveEntitlement;
 
   @override
   void initState() {
     super.initState();
+    _effectiveEntitlement =
+        widget.premiumEntitlement ?? PremiumEntitlement.free();
     _contentFuture = widget.contentLoader.load();
   }
 
@@ -47,6 +58,10 @@ class _SoundsScreenState extends State<SoundsScreen> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.contentLoader != widget.contentLoader) {
       _contentFuture = widget.contentLoader.load();
+    }
+    if (oldWidget.premiumEntitlement != widget.premiumEntitlement) {
+      _effectiveEntitlement =
+          widget.premiumEntitlement ?? PremiumEntitlement.free();
     }
   }
 
@@ -83,8 +98,14 @@ class _SoundsScreenState extends State<SoundsScreen> {
                   title: widget.strings.noSoundsTitle,
                   message: widget.strings.noSoundsMessage,
                 )
-              else
+              else ...[
                 ..._soundCards(sounds),
+                if (widget.showAdPlaceholder &&
+                    _effectiveEntitlement.shouldShowAds) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  AdPlaceholderCard(strings: widget.strings),
+                ],
+              ],
             ],
           );
         },
@@ -94,16 +115,22 @@ class _SoundsScreenState extends State<SoundsScreen> {
 
   List<Widget> _soundCards(List<SoundItem> sounds) {
     return [
-      for (var index = 0; index < sounds.length; index++) ...[
-        if (index > 0) const SizedBox(height: AppSpacing.md),
+      for (final sound in sounds) ...[
+        if (sound != sounds.first) const SizedBox(height: AppSpacing.md),
         _SoundCard(
-          sound: sounds[index],
+          sound: sound,
           strings: widget.strings,
+          isPremium: _isPremiumUnlock(sound.unlockType),
           onTap: () {
+            if (_isPremiumUnlock(sound.unlockType) &&
+                !_effectiveEntitlement.canAccessPremiumContent) {
+              widget.onOpenPremiumPaywall?.call();
+              return;
+            }
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => SoundDetailScreen(
-                  sound: sounds[index],
+                  sound: sound,
                   strings: widget.strings,
                 ),
               ),
@@ -113,17 +140,23 @@ class _SoundsScreenState extends State<SoundsScreen> {
       ],
     ];
   }
+
+  bool _isPremiumUnlock(String unlockType) {
+    return unlockType.trim().toLowerCase() == 'premium';
+  }
 }
 
 class _SoundCard extends StatelessWidget {
   const _SoundCard({
     required this.sound,
     required this.strings,
+    required this.isPremium,
     required this.onTap,
   });
 
   final SoundItem sound;
   final AppStrings strings;
+  final bool isPremium;
   final VoidCallback onTap;
 
   @override
@@ -149,6 +182,10 @@ class _SoundCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _SoundMetadata(sound: sound, strings: strings),
+                if (isPremium) ...[
+                  const SizedBox(height: AppSpacing.xs),
+                  NurtlyChip(label: strings.premium),
+                ],
               ],
             ),
           ),

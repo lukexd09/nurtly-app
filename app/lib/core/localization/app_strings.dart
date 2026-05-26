@@ -77,6 +77,27 @@ class AppStrings {
     required this.futureChanges,
     required this.back,
     required this.settingsTooltip,
+    required this.premiumSectionTitle,
+    required this.premiumStatusLabel,
+    required this.premiumStatusFree,
+    required this.premiumStatusActive,
+    required this.premiumStatusLifetimeActive,
+    required this.premiumStatusPending,
+    required this.premiumStatusPaymentIssue,
+    required this.premiumUpgrade,
+    required this.premiumManage,
+    required this.restorePurchases,
+    required this.premiumTitle,
+    required this.premiumPaywallSubtitle,
+    required this.premiumRemoveAds,
+    required this.premiumUnlockContent,
+    required this.premiumMonthlyPlan,
+    required this.premiumLifetimePlan,
+    required this.premiumMonthlyPrice,
+    required this.premiumLifetimePrice,
+    required this.premiumBillingComingSoon,
+    required this.adPlaceholderTitle,
+    required this.adPlaceholderSubtitle,
   });
 
   final AppLanguage language;
@@ -153,6 +174,27 @@ class AppStrings {
   final String futureChanges;
   final String back;
   final String settingsTooltip;
+  final String premiumSectionTitle;
+  final String premiumStatusLabel;
+  final String premiumStatusFree;
+  final String premiumStatusActive;
+  final String premiumStatusLifetimeActive;
+  final String premiumStatusPending;
+  final String premiumStatusPaymentIssue;
+  final String premiumUpgrade;
+  final String premiumManage;
+  final String restorePurchases;
+  final String premiumTitle;
+  final String premiumPaywallSubtitle;
+  final String premiumRemoveAds;
+  final String premiumUnlockContent;
+  final String premiumMonthlyPlan;
+  final String premiumLifetimePlan;
+  final String premiumMonthlyPrice;
+  final String premiumLifetimePrice;
+  final String premiumBillingComingSoon;
+  final String adPlaceholderTitle;
+  final String adPlaceholderSubtitle;
 
   static const english = AppStrings._(
     language: AppLanguage.english,
@@ -234,6 +276,28 @@ class AppStrings {
         'Future data-related changes should be introduced clearly before they are enabled.',
     back: 'Back',
     settingsTooltip: 'Settings',
+    premiumSectionTitle: 'Premium',
+    premiumStatusLabel: 'Status',
+    premiumStatusFree: 'Free plan',
+    premiumStatusActive: 'Premium active',
+    premiumStatusLifetimeActive: 'Lifetime Premium active',
+    premiumStatusPending: 'Purchase pending',
+    premiumStatusPaymentIssue: 'Payment issue',
+    premiumUpgrade: 'Upgrade to Premium',
+    premiumManage: 'Manage Premium',
+    restorePurchases: 'Restore purchases',
+    premiumTitle: 'Nurtly Premium',
+    premiumPaywallSubtitle:
+        'Remove ads and unlock premium play ideas and sounds.',
+    premiumRemoveAds: 'Remove ads',
+    premiumUnlockContent: 'Unlock premium play ideas and sounds',
+    premiumMonthlyPlan: 'Premium Monthly',
+    premiumLifetimePlan: 'Premium Lifetime',
+    premiumMonthlyPrice: '14.99 PLN / month',
+    premiumLifetimePrice: '129.99 PLN once',
+    premiumBillingComingSoon: 'Billing coming soon',
+    adPlaceholderTitle: 'Sponsored space',
+    adPlaceholderSubtitle: 'Shown only in passive free-plan slots.',
   );
 
   static const polish = AppStrings._(
@@ -319,6 +383,27 @@ class AppStrings {
         'Przyszłe zmiany związane z danymi powinny być jasno opisane przed włączeniem.',
     back: 'Wstecz',
     settingsTooltip: 'Ustawienia',
+    premiumSectionTitle: 'Premium',
+    premiumStatusLabel: 'Status',
+    premiumStatusFree: 'Darmowy plan',
+    premiumStatusActive: 'Premium aktywne',
+    premiumStatusLifetimeActive: 'Premium na stałe aktywne',
+    premiumStatusPending: 'Zakup oczekuje na potwierdzenie',
+    premiumStatusPaymentIssue: 'Problem z płatnością',
+    premiumUpgrade: 'Przejdź na Premium',
+    premiumManage: 'Zarządzaj Premium',
+    restorePurchases: 'Przywróć zakupy',
+    premiumTitle: 'Nurtly Premium',
+    premiumPaywallSubtitle: 'Usuń reklamy i odblokuj premium zabawy i dźwięki.',
+    premiumRemoveAds: 'Usuń reklamy',
+    premiumUnlockContent: 'Odblokuj premium zabawy i dźwięki',
+    premiumMonthlyPlan: 'Premium miesięcznie',
+    premiumLifetimePlan: 'Premium na stałe',
+    premiumMonthlyPrice: '14,99 PLN / miesiąc',
+    premiumLifetimePrice: '129,99 PLN jednorazowo',
+    premiumBillingComingSoon: 'Płatności będą dostępne w kolejnej wersji MVP',
+    adPlaceholderTitle: 'Miejsce sponsorowane',
+    adPlaceholderSubtitle: 'Widoczne tylko w spokojnych miejscach planu Free.',
   );
 
   static AppStrings forLanguage(AppLanguage language) {
@@ -342,6 +427,13 @@ class AppStrings {
     return switch (language) {
       AppLanguage.english => '$count gentle ideas',
       AppLanguage.polish => '$count łagodnych pomysłów',
+    };
+  }
+
+  String premiumStatusActiveUntil(String value) {
+    return switch (language) {
+      AppLanguage.english => 'Premium active until $value',
+      AppLanguage.polish => 'Premium aktywne do $value',
     };
   }
 

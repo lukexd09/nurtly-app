@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/localization/app_strings.dart';
+import '../../core/monetization/ad_placeholder.dart';
 import '../../core/navigation/app_tab.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
@@ -164,12 +165,14 @@ class HomeScreen extends StatelessWidget {
     required this.strings,
     required this.onSelectTab,
     required this.onOpenTodaysIdea,
+    this.showAdPlaceholder = false,
     super.key,
   });
 
   final AppStrings strings;
   final ValueChanged<AppTab> onSelectTab;
   final VoidCallback onOpenTodaysIdea;
+  final bool showAdPlaceholder;
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +208,10 @@ class HomeScreen extends StatelessWidget {
           icon: Icons.graphic_eq,
           onTap: () => onSelectTab(AppTab.sounds),
         ),
+        if (showAdPlaceholder) ...[
+          const SizedBox(height: AppSpacing.md),
+          AdPlaceholderCard(strings: strings),
+        ],
       ],
     );
   }

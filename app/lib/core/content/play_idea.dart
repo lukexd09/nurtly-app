@@ -34,6 +34,7 @@ class PlayIdea {
     required this.summary,
     required this.ageGroup,
     required this.ageRangeMonths,
+    this.unlockType = 'free',
     required this.place,
     required this.messLevel,
     required this.childEngagement,
@@ -53,6 +54,7 @@ class PlayIdea {
   final String summary;
   final String ageGroup;
   final AgeRangeMonths ageRangeMonths;
+  final String unlockType;
   final String place;
   final String messLevel;
   final String childEngagement;
@@ -73,6 +75,9 @@ class PlayIdea {
       summary: readString(json, 'summary'),
       ageGroup: readString(json, 'ageGroup'),
       ageRangeMonths: AgeRangeMonths.fromJson(readMap(json, 'ageRangeMonths')),
+      unlockType: json.containsKey('unlockType')
+          ? readString(json, 'unlockType')
+          : 'free',
       place: readString(json, 'place'),
       messLevel: readString(json, 'messLevel'),
       childEngagement: readString(json, 'childEngagement'),
