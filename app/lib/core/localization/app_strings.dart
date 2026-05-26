@@ -72,6 +72,10 @@ class AppStrings {
     required this.noCloudSync,
     required this.noAnalytics,
     required this.noAds,
+    required this.premiumRemovesAdsInFreePlan,
+    required this.purchasesGoThroughGooglePlay,
+    required this.journalContentNotUsedForAds,
+    required this.premiumStateMayBeStoredLocally,
     required this.bundledSampleContent,
     required this.futureChangesTitle,
     required this.futureChanges,
@@ -97,9 +101,12 @@ class AppStrings {
     required this.premiumLifetimePlan,
     required this.premiumMonthlyPrice,
     required this.premiumLifetimePrice,
-    required this.premiumBillingComingSoon,
     required this.premiumRestoreUnavailableTitle,
     required this.premiumRestoreUnavailableBody,
+    required this.premiumRestoreNoPurchaseTitle,
+    required this.premiumRestoreNoPurchaseBody,
+    required this.premiumPurchasePending,
+    required this.premiumPurchaseUnavailable,
     required this.adPlaceholderTitle,
     required this.adPlaceholderSubtitle,
   });
@@ -173,6 +180,10 @@ class AppStrings {
   final String noCloudSync;
   final String noAnalytics;
   final String noAds;
+  final String premiumRemovesAdsInFreePlan;
+  final String purchasesGoThroughGooglePlay;
+  final String journalContentNotUsedForAds;
+  final String premiumStateMayBeStoredLocally;
   final String bundledSampleContent;
   final String futureChangesTitle;
   final String futureChanges;
@@ -198,9 +209,12 @@ class AppStrings {
   final String premiumLifetimePlan;
   final String premiumMonthlyPrice;
   final String premiumLifetimePrice;
-  final String premiumBillingComingSoon;
   final String premiumRestoreUnavailableTitle;
   final String premiumRestoreUnavailableBody;
+  final String premiumRestoreNoPurchaseTitle;
+  final String premiumRestoreNoPurchaseBody;
+  final String premiumPurchasePending;
+  final String premiumPurchaseUnavailable;
   final String adPlaceholderTitle;
   final String adPlaceholderSubtitle;
 
@@ -278,6 +292,12 @@ class AppStrings {
     noCloudSync: 'No cloud sync is currently enabled.',
     noAnalytics: 'No analytics are currently enabled.',
     noAds: 'No ads are currently enabled.',
+    premiumRemovesAdsInFreePlan: 'Premium removes ads.',
+    purchasesGoThroughGooglePlay:
+        'Purchases on Android go through Google Play.',
+    journalContentNotUsedForAds: 'Journal note content is not used for ads.',
+    premiumStateMayBeStoredLocally:
+        'Premium state may be stored locally to keep access working.',
     bundledSampleContent: 'Bundled sample content is included in the app.',
     futureChangesTitle: 'Future changes',
     futureChanges:
@@ -305,11 +325,14 @@ class AppStrings {
     premiumLifetimePlan: 'Premium Lifetime',
     premiumMonthlyPrice: '14.99 PLN / month',
     premiumLifetimePrice: '129.99 PLN once',
-    premiumBillingComingSoon: 'Billing coming soon',
-    premiumRestoreUnavailableTitle:
-        'Purchases are not available in this MVP build yet',
-    premiumRestoreUnavailableBody:
-        'Restore purchases will be enabled with Google Play Billing.',
+    premiumRestoreUnavailableTitle: 'Purchases are temporarily unavailable',
+    premiumRestoreUnavailableBody: 'Please try again later.',
+    premiumRestoreNoPurchaseTitle: 'No active Premium purchase was found',
+    premiumRestoreNoPurchaseBody:
+        'This Google Play account does not currently have Premium access.',
+    premiumPurchasePending: 'Your purchase is pending.',
+    premiumPurchaseUnavailable:
+        'Purchases are temporarily unavailable. Please try again later.',
     adPlaceholderTitle: 'Sponsored space',
     adPlaceholderSubtitle: 'Shown only in passive free-plan slots.',
   );
@@ -390,6 +413,13 @@ class AppStrings {
     noCloudSync: 'Obecnie nie ma synchronizacji z chmurą.',
     noAnalytics: 'Obecnie nie ma analityki.',
     noAds: 'Obecnie nie ma reklam.',
+    premiumRemovesAdsInFreePlan: 'Premium usuwa reklamy.',
+    purchasesGoThroughGooglePlay:
+        'Zakupy na Androidzie odbywają się przez Google Play.',
+    journalContentNotUsedForAds:
+        'Treści notatek z dziennika nie są używane do reklam.',
+    premiumStateMayBeStoredLocally:
+        'Stan Premium może być przechowywany lokalnie, aby dostęp działał.',
     bundledSampleContent:
         'W aplikacji znajdują się przykładowe treści wbudowane.',
     futureChangesTitle: 'Przyszłe zmiany',
@@ -417,10 +447,14 @@ class AppStrings {
     premiumLifetimePlan: 'Premium na stałe',
     premiumMonthlyPrice: '14,99 PLN / miesiąc',
     premiumLifetimePrice: '129,99 PLN jednorazowo',
-    premiumBillingComingSoon: 'Płatności będą dostępne w kolejnej wersji MVP',
     premiumRestoreUnavailableTitle: 'Zakupy nie są jeszcze dostępne',
-    premiumRestoreUnavailableBody:
-        'Odzyskiwanie dostępu Premium zostanie włączone razem z Google Play Billing.',
+    premiumRestoreUnavailableBody: 'Spróbuj ponownie później.',
+    premiumRestoreNoPurchaseTitle: 'Nie znaleziono aktywnego dostępu Premium',
+    premiumRestoreNoPurchaseBody:
+        'To konto Google Play nie ma obecnie aktywnego dostępu Premium.',
+    premiumPurchasePending: 'Zakup oczekuje na potwierdzenie.',
+    premiumPurchaseUnavailable:
+        'Zakupy są chwilowo niedostępne. Spróbuj ponownie później.',
     adPlaceholderTitle: 'Miejsce sponsorowane',
     adPlaceholderSubtitle: 'Widoczne tylko w spokojnych miejscach planu Free.',
   );

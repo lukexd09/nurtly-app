@@ -17,6 +17,19 @@ void main() {
     expect(strings.premiumStatusLifetimeActive, 'Lifetime Premium active');
     expect(strings.premiumUpgrade, 'Upgrade to Premium');
     expect(strings.restorePurchases, 'Restore Premium access');
+    expect(strings.premiumRemovesAdsInFreePlan, 'Premium removes ads.');
+    expect(
+      strings.purchasesGoThroughGooglePlay,
+      'Purchases on Android go through Google Play.',
+    );
+    expect(
+      strings.journalContentNotUsedForAds,
+      'Journal note content is not used for ads.',
+    );
+    expect(
+      strings.premiumStateMayBeStoredLocally,
+      'Premium state may be stored locally to keep access working.',
+    );
     expect(strings.premiumNotNow, 'Not now');
     expect(
       strings.premiumRestoreAccessLink,
@@ -24,11 +37,20 @@ void main() {
     );
     expect(
       strings.premiumRestoreUnavailableTitle,
-      'Purchases are not available in this MVP build yet',
+      'Purchases are temporarily unavailable',
     );
     expect(
       strings.premiumRestoreUnavailableBody,
-      'Restore purchases will be enabled with Google Play Billing.',
+      'Please try again later.',
+    );
+    expect(strings.premiumRestoreNoPurchaseTitle,
+        'No active Premium purchase was found');
+    expect(strings.premiumRestoreNoPurchaseBody,
+        'This Google Play account does not currently have Premium access.');
+    expect(strings.premiumPurchasePending, 'Your purchase is pending.');
+    expect(
+      strings.premiumPurchaseUnavailable,
+      'Purchases are temporarily unavailable. Please try again later.',
     );
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Remove ads');
@@ -52,6 +74,19 @@ void main() {
     expect(strings.premiumStatusLifetimeActive, 'Premium na stałe aktywne');
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
     expect(strings.restorePurchases, 'Odzyskaj dostęp Premium');
+    expect(strings.premiumRemovesAdsInFreePlan, 'Premium usuwa reklamy.');
+    expect(
+      strings.purchasesGoThroughGooglePlay,
+      'Zakupy na Androidzie odbywają się przez Google Play.',
+    );
+    expect(
+      strings.journalContentNotUsedForAds,
+      'Treści notatek z dziennika nie są używane do reklam.',
+    );
+    expect(
+      strings.premiumStateMayBeStoredLocally,
+      'Stan Premium może być przechowywany lokalnie, aby dostęp działał.',
+    );
     expect(strings.premiumNotNow, 'Nie teraz');
     expect(
       strings.premiumRestoreAccessLink,
@@ -63,8 +98,15 @@ void main() {
     );
     expect(
       strings.premiumRestoreUnavailableBody,
-      'Odzyskiwanie dostępu Premium zostanie włączone razem z Google Play Billing.',
+      'Spróbuj ponownie później.',
     );
+    expect(strings.premiumRestoreNoPurchaseTitle,
+        'Nie znaleziono aktywnego dostępu Premium');
+    expect(strings.premiumRestoreNoPurchaseBody,
+        'To konto Google Play nie ma obecnie aktywnego dostępu Premium.');
+    expect(strings.premiumPurchasePending, 'Zakup oczekuje na potwierdzenie.');
+    expect(strings.premiumPurchaseUnavailable,
+        'Zakupy są chwilowo niedostępne. Spróbuj ponownie później.');
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Usuń reklamy');
     expect(strings.adPlaceholderTitle, 'Miejsce sponsorowane');

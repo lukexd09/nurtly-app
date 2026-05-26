@@ -15,7 +15,10 @@ try {
 
     foreach ($file in $filesToRestore) {
         if (Test-Path $file) {
-            git restore -- $file
+            & git ls-files --error-unmatch -- $file 1>$null 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                git restore -- $file
+            }
         }
     }
 

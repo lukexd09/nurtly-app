@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../ads/ad_widget_factory.dart';
 import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
 import '../localization/app_language.dart';
@@ -10,6 +11,8 @@ import '../monetization/ad_policy.dart';
 import '../monetization/premium_access_controller.dart';
 import '../monetization/premium_entitlement.dart';
 import '../monetization/premium_entitlement_provider.dart';
+import '../monetization/purchase_result.dart';
+import '../monetization/premium_purchase_provider.dart';
 import '../monetization/premium_paywall_sheet.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/journal/journal_screen.dart';
@@ -25,23 +28,32 @@ import '../theme/app_text_styles.dart';
 import 'app_tab.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({
+  AppShell({
     this.contentLoader,
-    this.languagePreferenceStore =
-        const SharedPreferencesLanguagePreferenceStore(),
-    this.premiumEntitlementProvider = const LocalPremiumEntitlementProvider(),
+    LanguagePreferenceStore? languagePreferenceStore,
+    PremiumEntitlementProvider? premiumEntitlementProvider,
+    PremiumPurchaseProvider? premiumPurchaseProvider,
+    AdWidgetFactory? adWidgetFactory,
     super.key,
-  });
+  })  : languagePreferenceStore = languagePreferenceStore ??
+            const SharedPreferencesLanguagePreferenceStore(),
+        premiumEntitlementProvider =
+            premiumEntitlementProvider ?? LocalPremiumEntitlementProvider(),
+        premiumPurchaseProvider =
+            premiumPurchaseProvider ?? const LocalPremiumPurchaseProvider(),
+        adWidgetFactory = adWidgetFactory ?? const FakeAdWidgetFactory();
 
   final ContentLoader? contentLoader;
   final LanguagePreferenceStore languagePreferenceStore;
   final PremiumEntitlementProvider premiumEntitlementProvider;
+  final PremiumPurchaseProvider premiumPurchaseProvider;
+  final AdWidgetFactory adWidgetFactory;
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   var _currentIndex = 0;
   late AppLanguage _selectedLanguage;
   late final PremiumAccessController _premiumController;
@@ -54,8 +66,10 @@ class _AppShellState extends State<AppShell> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _premiumController = PremiumAccessController(
       provider: widget.premiumEntitlementProvider,
+      purchaseProvider: widget.premiumPurchaseProvider,
     );
     _premiumController.addListener(_handlePremiumChanged);
     _selectedLanguage = const AppLocaleResolver().resolve(
@@ -67,9 +81,17 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _premiumController.removeListener(_handlePremiumChanged);
     _premiumController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_premiumController.refresh());
+    }
   }
 
   void _handlePremiumChanged() {
@@ -181,16 +203,22 @@ class _AppShellState extends State<AppShell> {
       builder: (sheetContext) {
         return PremiumPaywallSheet(
           strings: _strings,
-          onShowRestoreUnavailable: () {
+          controller: _premiumController,
+          onRestoreAccess: () {
             Navigator.of(sheetContext).pop();
-            _showRestoreUnavailableMessage();
+            unawaited(_restorePremiumAccess());
           },
         );
       },
     );
   }
 
-  Future<void> _showRestoreUnavailableMessage() async {
+  Future<void> _restorePremiumAccess() async {
+    final result = await _premiumController.restorePurchases();
+    if (!mounted) {
+      return;
+    }
+
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -202,6 +230,8 @@ class _AppShellState extends State<AppShell> {
         return SafeArea(
           child: Builder(
             builder: (messageContext) {
+              final title = _restoreMessageTitle(_strings, result);
+              final body = _restoreMessageBody(_strings, result);
               return Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Column(
@@ -209,14 +239,14 @@ class _AppShellState extends State<AppShell> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _strings.premiumRestoreUnavailableTitle,
+                      title,
                       style: AppTextStyles.cardTitle.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      _strings.premiumRestoreUnavailableBody,
+                      body,
                       style: AppTextStyles.body,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -235,6 +265,38 @@ class _AppShellState extends State<AppShell> {
         );
       },
     );
+  }
+
+  String _restoreMessageTitle(
+    AppStrings strings,
+    PurchaseActionResult result,
+  ) {
+    return switch (result.status) {
+      PurchaseActionStatus.success => strings.premiumStatusActive,
+      PurchaseActionStatus.noPurchaseFound =>
+        strings.premiumRestoreNoPurchaseTitle,
+      PurchaseActionStatus.unavailable ||
+      PurchaseActionStatus.error ||
+      PurchaseActionStatus.canceled ||
+      PurchaseActionStatus.pending =>
+        strings.premiumRestoreUnavailableTitle,
+    };
+  }
+
+  String _restoreMessageBody(
+    AppStrings strings,
+    PurchaseActionResult result,
+  ) {
+    return switch (result.status) {
+      PurchaseActionStatus.success => strings.premiumStatusActive,
+      PurchaseActionStatus.noPurchaseFound =>
+        strings.premiumRestoreNoPurchaseBody,
+      PurchaseActionStatus.unavailable ||
+      PurchaseActionStatus.error ||
+      PurchaseActionStatus.canceled ||
+      PurchaseActionStatus.pending =>
+        strings.premiumRestoreUnavailableBody,
+    };
   }
 
   void _openSettings() {
@@ -297,7 +359,7 @@ class _AppShellState extends State<AppShell> {
                     title: strings.restorePurchases,
                     onTap: () {
                       Navigator.of(sheetContext).pop();
-                      unawaited(_showRestoreUnavailableMessage());
+                      unawaited(_restorePremiumAccess());
                     },
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -433,6 +495,7 @@ class _AppShellState extends State<AppShell> {
         onSelectTab: _selectTab,
         onOpenTodaysIdea: _openTodaysIdea,
         showAdPlaceholder: adPolicy.allows(AdPlacement.homePassiveSlot),
+        adWidgetFactory: widget.adWidgetFactory,
       ),
       PlayScreen(
         strings: _strings,
@@ -440,6 +503,7 @@ class _AppShellState extends State<AppShell> {
         premiumEntitlement: _premiumController.entitlement,
         onOpenPremiumPaywall: _openPremiumPaywall,
         showAdPlaceholder: adPolicy.allows(AdPlacement.playListPassiveSlot),
+        adWidgetFactory: widget.adWidgetFactory,
       ),
       const JournalScreen(),
       SoundsScreen(
@@ -448,6 +512,7 @@ class _AppShellState extends State<AppShell> {
         premiumEntitlement: _premiumController.entitlement,
         onOpenPremiumPaywall: _openPremiumPaywall,
         showAdPlaceholder: adPolicy.allows(AdPlacement.soundsListPassiveSlot),
+        adWidgetFactory: widget.adWidgetFactory,
       ),
     ];
 

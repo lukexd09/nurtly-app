@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/core/monetization/premium_entitlement_provider.dart';
 
-class FakePremiumEntitlementProvider implements PremiumEntitlementProvider {
+class FakePremiumEntitlementProvider extends ChangeNotifier
+    implements PremiumEntitlementProvider {
   FakePremiumEntitlementProvider({
     PremiumEntitlement? loadEntitlement,
     PremiumEntitlement? refreshEntitlement,

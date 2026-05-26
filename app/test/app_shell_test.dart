@@ -119,34 +119,22 @@ void main() {
     expect(find.text('Nurtly Premium'), findsOneWidget);
     expect(find.text('Remove ads'), findsOneWidget);
     expect(find.text('Unlock premium play ideas and sounds'), findsOneWidget);
-    expect(find.text('Premium Monthly'), findsOneWidget);
-    expect(find.text('Premium Lifetime'), findsOneWidget);
-    expect(find.text('Billing coming soon'), findsWidgets);
+    expect(find.text('Premium Monthly'), findsWidgets);
+    expect(find.text('Premium Lifetime'), findsWidgets);
+    expect(find.text('Billing coming soon'), findsNothing);
 
-    expect(find.text('Not now'), findsOneWidget);
-    expect(find.text('Already Premium? Restore access'), findsOneWidget);
+    await tester.drag(
+      find.byType(ListView).last,
+      const Offset(0, -400),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Not now'), findsWidgets);
+    expect(find.text('Already Premium? Restore access'), findsWidgets);
 
-    await tester.tap(find.text('Not now'));
+    await tester.tap(find.text('Not now').first);
     await tester.pumpAndSettle();
 
     expect(find.text('Nurtly Premium'), findsNothing);
-
-    await tester.tap(find.byTooltip('Settings'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Upgrade to Premium'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Already Premium? Restore access'));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.text('Purchases are not available in this MVP build yet'),
-      findsOneWidget,
-    );
-    expect(
-      find.text('Restore purchases will be enabled with Google Play Billing.'),
-      findsOneWidget,
-    );
   });
 
   testWidgets('Tapping Language opens language selector and updates row',
@@ -186,14 +174,20 @@ void main() {
     expect(find.text('J\u0119zyk'), findsWidgets);
     expect(find.text('Prywatno\u015b\u0107 i dane'), findsOneWidget);
 
-    await tester.tap(find.text('Przejd\u017a na Premium'));
+    await tester.ensureVisible(find.text('Przejd\u017a na Premium').first);
+    await tester.tap(find.text('Przejd\u017a na Premium').first);
     await tester.pumpAndSettle();
-    expect(find.text('Nie teraz'), findsOneWidget);
+    await tester.drag(
+      find.byType(ListView).last,
+      const Offset(0, -400),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Nie teraz'), findsWidgets);
     expect(
       find.text('Masz ju\u017c Premium? Odzyskaj dost\u0119p'),
-      findsOneWidget,
+      findsWidgets,
     );
-    await tester.tap(find.text('Nie teraz'));
+    await tester.tap(find.text('Nie teraz').first);
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Ustawienia'));

@@ -45,9 +45,13 @@ class PrivacyDataScreen extends StatelessWidget {
                 _PrivacyLine(
                   strings.noJournalCloudSync,
                 ),
+                _PrivacyLine(strings.premiumRemovesAdsInFreePlan),
                 _PrivacyLine(strings.noCloudSync),
                 _PrivacyLine(strings.noAnalytics),
                 _PrivacyLine(strings.noAds),
+                _PrivacyLine(strings.purchasesGoThroughGooglePlay),
+                _PrivacyLine(strings.journalContentNotUsedForAds),
+                _PrivacyLine(strings.premiumStateMayBeStoredLocally),
                 _PrivacyLine(strings.bundledSampleContent),
               ],
             ),

@@ -12,18 +12,29 @@ void main() {
 
     expect(find.text('Privacy & Data'), findsOneWidget);
     expect(find.text('- No account is used.'), findsOneWidget);
+    expect(find.text('- Premium removes ads.'), findsOneWidget);
     expect(find.text('- No cloud sync is currently enabled.'), findsOneWidget);
     expect(find.text('- No analytics are currently enabled.'), findsOneWidget);
     expect(find.text('- No ads are currently enabled.'), findsOneWidget);
     expect(
-      find.text('- Bundled sample content is included in the app.'),
+      find.text('- Purchases on Android go through Google Play.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('- Journal note content is not used for ads.'),
       findsOneWidget,
     );
     expect(
       find.text(
-        'Future data-related changes should be introduced clearly before they are enabled.',
+        '- Premium state may be stored locally to keep access working.',
       ),
       findsOneWidget,
     );
+    expect(
+      find.text('- Bundled sample content is included in the app.'),
+      findsOneWidget,
+    );
+    await tester.scrollUntilVisible(find.text('Future changes'), 120);
+    expect(find.text('Future changes'), findsOneWidget);
   });
 }

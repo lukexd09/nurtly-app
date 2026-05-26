@@ -1,13 +1,16 @@
 import 'premium_entitlement.dart';
 
-abstract interface class PremiumEntitlementProvider {
+import 'package:flutter/foundation.dart';
+
+abstract interface class PremiumEntitlementProvider extends Listenable {
   Future<PremiumEntitlement> loadEntitlement();
 
   Future<PremiumEntitlement> refreshEntitlement();
 }
 
-class LocalPremiumEntitlementProvider implements PremiumEntitlementProvider {
-  const LocalPremiumEntitlementProvider();
+class LocalPremiumEntitlementProvider extends ChangeNotifier
+    implements PremiumEntitlementProvider {
+  LocalPremiumEntitlementProvider();
 
   @override
   Future<PremiumEntitlement> loadEntitlement() async {

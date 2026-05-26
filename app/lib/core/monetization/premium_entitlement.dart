@@ -31,7 +31,7 @@ class PremiumEntitlement {
 
   factory PremiumEntitlement.monthlyActive({
     required DateTime checkedAt,
-    required DateTime expiresAt,
+    DateTime? expiresAt,
   }) {
     return PremiumEntitlement(
       state: PremiumState.active,
@@ -152,7 +152,7 @@ class PremiumEntitlement {
 
   bool _isMonthlyAccessAllowed(DateTime now) {
     if (expiresAt == null) {
-      return false;
+      return true;
     }
     if (!now.isAfter(expiresAt!)) {
       return true;

@@ -365,7 +365,7 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_window_weather_watch",
@@ -529,7 +529,7 @@
         "min": 0,
         "max": 12
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_container_matching",
@@ -696,7 +696,7 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_spoon_cup_transfer",
@@ -868,7 +868,7 @@
         "min": 36,
         "max": 72
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_soft_cleanup_song",
@@ -1037,7 +1037,7 @@
         "min": 18,
         "max": 36
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_soft_rain"
     },
     {
       "id": "play_towel_peek_path",
@@ -1135,7 +1135,8 @@
         "min": 12,
         "max": 36
       },
-      "suggestedSoundId": "sound_warm_noise"
+      "suggestedSoundId": "sound_warm_noise",
+      "unlockType": "premium"
     },
     {
       "id": "play_bath_cup_pour",
@@ -1167,7 +1168,8 @@
         "min": 18,
         "max": 48
       },
-      "suggestedSoundId": "sound_evening_crickets"
+      "suggestedSoundId": "sound_evening_crickets",
+      "unlockType": "premium"
     },
     {
       "id": "play_couch_island_pretend",
@@ -1200,7 +1202,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_dishwasher_hum",
+      "unlockType": "premium"
     },
     {
       "id": "play_stuffed_animal_bedtime",
@@ -1234,7 +1237,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_quiet_stream"
+      "suggestedSoundId": "sound_quiet_stream",
+      "unlockType": "premium"
     },
     {
       "id": "play_window_bird_watch",
@@ -1266,7 +1270,8 @@
         "min": 18,
         "max": 60
       },
-      "suggestedSoundId": "sound_soft_rain"
+      "suggestedSoundId": "sound_soft_rain",
+      "unlockType": "premium"
     },
     {
       "id": "play_paper_towel_roll_tunnel",
@@ -1299,7 +1304,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_warm_noise"
+      "suggestedSoundId": "sound_warm_noise",
+      "unlockType": "premium"
     },
     {
       "id": "play_sock_matching_basket",
@@ -1332,7 +1338,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_evening_crickets"
+      "suggestedSoundId": "sound_evening_crickets",
+      "unlockType": "premium"
     },
     {
       "id": "play_soft_toy_hide_find",
@@ -1364,7 +1371,8 @@
         "min": 18,
         "max": 48
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_dishwasher_hum",
+      "unlockType": "premium"
     },
     {
       "id": "play_gentle_hallway_parade",
@@ -1396,7 +1404,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_quiet_stream"
+      "suggestedSoundId": "sound_quiet_stream",
+      "unlockType": "premium"
     },
     {
       "id": "play_picnic_blanket_sorting",
@@ -1429,7 +1438,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_soft_rain"
+      "suggestedSoundId": "sound_soft_rain",
+      "unlockType": "premium"
     },
     {
       "id": "play_sponge_squeeze_outside",
@@ -1462,7 +1472,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_warm_noise"
+      "suggestedSoundId": "sound_warm_noise",
+      "unlockType": "premium"
     },
     {
       "id": "play_chair_train_pretend",
@@ -1496,7 +1507,8 @@
         "min": 36,
         "max": 72
       },
-      "suggestedSoundId": "sound_evening_crickets"
+      "suggestedSoundId": "sound_evening_crickets",
+      "unlockType": "premium"
     },
     {
       "id": "play_calm_hand_tracing",
@@ -1530,7 +1542,8 @@
         "min": 36,
         "max": 72
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_dishwasher_hum",
+      "unlockType": "premium"
     },
     {
       "id": "play_toy_wash_station",
@@ -1564,7 +1577,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_quiet_stream"
+      "suggestedSoundId": "sound_quiet_stream",
+      "unlockType": "premium"
     },
     {
       "id": "play_napkin_folding_helper",
@@ -1596,7 +1610,8 @@
         "min": 36,
         "max": 72
       },
-      "suggestedSoundId": "sound_soft_rain"
+      "suggestedSoundId": "sound_soft_rain",
+      "unlockType": "premium"
     },
     {
       "id": "play_animal_sound_pause",
@@ -1628,7 +1643,8 @@
         "min": 18,
         "max": 48
       },
-      "suggestedSoundId": "sound_warm_noise"
+      "suggestedSoundId": "sound_warm_noise",
+      "unlockType": "premium"
     },
     {
       "id": "play_quiet_basket_rotation",
@@ -1661,7 +1677,8 @@
         "min": 18,
         "max": 60
       },
-      "suggestedSoundId": "sound_evening_crickets"
+      "suggestedSoundId": "sound_evening_crickets",
+      "unlockType": "premium"
     },
     {
       "id": "play_big_small_match",
@@ -1696,7 +1713,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_dishwasher_hum",
+      "unlockType": "premium"
     },
     {
       "id": "play_blanket_cave_reading",
@@ -1729,7 +1747,8 @@
         "min": 24,
         "max": 60
       },
-      "suggestedSoundId": "sound_quiet_stream"
+      "suggestedSoundId": "sound_quiet_stream",
+      "unlockType": "premium"
     },
     {
       "id": "play_spoon_mirror_tap",
@@ -1762,7 +1781,8 @@
         "min": 18,
         "max": 48
       },
-      "suggestedSoundId": "sound_soft_rain"
+      "suggestedSoundId": "sound_soft_rain",
+      "unlockType": "premium"
     },
     {
       "id": "play_pretend_shop_with_cups",
@@ -1828,7 +1848,8 @@
         "min": 18,
         "max": 60
       },
-      "suggestedSoundId": "sound_evening_crickets"
+      "suggestedSoundId": "sound_evening_crickets",
+      "unlockType": "premium"
     },
     {
       "id": "play_bath_toy_rescue",
@@ -1861,7 +1882,8 @@
         "min": 18,
         "max": 48
       },
-      "suggestedSoundId": "sound_dishwasher_hum"
+      "suggestedSoundId": "sound_dishwasher_hum",
+      "unlockType": "premium"
     },
     {
       "id": "play_clean_cloth_wipe_helper",
@@ -1894,7 +1916,8 @@
         "min": 18,
         "max": 60
       },
-      "suggestedSoundId": "sound_quiet_stream"
+      "suggestedSoundId": "sound_quiet_stream",
+      "unlockType": "premium"
     }
   ],
   "playFilters": [
@@ -2039,7 +2062,8 @@
       "summary": "A gentle household hum for everyday routines.",
       "assetPath": "assets/audio/dishwasher_hum.mp3",
       "artworkAssetPath": "assets/images/sounds/dishwasher_hum.webp",
-      "unlockType": "free"
+      "unlockType": "premium"
     }
   ]
 }
+
