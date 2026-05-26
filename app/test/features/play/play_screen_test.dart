@@ -7,6 +7,7 @@ import 'package:nurtly/core/content/play_filter.dart';
 import 'package:nurtly/core/content/play_idea.dart';
 import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/core/localization/app_strings.dart';
+import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 
 import '../../test_fakes/fake_content_loader.dart';
@@ -555,6 +556,136 @@ void main() {
       expect(find.byIcon(Icons.waves_rounded), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'premium play cards open paywall for free users and detail for premium users',
+    (tester) async {
+      var paywallCalls = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PlayScreen(
+            contentLoader: const _PremiumPlayContentLoader(),
+            premiumEntitlement: PremiumEntitlement.free(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            onOpenPremiumPaywall: () {
+              paywallCalls++;
+            },
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(find.text('Sponsored space'), 200);
+      expect(find.text('Sponsored space'), findsOneWidget);
+      expect(find.text('Premium'), findsOneWidget);
+
+      await tester.tap(find.text('Premium pretend shop'));
+      await tester.pumpAndSettle();
+
+      expect(paywallCalls, 1);
+      expect(find.text('What to expect'), findsNothing);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PlayScreen(
+            contentLoader: const _PremiumPlayContentLoader(),
+            premiumEntitlement: PremiumEntitlement.lifetimeActive(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sponsored space'), findsNothing);
+      await tester.tap(find.text('Premium pretend shop'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('What to expect'), findsOneWidget);
+    },
+  );
+}
+
+class _PremiumPlayContentLoader extends ContentLoader {
+  const _PremiumPlayContentLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _testTaxonomy,
+      playFilters: [],
+      playIdeas: [
+        PlayIdea(
+          id: 'play_premium_shop',
+          title: 'Premium pretend shop',
+          summary: 'A more spacious pretend play idea.',
+          ageGroup: '3-6 years',
+          ageRangeMonths: AgeRangeMonths(min: 36, max: 72),
+          place: 'place_table',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_medium',
+          parentInvolvement: 'parent_involvement_medium',
+          activityType: 'activity_imaginative_play',
+          unlockType: 'premium',
+          contexts: ['context_home', 'context_pretend', 'context_preschool'],
+          neededItems: ['Two cups'],
+          steps: ['Set out the cups.'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_free_rain_book',
+          title: 'Free rain book',
+          summary: 'A free play idea that keeps the calm rhythm.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home', 'context_quiet'],
+          neededItems: ['Book'],
+          steps: ['Open the book.'],
+          whatToExpect: 'A calm test note for content loading.',
+          suggestedSoundId: 'sound_soft_rain',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_room_fan',
+          title: 'Room fan',
+          category: 'Home',
+          summary: 'A soft fan sound for steady background calm.',
+          assetPath: 'assets/audio/room_fan.mp3',
+          unlockType: 'premium',
+        ),
+      ],
+    );
+  }
 }
 
 class _PlayFilterContentLoader extends ContentLoader {

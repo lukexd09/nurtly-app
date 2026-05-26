@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/localization/app_strings.dart';
+import '../../core/monetization/ad_placeholder.dart';
+import '../../core/monetization/premium_entitlement.dart';
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/content_taxonomy.dart';
@@ -32,10 +34,16 @@ class PlayScreen extends StatefulWidget {
     super.key,
     this.contentLoader = const ContentLoader(),
     this.strings = AppStrings.english,
+    this.premiumEntitlement,
+    this.onOpenPremiumPaywall,
+    this.showAdPlaceholder = false,
   });
 
   final ContentLoader contentLoader;
   final AppStrings strings;
+  final PremiumEntitlement? premiumEntitlement;
+  final VoidCallback? onOpenPremiumPaywall;
+  final bool showAdPlaceholder;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -45,10 +53,13 @@ class _PlayScreenState extends State<PlayScreen> {
   late Future<ContentPackage> _contentFuture;
   bool _filtersExpanded = false;
   final Set<String> _selectedFilterIds = <String>{};
+  late PremiumEntitlement _effectiveEntitlement;
 
   @override
   void initState() {
     super.initState();
+    _effectiveEntitlement =
+        widget.premiumEntitlement ?? PremiumEntitlement.free();
     _contentFuture = widget.contentLoader.load();
   }
 
@@ -57,6 +68,10 @@ class _PlayScreenState extends State<PlayScreen> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.contentLoader != widget.contentLoader) {
       _contentFuture = widget.contentLoader.load();
+    }
+    if (oldWidget.premiumEntitlement != widget.premiumEntitlement) {
+      _effectiveEntitlement =
+          widget.premiumEntitlement ?? PremiumEntitlement.free();
     }
   }
 
@@ -131,6 +146,11 @@ class _PlayScreenState extends State<PlayScreen> {
                   package!.taxonomy,
                   widget.strings,
                 ),
+                if (widget.showAdPlaceholder &&
+                    _effectiveEntitlement.shouldShowAds) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  AdPlaceholderCard(strings: widget.strings),
+                ],
               ],
             ],
           );
@@ -191,18 +211,24 @@ class _PlayScreenState extends State<PlayScreen> {
     AppStrings strings,
   ) {
     return [
-      for (var index = 0; index < playIdeas.length; index++) ...[
-        if (index > 0) const SizedBox(height: AppSpacing.md),
+      for (final idea in playIdeas) ...[
+        if (idea != playIdeas.first) const SizedBox(height: AppSpacing.md),
         _PlayIdeaCard(
-          idea: playIdeas[index],
+          idea: idea,
           taxonomy: taxonomy,
+          strings: strings,
+          isPremium: _isPremiumUnlock(idea.unlockType),
           onTap: () {
-            final suggestedSound =
-                resolveSuggestedSound(playIdeas[index], sounds);
+            if (_isPremiumUnlock(idea.unlockType) &&
+                !_effectiveEntitlement.canAccessPremiumContent) {
+              widget.onOpenPremiumPaywall?.call();
+              return;
+            }
+            final suggestedSound = resolveSuggestedSound(idea, sounds);
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => PlayActivityDetailScreen(
-                  idea: playIdeas[index],
+                  idea: idea,
                   taxonomy: taxonomy,
                   suggestedSound: suggestedSound,
                   strings: strings,
@@ -213,6 +239,10 @@ class _PlayScreenState extends State<PlayScreen> {
         ),
       ],
     ];
+  }
+
+  bool _isPremiumUnlock(String unlockType) {
+    return unlockType.trim().toLowerCase() == 'premium';
   }
 }
 
@@ -386,11 +416,15 @@ class _PlayIdeaCard extends StatelessWidget {
   const _PlayIdeaCard({
     required this.idea,
     required this.taxonomy,
+    required this.strings,
+    required this.isPremium,
     required this.onTap,
   });
 
   final PlayIdea idea;
   final ContentTaxonomy taxonomy;
+  final AppStrings strings;
+  final bool isPremium;
   final VoidCallback onTap;
 
   @override
@@ -407,6 +441,10 @@ class _PlayIdeaCard extends StatelessWidget {
           Text(idea.summary, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.md),
           _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
+          if (isPremium) ...[
+            const SizedBox(height: AppSpacing.xs),
+            NurtlyChip(label: strings.premium),
+          ],
         ],
       ),
     );

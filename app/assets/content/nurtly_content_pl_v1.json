@@ -1771,6 +1771,7 @@
       "whatToExpect": "Spokojna zabawa w udawanie z bardzo małą ilością rzeczy. Wystarczy kilka kubków, by stworzyć scenkę.",
       "parentNote": "To dobry wybór, gdy chcesz prostej zabawy w role.",
       "safetyNote": "Używaj tylko dużych, bezpiecznych przedmiotów.",
+      "unlockType": "premium",
       "ageRangeMonths": {
         "min": 36,
         "max": 72
@@ -2009,7 +2010,7 @@
       "summary": "Cichy dźwięk wentylatora zapewniający stabilne tło.",
       "assetPath": "assets/audio/room_fan.mp3",
       "artworkAssetPath": "assets/images/sounds/room_fan.webp",
-      "unlockType": "free"
+      "unlockType": "premium"
     },
     {
       "id": "sound_dishwasher_hum",

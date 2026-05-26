@@ -141,6 +141,14 @@ void main() {
       _soundAssetMap(english.sounds),
       _soundAssetMap(polish.sounds),
     );
+    expect(
+      _unlockTypeMap(english.playIdeas),
+      _unlockTypeMap(polish.playIdeas),
+    );
+    expect(
+      _soundUnlockTypeMap(english.sounds),
+      _soundUnlockTypeMap(polish.sounds),
+    );
   });
 
   test('Polish taxonomy labels are localized while IDs stay stable', () async {
@@ -561,6 +569,11 @@ void main() {
         reason: '${idea.id} safetyNote',
       );
       expect(
+        _isNotBlank(idea.unlockType),
+        isTrue,
+        reason: '${idea.id} unlockType',
+      );
+      expect(
         _isNotBlank(idea.suggestedSoundId ?? ''),
         isTrue,
         reason: '${idea.id} suggestedSoundId required',
@@ -722,7 +735,52 @@ void main() {
       expect(sound.artworkAssetPath, expectedArtworkPathsById[sound.id]);
       expect(sound.summary.toLowerCase(), isNot(contains('placeholder')));
       expect(sound.summary.toLowerCase(), isNot(contains('future')));
-      expect(sound.unlockType, 'free');
+      expect(
+        {'free', 'premium'},
+        contains(sound.unlockType),
+        reason: '${sound.id} unlockType',
+      );
+    }
+  });
+
+  test('bundled content includes premium play and sound items', () async {
+    final packages = await Future.wait([
+      const ContentLoader(
+        source: BundledContentSource(language: AppLanguage.english),
+      ).load(),
+      const ContentLoader(
+        source: BundledContentSource(language: AppLanguage.polish),
+      ).load(),
+    ]);
+
+    for (final package in packages) {
+      expect(
+        package.playIdeas.any((idea) => idea.unlockType == 'premium'),
+        isTrue,
+      );
+      expect(
+        package.sounds.any((sound) => sound.unlockType == 'premium'),
+        isTrue,
+      );
+
+      final soundsById = {
+        for (final sound in package.sounds) sound.id: sound,
+      };
+      for (final idea in package.playIdeas) {
+        if (idea.unlockType == 'free' && idea.suggestedSoundId != null) {
+          final suggestedSound = soundsById[idea.suggestedSoundId];
+          expect(
+            suggestedSound,
+            isNotNull,
+            reason: idea.id,
+          );
+          expect(
+            suggestedSound!.unlockType,
+            'free',
+            reason: idea.id,
+          );
+        }
+      }
     }
   });
 
@@ -789,6 +847,14 @@ List<String?> _suggestedSoundIds(Iterable<PlayIdea> ideas) =>
 Map<String, String> _soundAssetMap(Iterable<SoundItem> sounds) => {
       for (final sound in sounds)
         sound.id: '${sound.assetPath}|${sound.artworkAssetPath ?? ''}'
+    };
+
+Map<String, String> _unlockTypeMap(Iterable<PlayIdea> ideas) => {
+      for (final idea in ideas) idea.id: idea.unlockType,
+    };
+
+Map<String, String> _soundUnlockTypeMap(Iterable<SoundItem> sounds) => {
+      for (final sound in sounds) sound.id: sound.unlockType,
     };
 
 String _expectedPolishAgeGroupFor(PlayIdea idea) {
