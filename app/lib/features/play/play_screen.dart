@@ -54,6 +54,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late Future<ContentPackage> _contentFuture;
   bool _filtersExpanded = false;
   final Set<String> _selectedFilterIds = <String>{};
+  final Set<String> _selectedAccessFilterIds = <String>{};
   late PremiumEntitlement _effectiveEntitlement;
 
   @override
@@ -107,7 +108,9 @@ class _PlayScreenState extends State<PlayScreen> {
                   strings: widget.strings,
                   expanded: _filtersExpanded,
                   filters: package?.playFilters ?? const <PlayFilter>[],
+                  accessFilters: _accessFilters(widget.strings),
                   selectedFilterIds: _selectedFilterIds,
+                  selectedAccessFilterIds: _selectedAccessFilterIds,
                   onToggleExpanded: () {
                     setState(() {
                       _filtersExpanded = !_filtersExpanded;
@@ -122,20 +125,38 @@ class _PlayScreenState extends State<PlayScreen> {
                       }
                     });
                   },
+                  onToggleAccessFilter: (filterId) {
+                    setState(() {
+                      if (_selectedAccessFilterIds.contains(filterId)) {
+                        _selectedAccessFilterIds.remove(filterId);
+                      } else {
+                        _selectedAccessFilterIds.add(filterId);
+                      }
+                    });
+                  },
                   onClear: _selectedFilterIds.isEmpty
-                      ? null
+                      ? (_selectedAccessFilterIds.isEmpty
+                          ? null
+                          : () {
+                              setState(() {
+                                _selectedAccessFilterIds.clear();
+                              });
+                            })
                       : () {
                           setState(() {
                             _selectedFilterIds.clear();
+                            _selectedAccessFilterIds.clear();
                           });
                         },
-                  activeCountLabel: _selectedFilterIds.isEmpty
+                  activeCountLabel: (_selectedFilterIds.isEmpty &&
+                          _selectedAccessFilterIds.isEmpty)
                       ? null
                       : widget.strings.quickIdeasCount(
                           _applyQuickFilters(
                             playIdeas,
                             package?.playFilters ?? const <PlayFilter>[],
                             _selectedFilterIds,
+                            _selectedAccessFilterIds,
                           ).length,
                         ),
                 ),
@@ -166,8 +187,10 @@ class _PlayScreenState extends State<PlayScreen> {
       playIdeas,
       filters,
       _selectedFilterIds,
+      _selectedAccessFilterIds,
     );
-    final isFiltered = _selectedFilterIds.isNotEmpty;
+    final isFiltered =
+        _selectedFilterIds.isNotEmpty || _selectedAccessFilterIds.isNotEmpty;
     if (filtered.isEmpty) {
       return [
         EmptyState(
@@ -191,20 +214,21 @@ class _PlayScreenState extends State<PlayScreen> {
     List<PlayIdea> ideas,
     List<PlayFilter> filters,
     Set<String> selectedFilterIds,
+    Set<String> selectedAccessFilterIds,
   ) {
-    if (selectedFilterIds.isEmpty) {
-      return ideas;
-    }
     final selectedFilters = filters
         .where((filter) => selectedFilterIds.contains(filter.id))
         .toList();
-    if (selectedFilters.isEmpty) {
-      return ideas;
-    }
-    return ideas
-        .where(
-            (idea) => selectedFilters.every((filter) => filter.matches(idea)))
-        .toList();
+    return ideas.where((idea) {
+      final contentFiltersMatch = selectedFilters.isEmpty
+          ? true
+          : selectedFilters.every((filter) => filter.matches(idea));
+      final accessFiltersMatch = _matchesAccessFilters(
+        idea,
+        selectedAccessFilterIds,
+      );
+      return contentFiltersMatch && accessFiltersMatch;
+    }).toList();
   }
 
   List<Widget> _playIdeaCards(List<PlayIdea> playIdeas, List<SoundItem> sounds,
@@ -255,6 +279,35 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _isPremiumUnlock(String unlockType) {
     return unlockType.trim().toLowerCase() == 'premium';
   }
+
+  bool _matchesAccessFilters(
+    PlayIdea idea,
+    Set<String> selectedAccessFilterIds,
+  ) {
+    if (selectedAccessFilterIds.isEmpty) {
+      return true;
+    }
+    final unlockType = _displayUnlockTypeId(idea);
+    final normalized = selectedAccessFilterIds
+        .map((value) => value.trim().toLowerCase())
+        .toSet();
+    return normalized.contains(unlockType);
+  }
+
+  String _displayUnlockTypeId(PlayIdea idea) {
+    final unlockType = idea.unlockType.trim().toLowerCase();
+    if (unlockType == 'premium') {
+      return 'access_premium';
+    }
+    return 'access_free';
+  }
+
+  List<_AccessFilterOption> _accessFilters(AppStrings strings) {
+    return [
+      _AccessFilterOption(id: 'access_free', label: strings.free),
+      _AccessFilterOption(id: 'access_premium', label: strings.premium),
+    ];
+  }
 }
 
 class _QuickFiltersModule extends StatelessWidget {
@@ -262,9 +315,12 @@ class _QuickFiltersModule extends StatelessWidget {
     required this.strings,
     required this.expanded,
     required this.filters,
+    required this.accessFilters,
     required this.selectedFilterIds,
+    required this.selectedAccessFilterIds,
     required this.onToggleExpanded,
     required this.onToggleFilter,
+    required this.onToggleAccessFilter,
     required this.onClear,
     required this.activeCountLabel,
   });
@@ -272,9 +328,12 @@ class _QuickFiltersModule extends StatelessWidget {
   final AppStrings strings;
   final bool expanded;
   final List<PlayFilter> filters;
+  final List<_AccessFilterOption> accessFilters;
   final Set<String> selectedFilterIds;
+  final Set<String> selectedAccessFilterIds;
   final VoidCallback onToggleExpanded;
   final ValueChanged<PlayFilter> onToggleFilter;
+  final ValueChanged<String> onToggleAccessFilter;
   final VoidCallback? onClear;
   final String? activeCountLabel;
 
@@ -343,6 +402,29 @@ class _QuickFiltersModule extends StatelessWidget {
           Wrap(
             spacing: AppSpacing.xs,
             runSpacing: AppSpacing.xs,
+            children: accessFilters.map((filter) {
+              return Material(
+                color: Colors.transparent,
+                child: FilterChip(
+                  label: Text(filter.label),
+                  selected: selectedAccessFilterIds.contains(filter.id),
+                  onSelected: (_) => onToggleAccessFilter(filter.id),
+                  selectedColor: AppColors.primarySoft,
+                  backgroundColor: AppColors.surface,
+                  side: const BorderSide(color: AppColors.borderSoft),
+                  labelStyle: selectedAccessFilterIds.contains(filter.id)
+                      ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+                      : AppTextStyles.caption
+                          .copyWith(color: AppColors.textSecondary),
+                  showCheckmark: false,
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Wrap(
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
             children: filters.map((filter) {
               return Material(
                 color: Colors.transparent,
@@ -366,6 +448,16 @@ class _QuickFiltersModule extends StatelessWidget {
       ],
     );
   }
+}
+
+class _AccessFilterOption {
+  const _AccessFilterOption({
+    required this.id,
+    required this.label,
+  });
+
+  final String id;
+  final String label;
 }
 
 class _PlayHeader extends StatelessWidget {
@@ -449,20 +541,14 @@ class _PlayIdeaCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(idea.summary, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.md),
-          _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
-          const SizedBox(height: AppSpacing.xs),
-          NurtlyChip(label: _displayUnlockType(idea)),
+          _PlayIdeaMetadata(
+            idea: idea,
+            taxonomy: taxonomy,
+            strings: strings,
+          ),
         ],
       ),
     );
-  }
-
-  String _displayUnlockType(PlayIdea idea) {
-    final unlockType = idea.unlockType.trim().toLowerCase();
-    if (unlockType == 'premium') {
-      return strings.premium;
-    }
-    return strings.free;
   }
 }
 
@@ -602,7 +688,11 @@ class _PlayDetailHero extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(idea.summary, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.md),
-            _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
+            _PlayIdeaMetadata(
+              idea: idea,
+              taxonomy: taxonomy,
+              strings: strings,
+            ),
           ],
         ),
       ),
@@ -646,14 +736,17 @@ class _PlayIdeaMetadata extends StatelessWidget {
   const _PlayIdeaMetadata({
     required this.idea,
     required this.taxonomy,
+    required this.strings,
   });
 
   final PlayIdea idea;
   final ContentTaxonomy taxonomy;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      key: ValueKey('play-card-metadata-${idea.id}'),
       spacing: AppSpacing.xs,
       runSpacing: AppSpacing.xs,
       children: [
@@ -677,9 +770,20 @@ class _PlayIdeaMetadata extends StatelessWidget {
         NurtlyChip(
           label: taxonomy.labelForActivityType(idea.activityType),
         ),
+        NurtlyChip(
+          label: _displayUnlockType(idea, strings),
+        ),
       ],
     );
   }
+}
+
+String _displayUnlockType(PlayIdea idea, AppStrings strings) {
+  final unlockType = idea.unlockType.trim().toLowerCase();
+  if (unlockType == 'premium') {
+    return strings.premium;
+  }
+  return strings.free;
 }
 
 class _BulletText extends StatelessWidget {
