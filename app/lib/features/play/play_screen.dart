@@ -218,7 +218,6 @@ class _PlayScreenState extends State<PlayScreen> {
           idea: playIdeas[index],
           taxonomy: taxonomy,
           strings: strings,
-          isPremium: _isPremiumUnlock(playIdeas[index].unlockType),
           onTap: () {
             if (_isPremiumUnlock(playIdeas[index].unlockType) &&
                 !_effectiveEntitlement.canAccessPremiumContent) {
@@ -429,14 +428,12 @@ class _PlayIdeaCard extends StatelessWidget {
     required this.idea,
     required this.taxonomy,
     required this.strings,
-    required this.isPremium,
     required this.onTap,
   });
 
   final PlayIdea idea;
   final ContentTaxonomy taxonomy;
   final AppStrings strings;
-  final bool isPremium;
   final VoidCallback onTap;
 
   @override
@@ -453,13 +450,19 @@ class _PlayIdeaCard extends StatelessWidget {
           Text(idea.summary, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.md),
           _PlayIdeaMetadata(idea: idea, taxonomy: taxonomy),
-          if (isPremium) ...[
-            const SizedBox(height: AppSpacing.xs),
-            NurtlyChip(label: strings.premium),
-          ],
+          const SizedBox(height: AppSpacing.xs),
+          NurtlyChip(label: _displayUnlockType(idea)),
         ],
       ),
     );
+  }
+
+  String _displayUnlockType(PlayIdea idea) {
+    final unlockType = idea.unlockType.trim().toLowerCase();
+    if (unlockType == 'premium') {
+      return strings.premium;
+    }
+    return strings.free;
   }
 }
 
