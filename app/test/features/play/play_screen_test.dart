@@ -644,6 +644,47 @@ void main() {
     expect(find.text('premium'), findsNothing);
   });
 
+  testWidgets('access and content filters render in one chip wrap', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          strings: AppStrings.english,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+
+    final wrap = find.byKey(const ValueKey('play-filter-chip-wrap'));
+
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Free'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Premium'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Low mess'),
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('free unfiltered play list inserts ad after the 3rd item',
       (tester) async {
     await tester.pumpWidget(
@@ -826,6 +867,144 @@ class _PremiumPlayContentLoader extends ContentLoader {
           summary: 'A soft fan sound for steady background calm.',
           assetPath: 'assets/audio/room_fan.mp3',
           unlockType: 'premium',
+        ),
+      ],
+    );
+  }
+}
+
+class _PlayAccessFilterContentLoader extends ContentLoader {
+  const _PlayAccessFilterContentLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _testTaxonomy,
+      playFilters: [
+        PlayFilter(
+          id: 'low_mess',
+          label: 'Low mess',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'messLevel',
+              operator: 'equals',
+              value: 'mess_low',
+            ),
+          ],
+        ),
+      ],
+      playIdeas: [
+        PlayIdea(
+          id: 'play_free_low_1',
+          title: 'Free play 1',
+          summary: 'A free low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_free_low_2',
+          title: 'Free play 2',
+          summary: 'Another free low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_low_1',
+          title: 'Premium play 1',
+          summary: 'A premium low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_low_2',
+          title: 'Premium play 2',
+          summary: 'Another premium low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_medium',
+          title: 'Premium medium play',
+          summary: 'A premium medium-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_medium',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
         ),
       ],
     );
