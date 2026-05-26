@@ -111,7 +111,7 @@ void main() {
     expect(find.text('Status'), findsOneWidget);
     expect(find.text('Free plan'), findsOneWidget);
     expect(find.text('Upgrade to Premium'), findsOneWidget);
-    expect(find.text('Restore purchases'), findsOneWidget);
+    expect(find.text('Restore Premium access'), findsOneWidget);
 
     await tester.tap(find.text('Upgrade to Premium'));
     await tester.pumpAndSettle();
@@ -123,10 +123,26 @@ void main() {
     expect(find.text('Premium Lifetime'), findsOneWidget);
     expect(find.text('Billing coming soon'), findsWidgets);
 
-    await tester.tap(find.text('Restore purchases'));
+    expect(find.text('Not now'), findsOneWidget);
+    expect(find.text('Already Premium? Restore access'), findsOneWidget);
+
+    await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Purchases are not available yet'), findsOneWidget);
+    expect(find.text('Nurtly Premium'), findsNothing);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Upgrade to Premium'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Already Premium? Restore access'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Purchases are not available in this MVP build yet'),
+      findsOneWidget,
+    );
     expect(
       find.text('Restore purchases will be enabled with Google Play Billing.'),
       findsOneWidget,
@@ -148,7 +164,9 @@ void main() {
 
     expect(find.text('Language'), findsWidgets);
     expect(
-        find.byKey(const ValueKey('language-choice-polish')), findsOneWidget);
+      find.byKey(const ValueKey('language-choice-polish')),
+      findsOneWidget,
+    );
     expect(
       find.byKey(const ValueKey('language-choice-english')),
       findsOneWidget,
@@ -164,10 +182,26 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Ustawienia'), findsOneWidget);
-    expect(find.text('Ogólne'), findsOneWidget);
-    expect(find.text('Język'), findsWidgets);
-    expect(find.text('Prywatność i dane'), findsOneWidget);
+    expect(find.text('Og\u00f3lne'), findsOneWidget);
+    expect(find.text('J\u0119zyk'), findsWidgets);
+    expect(find.text('Prywatno\u015b\u0107 i dane'), findsOneWidget);
 
+    await tester.tap(find.text('Przejd\u017a na Premium'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nie teraz'), findsOneWidget);
+    expect(
+      find.text('Masz ju\u017c Premium? Odzyskaj dost\u0119p'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Nie teraz'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Ustawienia'));
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('settings-language-row')),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('settings-language-row')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('language-choice-english')));
@@ -214,9 +248,8 @@ void main() {
         saved: AppLanguage.polish,
       ),
     );
-
+    expect(find.text('D\u017awi\u0119ki'), findsOneWidget);
     expect(find.text('Spokojniejszy start'), findsOneWidget);
-    expect(find.text('Dźwięki'), findsOneWidget);
   });
 
   testWidgets('saved English language overrides system locale on startup',
