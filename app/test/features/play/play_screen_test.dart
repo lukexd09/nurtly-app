@@ -609,7 +609,7 @@ void main() {
     },
   );
 
-  testWidgets('play cards show localized Free and Premium chips',
+  testWidgets('play card metadata includes localized Free and Premium chips',
       (tester) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -621,8 +621,21 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Free'), findsOneWidget);
-    expect(find.text('Premium'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find
+            .byKey(const ValueKey('play-card-metadata-play_free_rain_book')),
+        matching: find.text('Free'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('play-card-metadata-play_premium_shop')),
+        matching: find.text('Premium'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('free'), findsNothing);
     expect(find.text('premium'), findsNothing);
   });
@@ -638,10 +651,174 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Darmowe'), findsOneWidget);
-    expect(find.text('Premium'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find
+            .byKey(const ValueKey('play-card-metadata-play_free_rain_book')),
+        matching: find.text('Darmowe'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('play-card-metadata-play_premium_shop')),
+        matching: find.text('Premium'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('free'), findsNothing);
     expect(find.text('premium'), findsNothing);
+  });
+
+  testWidgets('access filters show Free and Premium options', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          strings: AppStrings.english,
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FilterChip, 'Free'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Premium'), findsOneWidget);
+  });
+
+  testWidgets('access filters narrow play results by access type',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          strings: AppStrings.english,
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Free'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Free play 1'), findsOneWidget);
+    expect(find.text('Free play 2'), findsOneWidget);
+    expect(find.text('Premium play 1'), findsNothing);
+
+    await tester.tap(find.widgetWithText(FilterChip, 'Free'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Premium play 2'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+
+    expect(find.text('Premium play 1'), findsOneWidget);
+    expect(find.text('Premium play 2'), findsOneWidget);
+    expect(find.text('Free play 1'), findsNothing);
+  });
+
+  testWidgets(
+    'access filters combine with content filters and ad placement',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PlayScreen(
+            contentLoader: const _PlayAccessFilterContentLoader(),
+            strings: AppStrings.english,
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterChip, 'Low mess'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterChip, 'Free'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
+      await tester.pumpAndSettle();
+
+      final lowMessChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Low mess'),
+      );
+      final freeChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Free'),
+      );
+      final premiumChip = tester.widget<FilterChip>(
+        find.widgetWithText(FilterChip, 'Premium'),
+      );
+
+      expect(lowMessChip.selected, isTrue);
+      expect(freeChip.selected, isTrue);
+      expect(premiumChip.selected, isTrue);
+    },
+  );
+
+  testWidgets(
+    'premium access filter still opens paywall for free users',
+    (tester) async {
+      var paywallCalls = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PlayScreen(
+            contentLoader: const _PlayAccessFilterContentLoader(),
+            premiumEntitlement: PremiumEntitlement.free(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            onOpenPremiumPaywall: () {
+              paywallCalls++;
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Premium play 1'));
+      await tester.pumpAndSettle();
+
+      expect(paywallCalls, 1);
+      expect(find.text('What to expect'), findsNothing);
+    },
+  );
+
+  testWidgets('premium access filter allows premium users into details',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Premium play 1'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('What to expect'), findsOneWidget);
   });
 
   testWidgets('free unfiltered play list inserts ad after the 3rd item',
@@ -826,6 +1003,144 @@ class _PremiumPlayContentLoader extends ContentLoader {
           summary: 'A soft fan sound for steady background calm.',
           assetPath: 'assets/audio/room_fan.mp3',
           unlockType: 'premium',
+        ),
+      ],
+    );
+  }
+}
+
+class _PlayAccessFilterContentLoader extends ContentLoader {
+  const _PlayAccessFilterContentLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _testTaxonomy,
+      playFilters: [
+        PlayFilter(
+          id: 'low_mess',
+          label: 'Low mess',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'messLevel',
+              operator: 'equals',
+              value: 'mess_low',
+            ),
+          ],
+        ),
+      ],
+      playIdeas: [
+        PlayIdea(
+          id: 'play_free_low_1',
+          title: 'Free play 1',
+          summary: 'A free low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_free_low_2',
+          title: 'Free play 2',
+          summary: 'Another free low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_low_1',
+          title: 'Premium play 1',
+          summary: 'A premium low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_low_2',
+          title: 'Premium play 2',
+          summary: 'Another premium low-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'play_premium_medium',
+          title: 'Premium medium play',
+          summary: 'A premium medium-mess play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_medium',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
         ),
       ],
     );
