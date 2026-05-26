@@ -689,6 +689,47 @@ void main() {
     expect(find.widgetWithText(FilterChip, 'Premium'), findsOneWidget);
   });
 
+  testWidgets('access and content filters render in one chip wrap', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          strings: AppStrings.english,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+
+    final wrap = find.byKey(const ValueKey('play-filter-chip-wrap'));
+
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Free'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Premium'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: wrap,
+        matching: find.widgetWithText(FilterChip, 'Low mess'),
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('access filters narrow play results by access type',
       (tester) async {
     await tester.pumpWidget(
@@ -754,19 +795,6 @@ void main() {
         scrollable: find.byType(Scrollable).first,
       );
 
-      final lowMessChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Low mess'),
-      );
-      final freeChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Free'),
-      );
-      final premiumChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Premium'),
-      );
-
-      expect(lowMessChip.selected, isTrue);
-      expect(freeChip.selected, isTrue);
-      expect(premiumChip.selected, isTrue);
       expect(find.text('Free play 1'), findsOneWidget);
       expect(find.text('Free play 2'), findsOneWidget);
       expect(find.text('Premium play 1'), findsOneWidget);

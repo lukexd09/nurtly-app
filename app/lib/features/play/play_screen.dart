@@ -107,8 +107,8 @@ class _PlayScreenState extends State<PlayScreen> {
                 _QuickFiltersModule(
                   strings: widget.strings,
                   expanded: _filtersExpanded,
-                  filters: package?.playFilters ?? const <PlayFilter>[],
                   accessFilters: _accessFilters(widget.strings),
+                  filters: package?.playFilters ?? const <PlayFilter>[],
                   selectedFilterIds: _selectedFilterIds,
                   selectedAccessFilterIds: _selectedAccessFilterIds,
                   onToggleExpanded: () {
@@ -216,19 +216,18 @@ class _PlayScreenState extends State<PlayScreen> {
     Set<String> selectedFilterIds,
     Set<String> selectedAccessFilterIds,
   ) {
+    if (selectedFilterIds.isEmpty && selectedAccessFilterIds.isEmpty) {
+      return ideas;
+    }
     final selectedFilters = filters
         .where((filter) => selectedFilterIds.contains(filter.id))
         .toList();
-    return ideas.where((idea) {
-      final contentFiltersMatch = selectedFilters.isEmpty
-          ? true
-          : selectedFilters.every((filter) => filter.matches(idea));
-      final accessFiltersMatch = _matchesAccessFilters(
-        idea,
-        selectedAccessFilterIds,
-      );
-      return contentFiltersMatch && accessFiltersMatch;
-    }).toList();
+    return ideas
+        .where((idea) =>
+            _matchesAccessFilters(idea, selectedAccessFilterIds) &&
+            (selectedFilters.isEmpty ||
+                selectedFilters.every((filter) => filter.matches(idea))))
+        .toList();
   }
 
   List<Widget> _playIdeaCards(List<PlayIdea> playIdeas, List<SoundItem> sounds,
@@ -314,8 +313,8 @@ class _QuickFiltersModule extends StatelessWidget {
   const _QuickFiltersModule({
     required this.strings,
     required this.expanded,
-    required this.filters,
     required this.accessFilters,
+    required this.filters,
     required this.selectedFilterIds,
     required this.selectedAccessFilterIds,
     required this.onToggleExpanded,
@@ -327,8 +326,8 @@ class _QuickFiltersModule extends StatelessWidget {
 
   final AppStrings strings;
   final bool expanded;
-  final List<PlayFilter> filters;
   final List<_AccessFilterOption> accessFilters;
+  final List<PlayFilter> filters;
   final Set<String> selectedFilterIds;
   final Set<String> selectedAccessFilterIds;
   final VoidCallback onToggleExpanded;
@@ -400,52 +399,55 @@ class _QuickFiltersModule extends StatelessWidget {
         if (expanded) ...[
           const SizedBox(height: AppSpacing.xs),
           Wrap(
+            key: const ValueKey('play-filter-chip-wrap'),
             spacing: AppSpacing.xs,
             runSpacing: AppSpacing.xs,
-            children: accessFilters.map((filter) {
-              return Material(
-                color: Colors.transparent,
-                child: FilterChip(
-                  label: Text(filter.label),
-                  selected: selectedAccessFilterIds.contains(filter.id),
-                  onSelected: (_) => onToggleAccessFilter(filter.id),
-                  selectedColor: AppColors.primarySoft,
-                  backgroundColor: AppColors.surface,
-                  side: const BorderSide(color: AppColors.borderSoft),
-                  labelStyle: selectedAccessFilterIds.contains(filter.id)
-                      ? AppTextStyles.caption.copyWith(color: AppColors.primary)
-                      : AppTextStyles.caption
-                          .copyWith(color: AppColors.textSecondary),
-                  showCheckmark: false,
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: filters.map((filter) {
-              return Material(
-                color: Colors.transparent,
-                child: FilterChip(
-                  label: Text(filter.label),
-                  selected: selectedFilterIds.contains(filter.id),
-                  onSelected: (_) => onToggleFilter(filter),
-                  selectedColor: AppColors.primarySoft,
-                  backgroundColor: AppColors.surface,
-                  side: const BorderSide(color: AppColors.borderSoft),
-                  labelStyle: selectedFilterIds.contains(filter.id)
-                      ? AppTextStyles.caption.copyWith(color: AppColors.primary)
-                      : AppTextStyles.caption
-                          .copyWith(color: AppColors.textSecondary),
-                  showCheckmark: false,
-                ),
-              );
-            }).toList(),
+            children: [
+              for (final filter in accessFilters)
+                _buildAccessFilterChip(filter),
+              for (final filter in filters) _buildContentFilterChip(filter),
+            ],
           ),
         ],
       ],
+    );
+  }
+
+  Widget _buildAccessFilterChip(_AccessFilterOption filter) {
+    final selected = selectedAccessFilterIds.contains(filter.id);
+    return Material(
+      color: Colors.transparent,
+      child: FilterChip(
+        label: Text(filter.label),
+        selected: selected,
+        onSelected: (_) => onToggleAccessFilter(filter.id),
+        selectedColor: AppColors.primarySoft,
+        backgroundColor: AppColors.surface,
+        side: const BorderSide(color: AppColors.borderSoft),
+        labelStyle: selected
+            ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+            : AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        showCheckmark: false,
+      ),
+    );
+  }
+
+  Widget _buildContentFilterChip(PlayFilter filter) {
+    final selected = selectedFilterIds.contains(filter.id);
+    return Material(
+      color: Colors.transparent,
+      child: FilterChip(
+        label: Text(filter.label),
+        selected: selected,
+        onSelected: (_) => onToggleFilter(filter),
+        selectedColor: AppColors.primarySoft,
+        backgroundColor: AppColors.surface,
+        side: const BorderSide(color: AppColors.borderSoft),
+        labelStyle: selected
+            ? AppTextStyles.caption.copyWith(color: AppColors.primary)
+            : AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        showCheckmark: false,
+      ),
     );
   }
 }
