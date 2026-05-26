@@ -144,7 +144,8 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
       return;
     }
 
-    if (_entitlement.hasPremiumAccess) {
+    if (_entitlement.hasPremiumAccess ||
+        _entitlement.state == PremiumState.pending) {
       _entitlement = PremiumEntitlement.free(checkedAt: DateTime.now());
       notifyListeners();
     }

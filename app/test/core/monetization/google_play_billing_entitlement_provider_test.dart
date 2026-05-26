@@ -140,6 +140,33 @@ void main() {
     expect(provider.currentEntitlement.state, PremiumState.pending);
     expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
   });
+
+  test('confirmed no active purchase clears stale pending entitlement',
+      () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kMonthlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+        const [],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    expect(provider.currentEntitlement.state, PremiumState.pending);
+
+    final refreshed = await provider.refreshEntitlement();
+
+    expect(refreshed.state, PremiumState.free);
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
+  });
 }
 
 class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
