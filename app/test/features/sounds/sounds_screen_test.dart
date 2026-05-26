@@ -189,6 +189,78 @@ void main() {
       expect(find.text('Premium room fan'), findsWidgets);
     },
   );
+
+  testWidgets('free sounds list inserts ad after the 3rd item', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundsScreen(
+          contentLoader: const _AdPlacementSoundsContentLoader4(),
+          premiumEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Sound 4'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      greaterThan(tester.getTopLeft(find.text('Sound 3')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      lessThan(tester.getTopLeft(find.text('Sound 4')).dy),
+    );
+  });
+
+  testWidgets('short unfiltered sounds list inserts ad at the end',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundsScreen(
+          contentLoader: const _AdPlacementSoundsContentLoader2(),
+          premiumEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      greaterThan(tester.getTopLeft(find.text('Sound 2')).dy),
+    );
+  });
+
+  testWidgets('premium sounds lists do not show ad placeholders',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundsScreen(
+          contentLoader: const _AdPlacementSoundsContentLoader4(),
+          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsNothing);
+  });
 }
 
 class _SoundsArtworkFallbackLoader extends ContentLoader {
@@ -254,6 +326,78 @@ class _PremiumSoundsContentLoader extends ContentLoader {
           summary: 'A soft fan sound for steady background calm.',
           assetPath: 'assets/audio/room_fan.mp3',
           unlockType: 'premium',
+        ),
+      ],
+    );
+  }
+}
+
+class _AdPlacementSoundsContentLoader4 extends ContentLoader {
+  const _AdPlacementSoundsContentLoader4();
+
+  @override
+  Future<ContentPackage> load() async {
+    return _basePackage(
+      const [
+        SoundItem(
+          id: 'sound_1',
+          title: 'Sound 1',
+          category: 'Nature',
+          summary: 'Sound one.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_2',
+          title: 'Sound 2',
+          category: 'Nature',
+          summary: 'Sound two.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_3',
+          title: 'Sound 3',
+          category: 'Nature',
+          summary: 'Sound three.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_4',
+          title: 'Sound 4',
+          category: 'Nature',
+          summary: 'Sound four.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+class _AdPlacementSoundsContentLoader2 extends ContentLoader {
+  const _AdPlacementSoundsContentLoader2();
+
+  @override
+  Future<ContentPackage> load() async {
+    return _basePackage(
+      const [
+        SoundItem(
+          id: 'sound_1',
+          title: 'Sound 1',
+          category: 'Nature',
+          summary: 'Sound one.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+        SoundItem(
+          id: 'sound_2',
+          title: 'Sound 2',
+          category: 'Nature',
+          summary: 'Sound two.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
         ),
       ],
     );
