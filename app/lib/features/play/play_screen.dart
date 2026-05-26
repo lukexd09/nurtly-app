@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/localization/app_strings.dart';
 import '../../core/monetization/ad_placeholder.dart';
+import '../../core/monetization/ad_insertion_policy.dart';
 import '../../core/monetization/premium_entitlement.dart';
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
@@ -146,11 +147,6 @@ class _PlayScreenState extends State<PlayScreen> {
                   package!.taxonomy,
                   widget.strings,
                 ),
-                if (widget.showAdPlaceholder &&
-                    _effectiveEntitlement.shouldShowAds) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  AdPlaceholderCard(strings: widget.strings),
-                ],
               ],
             ],
           );
@@ -171,6 +167,7 @@ class _PlayScreenState extends State<PlayScreen> {
       filters,
       _selectedFilterIds,
     );
+    final isFiltered = _selectedFilterIds.isNotEmpty;
     if (filtered.isEmpty) {
       return [
         EmptyState(
@@ -180,7 +177,13 @@ class _PlayScreenState extends State<PlayScreen> {
       ];
     }
     return [
-      ..._playIdeaCards(filtered, sounds, taxonomy, strings),
+      ..._playIdeaCards(
+        filtered,
+        sounds,
+        taxonomy,
+        strings,
+        isFiltered: isFiltered,
+      ),
     ];
   }
 
@@ -204,31 +207,30 @@ class _PlayScreenState extends State<PlayScreen> {
         .toList();
   }
 
-  List<Widget> _playIdeaCards(
-    List<PlayIdea> playIdeas,
-    List<SoundItem> sounds,
-    ContentTaxonomy taxonomy,
-    AppStrings strings,
-  ) {
+  List<Widget> _playIdeaCards(List<PlayIdea> playIdeas, List<SoundItem> sounds,
+      ContentTaxonomy taxonomy, AppStrings strings,
+      {required bool isFiltered}) {
+    final adPolicy = const AdInsertionPolicy();
     return [
-      for (final idea in playIdeas) ...[
-        if (idea != playIdeas.first) const SizedBox(height: AppSpacing.md),
+      for (var index = 0; index < playIdeas.length; index++) ...[
+        if (index > 0) const SizedBox(height: AppSpacing.md),
         _PlayIdeaCard(
-          idea: idea,
+          idea: playIdeas[index],
           taxonomy: taxonomy,
           strings: strings,
-          isPremium: _isPremiumUnlock(idea.unlockType),
+          isPremium: _isPremiumUnlock(playIdeas[index].unlockType),
           onTap: () {
-            if (_isPremiumUnlock(idea.unlockType) &&
+            if (_isPremiumUnlock(playIdeas[index].unlockType) &&
                 !_effectiveEntitlement.canAccessPremiumContent) {
               widget.onOpenPremiumPaywall?.call();
               return;
             }
-            final suggestedSound = resolveSuggestedSound(idea, sounds);
+            final suggestedSound =
+                resolveSuggestedSound(playIdeas[index], sounds);
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => PlayActivityDetailScreen(
-                  idea: idea,
+                  idea: playIdeas[index],
                   taxonomy: taxonomy,
                   suggestedSound: suggestedSound,
                   strings: strings,
@@ -237,6 +239,16 @@ class _PlayScreenState extends State<PlayScreen> {
             );
           },
         ),
+        if (widget.showAdPlaceholder &&
+            _effectiveEntitlement.shouldShowAds &&
+            adPolicy.shouldInsertAdAfterContentIndex(
+              contentIndexOneBased: index + 1,
+              totalVisibleItems: playIdeas.length,
+              isFiltered: isFiltered,
+            )) ...[
+          const SizedBox(height: AppSpacing.md),
+          AdPlaceholderCard(strings: strings),
+        ],
       ],
     ];
   }

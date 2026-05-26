@@ -7,6 +7,7 @@ import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
 import '../../core/localization/app_strings.dart';
+import '../../core/monetization/ad_insertion_policy.dart';
 import '../../core/monetization/ad_placeholder.dart';
 import '../../core/monetization/premium_entitlement.dart';
 import '../../core/theme/app_colors.dart';
@@ -100,11 +101,6 @@ class _SoundsScreenState extends State<SoundsScreen> {
                 )
               else ...[
                 ..._soundCards(sounds),
-                if (widget.showAdPlaceholder &&
-                    _effectiveEntitlement.shouldShowAds) ...[
-                  const SizedBox(height: AppSpacing.lg),
-                  AdPlaceholderCard(strings: widget.strings),
-                ],
               ],
             ],
           );
@@ -114,15 +110,16 @@ class _SoundsScreenState extends State<SoundsScreen> {
   }
 
   List<Widget> _soundCards(List<SoundItem> sounds) {
+    final adPolicy = const AdInsertionPolicy();
     return [
-      for (final sound in sounds) ...[
-        if (sound != sounds.first) const SizedBox(height: AppSpacing.md),
+      for (var index = 0; index < sounds.length; index++) ...[
+        if (index > 0) const SizedBox(height: AppSpacing.md),
         _SoundCard(
-          sound: sound,
+          sound: sounds[index],
           strings: widget.strings,
-          isPremium: _isPremiumUnlock(sound.unlockType),
+          isPremium: _isPremiumUnlock(sounds[index].unlockType),
           onTap: () {
-            if (_isPremiumUnlock(sound.unlockType) &&
+            if (_isPremiumUnlock(sounds[index].unlockType) &&
                 !_effectiveEntitlement.canAccessPremiumContent) {
               widget.onOpenPremiumPaywall?.call();
               return;
@@ -130,13 +127,23 @@ class _SoundsScreenState extends State<SoundsScreen> {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => SoundDetailScreen(
-                  sound: sound,
+                  sound: sounds[index],
                   strings: widget.strings,
                 ),
               ),
             );
           },
         ),
+        if (widget.showAdPlaceholder &&
+            _effectiveEntitlement.shouldShowAds &&
+            adPolicy.shouldInsertAdAfterContentIndex(
+              contentIndexOneBased: index + 1,
+              totalVisibleItems: sounds.length,
+              isFiltered: false,
+            )) ...[
+          const SizedBox(height: AppSpacing.md),
+          AdPlaceholderCard(strings: widget.strings),
+        ],
       ],
     ];
   }

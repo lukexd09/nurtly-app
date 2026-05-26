@@ -608,6 +608,115 @@ void main() {
       expect(find.text('What to expect'), findsOneWidget);
     },
   );
+
+  testWidgets('free unfiltered play list inserts ad after the 3rd item',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _AdPlacementPlayContentLoader4(),
+          premiumEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Play 4'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      greaterThan(tester.getTopLeft(find.text('Play 3')).dy),
+    );
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      lessThan(tester.getTopLeft(find.text('Play 4')).dy),
+    );
+  });
+
+  testWidgets('filtered play results with 2 items do not show ads',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _AdPlacementPlayContentLoader2(),
+          premiumEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'All'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsNothing);
+    expect(find.text('Play 1'), findsOneWidget);
+    expect(find.text('Play 2'), findsOneWidget);
+  });
+
+  testWidgets('filtered play results with 3 items show one ad after the 3rd',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _AdPlacementPlayContentLoader3(),
+          premiumEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilterChip, 'All'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Play 3'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsOneWidget);
+    expect(
+      tester.getTopLeft(find.text('Sponsored space')).dy,
+      greaterThan(tester.getTopLeft(find.text('Play 3')).dy),
+    );
+  });
+
+  testWidgets('premium play lists do not show ad placeholders', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _AdPlacementPlayContentLoader4(),
+          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          showAdPlaceholder: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sponsored space'), findsNothing);
+  });
 }
 
 class _PremiumPlayContentLoader extends ContentLoader {
@@ -943,6 +1052,140 @@ class _MissingSuggestedSoundLoader extends ContentLoader {
       ],
     );
   }
+}
+
+class _AdPlacementPlayContentLoader4 extends ContentLoader {
+  const _AdPlacementPlayContentLoader4();
+
+  @override
+  Future<ContentPackage> load() async {
+    return _adPlacementPackage([
+      _playIdea('play_1', 'Play 1'),
+      _playIdea('play_2', 'Play 2'),
+      _playIdea('play_3', 'Play 3'),
+      _playIdea('play_4', 'Play 4'),
+    ]);
+  }
+}
+
+class _AdPlacementPlayContentLoader3 extends ContentLoader {
+  const _AdPlacementPlayContentLoader3();
+
+  @override
+  Future<ContentPackage> load() async {
+    return _adPlacementPackage([
+      _playIdea('play_1', 'Play 1'),
+      _playIdea('play_2', 'Play 2'),
+      _playIdea('play_3', 'Play 3'),
+    ]);
+  }
+}
+
+class _AdPlacementPlayContentLoader2 extends ContentLoader {
+  const _AdPlacementPlayContentLoader2();
+
+  @override
+  Future<ContentPackage> load() async {
+    return ContentPackage(
+      metadata: const ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _testTaxonomy,
+      playFilters: const [
+        PlayFilter(
+          id: 'all',
+          label: 'All',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'contexts',
+              operator: 'contains',
+              value: 'context_home',
+            ),
+          ],
+        ),
+      ],
+      playIdeas: [
+        _playIdea('play_1', 'Play 1'),
+        _playIdea('play_2', 'Play 2'),
+      ],
+      sounds: const [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+ContentPackage _adPlacementPackage(List<PlayIdea> ideas) {
+  return ContentPackage(
+    metadata: const ContentMetadata(
+      packageId: 'test',
+      schemaVersion: 1,
+      version: '1.1.0',
+      locale: 'en',
+      publishedAt: '2026-05-18',
+      minAppVersion: '0.1.0',
+    ),
+    taxonomy: _testTaxonomy,
+    playFilters: const [
+      PlayFilter(
+        id: 'all',
+        label: 'All',
+        matchMode: PlayFilterMatchMode.all,
+        rules: [
+          PlayFilterRule(
+            field: 'contexts',
+            operator: 'contains',
+            value: 'context_home',
+          ),
+        ],
+      ),
+    ],
+    playIdeas: ideas,
+    sounds: const [
+      SoundItem(
+        id: 'sound_soft_rain',
+        title: 'Soft rain',
+        category: 'Nature',
+        summary: 'Gentle rain for a calmer background.',
+        assetPath: 'assets/audio/soft_rain.mp3',
+        unlockType: 'free',
+      ),
+    ],
+  );
+}
+
+PlayIdea _playIdea(String id, String title) {
+  return PlayIdea(
+    id: id,
+    title: title,
+    summary: 'A calm test idea.',
+    ageGroup: '0-5 years',
+    ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+    place: 'place_home',
+    messLevel: 'mess_low',
+    childEngagement: 'child_engagement_low',
+    parentInvolvement: 'parent_involvement_low',
+    activityType: 'activity_quiet_time',
+    contexts: ['context_home'],
+    neededItems: ['Item'],
+    steps: ['Step'],
+    whatToExpect: 'A calm test note for content loading.',
+    parentNote: 'Keep it simple.',
+    safetyNote: 'Use safe items.',
+  );
 }
 
 const _testTaxonomy = ContentTaxonomy(

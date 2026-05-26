@@ -200,33 +200,37 @@ class _AppShellState extends State<AppShell> {
       ),
       builder: (_) {
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _strings.premiumRestoreUnavailableTitle,
-                  style: AppTextStyles.cardTitle.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+          child: Builder(
+            builder: (messageContext) {
+              return Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _strings.premiumRestoreUnavailableTitle,
+                      style: AppTextStyles.cardTitle.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      _strings.premiumRestoreUnavailableBody,
+                      style: AppTextStyles.body,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(messageContext).pop(),
+                        child: Text(_strings.back),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  _strings.premiumRestoreUnavailableBody,
-                  style: AppTextStyles.body,
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(_strings.back),
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },
