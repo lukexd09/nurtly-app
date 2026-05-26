@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app_config.dart';
@@ -12,13 +13,17 @@ import 'core/theme/app_theme.dart';
 import 'core/navigation/app_shell.dart';
 
 void main() {
-  unawaited(MobileAds.instance.initialize());
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    unawaited(MobileAds.instance.initialize());
+  }
   final billing = GooglePlayBillingEntitlementProvider();
   runApp(
     NurtlyApp(
       premiumProvider: billing,
       purchaseProvider: billing,
-      adWidgetFactory: const RealAdWidgetFactory(),
+      adWidgetFactory: defaultTargetPlatform == TargetPlatform.android
+          ? const RealAdWidgetFactory()
+          : const FakeAdWidgetFactory(),
     ),
   );
 }

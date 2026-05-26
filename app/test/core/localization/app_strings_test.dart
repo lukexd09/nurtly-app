@@ -19,6 +19,10 @@ void main() {
     expect(strings.restorePurchases, 'Restore Premium access');
     expect(strings.premiumRemovesAdsInFreePlan, 'Premium removes ads.');
     expect(
+      strings.freePlanMayShowAdsInPassiveSlots,
+      'Free plan may show ads in passive list slots.',
+    );
+    expect(
       strings.purchasesGoThroughGooglePlay,
       'Purchases on Android go through Google Play.',
     );
@@ -75,6 +79,10 @@ void main() {
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
     expect(strings.restorePurchases, 'Odzyskaj dostęp Premium');
     expect(strings.premiumRemovesAdsInFreePlan, 'Premium usuwa reklamy.');
+    expect(
+      strings.freePlanMayShowAdsInPassiveSlots,
+      'Plan darmowy może wyświetlać reklamy w spokojnych miejscach list.',
+    );
     expect(
       strings.purchasesGoThroughGooglePlay,
       'Zakupy na Androidzie odbywają się przez Google Play.',

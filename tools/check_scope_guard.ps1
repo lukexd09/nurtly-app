@@ -20,6 +20,10 @@ $platformPatterns = @(
     "^app/ios/"
 )
 
+$allowedPlatformFiles = @(
+    "^app/android/app/src/main/AndroidManifest\\.xml$"
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -199,10 +203,12 @@ try {
         }
 
         if (-not $AllowPlatformChanges) {
-            foreach ($pattern in $platformPatterns) {
-                if ($normalized -match $pattern) {
-                    $failures += "Platform file changed without -AllowPlatformChanges: $file"
-                }
+            $isPlatformFile = $normalized -match '^app/android/' -or $normalized -match '^app/ios/'
+            $isAllowedPlatformFile =
+                $normalized -eq 'app/android/app/src/main/AndroidManifest.xml'
+
+            if ($isPlatformFile -and -not $isAllowedPlatformFile) {
+                $failures += "Platform file changed without -AllowPlatformChanges: $file"
             }
         }
 

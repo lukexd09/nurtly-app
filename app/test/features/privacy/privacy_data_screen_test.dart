@@ -15,7 +15,10 @@ void main() {
     expect(find.text('- Premium removes ads.'), findsOneWidget);
     expect(find.text('- No cloud sync is currently enabled.'), findsOneWidget);
     expect(find.text('- No analytics are currently enabled.'), findsOneWidget);
-    expect(find.text('- No ads are currently enabled.'), findsOneWidget);
+    expect(
+      find.text('- Free plan may show ads in passive list slots.'),
+      findsOneWidget,
+    );
     expect(
       find.text('- Purchases on Android go through Google Play.'),
       findsOneWidget,

@@ -5,6 +5,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'billing_product_ids.dart';
 import 'billing_purchase_mapper.dart';
+import 'google_play_billing_client.dart';
 import 'premium_entitlement.dart';
 import 'premium_entitlement_provider.dart';
 import 'premium_product_catalog.dart';
@@ -14,15 +15,17 @@ import 'purchase_result.dart';
 class GooglePlayBillingEntitlementProvider extends ChangeNotifier
     implements PremiumEntitlementProvider, PremiumPurchaseProvider {
   GooglePlayBillingEntitlementProvider({
-    InAppPurchase? inAppPurchase,
-  }) : _inAppPurchase = inAppPurchase ?? InAppPurchase.instance;
+    GooglePlayBillingClient? billingClient,
+  }) : _billingClient = billingClient ?? InAppPurchaseBillingClient();
 
-  final InAppPurchase _inAppPurchase;
+  final GooglePlayBillingClient _billingClient;
   late final StreamSubscription<List<PurchaseDetails>> _purchaseSubscription;
   PremiumProductCatalog _productCatalog = PremiumProductCatalog.empty();
   PremiumEntitlement _entitlement = PremiumEntitlement.free();
   var _isInitialized = false;
   var _hasPurchaseSubscription = false;
+  var _isSyncingPurchases = false;
+  var _didReceivePurchaseUpdateDuringSync = false;
 
   @override
   PremiumProductCatalog get productCatalog => _productCatalog;
@@ -35,33 +38,34 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
       return;
     }
 
-    final available = await _inAppPurchase.isAvailable();
+    final available = await _billingClient.isAvailable();
     if (!available) {
       _isInitialized = true;
       return;
     }
 
-    _purchaseSubscription = _inAppPurchase.purchaseStream.listen(
+    _purchaseSubscription = _billingClient.purchaseStream.listen(
       _handlePurchaseUpdates,
       onError: (_) {},
     );
     _hasPurchaseSubscription = true;
     await _loadProductCatalog();
-    await _syncPurchases();
     _isInitialized = true;
   }
 
   @override
   Future<PremiumEntitlement> loadEntitlement() async {
     await initialize();
-    await _syncPurchases();
+    final synced = await _syncPurchases();
+    _applyNoPurchaseFallback(synced);
     return _entitlement;
   }
 
   @override
   Future<PremiumEntitlement> refreshEntitlement() async {
     await initialize();
-    await _syncPurchases();
+    final synced = await _syncPurchases();
+    _applyNoPurchaseFallback(synced);
     return _entitlement;
   }
 
@@ -78,25 +82,20 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   @override
   Future<PurchaseActionResult> restorePurchases() async {
     await initialize();
-    if (!await _inAppPurchase.isAvailable()) {
+    if (!await _billingClient.isAvailable()) {
       return const PurchaseActionResult(
         status: PurchaseActionStatus.unavailable,
       );
     }
 
-    final before = _entitlement;
-    try {
-      await _inAppPurchase.restorePurchases();
-      await _syncPurchases();
-    } catch (_) {
+    final synced = await _syncPurchases();
+    if (!synced) {
       return const PurchaseActionResult(status: PurchaseActionStatus.error);
     }
 
-    if (_entitlement.hasPremiumAccess) {
-      return const PurchaseActionResult(status: PurchaseActionStatus.success);
-    }
+    _applyNoPurchaseFallback(true);
 
-    if (before.hasPremiumAccess) {
+    if (_entitlement.hasPremiumAccess) {
       return const PurchaseActionResult(status: PurchaseActionStatus.success);
     }
 
@@ -106,7 +105,7 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   }
 
   Future<void> _loadProductCatalog() async {
-    final response = await _inAppPurchase.queryProductDetails({
+    final response = await _billingClient.queryProductDetails({
       kMonthlyPremiumProductId,
       kLifetimePremiumProductId,
     });
@@ -122,18 +121,38 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<void> _syncPurchases() async {
+  Future<bool> _syncPurchases() async {
+    if (_isSyncingPurchases) {
+      return true;
+    }
+
+    _isSyncingPurchases = true;
+    _didReceivePurchaseUpdateDuringSync = false;
     try {
-      await _inAppPurchase.restorePurchases();
+      await _billingClient.restorePurchases();
       await Future<void>.delayed(const Duration(milliseconds: 250));
+      return true;
     } catch (_) {
+      return false;
+    } finally {
+      _isSyncingPurchases = false;
+    }
+  }
+
+  void _applyNoPurchaseFallback(bool synced) {
+    if (!synced || _didReceivePurchaseUpdateDuringSync) {
       return;
+    }
+
+    if (_entitlement.hasPremiumAccess) {
+      _entitlement = PremiumEntitlement.free(checkedAt: DateTime.now());
+      notifyListeners();
     }
   }
 
   Future<PurchaseActionResult> _buyProduct(String productId) async {
     await initialize();
-    if (!await _inAppPurchase.isAvailable()) {
+    if (!await _billingClient.isAvailable()) {
       return const PurchaseActionResult(
         status: PurchaseActionStatus.unavailable,
       );
@@ -147,7 +166,7 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
     }
 
     try {
-      final started = await _inAppPurchase.buyNonConsumable(
+      final started = await _billingClient.buyNonConsumable(
         purchaseParam: PurchaseParam(productDetails: product),
       );
       if (!started) {
@@ -166,18 +185,31 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
     for (final purchase in purchases) {
       final nextEntitlement = _entitlementFromPurchase(purchase);
       if (nextEntitlement != null) {
+        _didReceivePurchaseUpdateDuringSync = true;
+      }
+      if (nextEntitlement != null &&
+          !_isSameEntitlement(_entitlement, nextEntitlement)) {
         _entitlement = nextEntitlement;
         updated = true;
       }
 
       if (purchase.pendingCompletePurchase) {
-        unawaited(_inAppPurchase.completePurchase(purchase));
+        unawaited(_billingClient.completePurchase(purchase));
       }
     }
 
     if (updated) {
       notifyListeners();
     }
+  }
+
+  bool _isSameEntitlement(
+    PremiumEntitlement left,
+    PremiumEntitlement right,
+  ) {
+    return left.state == right.state &&
+        left.source == right.source &&
+        left.expiresAt == right.expiresAt;
   }
 
   PremiumEntitlement? _entitlementFromPurchase(PurchaseDetails purchase) {

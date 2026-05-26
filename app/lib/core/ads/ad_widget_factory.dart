@@ -24,6 +24,9 @@ class RealAdWidgetFactory implements AdWidgetFactory {
 
   @override
   Widget buildPassiveSlot({required AppStrings strings}) {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return const SizedBox.shrink();
+    }
     return const _RealBannerAdSlot();
   }
 }
@@ -46,16 +49,13 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   }
 
   Future<void> _loadAd() async {
-    if (defaultTargetPlatform != TargetPlatform.android &&
-        defaultTargetPlatform != TargetPlatform.iOS) {
+    if (defaultTargetPlatform != TargetPlatform.android) {
       return;
     }
 
     final ad = BannerAd(
       size: AdSize.banner,
-      adUnitId: defaultTargetPlatform == TargetPlatform.iOS
-          ? AdUnitIds.bannerIos
-          : AdUnitIds.bannerAndroid,
+      adUnitId: AdUnitIds.bannerAndroid,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
@@ -108,7 +108,7 @@ class AdSlotFactory {
   const AdSlotFactory._();
 
   static AdWidgetFactory defaultForRuntime() {
-    if (kIsWeb) {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
       return const FakeAdWidgetFactory();
     }
     return const RealAdWidgetFactory();

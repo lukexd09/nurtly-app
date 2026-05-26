@@ -151,6 +151,20 @@ void main() {
     );
   });
 
+  test('bundled premium content ratio stays within MVP guardrails', () async {
+    final package = await const ContentLoader(
+      source: BundledContentSource(language: AppLanguage.english),
+    ).load();
+
+    final playPremiumRatio = _premiumRatio(package.playIdeas);
+    final soundPremiumRatio = _premiumRatio(package.sounds);
+
+    expect(playPremiumRatio, greaterThan(0.3));
+    expect(playPremiumRatio, lessThan(0.7));
+    expect(soundPremiumRatio, greaterThan(0.2));
+    expect(soundPremiumRatio, lessThan(0.8));
+  });
+
   test('Polish taxonomy labels are localized while IDs stay stable', () async {
     final english = await const ContentLoader(
       source: BundledContentSource(language: AppLanguage.english),
@@ -856,6 +870,23 @@ Map<String, String> _unlockTypeMap(Iterable<PlayIdea> ideas) => {
 Map<String, String> _soundUnlockTypeMap(Iterable<SoundItem> sounds) => {
       for (final sound in sounds) sound.id: sound.unlockType,
     };
+
+double _premiumRatio(Iterable<Object> items) {
+  final values = items.toList();
+  if (values.isEmpty) {
+    return 0;
+  }
+
+  final premiumCount = values.where((item) {
+    final unlockType = item is PlayIdea
+        ? item.unlockType
+        : item is SoundItem
+            ? item.unlockType
+            : '';
+    return unlockType.trim().toLowerCase() == 'premium';
+  }).length;
+  return premiumCount / values.length;
+}
 
 String _expectedPolishAgeGroupFor(PlayIdea idea) {
   final min = idea.ageRangeMonths.min;

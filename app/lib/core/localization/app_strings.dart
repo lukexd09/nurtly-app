@@ -73,6 +73,7 @@ class AppStrings {
     required this.noAnalytics,
     required this.noAds,
     required this.premiumRemovesAdsInFreePlan,
+    required this.freePlanMayShowAdsInPassiveSlots,
     required this.purchasesGoThroughGooglePlay,
     required this.journalContentNotUsedForAds,
     required this.premiumStateMayBeStoredLocally,
@@ -181,6 +182,7 @@ class AppStrings {
   final String noAnalytics;
   final String noAds;
   final String premiumRemovesAdsInFreePlan;
+  final String freePlanMayShowAdsInPassiveSlots;
   final String purchasesGoThroughGooglePlay;
   final String journalContentNotUsedForAds;
   final String premiumStateMayBeStoredLocally;
@@ -293,6 +295,8 @@ class AppStrings {
     noAnalytics: 'No analytics are currently enabled.',
     noAds: 'No ads are currently enabled.',
     premiumRemovesAdsInFreePlan: 'Premium removes ads.',
+    freePlanMayShowAdsInPassiveSlots:
+        'Free plan may show ads in passive list slots.',
     purchasesGoThroughGooglePlay:
         'Purchases on Android go through Google Play.',
     journalContentNotUsedForAds: 'Journal note content is not used for ads.',
@@ -414,6 +418,8 @@ class AppStrings {
     noAnalytics: 'Obecnie nie ma analityki.',
     noAds: 'Obecnie nie ma reklam.',
     premiumRemovesAdsInFreePlan: 'Premium usuwa reklamy.',
+    freePlanMayShowAdsInPassiveSlots:
+        'Plan darmowy może wyświetlać reklamy w spokojnych miejscach list.',
     purchasesGoThroughGooglePlay:
         'Zakupy na Androidzie odbywają się przez Google Play.',
     journalContentNotUsedForAds:
