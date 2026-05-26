@@ -609,6 +609,41 @@ void main() {
     },
   );
 
+  testWidgets('play cards show localized Free and Premium chips',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PremiumPlayContentLoader(),
+          strings: AppStrings.english,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Free'), findsOneWidget);
+    expect(find.text('Premium'), findsOneWidget);
+    expect(find.text('free'), findsNothing);
+    expect(find.text('premium'), findsNothing);
+  });
+
+  testWidgets('Polish play cards show localized access chips', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PremiumPlayContentLoader(),
+          strings: AppStrings.polish,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Darmowe'), findsOneWidget);
+    expect(find.text('Premium'), findsOneWidget);
+    expect(find.text('free'), findsNothing);
+    expect(find.text('premium'), findsNothing);
+  });
+
   testWidgets('free unfiltered play list inserts ad after the 3rd item',
       (tester) async {
     await tester.pumpWidget(
