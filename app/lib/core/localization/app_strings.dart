@@ -87,6 +87,8 @@ class AppStrings {
     required this.premiumUpgrade,
     required this.premiumManage,
     required this.restorePurchases,
+    required this.premiumNotNow,
+    required this.premiumRestoreAccessLink,
     required this.premiumTitle,
     required this.premiumPaywallSubtitle,
     required this.premiumRemoveAds,
@@ -186,6 +188,8 @@ class AppStrings {
   final String premiumUpgrade;
   final String premiumManage;
   final String restorePurchases;
+  final String premiumNotNow;
+  final String premiumRestoreAccessLink;
   final String premiumTitle;
   final String premiumPaywallSubtitle;
   final String premiumRemoveAds;
@@ -289,7 +293,9 @@ class AppStrings {
     premiumStatusPaymentIssue: 'Payment issue',
     premiumUpgrade: 'Upgrade to Premium',
     premiumManage: 'Manage Premium',
-    restorePurchases: 'Restore purchases',
+    restorePurchases: 'Restore Premium access',
+    premiumNotNow: 'Not now',
+    premiumRestoreAccessLink: 'Already Premium? Restore access',
     premiumTitle: 'Nurtly Premium',
     premiumPaywallSubtitle:
         'Remove ads and unlock premium play ideas and sounds.',
@@ -300,7 +306,8 @@ class AppStrings {
     premiumMonthlyPrice: '14.99 PLN / month',
     premiumLifetimePrice: '129.99 PLN once',
     premiumBillingComingSoon: 'Billing coming soon',
-    premiumRestoreUnavailableTitle: 'Purchases are not available yet',
+    premiumRestoreUnavailableTitle:
+        'Purchases are not available in this MVP build yet',
     premiumRestoreUnavailableBody:
         'Restore purchases will be enabled with Google Play Billing.',
     adPlaceholderTitle: 'Sponsored space',
@@ -399,7 +406,9 @@ class AppStrings {
     premiumStatusPaymentIssue: 'Problem z płatnością',
     premiumUpgrade: 'Przejdź na Premium',
     premiumManage: 'Zarządzaj Premium',
-    restorePurchases: 'Przywróć zakupy',
+    restorePurchases: 'Odzyskaj dostęp Premium',
+    premiumNotNow: 'Nie teraz',
+    premiumRestoreAccessLink: 'Masz już Premium? Odzyskaj dostęp',
     premiumTitle: 'Nurtly Premium',
     premiumPaywallSubtitle: 'Usuń reklamy i odblokuj premium zabawy i dźwięki.',
     premiumRemoveAds: 'Usuń reklamy',
@@ -411,7 +420,7 @@ class AppStrings {
     premiumBillingComingSoon: 'Płatności będą dostępne w kolejnej wersji MVP',
     premiumRestoreUnavailableTitle: 'Zakupy nie są jeszcze dostępne',
     premiumRestoreUnavailableBody:
-        'Przywracanie zakupów zostanie włączone razem z Google Play Billing.',
+        'Odzyskiwanie dostępu Premium zostanie włączone razem z Google Play Billing.',
     adPlaceholderTitle: 'Miejsce sponsorowane',
     adPlaceholderSubtitle: 'Widoczne tylko w spokojnych miejscach planu Free.',
   );

@@ -16,10 +16,15 @@ void main() {
     expect(strings.premiumStatusFree, 'Free plan');
     expect(strings.premiumStatusLifetimeActive, 'Lifetime Premium active');
     expect(strings.premiumUpgrade, 'Upgrade to Premium');
-    expect(strings.restorePurchases, 'Restore purchases');
+    expect(strings.restorePurchases, 'Restore Premium access');
+    expect(strings.premiumNotNow, 'Not now');
+    expect(
+      strings.premiumRestoreAccessLink,
+      'Already Premium? Restore access',
+    );
     expect(
       strings.premiumRestoreUnavailableTitle,
-      'Purchases are not available yet',
+      'Purchases are not available in this MVP build yet',
     );
     expect(
       strings.premiumRestoreUnavailableBody,
@@ -46,14 +51,19 @@ void main() {
     expect(strings.premiumStatusFree, 'Darmowy plan');
     expect(strings.premiumStatusLifetimeActive, 'Premium na stałe aktywne');
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
-    expect(strings.restorePurchases, 'Przywróć zakupy');
+    expect(strings.restorePurchases, 'Odzyskaj dostęp Premium');
+    expect(strings.premiumNotNow, 'Nie teraz');
+    expect(
+      strings.premiumRestoreAccessLink,
+      'Masz już Premium? Odzyskaj dostęp',
+    );
     expect(
       strings.premiumRestoreUnavailableTitle,
       'Zakupy nie są jeszcze dostępne',
     );
     expect(
       strings.premiumRestoreUnavailableBody,
-      'Przywracanie zakupów zostanie włączone razem z Google Play Billing.',
+      'Odzyskiwanie dostępu Premium zostanie włączone razem z Google Play Billing.',
     );
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Usuń reklamy');

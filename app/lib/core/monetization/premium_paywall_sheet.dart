@@ -51,11 +51,14 @@ class PremiumPaywallSheet extends StatelessWidget {
             note: strings.premiumBillingComingSoon,
           ),
           const SizedBox(height: AppSpacing.md),
-          OutlinedButton(
-            onPressed: () {
-              onShowRestoreUnavailable();
-            },
-            child: Text(strings.restorePurchases),
+          TextButton(
+            onPressed: onShowRestoreUnavailable,
+            child: Text(strings.premiumRestoreAccessLink),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(strings.premiumNotNow),
           ),
         ],
       ),
