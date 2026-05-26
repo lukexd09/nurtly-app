@@ -122,6 +122,15 @@ void main() {
     expect(find.text('Premium Monthly'), findsOneWidget);
     expect(find.text('Premium Lifetime'), findsOneWidget);
     expect(find.text('Billing coming soon'), findsWidgets);
+
+    await tester.tap(find.text('Restore purchases'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Purchases are not available yet'), findsOneWidget);
+    expect(
+      find.text('Restore purchases will be enabled with Google Play Billing.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Tapping Language opens language selector and updates row',

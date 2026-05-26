@@ -10,6 +10,7 @@ class PremiumAccessController extends ChangeNotifier {
 
   final PremiumEntitlementProvider _provider;
   PremiumEntitlement _entitlement = PremiumEntitlement.free();
+  bool _hasLoaded = false;
 
   PremiumEntitlement get entitlement => _entitlement;
 
@@ -20,12 +21,19 @@ class PremiumAccessController extends ChangeNotifier {
   bool get canAccessPremiumContent => _entitlement.canAccessPremiumContent;
 
   Future<void> load() async {
-    _entitlement = await _safeLoad(_provider.loadEntitlement);
+    _entitlement = await _safeLoad(
+      _provider.loadEntitlement,
+      fallback: PremiumEntitlement.free(),
+    );
+    _hasLoaded = true;
     notifyListeners();
   }
 
   Future<void> refresh() async {
-    _entitlement = await _safeLoad(_provider.refreshEntitlement);
+    _entitlement = await _safeLoad(
+      _provider.refreshEntitlement,
+      fallback: _entitlement,
+    );
     notifyListeners();
   }
 
@@ -34,12 +42,15 @@ class PremiumAccessController extends ChangeNotifier {
   }
 
   Future<PremiumEntitlement> _safeLoad(
-    Future<PremiumEntitlement> Function() loader,
-  ) async {
+    Future<PremiumEntitlement> Function() loader, {
+    required PremiumEntitlement fallback,
+  }) async {
     try {
       return await loader();
     } catch (_) {
-      return PremiumEntitlement.free();
+      return fallback;
     }
   }
+
+  bool get hasLoaded => _hasLoaded;
 }

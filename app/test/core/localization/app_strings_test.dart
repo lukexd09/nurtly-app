@@ -17,6 +17,14 @@ void main() {
     expect(strings.premiumStatusLifetimeActive, 'Lifetime Premium active');
     expect(strings.premiumUpgrade, 'Upgrade to Premium');
     expect(strings.restorePurchases, 'Restore purchases');
+    expect(
+      strings.premiumRestoreUnavailableTitle,
+      'Purchases are not available yet',
+    );
+    expect(
+      strings.premiumRestoreUnavailableBody,
+      'Restore purchases will be enabled with Google Play Billing.',
+    );
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Remove ads');
     expect(strings.adPlaceholderTitle, 'Sponsored space');
@@ -39,6 +47,14 @@ void main() {
     expect(strings.premiumStatusLifetimeActive, 'Premium na stałe aktywne');
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
     expect(strings.restorePurchases, 'Przywróć zakupy');
+    expect(
+      strings.premiumRestoreUnavailableTitle,
+      'Zakupy nie są jeszcze dostępne',
+    );
+    expect(
+      strings.premiumRestoreUnavailableBody,
+      'Przywracanie zakupów zostanie włączone razem z Google Play Billing.',
+    );
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Usuń reklamy');
     expect(strings.adPlaceholderTitle, 'Miejsce sponsorowane');

@@ -96,6 +96,8 @@ class AppStrings {
     required this.premiumMonthlyPrice,
     required this.premiumLifetimePrice,
     required this.premiumBillingComingSoon,
+    required this.premiumRestoreUnavailableTitle,
+    required this.premiumRestoreUnavailableBody,
     required this.adPlaceholderTitle,
     required this.adPlaceholderSubtitle,
   });
@@ -193,6 +195,8 @@ class AppStrings {
   final String premiumMonthlyPrice;
   final String premiumLifetimePrice;
   final String premiumBillingComingSoon;
+  final String premiumRestoreUnavailableTitle;
+  final String premiumRestoreUnavailableBody;
   final String adPlaceholderTitle;
   final String adPlaceholderSubtitle;
 
@@ -296,6 +300,9 @@ class AppStrings {
     premiumMonthlyPrice: '14.99 PLN / month',
     premiumLifetimePrice: '129.99 PLN once',
     premiumBillingComingSoon: 'Billing coming soon',
+    premiumRestoreUnavailableTitle: 'Purchases are not available yet',
+    premiumRestoreUnavailableBody:
+        'Restore purchases will be enabled with Google Play Billing.',
     adPlaceholderTitle: 'Sponsored space',
     adPlaceholderSubtitle: 'Shown only in passive free-plan slots.',
   );
@@ -402,6 +409,9 @@ class AppStrings {
     premiumMonthlyPrice: '14,99 PLN / miesiąc',
     premiumLifetimePrice: '129,99 PLN jednorazowo',
     premiumBillingComingSoon: 'Płatności będą dostępne w kolejnej wersji MVP',
+    premiumRestoreUnavailableTitle: 'Zakupy nie są jeszcze dostępne',
+    premiumRestoreUnavailableBody:
+        'Przywracanie zakupów zostanie włączone razem z Google Play Billing.',
     adPlaceholderTitle: 'Miejsce sponsorowane',
     adPlaceholderSubtitle: 'Widoczne tylko w spokojnych miejscach planu Free.',
   );

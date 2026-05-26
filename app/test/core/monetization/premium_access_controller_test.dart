@@ -50,4 +50,51 @@ void main() {
 
     expect(controller.entitlement.state, PremiumState.free);
   });
+
+  test('initial load error falls back to free', () async {
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(failOnLoad: true),
+    );
+
+    await controller.load();
+
+    expect(controller.entitlement.state, PremiumState.free);
+    expect(controller.hasPremiumAccess, isFalse);
+  });
+
+  test('refresh error preserves existing premium entitlement', () async {
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.lifetimeActive(checkedAt: now),
+        failOnRefresh: true,
+      ),
+    );
+
+    await controller.load();
+    await controller.refresh();
+
+    expect(controller.entitlement.state, PremiumState.active);
+    expect(controller.entitlement.source, PremiumSource.lifetime);
+    expect(controller.hasPremiumAccess, isTrue);
+  });
+
+  test('restorePurchases error preserves existing premium entitlement',
+      () async {
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.monthlyActive(
+          checkedAt: now,
+          expiresAt: now.add(const Duration(days: 30)),
+        ),
+        failOnRefresh: true,
+      ),
+    );
+
+    await controller.load();
+    await controller.restorePurchases();
+
+    expect(controller.entitlement.state, PremiumState.active);
+    expect(controller.entitlement.source, PremiumSource.monthly);
+    expect(controller.hasPremiumAccess, isTrue);
+  });
 }

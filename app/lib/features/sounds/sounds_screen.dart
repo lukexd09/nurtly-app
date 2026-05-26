@@ -181,7 +181,11 @@ class _SoundCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                _SoundMetadata(sound: sound, strings: strings),
+                _SoundMetadata(
+                  sound: sound,
+                  strings: strings,
+                  showUnlockType: !isPremium,
+                ),
                 if (isPremium) ...[
                   const SizedBox(height: AppSpacing.xs),
                   NurtlyChip(label: strings.premium),
@@ -797,7 +801,7 @@ class _SoundMetadata extends StatelessWidget {
     if (sound.unlockType.toLowerCase() == 'free') {
       return strings.free;
     }
-    return sound.unlockType;
+    return strings.premium;
   }
 }
 

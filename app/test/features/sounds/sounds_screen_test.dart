@@ -160,6 +160,7 @@ void main() {
 
       expect(find.text('Sponsored space'), findsOneWidget);
       expect(find.text('Premium'), findsOneWidget);
+      expect(find.text('premium'), findsNothing);
 
       await tester.tap(find.text('Premium room fan'));
       await tester.pumpAndSettle();

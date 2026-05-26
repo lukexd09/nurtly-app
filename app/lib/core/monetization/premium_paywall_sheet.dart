@@ -8,12 +8,12 @@ import '../theme/app_text_styles.dart';
 class PremiumPaywallSheet extends StatelessWidget {
   const PremiumPaywallSheet({
     required this.strings,
-    required this.onRestorePurchases,
+    required this.onShowRestoreUnavailable,
     super.key,
   });
 
   final AppStrings strings;
-  final VoidCallback onRestorePurchases;
+  final VoidCallback onShowRestoreUnavailable;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +51,10 @@ class PremiumPaywallSheet extends StatelessWidget {
             note: strings.premiumBillingComingSoon,
           ),
           const SizedBox(height: AppSpacing.md),
-          FilledButton(
-            onPressed: onRestorePurchases,
+          OutlinedButton(
+            onPressed: () {
+              onShowRestoreUnavailable();
+            },
             child: Text(strings.restorePurchases),
           ),
         ],

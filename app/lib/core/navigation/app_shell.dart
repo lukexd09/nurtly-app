@@ -181,10 +181,53 @@ class _AppShellState extends State<AppShell> {
       builder: (sheetContext) {
         return PremiumPaywallSheet(
           strings: _strings,
-          onRestorePurchases: () {
+          onShowRestoreUnavailable: () {
             Navigator.of(sheetContext).pop();
-            unawaited(_premiumController.restorePurchases());
+            _showRestoreUnavailableMessage();
           },
+        );
+      },
+    );
+  }
+
+  Future<void> _showRestoreUnavailableMessage() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      constraints: const BoxConstraints(maxHeight: 280),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _strings.premiumRestoreUnavailableTitle,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  _strings.premiumRestoreUnavailableBody,
+                  style: AppTextStyles.body,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(_strings.back),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -250,7 +293,7 @@ class _AppShellState extends State<AppShell> {
                     title: strings.restorePurchases,
                     onTap: () {
                       Navigator.of(sheetContext).pop();
-                      unawaited(_premiumController.restorePurchases());
+                      unawaited(_showRestoreUnavailableMessage());
                     },
                   ),
                   const SizedBox(height: AppSpacing.sm),
