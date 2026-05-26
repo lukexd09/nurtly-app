@@ -134,9 +134,14 @@ class _PlayScreenState extends State<PlayScreen> {
                       }
                     });
                   },
-                  onClear: (_selectedFilterIds.isEmpty &&
-                          _selectedAccessFilterIds.isEmpty)
-                      ? null
+                  onClear: _selectedFilterIds.isEmpty
+                      ? (_selectedAccessFilterIds.isEmpty
+                          ? null
+                          : () {
+                              setState(() {
+                                _selectedAccessFilterIds.clear();
+                              });
+                            })
                       : () {
                           setState(() {
                             _selectedFilterIds.clear();
@@ -767,7 +772,9 @@ class _PlayIdeaMetadata extends StatelessWidget {
         NurtlyChip(
           label: taxonomy.labelForActivityType(idea.activityType),
         ),
-        NurtlyChip(label: _displayUnlockType(idea, strings)),
+        NurtlyChip(
+          label: _displayUnlockType(idea, strings),
+        ),
       ],
     );
   }
