@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
