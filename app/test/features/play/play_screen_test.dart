@@ -727,14 +727,13 @@ void main() {
   });
 
   testWidgets(
-    'access filters combine with content filters and ad placement',
+    'Free + Premium access filters behave as OR within access group and AND with content filters',
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: PlayScreen(
             contentLoader: const _PlayAccessFilterContentLoader(),
             strings: AppStrings.english,
-            showAdPlaceholder: true,
           ),
         ),
       );
@@ -749,6 +748,12 @@ void main() {
       await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('Premium play 2'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
       final lowMessChip = tester.widget<FilterChip>(
         find.widgetWithText(FilterChip, 'Low mess'),
       );
@@ -762,6 +767,11 @@ void main() {
       expect(lowMessChip.selected, isTrue);
       expect(freeChip.selected, isTrue);
       expect(premiumChip.selected, isTrue);
+      expect(find.text('Free play 1'), findsOneWidget);
+      expect(find.text('Free play 2'), findsOneWidget);
+      expect(find.text('Premium play 1'), findsOneWidget);
+      expect(find.text('Premium play 2'), findsOneWidget);
+      expect(find.text('Premium medium play'), findsNothing);
     },
   );
 
@@ -819,6 +829,58 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('What to expect'), findsOneWidget);
+  });
+
+  testWidgets(
+    'access filter participates in ad policy for short filtered results',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PlayScreen(
+            contentLoader: const _PlayAccessFilterShortPremiumLoader(),
+            premiumEntitlement: PremiumEntitlement.free(
+              checkedAt: DateTime.utc(2026, 5, 26, 12),
+            ),
+            showAdPlaceholder: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Find the right fit'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilterChip, 'Premium'));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Premium short play 2'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      expect(find.text('Sponsored space'), findsNothing);
+      expect(find.text('Premium short play 1'), findsOneWidget);
+      expect(find.text('Premium short play 2'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Polish access filters show localized labels', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PlayScreen(
+          contentLoader: const _PlayAccessFilterContentLoader(),
+          strings: AppStrings.polish,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester
+        .tap(find.widgetWithText(TextButton, 'Znajdź odpowiednią zabawę'));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FilterChip, 'Darmowe'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Premium'), findsOneWidget);
   });
 
   testWidgets('free unfiltered play list inserts ad after the 3rd item',
@@ -1121,6 +1183,89 @@ class _PlayAccessFilterContentLoader extends ContentLoader {
           ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
           place: 'place_home',
           messLevel: 'mess_medium',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+class _PlayAccessFilterShortPremiumLoader extends ContentLoader {
+  const _PlayAccessFilterShortPremiumLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'test',
+        schemaVersion: 1,
+        version: '1.1.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _testTaxonomy,
+      playFilters: [
+        PlayFilter(
+          id: 'premium_only',
+          label: 'Premium only',
+          matchMode: PlayFilterMatchMode.all,
+          rules: [
+            PlayFilterRule(
+              field: 'unlockType',
+              operator: 'equals',
+              value: 'premium',
+            ),
+          ],
+        ),
+      ],
+      playIdeas: [
+        PlayIdea(
+          id: 'premium_short_1',
+          title: 'Premium short play 1',
+          summary: 'A short premium play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'A calm test note for content loading.',
+          parentNote: 'Keep it simple.',
+          safetyNote: 'Use safe items.',
+        ),
+        PlayIdea(
+          id: 'premium_short_2',
+          title: 'Premium short play 2',
+          summary: 'Another short premium play idea.',
+          ageGroup: '0-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
           childEngagement: 'child_engagement_low',
           parentInvolvement: 'parent_involvement_low',
           activityType: 'activity_quiet_time',
