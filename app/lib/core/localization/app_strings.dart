@@ -28,8 +28,10 @@ class AppStrings {
     required this.journalSubtitle,
     required this.journalLocalOnlyHint,
     required this.journalTodayLabel,
+    required this.journalYesterdayLabel,
     required this.journalPreviousDay,
     required this.journalNextDay,
+    required this.journalChangeDay,
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
     required this.journalEmptyStateMessage,
@@ -209,8 +211,10 @@ class AppStrings {
   final String journalSubtitle;
   final String journalLocalOnlyHint;
   final String journalTodayLabel;
+  final String journalYesterdayLabel;
   final String journalPreviousDay;
   final String journalNextDay;
+  final String journalChangeDay;
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
   final String journalEmptyStateMessage;
@@ -392,8 +396,10 @@ class AppStrings {
     journalSubtitle: 'A calm log for today’s care moments.',
     journalLocalOnlyHint: 'Saved on this device only.',
     journalTodayLabel: 'Today',
+    journalYesterdayLabel: 'Yesterday',
     journalPreviousDay: 'Previous day',
     journalNextDay: 'Next day',
+    journalChangeDay: 'Change day',
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
     journalEmptyStateMessage: 'Add the first entry when you are ready.',
@@ -586,8 +592,10 @@ class AppStrings {
     journalSubtitle: 'Spokojny zapis dzisiejszych momentów opieki.',
     journalLocalOnlyHint: 'Zapisywane tylko na tym urządzeniu.',
     journalTodayLabel: 'Dzisiaj',
+    journalYesterdayLabel: 'Wczoraj',
     journalPreviousDay: 'Poprzedni dzień',
     journalNextDay: 'Następny dzień',
+    journalChangeDay: 'Zmień dzień',
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
@@ -902,10 +910,7 @@ class AppStrings {
       return journalTodayLabel;
     }
     if (day == yesterday) {
-      return switch (language) {
-        AppLanguage.english => 'Yesterday',
-        AppLanguage.polish => 'Wczoraj',
-      };
+      return journalYesterdayLabel;
     }
     if (day == tomorrow) {
       return switch (language) {
@@ -913,7 +918,12 @@ class AppStrings {
         AppLanguage.polish => 'Jutro',
       };
     }
-    return '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+    return switch (language) {
+      AppLanguage.english =>
+        '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
+      AppLanguage.polish =>
+        '${day.day.toString().padLeft(2, '0')}.${day.month.toString().padLeft(2, '0')}.${day.year.toString().padLeft(4, '0')}',
+    };
   }
 
   String journalTimeLabel(DateTime dateTime) {

@@ -198,6 +198,8 @@ void main() {
       'No care moments logged for this day yet.',
     );
     expect(AppStrings.english.journalNoEntryShort, 'No entry');
+    expect(AppStrings.english.journalYesterdayLabel, 'Yesterday');
+    expect(AppStrings.english.journalChangeDay, 'Change day');
     expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
     expect(AppStrings.english.journalStartSleep, 'Start sleep');
     expect(AppStrings.english.journalStopSleep, 'Stop sleep');
@@ -220,6 +222,8 @@ void main() {
       'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
     );
     expect(AppStrings.polish.journalNoEntryShort, 'Brak wpisu');
+    expect(AppStrings.polish.journalYesterdayLabel, 'Wczoraj');
+    expect(AppStrings.polish.journalChangeDay, 'Zmie\u0144 dzie\u0144');
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');

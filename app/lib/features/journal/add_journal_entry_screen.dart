@@ -16,6 +16,7 @@ class AddJournalEntryScreen extends StatefulWidget {
     required this.strings,
     required this.entryType,
     this.initialEntry,
+    this.initialDay,
     this.now = DateTime.now,
     super.key,
   });
@@ -23,6 +24,7 @@ class AddJournalEntryScreen extends StatefulWidget {
   final AppStrings strings;
   final JournalEntryType entryType;
   final JournalEntry? initialEntry;
+  final DateTime? initialDay;
   final DateTime Function() now;
 
   @override
@@ -47,12 +49,20 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     super.initState();
     final now = widget.now();
     final initial = _initialEntry;
+    final initialDay = widget.initialDay == null
+        ? null
+        : DateTime(
+            widget.initialDay!.year,
+            widget.initialDay!.month,
+            widget.initialDay!.day,
+          );
+    final selectedDay = initialDay ?? DateTime(now.year, now.month, now.day);
     _noteController = TextEditingController(text: initial?.note ?? '');
     _amountController = TextEditingController(text: initial?.amountText ?? '');
-    _selectedEventAt = initial?.eventAt ?? now;
-    _selectedStartAt =
-        initial?.startAt ?? now.subtract(const Duration(hours: 1));
-    _selectedEndAt = initial?.endAt ?? now;
+    _selectedEventAt = initial?.eventAt ?? _mergeDateAndTime(selectedDay, now);
+    _selectedStartAt = initial?.startAt ??
+        _mergeDateAndTime(selectedDay, now.subtract(const Duration(hours: 1)));
+    _selectedEndAt = initial?.endAt ?? _mergeDateAndTime(selectedDay, now);
     _feedingType = initial?.feedingType ?? JournalFeedingType.breast;
     _diaperType = initial?.diaperType ?? JournalDiaperType.pee;
   }
@@ -139,7 +149,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   }
 
   Future<void> _pickEventTime() async {
-    final picked = await _pickDateTime(_selectedEventAt);
+    final picked = await _pickTimeOnly(_selectedEventAt);
     if (picked == null) {
       return;
     }
@@ -148,8 +158,18 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     });
   }
 
+  Future<void> _pickEventDay() async {
+    final picked = await _pickDateOnly(_selectedEventAt);
+    if (picked == null) {
+      return;
+    }
+    setState(() {
+      _selectedEventAt = _mergeDateAndTime(picked, _selectedEventAt);
+    });
+  }
+
   Future<void> _pickStartTime() async {
-    final picked = await _pickDateTime(_selectedStartAt);
+    final picked = await _pickTimeOnly(_selectedStartAt);
     if (picked == null) {
       return;
     }
@@ -162,10 +182,24 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     });
   }
 
+  Future<void> _pickStartDay() async {
+    final picked = await _pickDateOnly(_selectedStartAt);
+    if (picked == null) {
+      return;
+    }
+    setState(() {
+      _selectedStartAt = _mergeDateAndTime(picked, _selectedStartAt);
+      if (_selectedEndAt != null &&
+          !_selectedEndAt!.isAfter(_selectedStartAt)) {
+        _selectedEndAt = _selectedStartAt.add(const Duration(minutes: 1));
+      }
+    });
+  }
+
   Future<void> _pickEndTime() async {
     final base =
         _selectedEndAt ?? _selectedStartAt.add(const Duration(hours: 1));
-    final picked = await _pickDateTime(base);
+    final picked = await _pickTimeOnly(base);
     if (picked == null) {
       return;
     }
@@ -174,7 +208,36 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     });
   }
 
-  Future<DateTime?> _pickDateTime(DateTime initial) async {
+  Future<void> _pickEndDay() async {
+    final base =
+        _selectedEndAt ?? _selectedStartAt.add(const Duration(hours: 1));
+    final picked = await _pickDateOnly(base);
+    if (picked == null) {
+      return;
+    }
+    setState(() {
+      _selectedEndAt = _mergeDateAndTime(picked, base);
+    });
+  }
+
+  Future<DateTime?> _pickTimeOnly(DateTime initial) async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial),
+    );
+    if (time == null) {
+      return null;
+    }
+    return DateTime(
+      initial.year,
+      initial.month,
+      initial.day,
+      time.hour,
+      time.minute,
+    );
+  }
+
+  Future<DateTime?> _pickDateOnly(DateTime initial) async {
     // The picker dialogs intentionally use the current build context.
     final date = await showDatePicker(
       context: context,
@@ -185,19 +248,20 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     if (date == null) {
       return null;
     }
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(initial),
-    );
-    if (time == null) {
-      return null;
-    }
     return DateTime(
       date.year,
       date.month,
       date.day,
-      time.hour,
-      time.minute,
+    );
+  }
+
+  DateTime _mergeDateAndTime(DateTime date, DateTime timeSource) {
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      timeSource.hour,
+      timeSource.minute,
     );
   }
 
@@ -205,15 +269,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     final local = dateTime.toLocal();
     final time = widget.strings.journalTimeLabel(local);
     final now = widget.now();
-    final isToday = local.year == now.year &&
-        local.month == now.month &&
-        local.day == now.day;
-    if (isToday) {
-      return '${widget.strings.journalTodayLabel}, $time';
-    }
-    final date =
-        '${local.day.toString().padLeft(2, '0')}.${local.month.toString().padLeft(2, '0')}.${local.year.toString().padLeft(4, '0')}';
-    return '$date, $time';
+    return '${widget.strings.journalDayLabel(local, now)}, $time';
   }
 
   String _newId(DateTime now) {
@@ -249,18 +305,24 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   label: strings.journalSleepStartLabel,
                   value: _formatDateTime(_selectedStartAt),
                   onTap: _pickStartTime,
+                  onChangeDay: _pickStartDay,
+                  changeDayLabel: strings.journalChangeDay,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _TimePickerRow(
                   label: strings.journalSleepEndLabel,
                   value: _formatDateTime(_selectedEndAt ?? _selectedStartAt),
                   onTap: _pickEndTime,
+                  onChangeDay: _pickEndDay,
+                  changeDayLabel: strings.journalChangeDay,
                 ),
               ] else ...[
                 _TimePickerRow(
                   label: strings.journalEventTimeLabel,
                   value: _formatDateTime(_selectedEventAt),
                   onTap: _pickEventTime,
+                  onChangeDay: _pickEventDay,
+                  changeDayLabel: strings.journalChangeDay,
                 ),
               ],
               const SizedBox(height: AppSpacing.lg),
@@ -385,11 +447,15 @@ class _TimePickerRow extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onTap,
+    required this.onChangeDay,
+    required this.changeDayLabel,
   });
 
   final String label;
   final String value;
   final VoidCallback onTap;
+  final VoidCallback? onChangeDay;
+  final String changeDayLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -404,7 +470,27 @@ class _TimePickerRow extends StatelessWidget {
         dense: true,
         visualDensity: VisualDensity.compact,
         title: Text(label),
-        subtitle: Text(value),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(value),
+            if (onChangeDay != null)
+              TextButton(
+                onPressed: onChangeDay,
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+                child: Text(
+                  changeDayLabel,
+                  style: AppTextStyles.caption,
+                ),
+              ),
+          ],
+        ),
         trailing: const Icon(Icons.schedule_outlined),
         onTap: onTap,
       ),
@@ -429,9 +515,9 @@ class _EntryChoiceChip extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        backgroundColor: selected ? colors.primaryContainer : colors.surface,
+        backgroundColor: selected ? AppColors.primarySoft : colors.surface,
         foregroundColor:
-            selected ? colors.onPrimaryContainer : colors.onSurfaceVariant,
+            selected ? AppColors.textPrimary : colors.onSurfaceVariant,
         side: BorderSide(
           color: selected ? colors.primary : AppColors.borderSoft,
         ),

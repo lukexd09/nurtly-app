@@ -131,6 +131,53 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('selected day summary and add form use yesterday context',
+      (tester) async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+    controller.goToPreviousDay();
+
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.polish,
+          controller: controller,
+          now: () => DateTime(2026, 5, 19, 9, 30),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('journal-compact-summary-label')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('journal-compact-summary-card')),
+        matching: find.text('Wczoraj'),
+      ),
+      findsOneWidget,
+    );
+
+    await tester
+        .tap(find.byKey(const ValueKey('journal-quick-action-feeding')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Wczoraj, 09:30'), findsOneWidget);
+    expect(find.text('Dzisiaj, 09:30'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('Journal with an entry shows last moments section',
       (tester) async {
     final controller = JournalController(

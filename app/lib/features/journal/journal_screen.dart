@@ -86,11 +86,13 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _openAddEntry(JournalEntryType type) async {
+    final selectedDay = _controller.selectedDay;
     final entry = await Navigator.of(context).push<JournalEntry>(
       MaterialPageRoute<JournalEntry>(
         builder: (_) => AddJournalEntryScreen(
           strings: widget.strings,
           entryType: type,
+          initialDay: selectedDay,
           now: widget.now,
         ),
       ),
@@ -368,6 +370,8 @@ class _DashboardSection extends StatelessWidget {
           key: const ValueKey('journal-compact-summary-card'),
           strings: strings,
           summary: summary,
+          selectedDay: selectedDay,
+          now: now,
         ),
         if (hasEntriesForSelectedDay) ...[
           const SizedBox(height: AppSpacing.sm),
@@ -394,10 +398,14 @@ class _CompactSummaryCard extends StatelessWidget {
     super.key,
     required this.strings,
     required this.summary,
+    required this.selectedDay,
+    required this.now,
   });
 
   final AppStrings strings;
   final JournalSummary summary;
+  final DateTime selectedDay;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -408,7 +416,8 @@ class _CompactSummaryCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            strings.journalDashboardTitle,
+            strings.journalDayLabel(selectedDay, now),
+            key: const ValueKey('journal-compact-summary-label'),
             style: AppTextStyles.caption,
           ),
           const SizedBox(height: AppSpacing.xs),

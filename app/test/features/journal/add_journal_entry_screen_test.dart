@@ -45,10 +45,10 @@ void main() {
           entryType: JournalEntryType.feeding,
           initialEntry: JournalEntry.feeding(
             id: 'feeding-1',
-            eventAt: DateTime(2026, 5, 26, 14, 7),
+            eventAt: DateTime(2026, 5, 25, 14, 7),
             feedingType: JournalFeedingType.bottle,
-            createdAt: DateTime(2026, 5, 26, 14, 7),
-            updatedAt: DateTime(2026, 5, 26, 14, 7),
+            createdAt: DateTime(2026, 5, 25, 14, 7),
+            updatedAt: DateTime(2026, 5, 25, 14, 7),
           ),
           now: () => DateTime(2026, 5, 27, 14, 7),
         ),
@@ -56,8 +56,45 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('26.05.2026, 14:07'), findsOneWidget);
-    expect(find.textContaining('2026-05-26 14:07:00'), findsNothing);
+    expect(find.text('25.05.2026, 14:07'), findsOneWidget);
+    expect(find.textContaining('2026-05-25 14:07:00'), findsNothing);
     expect(find.text('Ilość / opis, opcjonalnie'), findsOneWidget);
+  });
+
+  testWidgets('feeding form starts on selected day context', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.feeding,
+          initialDay: DateTime(2026, 5, 26),
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Wczoraj, 14:07'), findsOneWidget);
+    expect(find.text('Zmień dzień'), findsOneWidget);
+    expect(find.textContaining('Dzisiaj, 14:07'), findsNothing);
+  });
+
+  testWidgets('feeding form shows today label for current day context',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.feeding,
+          initialDay: DateTime(2026, 5, 27),
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dzisiaj, 14:07'), findsOneWidget);
   });
 }
