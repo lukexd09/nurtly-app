@@ -320,9 +320,12 @@ class _DashboardSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Wrap(
+          spacing: AppSpacing.xs,
+          runSpacing: AppSpacing.xs,
           children: [
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.only(right: AppSpacing.sm),
               child: Text(
                 strings.journalDashboardTitle,
                 style: AppTextStyles.sectionTitle,
@@ -351,46 +354,62 @@ class _DashboardSection extends StatelessWidget {
           style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
         ),
         const SizedBox(height: AppSpacing.sm),
-        GridView.count(
-          key: const ValueKey('journal-summary-grid'),
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpacing.sm,
-          crossAxisSpacing: AppSpacing.sm,
-          childAspectRatio: 1.35,
-          children: [
-            _SummaryCard(
-              label: strings.journalTotalSleep,
-              value: _summaryValue(
-                strings,
-                summary.totalSleep,
-                hasEntry: summary.lastSleep != null,
-                emptyLabel: strings.journalNoSleepToday,
-              ),
-            ),
-            _SummaryCard(
-              label: strings.journalFeedingsCount,
-              value: _countValue(
-                summary.feedingsCount,
-                emptyLabel: strings.journalNoFeedingToday,
-              ),
-            ),
-            _SummaryCard(
-              label: strings.journalDiapersCount,
-              value: _countValue(
-                summary.diapersCount,
-                emptyLabel: strings.journalNoDiaperToday,
-              ),
-            ),
-            _SummaryCard(
-              label: strings.journalNotesCount,
-              value: _countValue(
-                summary.notesCount,
-                emptyLabel: strings.journalNoNotesToday,
-              ),
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final twoColumns = constraints.maxWidth >= 360;
+            final cardWidth = twoColumns
+                ? (constraints.maxWidth - AppSpacing.sm) / 2
+                : constraints.maxWidth;
+            return Wrap(
+              key: const ValueKey('journal-summary-grid'),
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                SizedBox(
+                  width: cardWidth,
+                  child: _SummaryCard(
+                    label: strings.journalTotalSleep,
+                    value: _summaryValue(
+                      strings,
+                      summary.totalSleep,
+                      hasEntry: summary.lastSleep != null,
+                      emptyLabel: strings.journalNoSleepToday,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: cardWidth,
+                  child: _SummaryCard(
+                    label: strings.journalFeedingsCount,
+                    value: _countValue(
+                      summary.feedingsCount,
+                      emptyLabel: strings.journalNoFeedingToday,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: cardWidth,
+                  child: _SummaryCard(
+                    label: strings.journalDiapersCount,
+                    value: _countValue(
+                      summary.diapersCount,
+                      emptyLabel: strings.journalNoDiaperToday,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: cardWidth,
+                  child: _SummaryCard(
+                    label: strings.journalNotesCount,
+                    value: _countValue(
+                      summary.notesCount,
+                      emptyLabel: strings.journalNoNotesToday,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         const SizedBox(height: AppSpacing.sm),
         _LastMomentLine(
@@ -472,14 +491,21 @@ class _SummaryCard extends StatelessWidget {
     return NurtlyCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label, style: AppTextStyles.caption),
+          Text(
+            label,
+            style: AppTextStyles.caption,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: AppSpacing.xxs),
           Text(
             value,
             style:
                 AppTextStyles.cardTitle.copyWith(fontWeight: FontWeight.w800),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

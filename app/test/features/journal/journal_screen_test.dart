@@ -68,4 +68,33 @@ void main() {
 
     expect(find.text('Duration: 0 h 01m'), findsOneWidget);
   });
+
+  testWidgets('summary cards do not overflow on a narrow Polish screen',
+      (tester) async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.polish,
+          controller: controller,
+          now: () => DateTime(2026, 5, 19, 9, 30),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('journal-summary-grid')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
