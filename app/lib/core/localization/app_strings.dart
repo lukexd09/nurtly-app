@@ -437,7 +437,7 @@ class AppStrings {
     journalSleepStartLabel: 'Start time',
     journalSleepEndLabel: 'End time',
     journalFeedingTypeLabel: 'Feeding type',
-    journalAmountLabel: 'Amount',
+    journalAmountLabel: 'Amount / note, optional',
     journalDiaperTypeLabel: 'Diaper type',
     journalNoteRequired: 'Please add a note first.',
     journalSleepInvalidRange: 'End time must be after start time.',
@@ -632,7 +632,7 @@ class AppStrings {
     journalSleepStartLabel: 'Godzina rozpoczęcia',
     journalSleepEndLabel: 'Godzina zakończenia',
     journalFeedingTypeLabel: 'Rodzaj karmienia',
-    journalAmountLabel: 'Ilość',
+    journalAmountLabel: 'Ilość / opis, opcjonalnie',
     journalDiaperTypeLabel: 'Rodzaj pieluchy',
     journalNoteRequired: 'Dodaj najpierw notatkę.',
     journalSleepInvalidRange:

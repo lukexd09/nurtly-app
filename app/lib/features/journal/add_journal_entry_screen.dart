@@ -203,7 +203,17 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
 
   String _formatDateTime(DateTime dateTime) {
     final local = dateTime.toLocal();
-    return '${local.year.toString().padLeft(4, '0')}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')} ${widget.strings.journalTimeLabel(local)}';
+    final time = widget.strings.journalTimeLabel(local);
+    final now = widget.now();
+    final isToday = local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.day;
+    if (isToday) {
+      return '${widget.strings.journalTodayLabel}, $time';
+    }
+    final date =
+        '${local.day.toString().padLeft(2, '0')}.${local.month.toString().padLeft(2, '0')}.${local.year.toString().padLeft(4, '0')}';
+    return '$date, $time';
   }
 
   String _newId(DateTime now) {
@@ -265,12 +275,11 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   runSpacing: AppSpacing.xs,
                   children: [
                     for (final option in JournalFeedingType.values)
-                      ChoiceChip(
-                        label: Text(
-                            strings.journalFeedingTypeChoiceLabel(option.code)),
+                      _EntryChoiceChip(
+                        label:
+                            strings.journalFeedingTypeChoiceLabel(option.code),
                         selected: _feedingType == option,
-                        onSelected: (_) =>
-                            setState(() => _feedingType = option),
+                        onPressed: () => setState(() => _feedingType = option),
                       ),
                   ],
                 ),
@@ -398,6 +407,47 @@ class _TimePickerRow extends StatelessWidget {
         subtitle: Text(value),
         trailing: const Icon(Icons.schedule_outlined),
         onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _EntryChoiceChip extends StatelessWidget {
+  const _EntryChoiceChip({
+    required this.label,
+    required this.selected,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: selected ? colors.primaryContainer : colors.surface,
+        foregroundColor:
+            selected ? colors.onPrimaryContainer : colors.onSurfaceVariant,
+        side: BorderSide(
+          color: selected ? colors.primary : AppColors.borderSoft,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        minimumSize: const Size(0, 40),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        alignment: Alignment.center,
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     );
   }
