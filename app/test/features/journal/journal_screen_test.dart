@@ -68,4 +68,47 @@ void main() {
 
     expect(find.text('Duration: 0 h 01m'), findsOneWidget);
   });
+
+  testWidgets('summary cards do not overflow on a narrow Polish screen',
+      (tester) async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.polish,
+          controller: controller,
+          now: () => DateTime(2026, 5, 19, 9, 30),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('journal-day-navigation')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('journal-summary-cards')), findsOneWidget);
+    expect(find.text(AppStrings.polish.journalTodayLabel), findsOneWidget);
+    expect(find.text('0 min'), findsWidgets);
+    expect(find.text(AppStrings.polish.journalNoEntryShort), findsNWidgets(4));
+
+    await tester.drag(
+      find.byKey(const ValueKey('journal-scroll-view')),
+      const Offset(0, -800),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('journal-quick-actions')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
