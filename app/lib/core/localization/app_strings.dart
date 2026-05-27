@@ -573,8 +573,7 @@ class AppStrings {
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
-    journalEmptyStateMessage:
-        'Dodaj pierwszy wpis, gdy będziesz gotowy/gotowa.',
+    journalEmptyStateMessage: 'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
     journalAddSleep: 'Dodaj sen',
     journalAddFeeding: 'Dodaj karmienie',
     journalAddDiaper: 'Dodaj pieluchę',

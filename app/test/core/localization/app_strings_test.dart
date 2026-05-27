@@ -208,6 +208,10 @@ void main() {
       AppStrings.polish.journalEmptyStateTitle,
       'Nie zapisano jeszcze momentów opieki dla tego dnia.',
     );
+    expect(
+      AppStrings.polish.journalEmptyStateMessage,
+      'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
+    );
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');

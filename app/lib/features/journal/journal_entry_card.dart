@@ -45,7 +45,9 @@ class JournalEntryCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(_detailText(strings, entry), style: AppTextStyles.body),
-          if (entry.note != null && entry.note!.trim().isNotEmpty) ...[
+          if (entry.type != JournalEntryType.note &&
+              entry.note != null &&
+              entry.note!.trim().isNotEmpty) ...[
             const SizedBox(height: AppSpacing.xs),
             Text(
               entry.note!.trim(),

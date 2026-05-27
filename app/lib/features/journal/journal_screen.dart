@@ -23,6 +23,7 @@ class JournalScreen extends StatefulWidget {
     this.controller,
     this.store,
     this.now = DateTime.now,
+    this.activeSleepTickerInterval = const Duration(minutes: 1),
     super.key,
   });
 
@@ -30,6 +31,7 @@ class JournalScreen extends StatefulWidget {
   final JournalController? controller;
   final JournalStore? store;
   final DateTime Function() now;
+  final Duration activeSleepTickerInterval;
 
   @override
   State<JournalScreen> createState() => _JournalScreenState();
@@ -38,6 +40,7 @@ class JournalScreen extends StatefulWidget {
 class _JournalScreenState extends State<JournalScreen> {
   late final JournalController _controller;
   late final bool _ownsController;
+  Timer? _activeSleepTicker;
 
   @override
   void initState() {
@@ -48,17 +51,38 @@ class _JournalScreenState extends State<JournalScreen> {
           store: widget.store ?? const SharedPreferencesJournalStore(),
           now: widget.now,
         );
+    _controller.addListener(_syncActiveSleepTicker);
     if (!_controller.hasLoaded) {
       unawaited(_controller.load());
     }
+    _syncActiveSleepTicker();
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_syncActiveSleepTicker);
+    _activeSleepTicker?.cancel();
     if (_ownsController) {
       _controller.dispose();
     }
     super.dispose();
+  }
+
+  void _syncActiveSleepTicker() {
+    final activeSleep = _controller.activeSleep;
+    if (activeSleep == null) {
+      _activeSleepTicker?.cancel();
+      _activeSleepTicker = null;
+      return;
+    }
+    if (_activeSleepTicker != null) {
+      return;
+    }
+    _activeSleepTicker = Timer.periodic(widget.activeSleepTickerInterval, (_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   Future<void> _openAddEntry(JournalEntryType type) async {

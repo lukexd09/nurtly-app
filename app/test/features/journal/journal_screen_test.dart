@@ -35,4 +35,37 @@ void main() {
     expect(find.byKey(const ValueKey('journal-scroll-view')), findsOneWidget);
     expect(find.text('Sponsored space'), findsNothing);
   });
+
+  testWidgets('active sleep duration updates while the screen is visible',
+      (tester) async {
+    var currentTime = DateTime(2026, 5, 19, 9, 30);
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => currentTime,
+    );
+    await controller.load();
+    await controller.startSleep();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.english,
+          controller: controller,
+          now: () => currentTime,
+          activeSleepTickerInterval: const Duration(seconds: 1),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('journal-active-sleep-card')),
+        findsOneWidget);
+    expect(find.text('Duration: 0 h 00m'), findsOneWidget);
+
+    currentTime = currentTime.add(const Duration(minutes: 1));
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.text('Duration: 0 h 01m'), findsOneWidget);
+  });
 }
