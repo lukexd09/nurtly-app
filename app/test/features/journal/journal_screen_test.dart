@@ -108,6 +108,10 @@ void main() {
       findsNothing,
     );
     expect(find.byKey(const ValueKey('journal-start-sleep')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-quick-action-chip-grid')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('journal-quick-action-add-sleep')),
         findsOneWidget);
     expect(find.byKey(const ValueKey('journal-quick-action-feeding')),

@@ -578,9 +578,8 @@ class _QuickActions extends StatelessWidget {
         const SizedBox(height: AppSpacing.sm),
         SizedBox(
           width: double.infinity,
-          child: FilledButton.tonalIcon(
+          child: FilledButton.tonal(
             key: const ValueKey('journal-start-sleep'),
-            iconAlignment: IconAlignment.start,
             onPressed: hasActiveSleep
                 ? null
                 : () async {
@@ -593,77 +592,105 @@ class _QuickActions extends StatelessWidget {
                 vertical: AppSpacing.sm,
               ),
             ),
-            icon: const Icon(Icons.play_arrow),
-            label: Text(strings.journalStartSleep),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.play_arrow, size: 18),
+                const SizedBox(width: AppSpacing.xs),
+                Text(strings.journalStartSleep),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        Align(
-          alignment: Alignment.center,
-          child: Wrap(
-            key: const ValueKey('journal-quick-action-chip-row'),
-            alignment: WrapAlignment.center,
-            runAlignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: AppSpacing.xs,
-            runSpacing: AppSpacing.xs,
-            children: [
-              OutlinedButton(
-                key: const ValueKey('journal-quick-action-add-sleep'),
-                onPressed: onAddSleep,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  minimumSize: const Size(0, 38),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final chipWidth = (constraints.maxWidth - AppSpacing.xs) / 2;
+            return Column(
+              key: const ValueKey('journal-quick-action-chip-grid'),
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-add-sleep'),
+                        label: strings.journalQuickActionSleep,
+                        onPressed: onAddSleep,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-feeding'),
+                        label: strings.journalQuickActionFeeding,
+                        onPressed: onAddFeeding,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(strings.journalQuickActionSleep),
-              ),
-              OutlinedButton(
-                key: const ValueKey('journal-quick-action-feeding'),
-                onPressed: onAddFeeding,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  minimumSize: const Size(0, 38),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-diaper'),
+                        label: strings.journalQuickActionDiaper,
+                        onPressed: onAddDiaper,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-note'),
+                        label: strings.journalQuickActionNote,
+                        onPressed: onAddNote,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(strings.journalQuickActionFeeding),
-              ),
-              OutlinedButton(
-                key: const ValueKey('journal-quick-action-diaper'),
-                onPressed: onAddDiaper,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  minimumSize: const Size(0, 38),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(strings.journalQuickActionDiaper),
-              ),
-              OutlinedButton(
-                key: const ValueKey('journal-quick-action-note'),
-                onPressed: onAddNote,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  minimumSize: const Size(0, 38),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(strings.journalQuickActionNote),
-              ),
-            ],
-          ),
+              ],
+            );
+          },
         ),
       ],
+    );
+  }
+}
+
+class _JournalQuickActionChip extends StatelessWidget {
+  const _JournalQuickActionChip({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        minimumSize: const Size.fromHeight(40),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }
