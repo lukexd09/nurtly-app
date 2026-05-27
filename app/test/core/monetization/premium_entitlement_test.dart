@@ -23,6 +23,16 @@ void main() {
     expect(entitlement.shouldShowAds, isFalse);
   });
 
+  test('active monthly without expiresAt still has premium access', () {
+    final entitlement = PremiumEntitlement.monthlyActive(
+      checkedAt: now,
+    );
+
+    expect(entitlement.hasPremiumAccessAt(now), isTrue);
+    expect(entitlement.shouldShowAds, isFalse);
+    expect(entitlement.needsRefresh(now), isFalse);
+  });
+
   test('active monthly needs refresh after 24h', () {
     final entitlement = PremiumEntitlement.monthlyActive(
       checkedAt: now.subtract(const Duration(hours: 25)),

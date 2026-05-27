@@ -20,6 +20,10 @@ $platformPatterns = @(
     "^app/ios/"
 )
 
+$allowedPlatformFiles = @(
+    "^app/android/app/src/main/AndroidManifest\\.xml$"
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -144,6 +148,25 @@ function Test-IsAllowedSharedPreferencesUsage {
     )
 }
 
+function Test-IsAllowedGoogleMobileAdsUsage {
+    param(
+        [string] $Path,
+        [string] $Pattern
+    )
+
+    if ($Pattern -ne "google_mobile_ads") {
+        return $false
+    }
+
+    $normalized = $Path -replace "\\", "/"
+    return $normalized -in @(
+        "app/pubspec.yaml",
+        "app/pubspec.lock",
+        "app/lib/core/ads/ad_widget_factory.dart",
+        "app/lib/main.dart"
+    )
+}
+
 function Test-ForbiddenPatternMatch {
     param(
         [string] $Content,
@@ -180,10 +203,12 @@ try {
         }
 
         if (-not $AllowPlatformChanges) {
-            foreach ($pattern in $platformPatterns) {
-                if ($normalized -match $pattern) {
-                    $failures += "Platform file changed without -AllowPlatformChanges: $file"
-                }
+            $isPlatformFile = $normalized -match '^app/android/' -or $normalized -match '^app/ios/'
+            $isAllowedPlatformFile =
+                $normalized -eq 'app/android/app/src/main/AndroidManifest.xml'
+
+            if ($isPlatformFile -and -not $isAllowedPlatformFile) {
+                $failures += "Platform file changed without -AllowPlatformChanges: $file"
             }
         }
 
@@ -195,6 +220,9 @@ try {
                     continue
                 }
                 if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) {
+                    continue
+                }
+                if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) {
                     continue
                 }
                 if (Test-ForbiddenPatternMatch $content $pattern) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/ads/ad_widget_factory.dart';
 import '../../core/localization/app_strings.dart';
-import '../../core/monetization/ad_placeholder.dart';
 import '../../core/monetization/ad_insertion_policy.dart';
 import '../../core/monetization/premium_entitlement.dart';
 import '../../core/content/content_loader.dart';
@@ -38,6 +38,7 @@ class PlayScreen extends StatefulWidget {
     this.premiumEntitlement,
     this.onOpenPremiumPaywall,
     this.showAdPlaceholder = false,
+    this.adWidgetFactory = const FakeAdWidgetFactory(),
   });
 
   final ContentLoader contentLoader;
@@ -45,6 +46,7 @@ class PlayScreen extends StatefulWidget {
   final PremiumEntitlement? premiumEntitlement;
   final VoidCallback? onOpenPremiumPaywall;
   final bool showAdPlaceholder;
+  final AdWidgetFactory adWidgetFactory;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -269,7 +271,7 @@ class _PlayScreenState extends State<PlayScreen> {
               isFiltered: isFiltered,
             )) ...[
           const SizedBox(height: AppSpacing.md),
-          AdPlaceholderCard(strings: strings),
+          widget.adWidgetFactory.buildPassiveSlot(strings: strings),
         ],
       ],
     ];

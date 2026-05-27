@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../core/ads/ad_widget_factory.dart';
 import '../../core/content/content_loader.dart';
 import '../../core/content/content_package.dart';
 import '../../core/content/sound_item.dart';
 import '../../core/localization/app_strings.dart';
 import '../../core/monetization/ad_insertion_policy.dart';
-import '../../core/monetization/ad_placeholder.dart';
 import '../../core/monetization/premium_entitlement.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
@@ -30,6 +30,7 @@ class SoundsScreen extends StatefulWidget {
     this.premiumEntitlement,
     this.onOpenPremiumPaywall,
     this.showAdPlaceholder = false,
+    this.adWidgetFactory = const FakeAdWidgetFactory(),
   });
 
   final ContentLoader contentLoader;
@@ -37,6 +38,7 @@ class SoundsScreen extends StatefulWidget {
   final PremiumEntitlement? premiumEntitlement;
   final VoidCallback? onOpenPremiumPaywall;
   final bool showAdPlaceholder;
+  final AdWidgetFactory adWidgetFactory;
 
   @override
   State<SoundsScreen> createState() => _SoundsScreenState();
@@ -142,7 +144,7 @@ class _SoundsScreenState extends State<SoundsScreen> {
               isFiltered: false,
             )) ...[
           const SizedBox(height: AppSpacing.md),
-          AdPlaceholderCard(strings: widget.strings),
+          widget.adWidgetFactory.buildPassiveSlot(strings: widget.strings),
         ],
       ],
     ];

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/ads/ad_widget_factory.dart';
 import '../../core/localization/app_strings.dart';
-import '../../core/monetization/ad_placeholder.dart';
 import '../../core/navigation/app_tab.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radii.dart';
@@ -166,6 +166,7 @@ class HomeScreen extends StatelessWidget {
     required this.onSelectTab,
     required this.onOpenTodaysIdea,
     this.showAdPlaceholder = false,
+    this.adWidgetFactory = const FakeAdWidgetFactory(),
     super.key,
   });
 
@@ -173,6 +174,7 @@ class HomeScreen extends StatelessWidget {
   final ValueChanged<AppTab> onSelectTab;
   final VoidCallback onOpenTodaysIdea;
   final bool showAdPlaceholder;
+  final AdWidgetFactory adWidgetFactory;
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +212,7 @@ class HomeScreen extends StatelessWidget {
         ),
         if (showAdPlaceholder) ...[
           const SizedBox(height: AppSpacing.md),
-          AdPlaceholderCard(strings: strings),
+          adWidgetFactory.buildPassiveSlot(strings: strings),
         ],
       ],
     );
