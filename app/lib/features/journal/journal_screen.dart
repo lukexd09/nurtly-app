@@ -517,7 +517,7 @@ class _LastMomentsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(strings.journalNoEntryShort, style: AppTextStyles.caption),
+          Text(strings.journalLastMomentsTitle, style: AppTextStyles.caption),
           const SizedBox(height: AppSpacing.xs),
           _LastMomentLine(
             label: strings.journalLastSleep,
@@ -581,7 +581,7 @@ class _QuickActions extends StatelessWidget {
           runSpacing: AppSpacing.xs,
           children: [
             FilledButton.tonalIcon(
-              key: const ValueKey('journal-quick-action-sleep'),
+              key: const ValueKey('journal-start-sleep'),
               onPressed: hasActiveSleep
                   ? null
                   : () async {
@@ -589,6 +589,19 @@ class _QuickActions extends StatelessWidget {
                     },
               icon: const Icon(Icons.play_arrow),
               label: Text(strings.journalStartSleep),
+            ),
+            TextButton(
+              key: const ValueKey('journal-quick-action-add-sleep'),
+              onPressed: onAddSleep,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(strings.journalQuickActionSleep),
             ),
             TextButton(
               key: const ValueKey('journal-quick-action-feeding'),

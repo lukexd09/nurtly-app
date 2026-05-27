@@ -201,6 +201,7 @@ void main() {
     expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
     expect(AppStrings.english.journalStartSleep, 'Start sleep');
     expect(AppStrings.english.journalStopSleep, 'Stop sleep');
+    expect(AppStrings.english.journalLastMomentsTitle, 'Latest entries');
     expect(AppStrings.english.journalQuickActionSleep, 'Sleep');
     expect(AppStrings.english.journalQuickActionFeeding, 'Feeding');
     expect(AppStrings.english.journalQuickActionDiaper, 'Diaper');
@@ -221,6 +222,7 @@ void main() {
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');
+    expect(AppStrings.polish.journalLastMomentsTitle, 'Ostatnie wpisy');
     expect(AppStrings.polish.journalQuickActionSleep, 'Sen');
     expect(AppStrings.polish.journalQuickActionFeeding, 'Karmienie');
     expect(AppStrings.polish.journalQuickActionDiaper, 'Pielucha');

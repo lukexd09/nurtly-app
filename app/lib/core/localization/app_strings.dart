@@ -56,6 +56,7 @@ class AppStrings {
     required this.journalFeedingsCount,
     required this.journalDiapersCount,
     required this.journalNotesCount,
+    required this.journalLastMomentsTitle,
     required this.journalNoSleepToday,
     required this.journalNoFeedingToday,
     required this.journalNoDiaperToday,
@@ -236,6 +237,7 @@ class AppStrings {
   final String journalFeedingsCount;
   final String journalDiapersCount;
   final String journalNotesCount;
+  final String journalLastMomentsTitle;
   final String journalNoSleepToday;
   final String journalNoFeedingToday;
   final String journalNoDiaperToday;
@@ -418,6 +420,7 @@ class AppStrings {
     journalFeedingsCount: 'Feedings',
     journalDiapersCount: 'Diapers',
     journalNotesCount: 'Notes',
+    journalLastMomentsTitle: 'Latest entries',
     journalNoSleepToday: 'No sleep logged today.',
     journalNoFeedingToday: 'No feeding logged today.',
     journalNoDiaperToday: 'No diaper logged today.',
@@ -612,6 +615,7 @@ class AppStrings {
     journalFeedingsCount: 'Karmienia',
     journalDiapersCount: 'Pieluchy',
     journalNotesCount: 'Notatki',
+    journalLastMomentsTitle: 'Ostatnie wpisy',
     journalNoSleepToday: 'Brak snu dzisiaj.',
     journalNoFeedingToday: 'Brak karmienia dzisiaj.',
     journalNoDiaperToday: 'Brak pieluchy dzisiaj.',

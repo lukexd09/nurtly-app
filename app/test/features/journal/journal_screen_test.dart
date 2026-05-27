@@ -107,7 +107,8 @@ void main() {
       find.byKey(const ValueKey('journal-last-moments-section')),
       findsNothing,
     );
-    expect(find.byKey(const ValueKey('journal-quick-action-sleep')),
+    expect(find.byKey(const ValueKey('journal-start-sleep')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-quick-action-add-sleep')),
         findsOneWidget);
     expect(find.byKey(const ValueKey('journal-quick-action-feeding')),
         findsOneWidget);
@@ -166,6 +167,8 @@ void main() {
       find.byKey(const ValueKey('journal-last-moments-section')),
       findsOneWidget,
     );
+    expect(
+        find.text(AppStrings.polish.journalLastMomentsTitle), findsOneWidget);
     expect(find.text(AppStrings.polish.journalNoEntryShort), findsWidgets);
     expect(tester.takeException(), isNull);
   });
