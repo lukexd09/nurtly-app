@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nurtly/core/localization/app_strings.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/journal/add_journal_entry_screen.dart';
 import 'package:nurtly/features/journal/journal_entry.dart';
 import 'package:nurtly/features/journal/journal_entry_type.dart';
+
+Widget _localizedTestApp(
+    {required Widget child, Locale locale = const Locale('pl')}) {
+  return MaterialApp(
+    locale: locale,
+    localizationsDelegates: const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: const [Locale('en'), Locale('pl')],
+    theme: AppTheme.light,
+    home: child,
+  );
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,9 +28,8 @@ void main() {
   testWidgets('feeding form shows readable selected chip labels',
       (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.feeding,
           now: () => DateTime(2026, 5, 27, 14, 7),
@@ -38,9 +53,8 @@ void main() {
   testWidgets('feeding form uses user-friendly time and amount copy',
       (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.feeding,
           initialEntry: JournalEntry.feeding(
@@ -63,9 +77,8 @@ void main() {
 
   testWidgets('feeding form starts on selected day context', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.feeding,
           initialDay: DateTime(2026, 5, 26),
@@ -87,9 +100,8 @@ void main() {
   testWidgets('feeding form shows today label for current day context',
       (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.feeding,
           initialDay: DateTime(2026, 5, 27),
@@ -105,9 +117,8 @@ void main() {
   testWidgets('sleep form exposes change day actions for both times',
       (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.sleep,
           initialDay: DateTime(2026, 5, 26),
@@ -130,9 +141,8 @@ void main() {
   testWidgets('diaper form shows readable selected chip labels',
       (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.light,
-        home: AddJournalEntryScreen(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
           strings: AppStrings.polish,
           entryType: JournalEntryType.diaper,
           now: () => DateTime(2026, 5, 27, 14, 7),
@@ -150,5 +160,48 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Siusiu'), findsOneWidget);
+  });
+
+  testWidgets('polish journal time picker uses localized material labels',
+      (tester) async {
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.feeding,
+          initialDay: DateTime(2026, 5, 26),
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('journal-change-event-day')));
+    await tester.pumpAndSettle();
+    expect(find.text('Select date'), findsNothing);
+    expect(find.text('Cancel'), findsNothing);
+    expect(find.byType(DatePickerDialog), findsOneWidget);
+  });
+
+  testWidgets('polish journal time picker does not show English labels',
+      (tester) async {
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.feeding,
+          initialDay: DateTime(2026, 5, 26),
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('journal-event-time-row')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Select time'), findsNothing);
+    expect(find.text('Cancel'), findsNothing);
+    expect(find.byType(TimePickerDialog), findsOneWidget);
   });
 }

@@ -34,6 +34,7 @@ class AppShell extends StatefulWidget {
     PremiumEntitlementProvider? premiumEntitlementProvider,
     PremiumPurchaseProvider? premiumPurchaseProvider,
     AdWidgetFactory? adWidgetFactory,
+    this.onLanguageChanged,
     super.key,
   })  : languagePreferenceStore = languagePreferenceStore ??
             const SharedPreferencesLanguagePreferenceStore(),
@@ -48,6 +49,7 @@ class AppShell extends StatefulWidget {
   final PremiumEntitlementProvider premiumEntitlementProvider;
   final PremiumPurchaseProvider premiumPurchaseProvider;
   final AdWidgetFactory adWidgetFactory;
+  final ValueChanged<AppLanguage>? onLanguageChanged;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -157,6 +159,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       _selectedLanguage = language;
       _localizedContentLoader = null;
     });
+    widget.onLanguageChanged?.call(language);
     unawaited(() async {
       try {
         await widget.languagePreferenceStore.save(language);

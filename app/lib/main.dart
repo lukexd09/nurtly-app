@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app_config.dart';
@@ -9,8 +10,10 @@ import 'core/ads/ad_widget_factory.dart';
 import 'core/monetization/google_play_billing_entitlement_provider.dart';
 import 'core/monetization/premium_entitlement_provider.dart';
 import 'core/monetization/premium_purchase_provider.dart';
+import 'core/localization/language_preference_store.dart';
 import 'core/theme/app_theme.dart';
 import 'core/navigation/app_shell.dart';
+import 'core/localization/app_language.dart';
 
 void main() {
   final isAndroidRuntime =
@@ -35,8 +38,9 @@ void main() {
   );
 }
 
-class NurtlyApp extends StatelessWidget {
+class NurtlyApp extends StatefulWidget {
   NurtlyApp({
+    this.languagePreferenceStore,
     PremiumEntitlementProvider? premiumProvider,
     PremiumPurchaseProvider? purchaseProvider,
     AdWidgetFactory? adWidgetFactory,
@@ -46,9 +50,27 @@ class NurtlyApp extends StatelessWidget {
             purchaseProvider ?? const LocalPremiumPurchaseProvider(),
         adWidgetFactory = adWidgetFactory ?? const FakeAdWidgetFactory();
 
+  final LanguagePreferenceStore? languagePreferenceStore;
   final PremiumEntitlementProvider premiumProvider;
   final PremiumPurchaseProvider purchaseProvider;
   final AdWidgetFactory adWidgetFactory;
+
+  @override
+  State<NurtlyApp> createState() => _NurtlyAppState();
+}
+
+class _NurtlyAppState extends State<NurtlyApp> {
+  Locale? _locale;
+
+  void _handleLocaleChanged(AppLanguage language) {
+    final nextLocale = Locale(language.languageCode);
+    if (_locale == nextLocale) {
+      return;
+    }
+    setState(() {
+      _locale = nextLocale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +78,19 @@ class NurtlyApp extends StatelessWidget {
       title: appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      locale: _locale,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en'), Locale('pl')],
       home: AppShell(
-        premiumEntitlementProvider: premiumProvider,
-        premiumPurchaseProvider: purchaseProvider,
-        adWidgetFactory: adWidgetFactory,
+        languagePreferenceStore: widget.languagePreferenceStore,
+        premiumEntitlementProvider: widget.premiumProvider,
+        premiumPurchaseProvider: widget.purchaseProvider,
+        adWidgetFactory: widget.adWidgetFactory,
+        onLanguageChanged: _handleLocaleChanged,
       ),
     );
   }

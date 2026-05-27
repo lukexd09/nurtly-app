@@ -326,6 +326,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                 ),
               ] else ...[
                 _TimePickerRow(
+                  rowKey: const ValueKey('journal-event-time-row'),
                   label: strings.journalEventTimeLabel,
                   value: _formatDateTime(_selectedEventAt),
                   onTap: _pickEventTime,
@@ -459,6 +460,7 @@ class _TimePickerRow extends StatelessWidget {
     required this.onChangeDay,
     required this.changeDayLabel,
     required this.changeDayKey,
+    this.rowKey,
   });
 
   final String label;
@@ -467,10 +469,12 @@ class _TimePickerRow extends StatelessWidget {
   final VoidCallback? onChangeDay;
   final String changeDayLabel;
   final Key changeDayKey;
+  final Key? rowKey;
 
   @override
   Widget build(BuildContext context) {
     return Material(
+      key: rowKey,
       color: AppColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
