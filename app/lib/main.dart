@@ -13,15 +13,22 @@ import 'core/theme/app_theme.dart';
 import 'core/navigation/app_shell.dart';
 
 void main() {
-  if (defaultTargetPlatform == TargetPlatform.android) {
+  final isAndroidRuntime =
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+  GooglePlayBillingEntitlementProvider? billing;
+  if (isAndroidRuntime) {
     unawaited(MobileAds.instance.initialize());
+    billing = GooglePlayBillingEntitlementProvider();
   }
-  final billing = GooglePlayBillingEntitlementProvider();
+  final PremiumEntitlementProvider premiumProvider =
+      billing ?? LocalPremiumEntitlementProvider();
+  final PremiumPurchaseProvider purchaseProvider =
+      billing ?? const LocalPremiumPurchaseProvider();
   runApp(
     NurtlyApp(
-      premiumProvider: billing,
-      purchaseProvider: billing,
-      adWidgetFactory: defaultTargetPlatform == TargetPlatform.android
+      premiumProvider: premiumProvider,
+      purchaseProvider: purchaseProvider,
+      adWidgetFactory: isAndroidRuntime
           ? const RealAdWidgetFactory()
           : const FakeAdWidgetFactory(),
     ),
