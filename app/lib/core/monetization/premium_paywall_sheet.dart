@@ -67,10 +67,12 @@ class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
             _PlanCard(
-              title: yearly?.title ?? widget.strings.premiumYearlyPlan,
+              titleKey: const ValueKey('premium-paywall-yearly-title'),
+              priceKey: const ValueKey('premium-paywall-yearly-price'),
+              noteKey: const ValueKey('premium-paywall-yearly-note'),
+              title: widget.strings.premiumYearlyPlan,
               price: yearly?.price ?? widget.strings.premiumYearlyPrice,
-              note: yearly?.description ??
-                  widget.strings.premiumYearlyRegularPrice,
+              note: widget.strings.premiumYearlyRegularPrice,
               badge: widget.strings.premiumBestValue,
               actionLabel: widget.strings.premiumYearlyPlan,
               isLoading: _isBuyingYearly,
@@ -78,10 +80,12 @@ class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             _PlanCard(
-              title: monthly?.title ?? widget.strings.premiumMonthlyPlan,
+              titleKey: const ValueKey('premium-paywall-monthly-title'),
+              priceKey: const ValueKey('premium-paywall-monthly-price'),
+              noteKey: const ValueKey('premium-paywall-monthly-note'),
+              title: widget.strings.premiumMonthlyPlan,
               price: monthly?.price ?? widget.strings.premiumMonthlyPrice,
-              note: monthly?.description ??
-                  widget.strings.premiumMonthlyRegularPrice,
+              note: widget.strings.premiumMonthlyRegularPrice,
               actionLabel: widget.strings.premiumMonthlyPlan,
               isLoading: _isBuyingMonthly,
               onPressed: _buyMonthly,
@@ -207,6 +211,9 @@ class _PlanCard extends StatelessWidget {
     required this.actionLabel,
     required this.isLoading,
     required this.onPressed,
+    this.titleKey,
+    this.priceKey,
+    this.noteKey,
     this.badge,
   });
 
@@ -217,6 +224,9 @@ class _PlanCard extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;
   final String? badge;
+  final Key? titleKey;
+  final Key? priceKey;
+  final Key? noteKey;
 
   @override
   Widget build(BuildContext context) {
@@ -236,6 +246,7 @@ class _PlanCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
+                    key: titleKey,
                     title,
                     style: AppTextStyles.cardTitle.copyWith(
                       fontWeight: FontWeight.w800,
@@ -249,9 +260,9 @@ class _PlanCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.xxs),
-            Text(price, style: AppTextStyles.body),
+            Text(price, key: priceKey, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.xxs),
-            Text(note, style: AppTextStyles.caption),
+            Text(note, key: noteKey, style: AppTextStyles.caption),
             const SizedBox(height: AppSpacing.sm),
             FilledButton(
               onPressed: isLoading ? null : onPressed,
