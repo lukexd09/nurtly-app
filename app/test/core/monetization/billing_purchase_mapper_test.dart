@@ -20,16 +20,16 @@ void main() {
     expect(entitlement.hasPremiumAccessAt(now), isTrue);
   });
 
-  test('successful lifetime purchase maps to lifetime active', () {
+  test('successful yearly purchase maps to yearly active', () {
     final entitlement = entitlementFromPurchaseDetails(
-      productId: kLifetimePremiumProductId,
+      productId: kYearlyPremiumProductId,
       status: PurchaseStatus.restored,
       checkedAt: now,
     );
 
     expect(entitlement, isNotNull);
     expect(entitlement!.state, PremiumState.active);
-    expect(entitlement.source, PremiumSource.lifetime);
+    expect(entitlement.source, PremiumSource.yearly);
     expect(entitlement.hasPremiumAccessAt(now), isTrue);
   });
 

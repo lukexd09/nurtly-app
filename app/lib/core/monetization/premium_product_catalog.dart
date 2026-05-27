@@ -5,28 +5,28 @@ import 'billing_product_ids.dart';
 class PremiumProductCatalog {
   const PremiumProductCatalog({
     required this.monthly,
-    required this.lifetime,
+    required this.yearly,
   });
 
   factory PremiumProductCatalog.empty() {
     return const PremiumProductCatalog(
       monthly: null,
-      lifetime: null,
+      yearly: null,
     );
   }
 
   final ProductDetails? monthly;
-  final ProductDetails? lifetime;
+  final ProductDetails? yearly;
 
   ProductDetails? productForId(String id) {
     return switch (id) {
       kMonthlyPremiumProductId => monthly,
-      kLifetimePremiumProductId => lifetime,
+      kYearlyPremiumProductId => yearly,
       _ => null,
     };
   }
 
   bool get hasMonthly => monthly != null;
 
-  bool get hasLifetime => lifetime != null;
+  bool get hasYearly => yearly != null;
 }

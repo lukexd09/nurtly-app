@@ -117,16 +117,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Nurtly Premium'), findsOneWidget);
+    expect(find.text('Launch offer -50%'), findsOneWidget);
     expect(find.text('Remove ads'), findsOneWidget);
-    expect(find.text('Unlock premium play ideas and sounds'), findsOneWidget);
+    expect(find.text('Unlock premium play ideas'), findsOneWidget);
+    expect(find.text('Unlock premium sounds'), findsOneWidget);
+    expect(find.text('Premium Yearly'), findsWidgets);
     expect(find.text('Premium Monthly'), findsWidgets);
-    expect(find.text('Premium Lifetime'), findsWidgets);
-    expect(find.text('Billing coming soon'), findsNothing);
+    expect(find.text('7.49 PLN / month'), findsOneWidget);
+    expect(find.text('64.99 PLN / year'), findsOneWidget);
 
-    await tester.drag(
-      find.byType(ListView).last,
-      const Offset(0, -400),
-    );
     await tester.pumpAndSettle();
     expect(find.text('Not now'), findsWidgets);
     expect(find.text('Already Premium? Restore access'), findsWidgets);
@@ -176,11 +175,6 @@ void main() {
 
     await tester.ensureVisible(find.text('Przejd\u017a na Premium').first);
     await tester.tap(find.text('Przejd\u017a na Premium').first);
-    await tester.pumpAndSettle();
-    await tester.drag(
-      find.byType(ListView).last,
-      const Offset(0, -400),
-    );
     await tester.pumpAndSettle();
     expect(find.text('Nie teraz'), findsWidgets);
     expect(

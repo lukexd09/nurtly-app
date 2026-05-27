@@ -28,7 +28,7 @@ void main() {
       await provider.loadEntitlement();
       client.emit([
         _purchase(
-          productId: kLifetimePremiumProductId,
+          productId: kYearlyPremiumProductId,
           status: PurchaseStatus.restored,
         ),
       ]);
@@ -48,7 +48,7 @@ void main() {
         const [],
         [
           _purchase(
-            productId: kLifetimePremiumProductId,
+            productId: kYearlyPremiumProductId,
             status: PurchaseStatus.restored,
           ),
         ],
@@ -62,7 +62,7 @@ void main() {
     await controller.load();
     client.emit([
       _purchase(
-        productId: kLifetimePremiumProductId,
+        productId: kYearlyPremiumProductId,
         status: PurchaseStatus.restored,
       ),
     ]);
@@ -77,7 +77,7 @@ void main() {
       restoreEventsByCall: [
         [
           _purchase(
-            productId: kLifetimePremiumProductId,
+            productId: kYearlyPremiumProductId,
             status: PurchaseStatus.restored,
           ),
         ],
@@ -93,7 +93,7 @@ void main() {
 
     expect(result.status, PurchaseActionStatus.error);
     expect(provider.currentEntitlement.state, PremiumState.active);
-    expect(provider.currentEntitlement.source, PremiumSource.lifetime);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
   });
 
   test('confirmed no active purchase clears stale premium entitlement',
@@ -102,7 +102,7 @@ void main() {
       restoreEventsByCall: [
         [
           _purchase(
-            productId: kLifetimePremiumProductId,
+            productId: kYearlyPremiumProductId,
             status: PurchaseStatus.restored,
           ),
         ],
@@ -209,11 +209,11 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
           description: 'Monthly premium',
           price: '14.99 PLN',
         ),
-      if (identifiers.contains(kLifetimePremiumProductId))
+      if (identifiers.contains(kYearlyPremiumProductId))
         _product(
-          id: kLifetimePremiumProductId,
-          title: 'Lifetime',
-          description: 'Lifetime premium',
+          id: kYearlyPremiumProductId,
+          title: 'Yearly',
+          description: 'Yearly premium',
           price: '129.99 PLN',
         ),
     ];

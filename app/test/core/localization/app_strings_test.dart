@@ -14,10 +14,34 @@ void main() {
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Free plan');
-    expect(strings.premiumStatusLifetimeActive, 'Lifetime Premium active');
+    expect(strings.premiumStatusYearlyActive, 'Yearly Premium active');
     expect(strings.premiumUpgrade, 'Upgrade to Premium');
     expect(strings.restorePurchases, 'Restore Premium access');
     expect(strings.premiumRemovesAdsInFreePlan, 'Premium removes ads.');
+    expect(strings.premiumLaunchOfferTitle, 'Launch offer -50%');
+    expect(
+      strings.premiumLaunchOfferDescription,
+      'Premium library is still growing, so Premium starts at a lower price.',
+    );
+    expect(strings.premiumYearlyPlan, 'Premium Yearly');
+    expect(strings.premiumYearlyPrice, '64.99 PLN / year');
+    expect(
+      strings.premiumYearlyRegularPrice,
+      'Launch price, regular price 129.99 PLN / year',
+    );
+    expect(strings.premiumBestValue, 'Best value');
+    expect(strings.premiumMonthlyPlan, 'Premium Monthly');
+    expect(strings.premiumMonthlyPrice, '7.49 PLN / month');
+    expect(
+      strings.premiumMonthlyRegularPrice,
+      'Launch price, regular price 14.99 PLN / month',
+    );
+    expect(strings.premiumUnlockPlayIdeas, 'Unlock premium play ideas');
+    expect(strings.premiumUnlockSounds, 'Unlock premium sounds');
+    expect(
+      strings.premiumFuturePremiumContent,
+      'New premium content in future updates',
+    );
     expect(
       strings.freePlanMayShowAdsInPassiveSlots,
       'Free plan may show ads in passive list slots.',
@@ -47,10 +71,14 @@ void main() {
       strings.premiumRestoreUnavailableBody,
       'Please try again later.',
     );
-    expect(strings.premiumRestoreNoPurchaseTitle,
-        'No active Premium purchase was found');
-    expect(strings.premiumRestoreNoPurchaseBody,
-        'This Google Play account does not currently have Premium access.');
+    expect(
+      strings.premiumRestoreNoPurchaseTitle,
+      'No active Premium purchase was found',
+    );
+    expect(
+      strings.premiumRestoreNoPurchaseBody,
+      'This Google Play account does not currently have Premium access.',
+    );
     expect(strings.premiumPurchasePending, 'Your purchase is pending.');
     expect(
       strings.premiumPurchaseUnavailable,
@@ -75,10 +103,34 @@ void main() {
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Darmowy plan');
-    expect(strings.premiumStatusLifetimeActive, 'Premium na stałe aktywne');
+    expect(strings.premiumStatusYearlyActive, 'Premium roczne aktywne');
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
     expect(strings.restorePurchases, 'Odzyskaj dostęp Premium');
     expect(strings.premiumRemovesAdsInFreePlan, 'Premium usuwa reklamy.');
+    expect(strings.premiumLaunchOfferTitle, 'Oferta startowa -50%');
+    expect(
+      strings.premiumLaunchOfferDescription,
+      'Biblioteka premium będzie się rozwijać, dlatego na start Premium jest dostępne w niższej cenie.',
+    );
+    expect(strings.premiumYearlyPlan, 'Premium rocznie');
+    expect(strings.premiumYearlyPrice, '64,99 PLN / rok');
+    expect(
+      strings.premiumYearlyRegularPrice,
+      'Cena startowa, cena docelowa 129,99 PLN / rok',
+    );
+    expect(strings.premiumBestValue, 'Najlepsza wartość');
+    expect(strings.premiumMonthlyPlan, 'Premium miesięcznie');
+    expect(strings.premiumMonthlyPrice, '7,49 PLN / miesiąc');
+    expect(
+      strings.premiumMonthlyRegularPrice,
+      'Cena startowa, cena docelowa 14,99 PLN / miesiąc',
+    );
+    expect(strings.premiumUnlockPlayIdeas, 'Odblokuj premium zabawy');
+    expect(strings.premiumUnlockSounds, 'Odblokuj premium dźwięki');
+    expect(
+      strings.premiumFuturePremiumContent,
+      'Nowe treści premium w kolejnych aktualizacjach',
+    );
     expect(
       strings.freePlanMayShowAdsInPassiveSlots,
       'Plan darmowy może wyświetlać reklamy w spokojnych miejscach list.',
@@ -108,13 +160,19 @@ void main() {
       strings.premiumRestoreUnavailableBody,
       'Spróbuj ponownie później.',
     );
-    expect(strings.premiumRestoreNoPurchaseTitle,
-        'Nie znaleziono aktywnego dostępu Premium');
-    expect(strings.premiumRestoreNoPurchaseBody,
-        'To konto Google Play nie ma obecnie aktywnego dostępu Premium.');
+    expect(
+      strings.premiumRestoreNoPurchaseTitle,
+      'Nie znaleziono aktywnego dostępu Premium',
+    );
+    expect(
+      strings.premiumRestoreNoPurchaseBody,
+      'To konto Google Play nie ma obecnie aktywnego dostępu Premium.',
+    );
     expect(strings.premiumPurchasePending, 'Zakup oczekuje na potwierdzenie.');
-    expect(strings.premiumPurchaseUnavailable,
-        'Zakupy są chwilowo niedostępne. Spróbuj ponownie później.');
+    expect(
+      strings.premiumPurchaseUnavailable,
+      'Zakupy są chwilowo niedostępne. Spróbuj ponownie później.',
+    );
     expect(strings.premiumTitle, 'Nurtly Premium');
     expect(strings.premiumRemoveAds, 'Usuń reklamy');
     expect(strings.adPlaceholderTitle, 'Miejsce sponsorowane');
@@ -123,7 +181,9 @@ void main() {
     expect(strings.tabLabel(AppTab.journal), 'Dziennik');
     expect(strings.quickIdeasCount(2), '2 łagodnych pomysłów');
     expect(
-        strings.noPressureNoStreaksNoGoals, 'BEZ PRESJI, BEZ SERII, BEZ CELÓW');
+      strings.noPressureNoStreaksNoGoals,
+      'BEZ PRESJI, BEZ SERII, BEZ CELÓW',
+    );
   });
 
   test('AppStrings.forLanguage resolves the right bundle', () {

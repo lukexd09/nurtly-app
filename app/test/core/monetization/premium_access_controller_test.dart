@@ -24,7 +24,7 @@ void main() {
   test('refresh updates entitlement', () async {
     final provider = FakePremiumEntitlementProvider(
       loadEntitlement: PremiumEntitlement.free(checkedAt: now),
-      refreshEntitlement: PremiumEntitlement.lifetimeActive(checkedAt: now),
+      refreshEntitlement: PremiumEntitlement.yearlyActive(checkedAt: now),
     );
     final controller = PremiumAccessController(provider: provider);
 
@@ -34,7 +34,7 @@ void main() {
     await controller.refresh();
 
     expect(controller.entitlement.state, PremiumState.active);
-    expect(controller.entitlement.source, PremiumSource.lifetime);
+    expect(controller.entitlement.source, PremiumSource.yearly);
     expect(controller.hasPremiumAccess, isTrue);
     expect(provider.loadCalls, 1);
     expect(provider.refreshCalls, 1);
@@ -73,9 +73,9 @@ void main() {
     expect(purchaseProvider.buyMonthlyCalls, 1);
   });
 
-  test('buyLifetime delegates to purchase provider', () async {
+  test('buyYearly delegates to purchase provider', () async {
     final purchaseProvider = FakePremiumPurchaseProvider(
-      buyLifetimeResult: const PurchaseActionResult(
+      buyYearlyResult: const PurchaseActionResult(
         status: PurchaseActionStatus.pending,
       ),
     );
@@ -87,10 +87,10 @@ void main() {
     );
 
     await controller.load();
-    final result = await controller.buyLifetime();
+    final result = await controller.buyYearly();
 
     expect(result.status, PurchaseActionStatus.pending);
-    expect(purchaseProvider.buyLifetimeCalls, 1);
+    expect(purchaseProvider.buyYearlyCalls, 1);
   });
 
   test('initial load error falls back to free', () async {
@@ -107,7 +107,7 @@ void main() {
   test('refresh error preserves existing premium entitlement', () async {
     final controller = PremiumAccessController(
       provider: FakePremiumEntitlementProvider(
-        loadEntitlement: PremiumEntitlement.lifetimeActive(checkedAt: now),
+        loadEntitlement: PremiumEntitlement.yearlyActive(checkedAt: now),
         failOnRefresh: true,
       ),
     );
@@ -116,7 +116,7 @@ void main() {
     await controller.refresh();
 
     expect(controller.entitlement.state, PremiumState.active);
-    expect(controller.entitlement.source, PremiumSource.lifetime);
+    expect(controller.entitlement.source, PremiumSource.yearly);
     expect(controller.hasPremiumAccess, isTrue);
   });
 
@@ -163,7 +163,7 @@ void main() {
   test('restorePurchases success preserves premium entitlement', () async {
     final controller = PremiumAccessController(
       provider: FakePremiumEntitlementProvider(
-        loadEntitlement: PremiumEntitlement.lifetimeActive(checkedAt: now),
+        loadEntitlement: PremiumEntitlement.yearlyActive(checkedAt: now),
       ),
       purchaseProvider: FakePremiumPurchaseProvider(),
     );
@@ -173,6 +173,6 @@ void main() {
 
     expect(result.status, PurchaseActionStatus.success);
     expect(controller.entitlement.state, PremiumState.active);
-    expect(controller.entitlement.source, PremiumSource.lifetime);
+    expect(controller.entitlement.source, PremiumSource.yearly);
   });
 }

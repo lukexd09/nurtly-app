@@ -75,8 +75,8 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   }
 
   @override
-  Future<PurchaseActionResult> buyLifetime() async {
-    return _buyProduct(kLifetimePremiumProductId);
+  Future<PurchaseActionResult> buyYearly() async {
+    return _buyProduct(kYearlyPremiumProductId);
   }
 
   @override
@@ -107,15 +107,15 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   Future<void> _loadProductCatalog() async {
     final response = await _billingClient.queryProductDetails({
       kMonthlyPremiumProductId,
-      kLifetimePremiumProductId,
+      kYearlyPremiumProductId,
     });
 
     _productCatalog = PremiumProductCatalog(
       monthly: response.productDetails.firstWhereOrNull(
         (product) => product.id == kMonthlyPremiumProductId,
       ),
-      lifetime: response.productDetails.firstWhereOrNull(
-        (product) => product.id == kLifetimePremiumProductId,
+      yearly: response.productDetails.firstWhereOrNull(
+        (product) => product.id == kYearlyPremiumProductId,
       ),
     );
     notifyListeners();

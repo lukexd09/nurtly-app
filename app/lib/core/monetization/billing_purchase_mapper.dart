@@ -21,8 +21,8 @@ PremiumEntitlement? entitlementFromPurchaseDetails({
     PurchaseStatus.purchased || PurchaseStatus.restored => switch (source) {
         PremiumSource.monthly =>
           PremiumEntitlement.monthlyActive(checkedAt: checkedAt),
-        PremiumSource.lifetime =>
-          PremiumEntitlement.lifetimeActive(checkedAt: checkedAt),
+        PremiumSource.yearly =>
+          PremiumEntitlement.yearlyActive(checkedAt: checkedAt),
         PremiumSource.none => PremiumEntitlement.free(checkedAt: checkedAt),
       },
     PurchaseStatus.canceled || PurchaseStatus.error => null,
@@ -32,7 +32,7 @@ PremiumEntitlement? entitlementFromPurchaseDetails({
 PremiumSource sourceForBillingProductId(String productId) {
   return switch (productId) {
     kMonthlyPremiumProductId => PremiumSource.monthly,
-    kLifetimePremiumProductId => PremiumSource.lifetime,
+    kYearlyPremiumProductId => PremiumSource.yearly,
     _ => PremiumSource.none,
   };
 }

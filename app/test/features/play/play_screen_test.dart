@@ -592,7 +592,7 @@ void main() {
         MaterialApp(
           home: PlayScreen(
             contentLoader: const _PremiumPlayContentLoader(),
-            premiumEntitlement: PremiumEntitlement.lifetimeActive(
+            premiumEntitlement: PremiumEntitlement.yearlyActive(
               checkedAt: DateTime.utc(2026, 5, 26, 12),
             ),
             showAdPlaceholder: true,
@@ -841,7 +841,7 @@ void main() {
       MaterialApp(
         home: PlayScreen(
           contentLoader: const _PlayAccessFilterContentLoader(),
-          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+          premiumEntitlement: PremiumEntitlement.yearlyActive(
             checkedAt: DateTime.utc(2026, 5, 26, 12),
           ),
         ),
@@ -1008,7 +1008,7 @@ void main() {
       MaterialApp(
         home: PlayScreen(
           contentLoader: const _AdPlacementPlayContentLoader4(),
-          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+          premiumEntitlement: PremiumEntitlement.yearlyActive(
             checkedAt: DateTime.utc(2026, 5, 26, 12),
           ),
           showAdPlaceholder: true,

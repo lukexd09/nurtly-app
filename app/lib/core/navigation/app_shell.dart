@@ -193,23 +193,16 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   }
 
   Future<void> _openPremiumPaywall() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      constraints: const BoxConstraints(maxHeight: 560),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) {
+          return PremiumPaywallScreen(
+            strings: _strings,
+            controller: _premiumController,
+            onRestoreAccess: _restorePremiumAccess,
+          );
+        },
       ),
-      builder: (sheetContext) {
-        return PremiumPaywallSheet(
-          strings: _strings,
-          controller: _premiumController,
-          onRestoreAccess: () {
-            Navigator.of(sheetContext).pop();
-            unawaited(_restorePremiumAccess());
-          },
-        );
-      },
     );
   }
 
@@ -577,8 +570,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       return strings.premiumStatusPaymentIssue;
     }
     if (entitlement.state == PremiumState.active &&
-        entitlement.source == PremiumSource.lifetime) {
-      return strings.premiumStatusLifetimeActive;
+        entitlement.source == PremiumSource.yearly) {
+      return strings.premiumStatusYearlyActive;
     }
     if (entitlement.state == PremiumState.active &&
         entitlement.source == PremiumSource.monthly &&

@@ -8,7 +8,7 @@ abstract interface class PremiumPurchaseProvider {
 
   Future<PurchaseActionResult> buyMonthly();
 
-  Future<PurchaseActionResult> buyLifetime();
+  Future<PurchaseActionResult> buyYearly();
 
   Future<PurchaseActionResult> restorePurchases();
 
@@ -25,7 +25,7 @@ class LocalPremiumPurchaseProvider implements PremiumPurchaseProvider {
   Future<void> initialize() async {}
 
   @override
-  Future<PurchaseActionResult> buyLifetime() async {
+  Future<PurchaseActionResult> buyYearly() async {
     return const PurchaseActionResult(status: PurchaseActionStatus.unavailable);
   }
 

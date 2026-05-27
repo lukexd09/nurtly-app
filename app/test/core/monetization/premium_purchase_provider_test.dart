@@ -7,10 +7,10 @@ void main() {
     const provider = LocalPremiumPurchaseProvider();
 
     expect(provider.productCatalog.hasMonthly, isFalse);
-    expect(provider.productCatalog.hasLifetime, isFalse);
+    expect(provider.productCatalog.hasYearly, isFalse);
     expect(await provider.buyMonthly(),
         const PurchaseActionResult(status: PurchaseActionStatus.unavailable));
-    expect(await provider.buyLifetime(),
+    expect(await provider.buyYearly(),
         const PurchaseActionResult(status: PurchaseActionStatus.unavailable));
     expect(await provider.restorePurchases(),
         const PurchaseActionResult(status: PurchaseActionStatus.unavailable));

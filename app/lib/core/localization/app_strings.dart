@@ -86,7 +86,7 @@ class AppStrings {
     required this.premiumStatusLabel,
     required this.premiumStatusFree,
     required this.premiumStatusActive,
-    required this.premiumStatusLifetimeActive,
+    required this.premiumStatusYearlyActive,
     required this.premiumStatusPending,
     required this.premiumStatusPaymentIssue,
     required this.premiumUpgrade,
@@ -96,12 +96,19 @@ class AppStrings {
     required this.premiumRestoreAccessLink,
     required this.premiumTitle,
     required this.premiumPaywallSubtitle,
-    required this.premiumRemoveAds,
-    required this.premiumUnlockContent,
+    required this.premiumLaunchOfferTitle,
+    required this.premiumLaunchOfferDescription,
+    required this.premiumYearlyPlan,
+    required this.premiumYearlyPrice,
+    required this.premiumYearlyRegularPrice,
+    required this.premiumBestValue,
     required this.premiumMonthlyPlan,
-    required this.premiumLifetimePlan,
     required this.premiumMonthlyPrice,
-    required this.premiumLifetimePrice,
+    required this.premiumMonthlyRegularPrice,
+    required this.premiumRemoveAds,
+    required this.premiumUnlockPlayIdeas,
+    required this.premiumUnlockSounds,
+    required this.premiumFuturePremiumContent,
     required this.premiumRestoreUnavailableTitle,
     required this.premiumRestoreUnavailableBody,
     required this.premiumRestoreNoPurchaseTitle,
@@ -195,7 +202,7 @@ class AppStrings {
   final String premiumStatusLabel;
   final String premiumStatusFree;
   final String premiumStatusActive;
-  final String premiumStatusLifetimeActive;
+  final String premiumStatusYearlyActive;
   final String premiumStatusPending;
   final String premiumStatusPaymentIssue;
   final String premiumUpgrade;
@@ -205,12 +212,19 @@ class AppStrings {
   final String premiumRestoreAccessLink;
   final String premiumTitle;
   final String premiumPaywallSubtitle;
-  final String premiumRemoveAds;
-  final String premiumUnlockContent;
+  final String premiumLaunchOfferTitle;
+  final String premiumLaunchOfferDescription;
+  final String premiumYearlyPlan;
+  final String premiumYearlyPrice;
+  final String premiumYearlyRegularPrice;
+  final String premiumBestValue;
   final String premiumMonthlyPlan;
-  final String premiumLifetimePlan;
   final String premiumMonthlyPrice;
-  final String premiumLifetimePrice;
+  final String premiumMonthlyRegularPrice;
+  final String premiumRemoveAds;
+  final String premiumUnlockPlayIdeas;
+  final String premiumUnlockSounds;
+  final String premiumFuturePremiumContent;
   final String premiumRestoreUnavailableTitle;
   final String premiumRestoreUnavailableBody;
   final String premiumRestoreNoPurchaseTitle;
@@ -312,7 +326,7 @@ class AppStrings {
     premiumStatusLabel: 'Status',
     premiumStatusFree: 'Free plan',
     premiumStatusActive: 'Premium active',
-    premiumStatusLifetimeActive: 'Lifetime Premium active',
+    premiumStatusYearlyActive: 'Yearly Premium active',
     premiumStatusPending: 'Purchase pending',
     premiumStatusPaymentIssue: 'Payment issue',
     premiumUpgrade: 'Upgrade to Premium',
@@ -322,13 +336,21 @@ class AppStrings {
     premiumRestoreAccessLink: 'Already Premium? Restore access',
     premiumTitle: 'Nurtly Premium',
     premiumPaywallSubtitle:
-        'Remove ads and unlock premium play ideas and sounds.',
+        'A calmer Nurtly, without ads and with premium play ideas and sounds.',
+    premiumLaunchOfferTitle: 'Launch offer -50%',
+    premiumLaunchOfferDescription:
+        'Premium library is still growing, so Premium starts at a lower price.',
+    premiumYearlyPlan: 'Premium Yearly',
+    premiumYearlyPrice: '64.99 PLN / year',
+    premiumYearlyRegularPrice: 'Launch price, regular price 129.99 PLN / year',
+    premiumBestValue: 'Best value',
     premiumRemoveAds: 'Remove ads',
-    premiumUnlockContent: 'Unlock premium play ideas and sounds',
     premiumMonthlyPlan: 'Premium Monthly',
-    premiumLifetimePlan: 'Premium Lifetime',
-    premiumMonthlyPrice: '14.99 PLN / month',
-    premiumLifetimePrice: '129.99 PLN once',
+    premiumMonthlyPrice: '7.49 PLN / month',
+    premiumMonthlyRegularPrice: 'Launch price, regular price 14.99 PLN / month',
+    premiumUnlockPlayIdeas: 'Unlock premium play ideas',
+    premiumUnlockSounds: 'Unlock premium sounds',
+    premiumFuturePremiumContent: 'New premium content in future updates',
     premiumRestoreUnavailableTitle: 'Purchases are temporarily unavailable',
     premiumRestoreUnavailableBody: 'Please try again later.',
     premiumRestoreNoPurchaseTitle: 'No active Premium purchase was found',
@@ -437,7 +459,7 @@ class AppStrings {
     premiumStatusLabel: 'Status',
     premiumStatusFree: 'Darmowy plan',
     premiumStatusActive: 'Premium aktywne',
-    premiumStatusLifetimeActive: 'Premium na stałe aktywne',
+    premiumStatusYearlyActive: 'Premium roczne aktywne',
     premiumStatusPending: 'Zakup oczekuje na potwierdzenie',
     premiumStatusPaymentIssue: 'Problem z płatnością',
     premiumUpgrade: 'Przejdź na Premium',
@@ -446,13 +468,24 @@ class AppStrings {
     premiumNotNow: 'Nie teraz',
     premiumRestoreAccessLink: 'Masz już Premium? Odzyskaj dostęp',
     premiumTitle: 'Nurtly Premium',
-    premiumPaywallSubtitle: 'Usuń reklamy i odblokuj premium zabawy i dźwięki.',
+    premiumPaywallSubtitle:
+        'Spokojniejsze Nurtly bez reklam oraz z dostępem do premium zabaw i dźwięków.',
+    premiumLaunchOfferTitle: 'Oferta startowa -50%',
+    premiumLaunchOfferDescription:
+        'Biblioteka premium będzie się rozwijać, dlatego na start Premium jest dostępne w niższej cenie.',
+    premiumYearlyPlan: 'Premium rocznie',
+    premiumYearlyPrice: '64,99 PLN / rok',
+    premiumYearlyRegularPrice: 'Cena startowa, cena docelowa 129,99 PLN / rok',
+    premiumBestValue: 'Najlepsza wartość',
     premiumRemoveAds: 'Usuń reklamy',
-    premiumUnlockContent: 'Odblokuj premium zabawy i dźwięki',
     premiumMonthlyPlan: 'Premium miesięcznie',
-    premiumLifetimePlan: 'Premium na stałe',
-    premiumMonthlyPrice: '14,99 PLN / miesiąc',
-    premiumLifetimePrice: '129,99 PLN jednorazowo',
+    premiumMonthlyPrice: '7,49 PLN / miesiąc',
+    premiumMonthlyRegularPrice:
+        'Cena startowa, cena docelowa 14,99 PLN / miesiąc',
+    premiumUnlockPlayIdeas: 'Odblokuj premium zabawy',
+    premiumUnlockSounds: 'Odblokuj premium dźwięki',
+    premiumFuturePremiumContent:
+        'Nowe treści premium w kolejnych aktualizacjach',
     premiumRestoreUnavailableTitle: 'Zakupy nie są jeszcze dostępne',
     premiumRestoreUnavailableBody: 'Spróbuj ponownie później.',
     premiumRestoreNoPurchaseTitle: 'Nie znaleziono aktywnego dostępu Premium',
