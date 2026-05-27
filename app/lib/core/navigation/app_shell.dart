@@ -129,6 +129,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       _localizedContentLoaderLanguage = null;
       _isReady = true;
     });
+    widget.onLanguageChanged?.call(language);
   }
 
   ContentLoader _contentLoaderForCurrentLanguage() {

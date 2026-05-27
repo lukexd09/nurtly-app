@@ -13,6 +13,28 @@ import 'test_fakes/fake_premium_entitlement_provider.dart';
 import 'test_fakes/fake_language_preference_store.dart';
 
 void main() {
+  testWidgets('AppShell bootstrap notifies parent about saved language',
+      (tester) async {
+    AppLanguage? capturedLanguage;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AppShell(
+          contentLoader: const FakeContentLoader(),
+          languagePreferenceStore: FakeLanguagePreferenceStore(
+            saved: AppLanguage.polish,
+          ),
+          premiumEntitlementProvider: FakePremiumEntitlementProvider(),
+          onLanguageChanged: (language) => capturedLanguage = language,
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
+
+    expect(capturedLanguage, AppLanguage.polish);
+  });
+
   testWidgets('NurtlyApp wires MaterialApp localization for Polish',
       (tester) async {
     await tester.pumpWidget(
@@ -22,11 +44,12 @@ void main() {
         ),
       ),
     );
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump(const Duration(seconds: 1));
 
     final materialApp = tester.widget<MaterialApp>(
       find.byType(MaterialApp),
     );
+    expect(materialApp.locale, const Locale('pl'));
     expect(materialApp.localizationsDelegates, isNotEmpty);
     expect(materialApp.supportedLocales, contains(const Locale('pl')));
   });
