@@ -305,10 +305,10 @@ void main() {
     await _pumpNurtlyApp(tester);
 
     final journalAction = find.text('Save a small note');
-    await tester.scrollUntilVisible(journalAction, 80);
-    await tester.tap(journalAction);
+    await tester.tap(journalAction.first);
     await _pumpTabChange(tester);
-    expect(find.text('No journal notes yet.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-scroll-view')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-header')), findsOneWidget);
   });
 
   testWidgets('Home quick link navigates to Sounds', (tester) async {
