@@ -224,6 +224,12 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(initial),
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
     if (time == null) {
       return null;
@@ -307,6 +313,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   onTap: _pickStartTime,
                   onChangeDay: _pickStartDay,
                   changeDayLabel: strings.journalChangeDay,
+                  changeDayKey: const ValueKey('journal-change-start-day'),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _TimePickerRow(
@@ -315,6 +322,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   onTap: _pickEndTime,
                   onChangeDay: _pickEndDay,
                   changeDayLabel: strings.journalChangeDay,
+                  changeDayKey: const ValueKey('journal-change-end-day'),
                 ),
               ] else ...[
                 _TimePickerRow(
@@ -323,6 +331,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   onTap: _pickEventTime,
                   onChangeDay: _pickEventDay,
                   changeDayLabel: strings.journalChangeDay,
+                  changeDayKey: const ValueKey('journal-change-event-day'),
                 ),
               ],
               const SizedBox(height: AppSpacing.lg),
@@ -365,11 +374,11 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
                   runSpacing: AppSpacing.xs,
                   children: [
                     for (final option in JournalDiaperType.values)
-                      ChoiceChip(
-                        label: Text(
-                            strings.journalDiaperTypeChoiceLabel(option.code)),
+                      _EntryChoiceChip(
+                        label:
+                            strings.journalDiaperTypeChoiceLabel(option.code),
                         selected: _diaperType == option,
-                        onSelected: (_) => setState(() => _diaperType = option),
+                        onPressed: () => setState(() => _diaperType = option),
                       ),
                   ],
                 ),
@@ -449,6 +458,7 @@ class _TimePickerRow extends StatelessWidget {
     required this.onTap,
     required this.onChangeDay,
     required this.changeDayLabel,
+    required this.changeDayKey,
   });
 
   final String label;
@@ -456,6 +466,7 @@ class _TimePickerRow extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onChangeDay;
   final String changeDayLabel;
+  final Key changeDayKey;
 
   @override
   Widget build(BuildContext context) {
@@ -475,12 +486,17 @@ class _TimePickerRow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(value),
-            if (onChangeDay != null)
-              TextButton(
+            if (onChangeDay != null) ...[
+              const SizedBox(height: AppSpacing.xxs),
+              OutlinedButton(
+                key: changeDayKey,
                 onPressed: onChangeDay,
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(0, 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: 0,
+                  ),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   visualDensity: VisualDensity.compact,
                 ),
@@ -489,6 +505,7 @@ class _TimePickerRow extends StatelessWidget {
                   style: AppTextStyles.caption,
                 ),
               ),
+            ],
           ],
         ),
         trailing: const Icon(Icons.schedule_outlined),
@@ -515,9 +532,8 @@ class _EntryChoiceChip extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        backgroundColor: selected ? AppColors.primarySoft : colors.surface,
-        foregroundColor:
-            selected ? AppColors.textPrimary : colors.onSurfaceVariant,
+        backgroundColor: colors.surface,
+        foregroundColor: selected ? AppColors.primary : colors.onSurfaceVariant,
         side: BorderSide(
           color: selected ? colors.primary : AppColors.borderSoft,
         ),

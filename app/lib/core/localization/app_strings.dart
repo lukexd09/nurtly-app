@@ -31,6 +31,7 @@ class AppStrings {
     required this.journalYesterdayLabel,
     required this.journalPreviousDay,
     required this.journalNextDay,
+    required this.journalGoToToday,
     required this.journalChangeDay,
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
@@ -214,6 +215,7 @@ class AppStrings {
   final String journalYesterdayLabel;
   final String journalPreviousDay;
   final String journalNextDay;
+  final String journalGoToToday;
   final String journalChangeDay;
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
@@ -399,6 +401,7 @@ class AppStrings {
     journalYesterdayLabel: 'Yesterday',
     journalPreviousDay: 'Previous day',
     journalNextDay: 'Next day',
+    journalGoToToday: 'Go to today',
     journalChangeDay: 'Change day',
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
@@ -595,6 +598,7 @@ class AppStrings {
     journalYesterdayLabel: 'Wczoraj',
     journalPreviousDay: 'Poprzedni dzień',
     journalNextDay: 'Następny dzień',
+    journalGoToToday: 'Przejdź do dziś',
     journalChangeDay: 'Zmień dzień',
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:

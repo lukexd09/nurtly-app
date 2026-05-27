@@ -161,12 +161,21 @@ void main() {
       find.byKey(const ValueKey('journal-compact-summary-label')),
       findsOneWidget,
     );
+    expect(find.byKey(const ValueKey('journal-go-to-today')), findsOneWidget);
+    expect(find.text('Przejdź do dziś'), findsOneWidget);
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('journal-compact-summary-card')),
         matching: find.text('Wczoraj'),
       ),
       findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('journal-compact-summary-card')),
+        matching: find.text('Dzisiaj'),
+      ),
+      findsNothing,
     );
 
     await tester

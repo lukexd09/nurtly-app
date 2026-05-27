@@ -357,10 +357,19 @@ class _DashboardSection extends StatelessWidget {
             if (_isNotToday(selectedDay, now))
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton(
-                  key: const ValueKey('journal-day-today'),
+                child: OutlinedButton(
+                  key: const ValueKey('journal-go-to-today'),
                   onPressed: onToday,
-                  child: Text(strings.journalTodayLabel),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 32),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 0,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(strings.journalGoToToday),
                 ),
               ),
           ],

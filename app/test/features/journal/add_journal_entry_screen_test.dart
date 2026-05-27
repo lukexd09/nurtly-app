@@ -76,6 +76,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Wczoraj, 14:07'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-change-event-day')),
+      findsOneWidget,
+    );
     expect(find.text('Zmień dzień'), findsOneWidget);
     expect(find.textContaining('Dzisiaj, 14:07'), findsNothing);
   });
@@ -96,5 +100,55 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Dzisiaj, 14:07'), findsOneWidget);
+  });
+
+  testWidgets('sleep form exposes change day actions for both times',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.sleep,
+          initialDay: DateTime(2026, 5, 26),
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('journal-change-start-day')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-change-end-day')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('diaper form shows readable selected chip labels',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AddJournalEntryScreen(
+          strings: AppStrings.polish,
+          entryType: JournalEntryType.diaper,
+          now: () => DateTime(2026, 5, 27, 14, 7),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Siusiu'), findsOneWidget);
+    expect(find.text('Kupka'), findsOneWidget);
+    expect(find.text('Oba'), findsOneWidget);
+    expect(find.text('Sucha'), findsOneWidget);
+
+    await tester.tap(find.text('Siusiu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Siusiu'), findsOneWidget);
   });
 }
