@@ -580,73 +580,88 @@ class _QuickActions extends StatelessWidget {
           width: double.infinity,
           child: FilledButton.tonalIcon(
             key: const ValueKey('journal-start-sleep'),
+            iconAlignment: IconAlignment.start,
             onPressed: hasActiveSleep
                 ? null
                 : () async {
                     await onStartSleep();
                   },
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+            ),
             icon: const Icon(Icons.play_arrow),
             label: Text(strings.journalStartSleep),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            OutlinedButton(
-              key: const ValueKey('journal-quick-action-add-sleep'),
-              onPressed: onAddSleep,
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+        Align(
+          alignment: Alignment.center,
+          child: Wrap(
+            key: const ValueKey('journal-quick-action-chip-row'),
+            alignment: WrapAlignment.center,
+            runAlignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppSpacing.xs,
+            runSpacing: AppSpacing.xs,
+            children: [
+              OutlinedButton(
+                key: const ValueKey('journal-quick-action-add-sleep'),
+                onPressed: onAddSleep,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  minimumSize: const Size(0, 38),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Text(strings.journalQuickActionSleep),
               ),
-              child: Text(strings.journalQuickActionSleep),
-            ),
-            OutlinedButton(
-              key: const ValueKey('journal-quick-action-feeding'),
-              onPressed: onAddFeeding,
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+              OutlinedButton(
+                key: const ValueKey('journal-quick-action-feeding'),
+                onPressed: onAddFeeding,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  minimumSize: const Size(0, 38),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Text(strings.journalQuickActionFeeding),
               ),
-              child: Text(strings.journalQuickActionFeeding),
-            ),
-            OutlinedButton(
-              key: const ValueKey('journal-quick-action-diaper'),
-              onPressed: onAddDiaper,
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+              OutlinedButton(
+                key: const ValueKey('journal-quick-action-diaper'),
+                onPressed: onAddDiaper,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  minimumSize: const Size(0, 38),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Text(strings.journalQuickActionDiaper),
               ),
-              child: Text(strings.journalQuickActionDiaper),
-            ),
-            OutlinedButton(
-              key: const ValueKey('journal-quick-action-note'),
-              onPressed: onAddNote,
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+              OutlinedButton(
+                key: const ValueKey('journal-quick-action-note'),
+                onPressed: onAddNote,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  minimumSize: const Size(0, 38),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Text(strings.journalQuickActionNote),
               ),
-              child: Text(strings.journalQuickActionNote),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
