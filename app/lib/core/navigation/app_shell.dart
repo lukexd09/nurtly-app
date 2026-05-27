@@ -498,7 +498,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         showAdPlaceholder: adPolicy.allows(AdPlacement.playListPassiveSlot),
         adWidgetFactory: widget.adWidgetFactory,
       ),
-      const JournalScreen(),
+      JournalScreen(strings: _strings),
       SoundsScreen(
         strings: _strings,
         contentLoader: _contentLoaderForCurrentLanguage(),

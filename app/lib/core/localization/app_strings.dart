@@ -24,6 +24,65 @@ class AppStrings {
     required this.saveSmallNoteSubtitle,
     required this.startCalmingSound,
     required this.startCalmingSoundSubtitle,
+    required this.journalTitle,
+    required this.journalSubtitle,
+    required this.journalLocalOnlyHint,
+    required this.journalTodayLabel,
+    required this.journalPreviousDay,
+    required this.journalNextDay,
+    required this.journalQuickActionsTitle,
+    required this.journalEmptyStateTitle,
+    required this.journalEmptyStateMessage,
+    required this.journalAddSleep,
+    required this.journalAddFeeding,
+    required this.journalAddDiaper,
+    required this.journalAddNote,
+    required this.journalStartSleep,
+    required this.journalStopSleep,
+    required this.journalActiveSleepTitle,
+    required this.journalActiveSleepStartedLabel,
+    required this.journalActiveSleepDurationLabel,
+    required this.journalDashboardTitle,
+    required this.journalLastSleep,
+    required this.journalLastFeeding,
+    required this.journalLastDiaper,
+    required this.journalNotesToday,
+    required this.journalTotalSleep,
+    required this.journalFeedingsCount,
+    required this.journalDiapersCount,
+    required this.journalNotesCount,
+    required this.journalNoSleepToday,
+    required this.journalNoFeedingToday,
+    required this.journalNoDiaperToday,
+    required this.journalNoNotesToday,
+    required this.journalEditEntry,
+    required this.journalDeleteEntry,
+    required this.journalDeleteEntryTitle,
+    required this.journalDeleteEntryBody,
+    required this.journalSaveEntry,
+    required this.journalCancelEntry,
+    required this.journalNoteLabel,
+    required this.journalNoteHint,
+    required this.journalEventTimeLabel,
+    required this.journalSleepStartLabel,
+    required this.journalSleepEndLabel,
+    required this.journalFeedingTypeLabel,
+    required this.journalAmountLabel,
+    required this.journalDiaperTypeLabel,
+    required this.journalNoteRequired,
+    required this.journalSleepInvalidRange,
+    required this.journalEntryTypeSleep,
+    required this.journalEntryTypeFeeding,
+    required this.journalEntryTypeDiaper,
+    required this.journalEntryTypeNote,
+    required this.journalFeedingTypeBreast,
+    required this.journalFeedingTypeBottle,
+    required this.journalFeedingTypeFood,
+    required this.journalFeedingTypeOther,
+    required this.journalDiaperTypePee,
+    required this.journalDiaperTypePoop,
+    required this.journalDiaperTypeBoth,
+    required this.journalDiaperTypeDry,
     required this.todaysIdeaUnavailable,
     required this.playTitle,
     required this.playSubtitle,
@@ -140,6 +199,65 @@ class AppStrings {
   final String saveSmallNoteSubtitle;
   final String startCalmingSound;
   final String startCalmingSoundSubtitle;
+  final String journalTitle;
+  final String journalSubtitle;
+  final String journalLocalOnlyHint;
+  final String journalTodayLabel;
+  final String journalPreviousDay;
+  final String journalNextDay;
+  final String journalQuickActionsTitle;
+  final String journalEmptyStateTitle;
+  final String journalEmptyStateMessage;
+  final String journalAddSleep;
+  final String journalAddFeeding;
+  final String journalAddDiaper;
+  final String journalAddNote;
+  final String journalStartSleep;
+  final String journalStopSleep;
+  final String journalActiveSleepTitle;
+  final String journalActiveSleepStartedLabel;
+  final String journalActiveSleepDurationLabel;
+  final String journalDashboardTitle;
+  final String journalLastSleep;
+  final String journalLastFeeding;
+  final String journalLastDiaper;
+  final String journalNotesToday;
+  final String journalTotalSleep;
+  final String journalFeedingsCount;
+  final String journalDiapersCount;
+  final String journalNotesCount;
+  final String journalNoSleepToday;
+  final String journalNoFeedingToday;
+  final String journalNoDiaperToday;
+  final String journalNoNotesToday;
+  final String journalEditEntry;
+  final String journalDeleteEntry;
+  final String journalDeleteEntryTitle;
+  final String journalDeleteEntryBody;
+  final String journalSaveEntry;
+  final String journalCancelEntry;
+  final String journalNoteLabel;
+  final String journalNoteHint;
+  final String journalEventTimeLabel;
+  final String journalSleepStartLabel;
+  final String journalSleepEndLabel;
+  final String journalFeedingTypeLabel;
+  final String journalAmountLabel;
+  final String journalDiaperTypeLabel;
+  final String journalNoteRequired;
+  final String journalSleepInvalidRange;
+  final String journalEntryTypeSleep;
+  final String journalEntryTypeFeeding;
+  final String journalEntryTypeDiaper;
+  final String journalEntryTypeNote;
+  final String journalFeedingTypeBreast;
+  final String journalFeedingTypeBottle;
+  final String journalFeedingTypeFood;
+  final String journalFeedingTypeOther;
+  final String journalDiaperTypePee;
+  final String journalDiaperTypePoop;
+  final String journalDiaperTypeBoth;
+  final String journalDiaperTypeDry;
   final String todaysIdeaUnavailable;
   final String playTitle;
   final String playSubtitle;
@@ -258,6 +376,65 @@ class AppStrings {
     saveSmallNoteSubtitle: 'Keep the moment without overthinking it.',
     startCalmingSound: 'Start a calming sound',
     startCalmingSoundSubtitle: 'A quiet background for a softer pause.',
+    journalTitle: 'Journal',
+    journalSubtitle: 'A calm log for today’s care moments.',
+    journalLocalOnlyHint: 'Saved on this device only.',
+    journalTodayLabel: 'Today',
+    journalPreviousDay: 'Previous day',
+    journalNextDay: 'Next day',
+    journalQuickActionsTitle: 'Quick actions',
+    journalEmptyStateTitle: 'No care moments logged for this day yet.',
+    journalEmptyStateMessage: 'Add the first entry when you are ready.',
+    journalAddSleep: 'Add sleep',
+    journalAddFeeding: 'Add feeding',
+    journalAddDiaper: 'Add diaper',
+    journalAddNote: 'Add note',
+    journalStartSleep: 'Start sleep',
+    journalStopSleep: 'Stop sleep',
+    journalActiveSleepTitle: 'Sleep in progress',
+    journalActiveSleepStartedLabel: 'Started',
+    journalActiveSleepDurationLabel: 'Duration',
+    journalDashboardTitle: 'Today',
+    journalLastSleep: 'Last sleep',
+    journalLastFeeding: 'Last feeding',
+    journalLastDiaper: 'Last diaper',
+    journalNotesToday: 'Notes today',
+    journalTotalSleep: 'Total sleep',
+    journalFeedingsCount: 'Feedings',
+    journalDiapersCount: 'Diapers',
+    journalNotesCount: 'Notes',
+    journalNoSleepToday: 'No sleep logged today.',
+    journalNoFeedingToday: 'No feeding logged today.',
+    journalNoDiaperToday: 'No diaper logged today.',
+    journalNoNotesToday: 'No notes today.',
+    journalEditEntry: 'Edit',
+    journalDeleteEntry: 'Delete',
+    journalDeleteEntryTitle: 'Delete entry?',
+    journalDeleteEntryBody: 'This will remove the entry from this day.',
+    journalSaveEntry: 'Save entry',
+    journalCancelEntry: 'Cancel',
+    journalNoteLabel: 'Note',
+    journalNoteHint: 'Write a few words...',
+    journalEventTimeLabel: 'Time',
+    journalSleepStartLabel: 'Start time',
+    journalSleepEndLabel: 'End time',
+    journalFeedingTypeLabel: 'Feeding type',
+    journalAmountLabel: 'Amount',
+    journalDiaperTypeLabel: 'Diaper type',
+    journalNoteRequired: 'Please add a note first.',
+    journalSleepInvalidRange: 'End time must be after start time.',
+    journalEntryTypeSleep: 'Sleep',
+    journalEntryTypeFeeding: 'Feeding',
+    journalEntryTypeDiaper: 'Diaper',
+    journalEntryTypeNote: 'Note',
+    journalFeedingTypeBreast: 'Breast',
+    journalFeedingTypeBottle: 'Bottle',
+    journalFeedingTypeFood: 'Food',
+    journalFeedingTypeOther: 'Other',
+    journalDiaperTypePee: 'Pee',
+    journalDiaperTypePoop: 'Poop',
+    journalDiaperTypeBoth: 'Both',
+    journalDiaperTypeDry: 'Dry',
     todaysIdeaUnavailable: "Today's idea is not available yet.",
     playTitle: 'Play',
     playSubtitle:
@@ -387,6 +564,67 @@ class AppStrings {
     saveSmallNoteSubtitle: 'Zachowaj tę chwilę bez zbędnego zastanawiania się.',
     startCalmingSound: 'Włącz wyciszający dźwięk',
     startCalmingSoundSubtitle: 'Spokojne tło dla łagodniejszej chwili.',
+    journalTitle: 'Dziennik',
+    journalSubtitle: 'Spokojny zapis dzisiejszych momentów opieki.',
+    journalLocalOnlyHint: 'Zapisywane tylko na tym urządzeniu.',
+    journalTodayLabel: 'Dzisiaj',
+    journalPreviousDay: 'Poprzedni dzień',
+    journalNextDay: 'Następny dzień',
+    journalQuickActionsTitle: 'Szybkie akcje',
+    journalEmptyStateTitle:
+        'Nie zapisano jeszcze momentów opieki dla tego dnia.',
+    journalEmptyStateMessage: 'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
+    journalAddSleep: 'Dodaj sen',
+    journalAddFeeding: 'Dodaj karmienie',
+    journalAddDiaper: 'Dodaj pieluchę',
+    journalAddNote: 'Dodaj notatkę',
+    journalStartSleep: 'Rozpocznij sen',
+    journalStopSleep: 'Zakończ sen',
+    journalActiveSleepTitle: 'Sen trwa',
+    journalActiveSleepStartedLabel: 'Rozpoczęto',
+    journalActiveSleepDurationLabel: 'Czas trwania',
+    journalDashboardTitle: 'Dzisiaj',
+    journalLastSleep: 'Ostatni sen',
+    journalLastFeeding: 'Ostatnie karmienie',
+    journalLastDiaper: 'Ostatnia pielucha',
+    journalNotesToday: 'Notatki dzisiaj',
+    journalTotalSleep: 'Suma snu',
+    journalFeedingsCount: 'Karmienia',
+    journalDiapersCount: 'Pieluchy',
+    journalNotesCount: 'Notatki',
+    journalNoSleepToday: 'Brak snu dzisiaj.',
+    journalNoFeedingToday: 'Brak karmienia dzisiaj.',
+    journalNoDiaperToday: 'Brak pieluchy dzisiaj.',
+    journalNoNotesToday: 'Brak notatek dzisiaj.',
+    journalEditEntry: 'Edytuj',
+    journalDeleteEntry: 'Usuń',
+    journalDeleteEntryTitle: 'Usunąć wpis?',
+    journalDeleteEntryBody: 'Ten wpis zniknie z wybranego dnia.',
+    journalSaveEntry: 'Zapisz wpis',
+    journalCancelEntry: 'Anuluj',
+    journalNoteLabel: 'Notatka',
+    journalNoteHint: 'Napisz kilka słów...',
+    journalEventTimeLabel: 'Godzina',
+    journalSleepStartLabel: 'Godzina rozpoczęcia',
+    journalSleepEndLabel: 'Godzina zakończenia',
+    journalFeedingTypeLabel: 'Rodzaj karmienia',
+    journalAmountLabel: 'Ilość',
+    journalDiaperTypeLabel: 'Rodzaj pieluchy',
+    journalNoteRequired: 'Dodaj najpierw notatkę.',
+    journalSleepInvalidRange:
+        'Godzina zakończenia musi być po godzinie rozpoczęcia.',
+    journalEntryTypeSleep: 'Sen',
+    journalEntryTypeFeeding: 'Karmienie',
+    journalEntryTypeDiaper: 'Pielucha',
+    journalEntryTypeNote: 'Notatka',
+    journalFeedingTypeBreast: 'Pierś',
+    journalFeedingTypeBottle: 'Butelka',
+    journalFeedingTypeFood: 'Jedzenie',
+    journalFeedingTypeOther: 'Inne',
+    journalDiaperTypePee: 'Siusiu',
+    journalDiaperTypePoop: 'Kupka',
+    journalDiaperTypeBoth: 'Oba',
+    journalDiaperTypeDry: 'Sucha',
     todaysIdeaUnavailable: 'Dzisiejszy pomysł nie jest jeszcze dostępny.',
     playTitle: 'Zabawy',
     playSubtitle:
@@ -628,6 +866,74 @@ class AppStrings {
       AppLanguage.english => 'A $child, $mess activity that $parent. $guidance',
       AppLanguage.polish =>
         'To $child, $mess aktywność, która $parent. $guidance',
+    };
+  }
+
+  String journalDayLabel(DateTime date, DateTime now) {
+    final day = DateTime(date.year, date.month, date.day);
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final tomorrow = today.add(const Duration(days: 1));
+    if (day == today) {
+      return journalTodayLabel;
+    }
+    if (day == yesterday) {
+      return switch (language) {
+        AppLanguage.english => 'Yesterday',
+        AppLanguage.polish => 'Wczoraj',
+      };
+    }
+    if (day == tomorrow) {
+      return switch (language) {
+        AppLanguage.english => 'Tomorrow',
+        AppLanguage.polish => 'Jutro',
+      };
+    }
+    return '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+  }
+
+  String journalTimeLabel(DateTime dateTime) {
+    final local = dateTime.toLocal();
+    return '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+  }
+
+  String formatJournalDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    return switch (language) {
+      AppLanguage.english => '$hours h ${minutes.toString().padLeft(2, '0')}m',
+      AppLanguage.polish =>
+        '$hours godz. ${minutes.toString().padLeft(2, '0')} min',
+    };
+  }
+
+  String journalEntryTypeLabel(String code) {
+    return switch (code) {
+      'sleep' => journalEntryTypeSleep,
+      'feeding' => journalEntryTypeFeeding,
+      'diaper' => journalEntryTypeDiaper,
+      'note' => journalEntryTypeNote,
+      _ => code,
+    };
+  }
+
+  String journalFeedingTypeChoiceLabel(String code) {
+    return switch (code) {
+      'breast' => journalFeedingTypeBreast,
+      'bottle' => journalFeedingTypeBottle,
+      'food' => journalFeedingTypeFood,
+      'other' => journalFeedingTypeOther,
+      _ => code,
+    };
+  }
+
+  String journalDiaperTypeChoiceLabel(String code) {
+    return switch (code) {
+      'pee' => journalDiaperTypePee,
+      'poop' => journalDiaperTypePoop,
+      'both' => journalDiaperTypeBoth,
+      'dry' => journalDiaperTypeDry,
+      _ => code,
     };
   }
 }

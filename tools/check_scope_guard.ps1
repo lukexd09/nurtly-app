@@ -144,7 +144,9 @@ function Test-IsAllowedSharedPreferencesUsage {
         "app/pubspec.yaml",
         "app/pubspec.lock",
         "app/lib/core/localization/language_preference_store.dart",
-        "app/test/core/localization/language_preference_store_test.dart"
+        "app/test/core/localization/language_preference_store_test.dart",
+        "app/lib/features/journal/journal_store.dart",
+        "app/test/features/journal/journal_store_test.dart"
     )
 }
 

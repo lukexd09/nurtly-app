@@ -190,4 +190,32 @@ void main() {
     expect(AppStrings.forLanguage(AppLanguage.english), AppStrings.english);
     expect(AppStrings.forLanguage(AppLanguage.polish), AppStrings.polish);
   });
+
+  test('Journal app strings expose the expected copy', () {
+    expect(AppStrings.english.journalTitle, 'Journal');
+    expect(
+      AppStrings.english.journalEmptyStateTitle,
+      'No care moments logged for this day yet.',
+    );
+    expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
+    expect(AppStrings.english.journalStartSleep, 'Start sleep');
+    expect(AppStrings.english.journalStopSleep, 'Stop sleep');
+    expect(AppStrings.english.journalFeedingTypeBottle, 'Bottle');
+    expect(AppStrings.english.journalDiaperTypeBoth, 'Both');
+
+    expect(AppStrings.polish.journalTitle, 'Dziennik');
+    expect(
+      AppStrings.polish.journalEmptyStateTitle,
+      'Nie zapisano jeszcze momentów opieki dla tego dnia.',
+    );
+    expect(
+      AppStrings.polish.journalEmptyStateMessage,
+      'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
+    );
+    expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
+    expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
+    expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');
+    expect(AppStrings.polish.journalFeedingTypeBottle, 'Butelka');
+    expect(AppStrings.polish.journalDiaperTypeBoth, 'Oba');
+  });
 }

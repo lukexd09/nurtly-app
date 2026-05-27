@@ -1,51 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nurtly/features/journal/add_journal_entry_screen.dart';
+import 'package:nurtly/core/localization/app_strings.dart';
+import 'package:nurtly/core/theme/app_theme.dart';
+import 'package:nurtly/features/journal/journal_controller.dart';
 import 'package:nurtly/features/journal/journal_screen.dart';
+import 'package:nurtly/features/journal/journal_store.dart';
 
 void main() {
-  testWidgets('shows empty journal state', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: JournalScreen()));
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    expect(find.text('No journal notes yet.'), findsOneWidget);
-    expect(find.text('Add a short note when you are ready.'), findsOneWidget);
+  testWidgets('shows journal header and privacy hint', (tester) async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.english,
+          controller: controller,
+          now: () => DateTime(2026, 5, 19, 9, 30),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('journal-header')), findsOneWidget);
+    expect(find.text(AppStrings.english.journalTitle), findsOneWidget);
+    expect(find.text(AppStrings.english.journalSubtitle), findsOneWidget);
+    expect(find.text(AppStrings.english.journalLocalOnlyHint), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-scroll-view')), findsOneWidget);
+    expect(find.text('Sponsored space'), findsNothing);
   });
 
-  testWidgets('add note flow creates a journal entry with mood',
+  testWidgets('active sleep duration updates while the screen is visible',
       (tester) async {
+    var currentTime = DateTime(2026, 5, 19, 9, 30);
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => currentTime,
+    );
+    await controller.load();
+    await controller.startSleep();
+
     await tester.pumpWidget(
       MaterialApp(
-        home: JournalScreen(now: () => DateTime(2026, 5, 19, 9, 30)),
+        theme: AppTheme.light,
+        home: JournalScreen(
+          strings: AppStrings.english,
+          controller: controller,
+          now: () => currentTime,
+          activeSleepTickerInterval: const Duration(seconds: 1),
+        ),
       ),
     );
-
-    await tester.tap(find.text('Add note'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(
-      find.byType(TextField),
-      'A quiet breakfast together.',
-    );
-    await tester.tap(find.text('Good moment'));
-    await tester.tap(find.text('Save note'));
-    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('journal-active-sleep-card')),
+        findsOneWidget);
+    expect(find.text('Duration: 0 h 00m'), findsOneWidget);
 
-    expect(find.text('A quiet breakfast together.'), findsOneWidget);
-    expect(find.text('Good moment'), findsOneWidget);
-    expect(find.text('Today 09:30'), findsOneWidget);
-  });
+    currentTime = currentTime.add(const Duration(minutes: 1));
+    await tester.pump(const Duration(seconds: 1));
 
-  testWidgets('empty journal note shows validation message', (tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: AddJournalEntryScreen(now: () => DateTime(2026, 5, 19, 9, 30)),
-      ),
-    );
-
-    await tester.tap(find.text('Save note'));
-    await tester.pump();
-
-    expect(find.text('Please add a short note first.'), findsOneWidget);
-    expect(find.text('Add note'), findsOneWidget);
+    expect(find.text('Duration: 0 h 01m'), findsOneWidget);
   });
 }
