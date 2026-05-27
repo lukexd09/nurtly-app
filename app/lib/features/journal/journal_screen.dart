@@ -576,24 +576,28 @@ class _QuickActions extends StatelessWidget {
         Text(strings.journalQuickActionsTitle,
             style: AppTextStyles.sectionTitle),
         const SizedBox(height: AppSpacing.sm),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.tonalIcon(
+            key: const ValueKey('journal-start-sleep'),
+            onPressed: hasActiveSleep
+                ? null
+                : () async {
+                    await onStartSleep();
+                  },
+            icon: const Icon(Icons.play_arrow),
+            label: Text(strings.journalStartSleep),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Wrap(
           spacing: AppSpacing.xs,
           runSpacing: AppSpacing.xs,
           children: [
-            FilledButton.tonalIcon(
-              key: const ValueKey('journal-start-sleep'),
-              onPressed: hasActiveSleep
-                  ? null
-                  : () async {
-                      await onStartSleep();
-                    },
-              icon: const Icon(Icons.play_arrow),
-              label: Text(strings.journalStartSleep),
-            ),
-            TextButton(
+            OutlinedButton(
               key: const ValueKey('journal-quick-action-add-sleep'),
               onPressed: onAddSleep,
-              style: TextButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
@@ -603,10 +607,10 @@ class _QuickActions extends StatelessWidget {
               ),
               child: Text(strings.journalQuickActionSleep),
             ),
-            TextButton(
+            OutlinedButton(
               key: const ValueKey('journal-quick-action-feeding'),
               onPressed: onAddFeeding,
-              style: TextButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
@@ -616,10 +620,10 @@ class _QuickActions extends StatelessWidget {
               ),
               child: Text(strings.journalQuickActionFeeding),
             ),
-            TextButton(
+            OutlinedButton(
               key: const ValueKey('journal-quick-action-diaper'),
               onPressed: onAddDiaper,
-              style: TextButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
@@ -629,10 +633,10 @@ class _QuickActions extends StatelessWidget {
               ),
               child: Text(strings.journalQuickActionDiaper),
             ),
-            TextButton(
+            OutlinedButton(
               key: const ValueKey('journal-quick-action-note'),
               onPressed: onAddNote,
-              style: TextButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
