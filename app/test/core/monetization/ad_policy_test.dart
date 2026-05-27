@@ -19,7 +19,7 @@ void main() {
   });
 
   test('premium entitlement hides ads everywhere', () {
-    final policy = AdPolicy(PremiumEntitlement.lifetimeActive(checkedAt: now));
+    final policy = AdPolicy(PremiumEntitlement.yearlyActive(checkedAt: now));
 
     for (final placement in AdPlacement.values) {
       expect(policy.allows(placement), isFalse);

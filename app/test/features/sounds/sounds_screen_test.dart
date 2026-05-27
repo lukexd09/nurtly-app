@@ -172,7 +172,7 @@ void main() {
         MaterialApp(
           home: SoundsScreen(
             contentLoader: const _PremiumSoundsContentLoader(),
-            premiumEntitlement: PremiumEntitlement.lifetimeActive(
+            premiumEntitlement: PremiumEntitlement.yearlyActive(
               checkedAt: DateTime.utc(2026, 5, 26, 12),
             ),
             showAdPlaceholder: true,
@@ -250,7 +250,7 @@ void main() {
       MaterialApp(
         home: SoundsScreen(
           contentLoader: const _AdPlacementSoundsContentLoader4(),
-          premiumEntitlement: PremiumEntitlement.lifetimeActive(
+          premiumEntitlement: PremiumEntitlement.yearlyActive(
             checkedAt: DateTime.utc(2026, 5, 26, 12),
           ),
           showAdPlaceholder: true,

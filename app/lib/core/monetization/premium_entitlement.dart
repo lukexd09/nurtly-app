@@ -1,7 +1,7 @@
 enum PremiumSource {
   none,
   monthly,
-  lifetime,
+  yearly,
 }
 
 enum PremiumState {
@@ -53,13 +53,15 @@ class PremiumEntitlement {
     );
   }
 
-  factory PremiumEntitlement.lifetimeActive({
+  factory PremiumEntitlement.yearlyActive({
     required DateTime checkedAt,
+    DateTime? expiresAt,
   }) {
     return PremiumEntitlement(
       state: PremiumState.active,
-      source: PremiumSource.lifetime,
+      source: PremiumSource.yearly,
       checkedAt: checkedAt,
+      expiresAt: expiresAt,
     );
   }
 
@@ -123,8 +125,9 @@ class PremiumEntitlement {
     }
 
     return switch (source) {
-      PremiumSource.lifetime => true,
-      PremiumSource.monthly => _isMonthlyAccessAllowed(now),
+      PremiumSource.yearly ||
+      PremiumSource.monthly =>
+        _isSubscriptionAccessAllowed(now),
       PremiumSource.none => false,
     };
   }
@@ -134,14 +137,14 @@ class PremiumEntitlement {
   bool needsRefresh(DateTime now) {
     return switch (source) {
       PremiumSource.monthly => _needsMonthlyRefresh(now),
-      PremiumSource.lifetime =>
-        now.difference(checkedAt) > const Duration(days: 7),
+      PremiumSource.yearly => _needsYearlyRefresh(now),
       PremiumSource.none => false,
     };
   }
 
   bool allowsOfflineSoftGrace(DateTime now) {
-    if (source != PremiumSource.monthly || expiresAt == null) {
+    if ((source != PremiumSource.monthly && source != PremiumSource.yearly) ||
+        expiresAt == null) {
       return false;
     }
     if (!now.isAfter(expiresAt!)) {
@@ -150,7 +153,7 @@ class PremiumEntitlement {
     return now.difference(expiresAt!) <= const Duration(hours: 24);
   }
 
-  bool _isMonthlyAccessAllowed(DateTime now) {
+  bool _isSubscriptionAccessAllowed(DateTime now) {
     if (expiresAt == null) {
       return true;
     }
@@ -162,6 +165,16 @@ class PremiumEntitlement {
 
   bool _needsMonthlyRefresh(DateTime now) {
     if (now.difference(checkedAt) > const Duration(hours: 24)) {
+      return true;
+    }
+    if (expiresAt == null) {
+      return false;
+    }
+    return now.isAfter(expiresAt!);
+  }
+
+  bool _needsYearlyRefresh(DateTime now) {
+    if (now.difference(checkedAt) > const Duration(days: 7)) {
       return true;
     }
     if (expiresAt == null) {

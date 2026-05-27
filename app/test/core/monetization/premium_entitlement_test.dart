@@ -87,15 +87,15 @@ void main() {
     expect(entitlement.canAccessPremiumContent, isFalse);
   });
 
-  test('lifetime active has premium access', () {
-    final entitlement = PremiumEntitlement.lifetimeActive(checkedAt: now);
+  test('yearly active has premium access', () {
+    final entitlement = PremiumEntitlement.yearlyActive(checkedAt: now);
 
     expect(entitlement.hasPremiumAccess, isTrue);
     expect(entitlement.shouldShowAds, isFalse);
   });
 
-  test('lifetime checked 6 days ago does not need refresh', () {
-    final entitlement = PremiumEntitlement.lifetimeActive(
+  test('yearly checked 6 days ago does not need refresh', () {
+    final entitlement = PremiumEntitlement.yearlyActive(
       checkedAt: now.subtract(const Duration(days: 6)),
     );
 
@@ -103,8 +103,8 @@ void main() {
     expect(entitlement.hasPremiumAccess, isTrue);
   });
 
-  test('lifetime checked 8 days ago needs refresh but still has access', () {
-    final entitlement = PremiumEntitlement.lifetimeActive(
+  test('yearly checked 8 days ago needs refresh but still has access', () {
+    final entitlement = PremiumEntitlement.yearlyActive(
       checkedAt: now.subtract(const Duration(days: 8)),
     );
 

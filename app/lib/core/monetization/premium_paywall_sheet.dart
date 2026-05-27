@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../localization/app_strings.dart';
-import 'premium_access_controller.dart';
-import 'purchase_result.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
+import 'premium_access_controller.dart';
+import 'purchase_result.dart';
 
-class PremiumPaywallSheet extends StatefulWidget {
-  const PremiumPaywallSheet({
+class PremiumPaywallScreen extends StatefulWidget {
+  const PremiumPaywallScreen({
     required this.strings,
     required this.controller,
     required this.onRestoreAccess,
@@ -20,84 +20,100 @@ class PremiumPaywallSheet extends StatefulWidget {
   final VoidCallback onRestoreAccess;
 
   @override
-  State<PremiumPaywallSheet> createState() => _PremiumPaywallSheetState();
+  State<PremiumPaywallScreen> createState() => _PremiumPaywallScreenState();
 }
 
-class _PremiumPaywallSheetState extends State<PremiumPaywallSheet> {
+class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
   var _isBuyingMonthly = false;
-  var _isBuyingLifetime = false;
+  var _isBuyingYearly = false;
   String? _statusMessage;
 
   @override
   Widget build(BuildContext context) {
     final catalog = widget.controller.productCatalog;
     final monthly = catalog.monthly;
-    final lifetime = catalog.lifetime;
+    final yearly = catalog.yearly;
 
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          AppSpacing.xs,
-          AppSpacing.lg,
-          AppSpacing.lg,
+    return Scaffold(
+      backgroundColor: AppColors.surface,
+      appBar: AppBar(
+        backgroundColor: AppColors.surface,
+        elevation: 0,
+        leading: IconButton(
+          tooltip: widget.strings.back,
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back),
         ),
-        shrinkWrap: true,
-        children: [
-          Text(
-            widget.strings.premiumTitle,
-            style: AppTextStyles.cardTitle.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
+        title: Text(widget.strings.premiumTitle),
+      ),
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
           ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(widget.strings.premiumPaywallSubtitle,
-              style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.md),
-          _BenefitLine(text: widget.strings.premiumRemoveAds),
-          _BenefitLine(text: widget.strings.premiumUnlockContent),
-          const SizedBox(height: AppSpacing.md),
-          _PlanCard(
-            title: monthly?.title ?? widget.strings.premiumMonthlyPlan,
-            price: monthly?.price ?? widget.strings.premiumMonthlyPrice,
-            note: monthly?.description ?? widget.strings.premiumMonthlyPlan,
-            actionLabel: widget.strings.premiumMonthlyPlan,
-            isLoading: _isBuyingMonthly,
-            onPressed: _buyMonthly,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          _PlanCard(
-            title: lifetime?.title ?? widget.strings.premiumLifetimePlan,
-            price: lifetime?.price ?? widget.strings.premiumLifetimePrice,
-            note: lifetime?.description ?? widget.strings.premiumLifetimePlan,
-            actionLabel: widget.strings.premiumLifetimePlan,
-            isLoading: _isBuyingLifetime,
-            onPressed: _buyLifetime,
-          ),
-          if (_statusMessage != null) ...[
-            const SizedBox(height: AppSpacing.sm),
+          children: [
             Text(
-              _statusMessage!,
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
+              widget.strings.premiumPaywallSubtitle,
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _CalloutCard(
+              title: widget.strings.premiumLaunchOfferTitle,
+              body: widget.strings.premiumLaunchOfferDescription,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _PlanCard(
+              title: yearly?.title ?? widget.strings.premiumYearlyPlan,
+              price: yearly?.price ?? widget.strings.premiumYearlyPrice,
+              note: yearly?.description ??
+                  widget.strings.premiumYearlyRegularPrice,
+              badge: widget.strings.premiumBestValue,
+              actionLabel: widget.strings.premiumYearlyPlan,
+              isLoading: _isBuyingYearly,
+              onPressed: _buyYearly,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _PlanCard(
+              title: monthly?.title ?? widget.strings.premiumMonthlyPlan,
+              price: monthly?.price ?? widget.strings.premiumMonthlyPrice,
+              note: monthly?.description ??
+                  widget.strings.premiumMonthlyRegularPrice,
+              actionLabel: widget.strings.premiumMonthlyPlan,
+              isLoading: _isBuyingMonthly,
+              onPressed: _buyMonthly,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            _BenefitLine(text: widget.strings.premiumRemoveAds),
+            _BenefitLine(text: widget.strings.premiumUnlockPlayIdeas),
+            _BenefitLine(text: widget.strings.premiumUnlockSounds),
+            _BenefitLine(text: widget.strings.premiumFuturePremiumContent),
+            if (_statusMessage != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                _statusMessage!,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
+            ],
+            const SizedBox(height: AppSpacing.md),
+            TextButton(
+              key: const ValueKey('premium-paywall-restore-link'),
+              onPressed: widget.onRestoreAccess,
+              child: Text(widget.strings.premiumRestoreAccessLink),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            FilledButton(
+              key: const ValueKey('premium-paywall-not-now'),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(widget.strings.premiumNotNow),
             ),
           ],
-          const SizedBox(height: AppSpacing.md),
-          TextButton(
-            key: const ValueKey('premium-paywall-restore-link'),
-            onPressed: () {
-              widget.onRestoreAccess();
-            },
-            child: Text(widget.strings.premiumRestoreAccessLink),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          FilledButton(
-            key: const ValueKey('premium-paywall-not-now'),
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(widget.strings.premiumNotNow),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -117,17 +133,17 @@ class _PremiumPaywallSheetState extends State<PremiumPaywallSheet> {
     });
   }
 
-  Future<void> _buyLifetime() async {
+  Future<void> _buyYearly() async {
     setState(() {
-      _isBuyingLifetime = true;
+      _isBuyingYearly = true;
       _statusMessage = null;
     });
-    final result = await widget.controller.buyLifetime();
+    final result = await widget.controller.buyYearly();
     if (!mounted) {
       return;
     }
     setState(() {
-      _isBuyingLifetime = false;
+      _isBuyingYearly = false;
       _statusMessage = _messageForPurchaseResult(result);
     });
   }
@@ -146,6 +162,43 @@ class _PremiumPaywallSheetState extends State<PremiumPaywallSheet> {
   }
 }
 
+class _CalloutCard extends StatelessWidget {
+  const _CalloutCard({
+    required this.title,
+    required this.body,
+  });
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceBright,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.borderSoft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: AppTextStyles.cardTitle.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxs),
+            Text(body, style: AppTextStyles.body),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _PlanCard extends StatelessWidget {
   const _PlanCard({
     required this.title,
@@ -154,6 +207,7 @@ class _PlanCard extends StatelessWidget {
     required this.actionLabel,
     required this.isLoading,
     required this.onPressed,
+    this.badge,
   });
 
   final String title;
@@ -162,13 +216,14 @@ class _PlanCard extends StatelessWidget {
   final String actionLabel;
   final bool isLoading;
   final VoidCallback onPressed;
+  final String? badge;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.borderSoft),
       ),
       child: Padding(
@@ -176,7 +231,23 @@ class _PlanCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: AppTextStyles.cardTitle),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                if (badge != null) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  _Badge(label: badge!),
+                ],
+              ],
+            ),
             const SizedBox(height: AppSpacing.xxs),
             Text(price, style: AppTextStyles.body),
             const SizedBox(height: AppSpacing.xxs),
@@ -187,6 +258,35 @@ class _PlanCard extends StatelessWidget {
               child: Text(actionLabel),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  const _Badge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xxs,
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );

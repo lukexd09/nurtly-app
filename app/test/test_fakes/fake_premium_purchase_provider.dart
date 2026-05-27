@@ -7,7 +7,7 @@ class FakePremiumPurchaseProvider implements PremiumPurchaseProvider {
     PremiumProductCatalog? productCatalog,
     this.buyMonthlyResult =
         const PurchaseActionResult(status: PurchaseActionStatus.success),
-    this.buyLifetimeResult =
+    this.buyYearlyResult =
         const PurchaseActionResult(status: PurchaseActionStatus.success),
     this.restorePurchasesResult =
         const PurchaseActionResult(status: PurchaseActionStatus.success),
@@ -15,12 +15,12 @@ class FakePremiumPurchaseProvider implements PremiumPurchaseProvider {
 
   PremiumProductCatalog _productCatalog;
   final PurchaseActionResult buyMonthlyResult;
-  final PurchaseActionResult buyLifetimeResult;
+  final PurchaseActionResult buyYearlyResult;
   final PurchaseActionResult restorePurchasesResult;
 
   int initializeCalls = 0;
   int buyMonthlyCalls = 0;
-  int buyLifetimeCalls = 0;
+  int buyYearlyCalls = 0;
   int restorePurchasesCalls = 0;
 
   void setProductCatalog(PremiumProductCatalog catalog) {
@@ -36,9 +36,9 @@ class FakePremiumPurchaseProvider implements PremiumPurchaseProvider {
   }
 
   @override
-  Future<PurchaseActionResult> buyLifetime() async {
-    buyLifetimeCalls++;
-    return buyLifetimeResult;
+  Future<PurchaseActionResult> buyYearly() async {
+    buyYearlyCalls++;
+    return buyYearlyResult;
   }
 
   @override

@@ -81,7 +81,7 @@ class PremiumAccessController extends ChangeNotifier {
     return result;
   }
 
-  Future<PurchaseActionResult> buyLifetime() async {
+  Future<PurchaseActionResult> buyYearly() async {
     final purchaseProvider = _purchaseProvider;
     if (purchaseProvider == null) {
       return const PurchaseActionResult(
@@ -89,7 +89,7 @@ class PremiumAccessController extends ChangeNotifier {
       );
     }
 
-    final result = await purchaseProvider.buyLifetime();
+    final result = await purchaseProvider.buyYearly();
     if (result.status != PurchaseActionStatus.unavailable) {
       await refresh();
     }
