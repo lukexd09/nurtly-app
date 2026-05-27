@@ -197,9 +197,14 @@ void main() {
       AppStrings.english.journalEmptyStateTitle,
       'No care moments logged for this day yet.',
     );
+    expect(AppStrings.english.journalNoEntryShort, 'No entry');
     expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
     expect(AppStrings.english.journalStartSleep, 'Start sleep');
     expect(AppStrings.english.journalStopSleep, 'Stop sleep');
+    expect(AppStrings.english.journalQuickActionSleep, 'Sleep');
+    expect(AppStrings.english.journalQuickActionFeeding, 'Feeding');
+    expect(AppStrings.english.journalQuickActionDiaper, 'Diaper');
+    expect(AppStrings.english.journalQuickActionNote, 'Note');
     expect(AppStrings.english.journalFeedingTypeBottle, 'Bottle');
     expect(AppStrings.english.journalDiaperTypeBoth, 'Both');
 
@@ -212,9 +217,14 @@ void main() {
       AppStrings.polish.journalEmptyStateMessage,
       'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
     );
+    expect(AppStrings.polish.journalNoEntryShort, 'Brak wpisu');
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');
+    expect(AppStrings.polish.journalQuickActionSleep, 'Sen');
+    expect(AppStrings.polish.journalQuickActionFeeding, 'Karmienie');
+    expect(AppStrings.polish.journalQuickActionDiaper, 'Pielucha');
+    expect(AppStrings.polish.journalQuickActionNote, 'Notatka');
     expect(AppStrings.polish.journalFeedingTypeBottle, 'Butelka');
     expect(AppStrings.polish.journalDiaperTypeBoth, 'Oba');
   });

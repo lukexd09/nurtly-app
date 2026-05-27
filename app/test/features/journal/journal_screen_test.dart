@@ -94,7 +94,21 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('journal-summary-grid')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-day-navigation')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('journal-summary-cards')), findsOneWidget);
+    expect(find.text(AppStrings.polish.journalTodayLabel), findsOneWidget);
+    expect(find.text('0 min'), findsWidgets);
+    expect(find.text(AppStrings.polish.journalNoEntryShort), findsNWidgets(4));
+
+    await tester.drag(
+      find.byKey(const ValueKey('journal-scroll-view')),
+      const Offset(0, -800),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('journal-quick-actions')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

@@ -33,10 +33,15 @@ class AppStrings {
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
     required this.journalEmptyStateMessage,
+    required this.journalNoEntryShort,
     required this.journalAddSleep,
     required this.journalAddFeeding,
     required this.journalAddDiaper,
     required this.journalAddNote,
+    required this.journalQuickActionSleep,
+    required this.journalQuickActionFeeding,
+    required this.journalQuickActionDiaper,
+    required this.journalQuickActionNote,
     required this.journalStartSleep,
     required this.journalStopSleep,
     required this.journalActiveSleepTitle,
@@ -208,10 +213,15 @@ class AppStrings {
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
   final String journalEmptyStateMessage;
+  final String journalNoEntryShort;
   final String journalAddSleep;
   final String journalAddFeeding;
   final String journalAddDiaper;
   final String journalAddNote;
+  final String journalQuickActionSleep;
+  final String journalQuickActionFeeding;
+  final String journalQuickActionDiaper;
+  final String journalQuickActionNote;
   final String journalStartSleep;
   final String journalStopSleep;
   final String journalActiveSleepTitle;
@@ -385,10 +395,15 @@ class AppStrings {
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
     journalEmptyStateMessage: 'Add the first entry when you are ready.',
+    journalNoEntryShort: 'No entry',
     journalAddSleep: 'Add sleep',
     journalAddFeeding: 'Add feeding',
     journalAddDiaper: 'Add diaper',
     journalAddNote: 'Add note',
+    journalQuickActionSleep: 'Sleep',
+    journalQuickActionFeeding: 'Feeding',
+    journalQuickActionDiaper: 'Diaper',
+    journalQuickActionNote: 'Note',
     journalStartSleep: 'Start sleep',
     journalStopSleep: 'Stop sleep',
     journalActiveSleepTitle: 'Sleep in progress',
@@ -574,10 +589,15 @@ class AppStrings {
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
     journalEmptyStateMessage: 'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
+    journalNoEntryShort: 'Brak wpisu',
     journalAddSleep: 'Dodaj sen',
     journalAddFeeding: 'Dodaj karmienie',
     journalAddDiaper: 'Dodaj pieluchę',
     journalAddNote: 'Dodaj notatkę',
+    journalQuickActionSleep: 'Sen',
+    journalQuickActionFeeding: 'Karmienie',
+    journalQuickActionDiaper: 'Pielucha',
+    journalQuickActionNote: 'Notatka',
     journalStartSleep: 'Rozpocznij sen',
     journalStopSleep: 'Zakończ sen',
     journalActiveSleepTitle: 'Sen trwa',

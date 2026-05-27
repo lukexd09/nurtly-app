@@ -320,40 +320,47 @@ class _DashboardSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
+        Column(
+          key: const ValueKey('journal-day-navigation'),
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.sm),
-              child: Text(
-                strings.journalDashboardTitle,
-                style: AppTextStyles.sectionTitle,
+            Row(
+              children: [
+                IconButton(
+                  key: const ValueKey('journal-day-previous'),
+                  tooltip: strings.journalPreviousDay,
+                  onPressed: onPreviousDay,
+                  icon: const Icon(Icons.chevron_left),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      strings.journalDayLabel(selectedDay, now),
+                      style: AppTextStyles.sectionTitle,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  key: const ValueKey('journal-day-next'),
+                  tooltip: strings.journalNextDay,
+                  onPressed: onNextDay,
+                  icon: const Icon(Icons.chevron_right),
+                ),
+              ],
+            ),
+            if (_isNotToday(selectedDay, now))
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  key: const ValueKey('journal-day-today'),
+                  onPressed: onToday,
+                  child: Text(strings.journalTodayLabel),
+                ),
               ),
-            ),
-            TextButton(
-              key: const ValueKey('journal-day-previous'),
-              onPressed: onPreviousDay,
-              child: Text(strings.journalPreviousDay),
-            ),
-            TextButton(
-              key: const ValueKey('journal-day-today'),
-              onPressed: onToday,
-              child: Text(strings.journalTodayLabel),
-            ),
-            TextButton(
-              key: const ValueKey('journal-day-next'),
-              onPressed: onNextDay,
-              child: Text(strings.journalNextDay),
-            ),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        Text(
-          strings.journalDayLabel(selectedDay, now),
-          style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
-        ),
-        const SizedBox(height: AppSpacing.sm),
         LayoutBuilder(
           builder: (context, constraints) {
             final twoColumns = constraints.maxWidth >= 360;
@@ -361,7 +368,7 @@ class _DashboardSection extends StatelessWidget {
                 ? (constraints.maxWidth - AppSpacing.sm) / 2
                 : constraints.maxWidth;
             return Wrap(
-              key: const ValueKey('journal-summary-grid'),
+              key: const ValueKey('journal-summary-cards'),
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
               children: [
@@ -369,42 +376,28 @@ class _DashboardSection extends StatelessWidget {
                   width: cardWidth,
                   child: _SummaryCard(
                     label: strings.journalTotalSleep,
-                    value: _summaryValue(
-                      strings,
-                      summary.totalSleep,
-                      hasEntry: summary.lastSleep != null,
-                      emptyLabel: strings.journalNoSleepToday,
-                    ),
+                    value: _summaryValue(strings, summary.totalSleep),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _SummaryCard(
                     label: strings.journalFeedingsCount,
-                    value: _countValue(
-                      summary.feedingsCount,
-                      emptyLabel: strings.journalNoFeedingToday,
-                    ),
+                    value: _countValue(summary.feedingsCount),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _SummaryCard(
                     label: strings.journalDiapersCount,
-                    value: _countValue(
-                      summary.diapersCount,
-                      emptyLabel: strings.journalNoDiaperToday,
-                    ),
+                    value: _countValue(summary.diapersCount),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _SummaryCard(
                     label: strings.journalNotesCount,
-                    value: _countValue(
-                      summary.notesCount,
-                      emptyLabel: strings.journalNoNotesToday,
-                    ),
+                    value: _countValue(summary.notesCount),
                   ),
                 ),
               ],
@@ -417,7 +410,7 @@ class _DashboardSection extends StatelessWidget {
           value: _lastEntryValue(
             strings,
             summary.lastSleep,
-            strings.journalNoSleepToday,
+            strings.journalNoEntryShort,
           ),
         ),
         _LastMomentLine(
@@ -425,7 +418,7 @@ class _DashboardSection extends StatelessWidget {
           value: _lastEntryValue(
             strings,
             summary.lastFeeding,
-            strings.journalNoFeedingToday,
+            strings.journalNoEntryShort,
           ),
         ),
         _LastMomentLine(
@@ -433,7 +426,7 @@ class _DashboardSection extends StatelessWidget {
           value: _lastEntryValue(
             strings,
             summary.lastDiaper,
-            strings.journalNoDiaperToday,
+            strings.journalNoEntryShort,
           ),
         ),
         _LastMomentLine(
@@ -441,7 +434,7 @@ class _DashboardSection extends StatelessWidget {
           value: _lastEntryValue(
             strings,
             summary.latestNote,
-            strings.journalNoNotesToday,
+            strings.journalNoEntryShort,
           ),
         ),
       ],
@@ -450,20 +443,15 @@ class _DashboardSection extends StatelessWidget {
 
   String _summaryValue(
     AppStrings strings,
-    Duration duration, {
-    required bool hasEntry,
-    required String emptyLabel,
-  }) {
-    if (!hasEntry && duration == Duration.zero) {
-      return emptyLabel;
+    Duration duration,
+  ) {
+    if (duration == Duration.zero) {
+      return '0 min';
     }
     return strings.formatJournalDuration(duration);
   }
 
-  String _countValue(int count, {required String emptyLabel}) {
-    if (count == 0) {
-      return emptyLabel;
-    }
+  String _countValue(int count) {
     return count.toString();
   }
 
@@ -474,6 +462,13 @@ class _DashboardSection extends StatelessWidget {
     }
     final time = entry.effectiveAt;
     return strings.journalTimeLabel(time);
+  }
+
+  bool _isNotToday(DateTime selectedDay, DateTime now) {
+    final selected =
+        DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+    final today = DateTime(now.year, now.month, now.day);
+    return selected != today;
   }
 }
 
@@ -489,6 +484,7 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NurtlyCard(
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -496,15 +492,14 @@ class _SummaryCard extends StatelessWidget {
           Text(
             label,
             style: AppTextStyles.caption,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: AppSpacing.xxs),
           Text(
             value,
-            style:
-                AppTextStyles.cardTitle.copyWith(fontWeight: FontWeight.w800),
-            maxLines: 3,
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w800),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ],
@@ -579,30 +574,63 @@ class _QuickActions extends StatelessWidget {
           spacing: AppSpacing.xs,
           runSpacing: AppSpacing.xs,
           children: [
-            OutlinedButton(
+            FilledButton.tonalIcon(
               key: const ValueKey('journal-start-sleep'),
               onPressed: hasActiveSleep
                   ? null
                   : () async {
                       await onStartSleep();
                     },
-              child: Text(strings.journalStartSleep),
+              icon: const Icon(Icons.play_arrow),
+              label: Text(strings.journalStartSleep),
             ),
-            OutlinedButton(
+            TextButton(
               onPressed: onAddSleep,
-              child: Text(strings.journalAddSleep),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(strings.journalQuickActionSleep),
             ),
-            OutlinedButton(
+            TextButton(
               onPressed: onAddFeeding,
-              child: Text(strings.journalAddFeeding),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(strings.journalQuickActionFeeding),
             ),
-            OutlinedButton(
+            TextButton(
               onPressed: onAddDiaper,
-              child: Text(strings.journalAddDiaper),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(strings.journalQuickActionDiaper),
             ),
-            OutlinedButton(
+            TextButton(
               onPressed: onAddNote,
-              child: Text(strings.journalAddNote),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(strings.journalQuickActionNote),
             ),
           ],
         ),
