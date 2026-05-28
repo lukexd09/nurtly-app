@@ -161,8 +161,11 @@ void main() {
       find.byKey(const ValueKey('journal-compact-summary-label')),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('journal-go-to-today')), findsOneWidget);
-    expect(find.text('Przejdź do dziś'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
+      findsOneWidget,
+    );
+    expect(find.text('Przejdź do dziś'), findsNothing);
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('journal-compact-summary-card')),
@@ -178,12 +181,32 @@ void main() {
       findsNothing,
     );
 
-    await tester
-        .tap(find.byKey(const ValueKey('journal-quick-action-feeding')));
+    await tester.tap(
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('Wczoraj, 09:30'), findsOneWidget);
-    expect(find.text('Dzisiaj, 09:30'), findsNothing);
+    expect(
+      find.byKey(const ValueKey('journal-day-picker-title')),
+      findsOneWidget,
+    );
+    expect(find.text('Wczoraj'), findsWidgets);
+    expect(find.text('Dzisiaj'), findsWidgets);
+    expect(find.text('Jutro'), findsWidgets);
+
+    await tester.tap(find.text('Dzisiaj').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('journal-compact-summary-card')),
+        matching: find.text('Dzisiaj'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Przejdź do dziś'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

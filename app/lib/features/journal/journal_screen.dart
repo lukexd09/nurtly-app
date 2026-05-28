@@ -16,6 +16,7 @@ import 'journal_entry_card.dart';
 import 'journal_entry_type.dart';
 import 'journal_store.dart';
 import 'journal_summary.dart';
+import 'widgets/journal_day_picker_sheet.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({
@@ -146,6 +147,20 @@ class _JournalScreenState extends State<JournalScreen> {
     await _controller.deleteEntry(entry.id);
   }
 
+  Future<void> _openDayPicker() async {
+    final selectedDay = _controller.selectedDay;
+    final pickedDay = await showJournalDayPickerSheet(
+      context: context,
+      strings: widget.strings,
+      initialDay: selectedDay,
+      now: widget.now(),
+    );
+    if (pickedDay == null) {
+      return;
+    }
+    _controller.selectDay(pickedDay);
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = widget.strings;
@@ -193,8 +208,8 @@ class _JournalScreenState extends State<JournalScreen> {
                 now: widget.now(),
                 hasEntriesForSelectedDay: entries.isNotEmpty,
                 onPreviousDay: _controller.goToPreviousDay,
-                onToday: _controller.goToToday,
                 onNextDay: _controller.goToNextDay,
+                onPickDay: _openDayPicker,
               ),
               const SizedBox(height: AppSpacing.lg),
               _QuickActions(
@@ -307,8 +322,8 @@ class _DashboardSection extends StatelessWidget {
     required this.now,
     required this.hasEntriesForSelectedDay,
     required this.onPreviousDay,
-    required this.onToday,
     required this.onNextDay,
+    required this.onPickDay,
   });
 
   final AppStrings strings;
@@ -317,8 +332,8 @@ class _DashboardSection extends StatelessWidget {
   final DateTime now;
   final bool hasEntriesForSelectedDay;
   final VoidCallback onPreviousDay;
-  final VoidCallback onToday;
   final VoidCallback onNextDay;
+  final Future<void> Function() onPickDay;
 
   @override
   Widget build(BuildContext context) {
@@ -339,10 +354,32 @@ class _DashboardSection extends StatelessWidget {
                 ),
                 Expanded(
                   child: Center(
-                    child: Text(
-                      strings.journalDayLabel(selectedDay, now),
-                      style: AppTextStyles.sectionTitle,
-                      textAlign: TextAlign.center,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        key: const ValueKey(
+                            'journal-selected-day-picker-trigger'),
+                        borderRadius: BorderRadius.circular(999),
+                        onTap: onPickDay,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.xs,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                strings.journalDayLabel(selectedDay, now),
+                                style: AppTextStyles.sectionTitle,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(width: AppSpacing.xxs),
+                              const Icon(Icons.expand_more, size: 18),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -354,24 +391,6 @@ class _DashboardSection extends StatelessWidget {
                 ),
               ],
             ),
-            if (_isNotToday(selectedDay, now))
-              Align(
-                alignment: Alignment.centerLeft,
-                child: OutlinedButton(
-                  key: const ValueKey('journal-go-to-today'),
-                  onPressed: onToday,
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 32),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: 0,
-                    ),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  child: Text(strings.journalGoToToday),
-                ),
-              ),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -392,13 +411,6 @@ class _DashboardSection extends StatelessWidget {
         ],
       ],
     );
-  }
-
-  bool _isNotToday(DateTime selectedDay, DateTime now) {
-    final selected =
-        DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
-    final today = DateTime(now.year, now.month, now.day);
-    return selected != today;
   }
 }
 

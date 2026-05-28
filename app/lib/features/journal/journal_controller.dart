@@ -147,6 +147,11 @@ class JournalController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectDay(DateTime day) {
+    _selectedDay = DateTime(day.year, day.month, day.day);
+    notifyListeners();
+  }
+
   Future<void> replaceAll(List<JournalEntry> entries) async {
     _entries
       ..clear()
