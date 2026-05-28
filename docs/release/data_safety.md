@@ -1,0 +1,49 @@
+# Data Safety preparation
+
+This worksheet helps prepare the Google Play Data Safety answers for the first MVP release.
+
+This document is not legal advice. Final answers must match the actual production behavior and Play Console configuration.
+
+## Purpose
+
+Use this page to collect the information needed for the Google Play Data Safety form before submission.
+
+## Current known behavior from the repository
+
+- Journal is local-only.
+- Journal data is not synced to a backend or cloud service.
+- Journal note content is not sent to a backend in the current implementation.
+- Billing is present for subscriptions.
+- Ads are planned and partially wired through the app.
+- Analytics status should be verified before final answers are submitted.
+
+## Data categories to review
+
+- App activity
+- Device or app info
+- Purchase history
+- Advertising ID
+- Diagnostics or crash logs
+- User-provided content, including Journal data
+
+## Questions to answer before submission
+
+- [ ] What data is collected?
+- [ ] What data is shared?
+- [ ] Is data encrypted in transit?
+- [ ] Can users request deletion?
+- [ ] Is data optional or required?
+- [ ] Are ads personalized?
+- [ ] Is the Advertising ID used?
+
+## TODO placeholders to finalize later
+
+- [ ] Final ad behavior from the ads setup.
+- [ ] Final analytics behavior.
+- [ ] Final privacy policy URL.
+- [ ] Final Billing data disclosure.
+
+## Notes
+
+- Keep the answer aligned with the production build, not the debug build.
+- Recheck this worksheet whenever ad, analytics, billing, or privacy behavior changes.
