@@ -32,7 +32,7 @@ keyAlias=upload
 storeFile=upload-keystore.jks
 ```
 
-`storeFile` is usually resolved relative to `app/android/` in this repo.
+`storeFile` is resolved relative to `C:\Projekty\Nurtly\app\android`.
 
 ## Create an upload keystore locally
 
@@ -51,19 +51,22 @@ You will be prompted for keystore and key passwords. Keep them private.
 
 ## Build a release AAB
 
-From `C:\Projekty\Nurtly\app`:
+From `C:\Projekty\Nurtly`:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
+cd app
 flutter build appbundle --release
 ```
 
 Expected output:
 
-- `app/build/app/outputs/bundle/release/app-release.aab`
+- from `C:\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
+- from `C:\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
 
 ## Verify the AAB path
 
-After the build, confirm the file exists:
+After the build, confirm the file exists from the repo root:
 
 ```powershell
 Test-Path app\build\app\outputs\bundle\release\app-release.aab

@@ -12,19 +12,25 @@ This note covers the Android MVP release build path for Nurtly.
 
 ## Commands
 
-Run the quality and release checks from `C:\Projekty\Nurtly\app`:
+Run the quality and release checks from the repository root `C:\Projekty\Nurtly`:
 
 ```powershell
-flutter test
 powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
+cd app
+flutter build appbundle --release
+```
+
+If you prefer to run Flutter checks directly inside `app`, the equivalent bundle command is:
+
+```powershell
+cd app
 flutter build appbundle --release
 ```
 
 ## Expected output
 
-The release bundle should be generated at:
-
-- `app/build/app/outputs/bundle/release/app-release.aab`
+- From `C:\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
+- From `C:\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
 
 ## Manual smoke before upload
 

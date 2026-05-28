@@ -18,6 +18,14 @@ if (releaseBuildRequested && !keystorePropertiesFile.exists()) {
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+def releaseSigningKeys = ['storePassword', 'keyPassword', 'keyAlias', 'storeFile']
+def missingReleaseSigningKeys = releaseSigningKeys.findAll { key ->
+    !keystoreProperties.containsKey(key) || keystoreProperties[key].toString().trim().isEmpty()
+}
+if (releaseBuildRequested && keystorePropertiesFile.exists() && !missingReleaseSigningKeys.isEmpty()) {
+    throw new GradleException(
+            "Missing required app/android/key.properties fields: ${missingReleaseSigningKeys.join(', ')}")
+}
 
 android {
     namespace = "com.nurtly.app"
