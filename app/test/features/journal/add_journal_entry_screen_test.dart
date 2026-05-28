@@ -185,6 +185,10 @@ void main() {
     expect(find.text('Wczoraj'), findsWidgets);
     expect(find.text('Dzisiaj'), findsWidgets);
     expect(find.text('Jutro'), findsWidgets);
+    expect(
+      find.byKey(const ValueKey('journal-day-chip-today')),
+      findsOneWidget,
+    );
     expect(find.byKey(const ValueKey('journal-day-previous')), findsOneWidget);
     expect(find.byKey(const ValueKey('journal-day-next')), findsOneWidget);
     expect(find.text('Select date'), findsNothing);

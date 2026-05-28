@@ -67,6 +67,13 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
     _setDay(_selectedDay.add(const Duration(days: 1)));
   }
 
+  bool _isRelativeDay(int deltaDays) {
+    final relative = _relativeDay(deltaDays);
+    return _selectedDay.year == relative.year &&
+        _selectedDay.month == relative.month &&
+        _selectedDay.day == relative.day;
+  }
+
   DateTime _relativeDay(int deltaDays) {
     return DateTime(
       widget.now.year,
@@ -125,26 +132,6 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: AppSpacing.xs,
-                  runSpacing: AppSpacing.xs,
-                  children: [
-                    _QuickChip(
-                      label: strings.journalYesterdayLabel,
-                      onPressed: () => _setDay(_relativeDay(-1)),
-                    ),
-                    _QuickChip(
-                      label: strings.journalTodayLabel,
-                      onPressed: () => _setDay(_relativeDay(0)),
-                    ),
-                    _QuickChip(
-                      label: strings.journalTomorrowLabel,
-                      onPressed: () => _setDay(_relativeDay(1)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.lg),
                 NurtlyCard(
                   padding: const EdgeInsets.all(AppSpacing.md),
                   child: Column(
@@ -191,6 +178,32 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: AppSpacing.xs,
+                  runSpacing: AppSpacing.xs,
+                  children: [
+                    _QuickChip(
+                      key: const ValueKey('journal-day-chip-yesterday'),
+                      label: strings.journalYesterdayLabel,
+                      onPressed: () => _setDay(_relativeDay(-1)),
+                      selected: _isRelativeDay(-1),
+                    ),
+                    _QuickChip(
+                      key: const ValueKey('journal-day-chip-today'),
+                      label: strings.journalTodayLabel,
+                      onPressed: () => _setDay(_relativeDay(0)),
+                      selected: _isRelativeDay(0),
+                    ),
+                    _QuickChip(
+                      key: const ValueKey('journal-day-chip-tomorrow'),
+                      label: strings.journalTomorrowLabel,
+                      onPressed: () => _setDay(_relativeDay(1)),
+                      selected: _isRelativeDay(1),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
                     Expanded(
@@ -220,21 +233,27 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
 
 class _QuickChip extends StatelessWidget {
   const _QuickChip({
+    super.key,
     required this.label,
     required this.onPressed,
+    required this.selected,
   });
 
   final String label;
   final VoidCallback onPressed;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        backgroundColor: AppColors.surfaceBright,
-        foregroundColor: AppColors.primary,
-        side: const BorderSide(color: AppColors.borderSoft),
+        backgroundColor:
+            selected ? AppColors.primarySoft : AppColors.surfaceBright,
+        foregroundColor: selected ? AppColors.primary : AppColors.textPrimary,
+        side: BorderSide(
+          color: selected ? AppColors.primary : AppColors.borderSoft,
+        ),
         minimumSize: const Size(0, 40),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,

@@ -234,7 +234,7 @@ class _TimeStepper extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(label, key: labelKey, style: AppTextStyles.caption),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             value,
             style: AppTextStyles.display.copyWith(fontSize: 30),
@@ -247,10 +247,11 @@ class _TimeStepper extends StatelessWidget {
                   key: minusKey,
                   onPressed: onDecrement,
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: AppColors.surface,
+                    backgroundColor: AppColors.surfaceBright,
+                    side: const BorderSide(color: AppColors.borderSoft),
                     minimumSize: const Size(0, 48),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
+                      horizontal: AppSpacing.md,
                     ),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -263,10 +264,11 @@ class _TimeStepper extends StatelessWidget {
                   key: plusKey,
                   onPressed: onIncrement,
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: AppColors.surface,
+                    backgroundColor: AppColors.surfaceBright,
+                    side: const BorderSide(color: AppColors.borderSoft),
                     minimumSize: const Size(0, 48),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
+                      horizontal: AppSpacing.md,
                     ),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
