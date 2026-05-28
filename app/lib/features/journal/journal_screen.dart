@@ -340,7 +340,7 @@ class _DashboardSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _JournalDaySelector(
-          key: const ValueKey('journal-day-navigation'),
+          key: const ValueKey('journal-day-selector'),
           strings: strings,
           selectedDay: selectedDay,
           now: now,
@@ -407,31 +407,40 @@ class _JournalDaySelector extends StatelessWidget {
           child: Center(
             child: Material(
               color: Colors.transparent,
-              child: InkWell(
-                key: const ValueKey('journal-selected-day-picker-trigger'),
-                borderRadius: BorderRadius.circular(999),
-                onTap: onPickDay,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: AppColors.borderSoft),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        strings.journalDayLabel(selectedDay, now),
-                        style: AppTextStyles.sectionTitle,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(width: AppSpacing.xxs),
-                      const Icon(Icons.expand_more, size: 18),
-                    ],
+              child: SizedBox(
+                width: 168,
+                child: InkWell(
+                  key: const ValueKey('journal-selected-day-picker-trigger'),
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: onPickDay,
+                  child: Container(
+                    height: 40,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: AppColors.borderSoft),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            strings.journalDayLabel(selectedDay, now),
+                            style: AppTextStyles.sectionTitle,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.xxs),
+                        const Icon(Icons.expand_more, size: 18),
+                      ],
+                    ),
                   ),
                 ),
               ),

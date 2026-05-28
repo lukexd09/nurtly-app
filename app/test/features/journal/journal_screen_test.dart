@@ -97,8 +97,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-        find.byKey(const ValueKey('journal-day-navigation')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-day-selector')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
       findsOneWidget,
@@ -179,6 +178,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
+      find.byKey(const ValueKey('journal-day-selector')),
+      findsOneWidget,
+    );
+    expect(
       find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
       findsOneWidget,
     );
@@ -204,7 +207,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-        find.byKey(const ValueKey('journal-day-picker-title')), findsOneWidget);
+      find.byKey(const ValueKey('journal-day-picker-title')),
+      findsOneWidget,
+    );
     expect(find.text('Wczoraj'), findsWidgets);
     expect(find.text('Dzisiaj'), findsWidgets);
     expect(find.text('Jutro'), findsWidgets);
