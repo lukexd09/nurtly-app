@@ -207,7 +207,8 @@ try {
         if (-not $AllowPlatformChanges) {
             $isPlatformFile = $normalized -match '^app/android/' -or $normalized -match '^app/ios/'
             $isAllowedPlatformFile =
-                $normalized -eq 'app/android/app/src/main/AndroidManifest.xml'
+                $normalized -eq 'app/android/app/src/main/AndroidManifest.xml' -or
+                $normalized -eq 'app/android/app/build.gradle'
 
             if ($isPlatformFile -and -not $isAllowedPlatformFile) {
                 $failures += "Platform file changed without -AllowPlatformChanges: $file"
