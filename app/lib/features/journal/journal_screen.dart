@@ -16,6 +16,7 @@ import 'journal_entry_card.dart';
 import 'journal_entry_type.dart';
 import 'journal_store.dart';
 import 'journal_summary.dart';
+import 'widgets/journal_day_picker_sheet.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({
@@ -83,6 +84,19 @@ class _JournalScreenState extends State<JournalScreen> {
         setState(() {});
       }
     });
+  }
+
+  Future<void> _openDayPicker() async {
+    final selectedDay = await showJournalDayPickerSheet(
+      context: context,
+      strings: widget.strings,
+      initialDay: _controller.selectedDay,
+      now: widget.now(),
+    );
+    if (selectedDay == null) {
+      return;
+    }
+    _controller.selectDay(selectedDay);
   }
 
   Future<void> _openAddEntry(JournalEntryType type) async {
@@ -193,8 +207,8 @@ class _JournalScreenState extends State<JournalScreen> {
                 now: widget.now(),
                 hasEntriesForSelectedDay: entries.isNotEmpty,
                 onPreviousDay: _controller.goToPreviousDay,
-                onToday: _controller.goToToday,
                 onNextDay: _controller.goToNextDay,
+                onPickDay: _openDayPicker,
               ),
               const SizedBox(height: AppSpacing.lg),
               _QuickActions(
@@ -209,7 +223,7 @@ class _JournalScreenState extends State<JournalScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
               _DayTimelineHeader(
-                key: const ValueKey('journal-day-timeline-header'),
+                key: const ValueKey('journal-timeline-section'),
                 strings: strings,
                 selectedDay: selectedDay,
                 now: widget.now(),
@@ -307,8 +321,8 @@ class _DashboardSection extends StatelessWidget {
     required this.now,
     required this.hasEntriesForSelectedDay,
     required this.onPreviousDay,
-    required this.onToday,
     required this.onNextDay,
+    required this.onPickDay,
   });
 
   final AppStrings strings;
@@ -317,88 +331,138 @@ class _DashboardSection extends StatelessWidget {
   final DateTime now;
   final bool hasEntriesForSelectedDay;
   final VoidCallback onPreviousDay;
-  final VoidCallback onToday;
   final VoidCallback onNextDay;
+  final Future<void> Function() onPickDay;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
+        _JournalDaySelector(
           key: const ValueKey('journal-day-navigation'),
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  key: const ValueKey('journal-day-previous'),
-                  tooltip: strings.journalPreviousDay,
-                  onPressed: onPreviousDay,
-                  icon: const Icon(Icons.chevron_left),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      strings.journalDayLabel(selectedDay, now),
-                      style: AppTextStyles.sectionTitle,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  key: const ValueKey('journal-day-next'),
-                  tooltip: strings.journalNextDay,
-                  onPressed: onNextDay,
-                  icon: const Icon(Icons.chevron_right),
-                ),
-              ],
-            ),
-            if (_isNotToday(selectedDay, now))
-              Align(
-                alignment: Alignment.centerLeft,
-                child: OutlinedButton(
-                  key: const ValueKey('journal-go-to-today'),
-                  onPressed: onToday,
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 32),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: 0,
-                    ),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  child: Text(strings.journalGoToToday),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        _CompactSummaryCard(
-          key: const ValueKey('journal-compact-summary-card'),
           strings: strings,
-          summary: summary,
           selectedDay: selectedDay,
           now: now,
+          onPreviousDay: onPreviousDay,
+          onNextDay: onNextDay,
+          onPickDay: onPickDay,
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        _JournalSection(
+          key: const ValueKey('journal-summary-card'),
+          child: _CompactSummaryCard(
+            key: const ValueKey('journal-compact-summary-card'),
+            strings: strings,
+            summary: summary,
+            selectedDay: selectedDay,
+            now: now,
+          ),
         ),
         if (hasEntriesForSelectedDay) ...[
           const SizedBox(height: AppSpacing.sm),
-          _LastMomentsSection(
-            key: const ValueKey('journal-last-moments-section'),
-            strings: strings,
-            summary: summary,
+          _JournalSection(
+            key: const ValueKey('journal-last-entries-card'),
+            child: _LastMomentsSection(
+              key: const ValueKey('journal-last-moments-section'),
+              strings: strings,
+              summary: summary,
+            ),
           ),
         ],
       ],
     );
   }
+}
 
-  bool _isNotToday(DateTime selectedDay, DateTime now) {
-    final selected =
-        DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
-    final today = DateTime(now.year, now.month, now.day);
-    return selected != today;
+class _JournalDaySelector extends StatelessWidget {
+  const _JournalDaySelector({
+    super.key,
+    required this.strings,
+    required this.selectedDay,
+    required this.now,
+    required this.onPreviousDay,
+    required this.onNextDay,
+    required this.onPickDay,
+  });
+
+  final AppStrings strings;
+  final DateTime selectedDay;
+  final DateTime now;
+  final VoidCallback onPreviousDay;
+  final VoidCallback onNextDay;
+  final Future<void> Function() onPickDay;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          key: const ValueKey('journal-day-previous'),
+          tooltip: strings.journalPreviousDay,
+          onPressed: onPreviousDay,
+          icon: const Icon(Icons.chevron_left),
+        ),
+        Expanded(
+          child: Center(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                key: const ValueKey('journal-selected-day-picker-trigger'),
+                borderRadius: BorderRadius.circular(999),
+                onTap: onPickDay,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(color: AppColors.borderSoft),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        strings.journalDayLabel(selectedDay, now),
+                        style: AppTextStyles.sectionTitle,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(width: AppSpacing.xxs),
+                      const Icon(Icons.expand_more, size: 18),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          key: const ValueKey('journal-day-next'),
+          tooltip: strings.journalNextDay,
+          onPressed: onNextDay,
+          icon: const Icon(Icons.chevron_right),
+        ),
+      ],
+    );
+  }
+}
+
+class _JournalSection extends StatelessWidget {
+  const _JournalSection({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return NurtlyCard(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: child,
+    );
   }
 }
 
@@ -430,21 +494,21 @@ class _CompactSummaryCard extends StatelessWidget {
             style: AppTextStyles.caption,
           ),
           const SizedBox(height: AppSpacing.xs),
-          _SummaryRow(
+          _JournalMetricRow(
             label: strings.journalTotalSleep,
             value: summary.totalSleep == Duration.zero
                 ? '0 min'
                 : strings.formatJournalDuration(summary.totalSleep),
           ),
-          _SummaryRow(
+          _JournalMetricRow(
             label: strings.journalFeedingsCount,
             value: summary.feedingsCount.toString(),
           ),
-          _SummaryRow(
+          _JournalMetricRow(
             label: strings.journalDiapersCount,
             value: summary.diapersCount.toString(),
           ),
-          _SummaryRow(
+          _JournalMetricRow(
             label: strings.journalNotesCount,
             value: summary.notesCount.toString(),
           ),
@@ -454,8 +518,8 @@ class _CompactSummaryCard extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
+class _JournalMetricRow extends StatelessWidget {
+  const _JournalMetricRow({
     required this.label,
     required this.value,
   });
@@ -476,39 +540,7 @@ class _SummaryRow extends StatelessWidget {
           Text(
             value,
             style: AppTextStyles.body.copyWith(
-              color: AppColors.textMuted,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LastMomentLine extends StatelessWidget {
-  const _LastMomentLine({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xxs),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(label, style: AppTextStyles.body),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            value,
-            style: AppTextStyles.body.copyWith(
-              color: AppColors.textMuted,
+              color: AppColors.textPrimary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -537,19 +569,19 @@ class _LastMomentsSection extends StatelessWidget {
         children: [
           Text(strings.journalLastMomentsTitle, style: AppTextStyles.caption),
           const SizedBox(height: AppSpacing.xs),
-          _LastMomentLine(
+          _JournalMetricRow(
             label: strings.journalLastSleep,
             value: _lastEntryValue(summary.lastSleep),
           ),
-          _LastMomentLine(
+          _JournalMetricRow(
             label: strings.journalLastFeeding,
             value: _lastEntryValue(summary.lastFeeding),
           ),
-          _LastMomentLine(
+          _JournalMetricRow(
             label: strings.journalLastDiaper,
             value: _lastEntryValue(summary.lastDiaper),
           ),
-          _LastMomentLine(
+          _JournalMetricRow(
             label: strings.journalNotesToday,
             value: _lastEntryValue(summary.latestNote),
           ),

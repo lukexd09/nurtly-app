@@ -60,8 +60,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('journal-active-sleep-card')),
-        findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-active-sleep-card')),
+      findsOneWidget,
+    );
     expect(find.text('Duration: 0 h 00m'), findsOneWidget);
 
     currentTime = currentTime.add(const Duration(minutes: 1));
@@ -96,30 +98,49 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const ValueKey('journal-day-navigation')),
+        find.byKey(const ValueKey('journal-day-navigation')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
       findsOneWidget,
     );
+    expect(find.byKey(const ValueKey('journal-summary-card')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('journal-compact-summary-card')),
       findsOneWidget,
     );
     expect(
+      find.byKey(const ValueKey('journal-last-entries-card')),
+      findsNothing,
+    );
+    expect(
       find.byKey(const ValueKey('journal-last-moments-section')),
       findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-timeline-section')),
+      findsOneWidget,
     );
     expect(find.byKey(const ValueKey('journal-start-sleep')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('journal-quick-action-chip-grid')),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('journal-quick-action-add-sleep')),
-        findsOneWidget);
-    expect(find.byKey(const ValueKey('journal-quick-action-feeding')),
-        findsOneWidget);
-    expect(find.byKey(const ValueKey('journal-quick-action-diaper')),
-        findsOneWidget);
-    expect(find.byKey(const ValueKey('journal-quick-action-note')),
-        findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('journal-quick-action-add-sleep')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-quick-action-feeding')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-quick-action-diaper')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-quick-action-note')),
+      findsOneWidget,
+    );
     expect(find.text('0 min'), findsOneWidget);
 
     await tester.drag(
@@ -131,7 +152,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('selected day summary and add form use yesterday context',
+  testWidgets('selected day trigger opens custom day picker and updates day',
       (tester) async {
     final controller = JournalController(
       store: InMemoryJournalStore(),
@@ -158,11 +179,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const ValueKey('journal-compact-summary-label')),
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('journal-go-to-today')), findsOneWidget);
-    expect(find.text('Przejdź do dziś'), findsOneWidget);
+    expect(find.text('Przejdź do dziś'), findsNothing);
     expect(
       find.descendant(
         of: find.byKey(const ValueKey('journal-compact-summary-card')),
@@ -178,16 +198,38 @@ void main() {
       findsNothing,
     );
 
-    await tester
-        .tap(find.byKey(const ValueKey('journal-quick-action-feeding')));
+    await tester.tap(
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.text('Wczoraj, 09:30'), findsOneWidget);
-    expect(find.text('Dzisiaj, 09:30'), findsNothing);
+    expect(
+        find.byKey(const ValueKey('journal-day-picker-title')), findsOneWidget);
+    expect(find.text('Wczoraj'), findsWidgets);
+    expect(find.text('Dzisiaj'), findsWidgets);
+    expect(find.text('Jutro'), findsWidgets);
+
+    await tester.tap(find.text('Dzisiaj').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('journal-selected-day-picker-trigger')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('journal-compact-summary-card')),
+        matching: find.text('Dzisiaj'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Przejdź do dziś'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Journal with an entry shows last moments section',
+  testWidgets('Journal with an entry shows last entries section',
       (tester) async {
     final controller = JournalController(
       store: InMemoryJournalStore(),
@@ -220,7 +262,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const ValueKey('journal-compact-summary-card')),
+      find.byKey(const ValueKey('journal-summary-card')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('journal-last-entries-card')),
       findsOneWidget,
     );
     expect(
@@ -228,7 +274,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-        find.text(AppStrings.polish.journalLastMomentsTitle), findsOneWidget);
+      find.text(AppStrings.polish.journalLastMomentsTitle),
+      findsOneWidget,
+    );
     expect(find.text(AppStrings.polish.journalNoEntryShort), findsWidgets);
     expect(tester.takeException(), isNull);
   });
