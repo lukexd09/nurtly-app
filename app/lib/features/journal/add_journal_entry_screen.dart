@@ -10,6 +10,8 @@ import '../../core/widgets/section_header.dart';
 import '../../core/localization/app_strings.dart';
 import 'journal_entry.dart';
 import 'journal_entry_type.dart';
+import 'widgets/journal_day_picker_sheet.dart';
+import 'widgets/journal_time_picker_sheet.dart';
 
 class AddJournalEntryScreen extends StatefulWidget {
   const AddJournalEntryScreen({
@@ -221,43 +223,29 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
   }
 
   Future<DateTime?> _pickTimeOnly(DateTime initial) async {
-    final time = await showTimePicker(
+    final picked = await showJournalTimePickerSheet(
       context: context,
+      strings: widget.strings,
       initialTime: TimeOfDay.fromDateTime(initial),
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
     );
-    if (time == null) {
+    if (picked == null) {
       return null;
     }
     return DateTime(
       initial.year,
       initial.month,
       initial.day,
-      time.hour,
-      time.minute,
+      picked.hour,
+      picked.minute,
     );
   }
 
   Future<DateTime?> _pickDateOnly(DateTime initial) async {
-    // The picker dialogs intentionally use the current build context.
-    final date = await showDatePicker(
+    return showJournalDayPickerSheet(
       context: context,
-      initialDate: initial,
-      firstDate: DateTime(initial.year - 2),
-      lastDate: DateTime(initial.year + 2),
-    );
-    if (date == null) {
-      return null;
-    }
-    return DateTime(
-      date.year,
-      date.month,
-      date.day,
+      strings: widget.strings,
+      initialDay: initial,
+      now: widget.now(),
     );
   }
 

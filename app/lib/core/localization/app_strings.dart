@@ -29,10 +29,20 @@ class AppStrings {
     required this.journalLocalOnlyHint,
     required this.journalTodayLabel,
     required this.journalYesterdayLabel,
+    required this.journalTomorrowLabel,
     required this.journalPreviousDay,
     required this.journalNextDay,
     required this.journalGoToToday,
     required this.journalChangeDay,
+    required this.journalChooseTimeTitle,
+    required this.journalSavePicker,
+    required this.journalPickerNow,
+    required this.journalPickerMinus15,
+    required this.journalPickerMinus5,
+    required this.journalPickerPlus5,
+    required this.journalPickerPlus15,
+    required this.journalPickerPreviousDay,
+    required this.journalPickerNextDay,
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
     required this.journalEmptyStateMessage,
@@ -213,10 +223,20 @@ class AppStrings {
   final String journalLocalOnlyHint;
   final String journalTodayLabel;
   final String journalYesterdayLabel;
+  final String journalTomorrowLabel;
   final String journalPreviousDay;
   final String journalNextDay;
   final String journalGoToToday;
   final String journalChangeDay;
+  final String journalChooseTimeTitle;
+  final String journalSavePicker;
+  final String journalPickerNow;
+  final String journalPickerMinus15;
+  final String journalPickerMinus5;
+  final String journalPickerPlus5;
+  final String journalPickerPlus15;
+  final String journalPickerPreviousDay;
+  final String journalPickerNextDay;
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
   final String journalEmptyStateMessage;
@@ -399,10 +419,20 @@ class AppStrings {
     journalLocalOnlyHint: 'Saved on this device only.',
     journalTodayLabel: 'Today',
     journalYesterdayLabel: 'Yesterday',
+    journalTomorrowLabel: 'Tomorrow',
     journalPreviousDay: 'Previous day',
     journalNextDay: 'Next day',
     journalGoToToday: 'Go to today',
     journalChangeDay: 'Change day',
+    journalChooseTimeTitle: 'Choose time',
+    journalSavePicker: 'Save',
+    journalPickerNow: 'Now',
+    journalPickerMinus15: '-15 min',
+    journalPickerMinus5: '-5 min',
+    journalPickerPlus5: '+5 min',
+    journalPickerPlus15: '+15 min',
+    journalPickerPreviousDay: 'Previous day',
+    journalPickerNextDay: 'Next day',
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
     journalEmptyStateMessage: 'Add the first entry when you are ready.',
@@ -596,10 +626,20 @@ class AppStrings {
     journalLocalOnlyHint: 'Zapisywane tylko na tym urządzeniu.',
     journalTodayLabel: 'Dzisiaj',
     journalYesterdayLabel: 'Wczoraj',
+    journalTomorrowLabel: 'Jutro',
     journalPreviousDay: 'Poprzedni dzień',
     journalNextDay: 'Następny dzień',
     journalGoToToday: 'Przejdź do dziś',
     journalChangeDay: 'Zmień dzień',
+    journalChooseTimeTitle: 'Wybierz godzinę',
+    journalSavePicker: 'Zapisz',
+    journalPickerNow: 'Teraz',
+    journalPickerMinus15: '-15 min',
+    journalPickerMinus5: '-5 min',
+    journalPickerPlus5: '+5 min',
+    journalPickerPlus15: '+15 min',
+    journalPickerPreviousDay: 'Poprzedni dzień',
+    journalPickerNextDay: 'Następny dzień',
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
