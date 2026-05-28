@@ -124,18 +124,6 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                   style: AppTextStyles.sectionTitle,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  selectedLabel,
-                  style: AppTextStyles.display.copyWith(fontSize: 28),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  _formatAbsoluteDay(_selectedDay),
-                  style: AppTextStyles.caption,
-                  textAlign: TextAlign.center,
-                ),
                 const SizedBox(height: AppSpacing.lg),
                 Wrap(
                   alignment: WrapAlignment.center,
@@ -163,21 +151,39 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          IconButton(
+                            key: const ValueKey('journal-day-previous'),
+                            tooltip: strings.journalPickerPreviousDay,
+                            onPressed: _goToPreviousDay,
+                            icon: const Icon(Icons.chevron_left),
+                          ),
                           Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _goToPreviousDay,
-                              icon: const Icon(Icons.chevron_left),
-                              label: Text(strings.journalPickerPreviousDay),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  selectedLabel,
+                                  style: AppTextStyles.display.copyWith(
+                                    fontSize: 26,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: AppSpacing.xxs),
+                                Text(
+                                  _formatAbsoluteDay(_selectedDay),
+                                  style: AppTextStyles.caption,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _goToNextDay,
-                              icon: const Icon(Icons.chevron_right),
-                              label: Text(strings.journalPickerNextDay),
-                            ),
+                          IconButton(
+                            key: const ValueKey('journal-day-next'),
+                            tooltip: strings.journalPickerNextDay,
+                            onPressed: _goToNextDay,
+                            icon: const Icon(Icons.chevron_right),
                           ),
                         ],
                       ),

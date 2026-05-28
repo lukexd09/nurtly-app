@@ -130,26 +130,29 @@ class _JournalTimePickerSheetState extends State<_JournalTimePickerSheet> {
                       ),
                       const SizedBox(height: AppSpacing.lg),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _StepButton(
-                            label: '-1h',
-                            onPressed: () => _adjustMinutes(-60),
+                          Expanded(
+                            child: _TimeStepper(
+                              minusKey: const ValueKey('journal-hour-minus'),
+                              plusKey: const ValueKey('journal-hour-plus'),
+                              labelKey: const ValueKey('journal-hour-label'),
+                              label: strings.journalPickerHourLabel,
+                              value: selected.hour.toString().padLeft(2, '0'),
+                              onDecrement: () => _adjustMinutes(-60),
+                              onIncrement: () => _adjustMinutes(60),
+                            ),
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          _StepButton(
-                            label: '+1h',
-                            onPressed: () => _adjustMinutes(60),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          _StepButton(
-                            label: '-5m',
-                            onPressed: () => _adjustMinutes(-5),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          _StepButton(
-                            label: '+5m',
-                            onPressed: () => _adjustMinutes(5),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: _TimeStepper(
+                              minusKey: const ValueKey('journal-minute-minus'),
+                              plusKey: const ValueKey('journal-minute-plus'),
+                              labelKey: const ValueKey('journal-minute-label'),
+                              label: strings.journalPickerMinuteLabel,
+                              value: selected.minute.toString().padLeft(2, '0'),
+                              onDecrement: () => _adjustMinutes(-5),
+                              onIncrement: () => _adjustMinutes(5),
+                            ),
                           ),
                         ],
                       ),
@@ -166,14 +169,6 @@ class _JournalTimePickerSheetState extends State<_JournalTimePickerSheet> {
                           _QuickChip(
                             label: strings.journalPickerMinus15,
                             onPressed: () => _adjustMinutes(-15),
-                          ),
-                          _QuickChip(
-                            label: strings.journalPickerMinus5,
-                            onPressed: () => _adjustMinutes(-5),
-                          ),
-                          _QuickChip(
-                            label: strings.journalPickerPlus5,
-                            onPressed: () => _adjustMinutes(5),
                           ),
                           _QuickChip(
                             label: strings.journalPickerPlus15,
@@ -211,25 +206,77 @@ class _JournalTimePickerSheetState extends State<_JournalTimePickerSheet> {
   }
 }
 
-class _StepButton extends StatelessWidget {
-  const _StepButton({
+class _TimeStepper extends StatelessWidget {
+  const _TimeStepper({
+    required this.minusKey,
+    required this.plusKey,
+    required this.labelKey,
     required this.label,
-    required this.onPressed,
+    required this.value,
+    required this.onDecrement,
+    required this.onIncrement,
   });
 
+  final Key minusKey;
+  final Key plusKey;
+  final Key labelKey;
   final String label;
-  final VoidCallback onPressed;
+  final String value;
+  final VoidCallback onDecrement;
+  final VoidCallback onIncrement;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(64, 44),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return NurtlyCard(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      backgroundColor: AppColors.surfaceBright,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, key: labelKey, style: AppTextStyles.caption),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            value,
+            style: AppTextStyles.display.copyWith(fontSize: 30),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  key: minusKey,
+                  onPressed: onDecrement,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: AppColors.surface,
+                    minimumSize: const Size(0, 48),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text('−'),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: OutlinedButton(
+                  key: plusKey,
+                  onPressed: onIncrement,
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: AppColors.surface,
+                    minimumSize: const Size(0, 48),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: const Text('+'),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      child: Text(label),
     );
   }
 }

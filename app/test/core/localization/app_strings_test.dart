@@ -207,6 +207,8 @@ void main() {
     expect(AppStrings.english.journalPickerNow, 'Now');
     expect(AppStrings.english.journalPickerMinus15, '-15 min');
     expect(AppStrings.english.journalPickerPlus15, '+15 min');
+    expect(AppStrings.english.journalPickerHourLabel, 'Hour');
+    expect(AppStrings.english.journalPickerMinuteLabel, 'Minutes');
     expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
     expect(AppStrings.english.journalStartSleep, 'Start sleep');
     expect(AppStrings.english.journalStopSleep, 'Stop sleep');
@@ -238,6 +240,8 @@ void main() {
     expect(AppStrings.polish.journalPickerNow, 'Teraz');
     expect(AppStrings.polish.journalPickerMinus15, '-15 min');
     expect(AppStrings.polish.journalPickerPlus15, '+15 min');
+    expect(AppStrings.polish.journalPickerHourLabel, 'Godzina');
+    expect(AppStrings.polish.journalPickerMinuteLabel, 'Minuty');
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');

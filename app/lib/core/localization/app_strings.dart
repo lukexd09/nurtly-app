@@ -38,11 +38,11 @@ class AppStrings {
     required this.journalSavePicker,
     required this.journalPickerNow,
     required this.journalPickerMinus15,
-    required this.journalPickerMinus5,
-    required this.journalPickerPlus5,
     required this.journalPickerPlus15,
     required this.journalPickerPreviousDay,
     required this.journalPickerNextDay,
+    required this.journalPickerHourLabel,
+    required this.journalPickerMinuteLabel,
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
     required this.journalEmptyStateMessage,
@@ -232,11 +232,11 @@ class AppStrings {
   final String journalSavePicker;
   final String journalPickerNow;
   final String journalPickerMinus15;
-  final String journalPickerMinus5;
-  final String journalPickerPlus5;
   final String journalPickerPlus15;
   final String journalPickerPreviousDay;
   final String journalPickerNextDay;
+  final String journalPickerHourLabel;
+  final String journalPickerMinuteLabel;
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
   final String journalEmptyStateMessage;
@@ -428,11 +428,11 @@ class AppStrings {
     journalSavePicker: 'Save',
     journalPickerNow: 'Now',
     journalPickerMinus15: '-15 min',
-    journalPickerMinus5: '-5 min',
-    journalPickerPlus5: '+5 min',
     journalPickerPlus15: '+15 min',
     journalPickerPreviousDay: 'Previous day',
     journalPickerNextDay: 'Next day',
+    journalPickerHourLabel: 'Hour',
+    journalPickerMinuteLabel: 'Minutes',
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
     journalEmptyStateMessage: 'Add the first entry when you are ready.',
@@ -635,11 +635,11 @@ class AppStrings {
     journalSavePicker: 'Zapisz',
     journalPickerNow: 'Teraz',
     journalPickerMinus15: '-15 min',
-    journalPickerMinus5: '-5 min',
-    journalPickerPlus5: '+5 min',
     journalPickerPlus15: '+15 min',
     journalPickerPreviousDay: 'Poprzedni dzień',
     journalPickerNextDay: 'Następny dzień',
+    journalPickerHourLabel: 'Godzina',
+    journalPickerMinuteLabel: 'Minuty',
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
