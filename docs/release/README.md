@@ -12,6 +12,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Monetization and ads config](monetization_ads_config.md)
 - [Release smoke test](../qa/release_smoke_test.md)
 - [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
+- [Privacy policy drafts](../legal/README.md)
 
 ## Suggested release order
 
