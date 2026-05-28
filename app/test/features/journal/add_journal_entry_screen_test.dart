@@ -230,6 +230,7 @@ void main() {
                   context: context,
                   strings: AppStrings.polish,
                   initialTime: const TimeOfDay(hour: 8, minute: 43),
+                  now: () => DateTime(2026, 5, 27, 20, 20),
                 );
               },
               child: const Text('Open'),
@@ -242,12 +243,12 @@ void main() {
 
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('+5 min'));
+    await tester.tap(find.text('Teraz'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Zapisz'));
     await tester.pumpAndSettle();
 
-    expect(selectedTime, const TimeOfDay(hour: 8, minute: 48));
+    expect(selectedTime, const TimeOfDay(hour: 20, minute: 20));
   });
 
   testWidgets('day picker sheet changes day', (tester) async {

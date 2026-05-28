@@ -10,6 +10,7 @@ Future<TimeOfDay?> showJournalTimePickerSheet({
   required BuildContext context,
   required AppStrings strings,
   required TimeOfDay initialTime,
+  required DateTime Function() now,
 }) {
   return showModalBottomSheet<TimeOfDay?>(
     context: context,
@@ -18,6 +19,7 @@ Future<TimeOfDay?> showJournalTimePickerSheet({
     builder: (_) => _JournalTimePickerSheet(
       strings: strings,
       initialTime: initialTime,
+      now: now,
     ),
   );
 }
@@ -26,10 +28,12 @@ class _JournalTimePickerSheet extends StatefulWidget {
   const _JournalTimePickerSheet({
     required this.strings,
     required this.initialTime,
+    required this.now,
   });
 
   final AppStrings strings;
   final TimeOfDay initialTime;
+  final DateTime Function() now;
 
   @override
   State<_JournalTimePickerSheet> createState() =>
@@ -60,8 +64,8 @@ class _JournalTimePickerSheetState extends State<_JournalTimePickerSheet> {
   }
 
   void _setNow() {
-    final now = DateTime.now();
-    _setMinutes(now.hour * 60 + now.minute);
+    final current = widget.now();
+    _setMinutes(current.hour * 60 + current.minute);
   }
 
   @override

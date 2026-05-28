@@ -227,6 +227,7 @@ class _AddJournalEntryScreenState extends State<AddJournalEntryScreen> {
       context: context,
       strings: widget.strings,
       initialTime: TimeOfDay.fromDateTime(initial),
+      now: widget.now,
     );
     if (picked == null) {
       return null;
