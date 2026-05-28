@@ -20,7 +20,7 @@ void main() {
 
     expect(entitlement.hasPremiumAccessAt(now), isTrue);
     expect(entitlement.canAccessPremiumContentAt(now), isTrue);
-    expect(entitlement.shouldShowAds, isFalse);
+    expect(entitlement.shouldShowAdsAt(now), isFalse);
   });
 
   test('active monthly without expiresAt still has premium access', () {
