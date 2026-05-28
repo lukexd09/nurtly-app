@@ -1,0 +1,60 @@
+# Monetization and ads release config
+
+This note summarizes the current release-readiness state for monetization and ads in the MVP-2 release path.
+
+## 1. Current repo state
+
+### Billing
+
+- Google Play Billing integration is present in the app.
+- Current product IDs expected by the app:
+  - `nurtly_premium_monthly`
+  - `nurtly_premium_yearly`
+- Premium entitlement supports monthly and yearly active states.
+- Restore purchases is wired through the premium access flow.
+- Premium gating is applied through entitlement and ad policy checks.
+
+### Ads
+
+- Ads are wired through the app.
+- Current Android manifest uses the Google test ads app id for development.
+- Banner ads are the current ad format.
+- Premium users should not load or see ads.
+
+## 2. Required Google Play Console setup
+
+- [ ] Create the monthly subscription product.
+- [ ] Create the yearly subscription product.
+- [ ] Verify the product IDs match the app config exactly.
+- [ ] Configure introductory or early pricing in Play Console if the launch offer is intended.
+- [ ] Test purchases on internal or closed track before production.
+- [ ] Confirm restore purchases works on a real device.
+- [ ] Confirm premium users do not see ads.
+
+## 3. Required ads setup
+
+- [ ] Create the production ads app.
+- [ ] Replace the test ads app id with the production ads app id before public release.
+- [ ] Create production banner ad units.
+- [ ] Map the production ad unit ids into the release setup.
+- [ ] Keep rewarded ads out of this MVP release.
+
+## 4. Premium behavior
+
+- Premium users must not see ads.
+- Restore purchases should recover Premium when a valid purchase exists.
+- Failed, expired, or cancelled purchase states should be smoke-tested where practical.
+- The app uses the entitlement state, not hardcoded paid/free UI assumptions, to control ad visibility.
+
+## 5. Release checklist
+
+- [ ] Test IDs are not used in public production release.
+- [ ] Production IDs are not committed as sensitive values if avoidable.
+- [ ] Data Safety is updated after final ads behavior is confirmed.
+- [ ] Privacy policy is updated after final ads behavior is confirmed.
+- [ ] Play Console billing and ads configuration matches the release build.
+
+## Notes
+
+- This document is a release checklist, not a production configuration file.
+- Real production ads IDs should live in the store console or a secure release process, not in this repo.
