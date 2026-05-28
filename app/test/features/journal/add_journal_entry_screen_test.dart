@@ -6,6 +6,8 @@ import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/journal/add_journal_entry_screen.dart';
 import 'package:nurtly/features/journal/journal_entry.dart';
 import 'package:nurtly/features/journal/journal_entry_type.dart';
+import 'package:nurtly/features/journal/widgets/journal_day_picker_sheet.dart';
+import 'package:nurtly/features/journal/widgets/journal_time_picker_sheet.dart';
 
 Widget _localizedTestApp(
     {required Widget child, Locale locale = const Locale('pl')}) {
@@ -162,7 +164,7 @@ void main() {
     expect(find.text('Siusiu'), findsOneWidget);
   });
 
-  testWidgets('polish journal time picker uses localized material labels',
+  testWidgets('polish journal day picker uses custom sheet labels',
       (tester) async {
     await tester.pumpWidget(
       _localizedTestApp(
@@ -178,12 +180,24 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('journal-change-event-day')));
     await tester.pumpAndSettle();
+    expect(
+        find.byKey(const ValueKey('journal-day-picker-title')), findsOneWidget);
+    expect(find.text('Wczoraj'), findsWidgets);
+    expect(find.text('Dzisiaj'), findsWidgets);
+    expect(find.text('Jutro'), findsWidgets);
+    expect(
+      find.byKey(const ValueKey('journal-day-chip-today')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('journal-day-previous')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-day-next')), findsOneWidget);
     expect(find.text('Select date'), findsNothing);
     expect(find.text('Cancel'), findsNothing);
-    expect(find.byType(DatePickerDialog), findsOneWidget);
+    expect(find.text('Poprzedni dzień'), findsNothing);
+    expect(find.text('Następny dzień'), findsNothing);
   });
 
-  testWidgets('polish journal time picker does not show English labels',
+  testWidgets('polish journal time picker uses custom sheet labels',
       (tester) async {
     await tester.pumpWidget(
       _localizedTestApp(
@@ -200,8 +214,165 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('journal-event-time-row')));
     await tester.pumpAndSettle();
 
+    expect(
+      find.byKey(const ValueKey('journal-time-picker-title')),
+      findsOneWidget,
+    );
+    expect(find.text('Wybierz godzinę'), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-hour-label')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-minute-label')), findsOneWidget);
     expect(find.text('Select time'), findsNothing);
-    expect(find.text('Cancel'), findsNothing);
-    expect(find.byType(TimePickerDialog), findsOneWidget);
+    expect(find.text('AM'), findsNothing);
+    expect(find.text('PM'), findsNothing);
+    expect(find.text('Anuluj'), findsWidgets);
+    expect(find.text('Zapisz'), findsWidgets);
+    expect(find.byKey(const ValueKey('journal-hour-minus')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-hour-plus')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-minute-minus')), findsOneWidget);
+    expect(find.byKey(const ValueKey('journal-minute-plus')), findsOneWidget);
+    expect(find.text('Teraz'), findsOneWidget);
+    expect(find.text('-15 min'), findsOneWidget);
+    expect(find.text('+15 min'), findsOneWidget);
+    expect(find.text('-1h'), findsNothing);
+    expect(find.text('+1h'), findsNothing);
+    expect(find.text('-5m'), findsNothing);
+    expect(find.text('+5m'), findsNothing);
+  });
+
+  testWidgets('time picker sheet changes minute by five', (tester) async {
+    TimeOfDay? selectedTime;
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () async {
+                selectedTime = await showJournalTimePickerSheet(
+                  context: context,
+                  strings: AppStrings.polish,
+                  initialTime: const TimeOfDay(hour: 8, minute: 43),
+                  now: () => DateTime(2026, 5, 27, 20, 20),
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('journal-minute-plus')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(selectedTime, const TimeOfDay(hour: 8, minute: 48));
+  });
+
+  testWidgets('time picker sheet uses injected now for quick action',
+      (tester) async {
+    TimeOfDay? selectedTime;
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () async {
+                selectedTime = await showJournalTimePickerSheet(
+                  context: context,
+                  strings: AppStrings.polish,
+                  initialTime: const TimeOfDay(hour: 8, minute: 43),
+                  now: () => DateTime(2026, 5, 27, 20, 20),
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Teraz'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(selectedTime, const TimeOfDay(hour: 20, minute: 20));
+  });
+
+  testWidgets('day picker sheet changes day', (tester) async {
+    DateTime? selectedDay;
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () async {
+                selectedDay = await showJournalDayPickerSheet(
+                  context: context,
+                  strings: AppStrings.polish,
+                  initialDay: DateTime(2026, 5, 27),
+                  now: DateTime(2026, 5, 27, 14, 7),
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byKey(const ValueKey('journal-day-picker-title')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('journal-day-next')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(selectedDay, DateTime(2026, 5, 28));
+  });
+
+  testWidgets('day picker quick chips keep active day flow', (tester) async {
+    DateTime? selectedDay;
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () async {
+                selectedDay = await showJournalDayPickerSheet(
+                  context: context,
+                  strings: AppStrings.polish,
+                  initialDay: DateTime(2026, 5, 27),
+                  now: DateTime(2026, 5, 27, 14, 7),
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byKey(const ValueKey('journal-day-chip-today')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('journal-day-chip-tomorrow')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(selectedDay, DateTime(2026, 5, 28));
   });
 }
