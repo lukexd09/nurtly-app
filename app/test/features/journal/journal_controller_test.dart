@@ -94,6 +94,175 @@ void main() {
     expect(controller.entries.single.id, 'today');
   });
 
+  test('controller selectDay normalizes to date-only and notifies listeners',
+      () async {
+    var notifyCount = 0;
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    controller.addListener(() {
+      notifyCount++;
+    });
+    await controller.load();
+
+    controller.selectDay(DateTime(2026, 5, 26, 14, 7));
+
+    expect(controller.selectedDay, DateTime(2026, 5, 26));
+    expect(controller.selectedDay.hour, 0);
+    expect(controller.selectedDay.minute, 0);
+    expect(notifyCount, greaterThan(0));
+  });
+
+  test('controller edits sleep entries without changing their type', () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.sleep(
+            id: 'sleep-1',
+            startAt: DateTime(2026, 5, 19, 7, 0),
+            endAt: DateTime(2026, 5, 19, 8, 15),
+            note: 'Morning nap',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    final updated = controller.entries.single.copyWith(
+      note: 'Morning nap updated',
+      endAt: DateTime(2026, 5, 19, 8, 25),
+    );
+    await controller.updateEntry(updated);
+
+    final entry = controller.entries.single;
+    expect(entry.type, JournalEntryType.sleep);
+    expect(entry.note, 'Morning nap updated');
+    expect(entry.endAt, DateTime(2026, 5, 19, 8, 25));
+  });
+
+  test('controller edits feeding entries without changing their type',
+      () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.feeding(
+            id: 'feeding-1',
+            eventAt: DateTime(2026, 5, 19, 10, 0),
+            feedingType: JournalFeedingType.bottle,
+            amountText: '180 ml',
+            note: 'After the walk',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 10, 30),
+    );
+    await controller.load();
+
+    final updated = controller.entries.single.copyWith(
+      amountText: '200 ml',
+      note: 'After the walk updated',
+    );
+    await controller.updateEntry(updated);
+
+    final entry = controller.entries.single;
+    expect(entry.type, JournalEntryType.feeding);
+    expect(entry.feedingType, JournalFeedingType.bottle);
+    expect(entry.amountText, '200 ml');
+    expect(entry.note, 'After the walk updated');
+  });
+
+  test('controller edits diaper entries without changing their type', () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.diaper(
+            id: 'diaper-1',
+            eventAt: DateTime(2026, 5, 19, 11, 0),
+            diaperType: JournalDiaperType.both,
+            note: 'Changed quickly',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 11, 30),
+    );
+    await controller.load();
+
+    final updated = controller.entries.single.copyWith(
+      note: 'Changed quickly updated',
+    );
+    await controller.updateEntry(updated);
+
+    final entry = controller.entries.single;
+    expect(entry.type, JournalEntryType.diaper);
+    expect(entry.diaperType, JournalDiaperType.both);
+    expect(entry.note, 'Changed quickly updated');
+  });
+
+  test('controller edits note entries without changing their type', () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.note(
+            id: 'note-1',
+            eventAt: DateTime(2026, 5, 19, 12, 0),
+            note: 'A quiet evening.',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 12, 30),
+    );
+    await controller.load();
+
+    final updated = controller.entries.single.copyWith(
+      note: 'A quiet evening updated.',
+    );
+    await controller.updateEntry(updated);
+
+    final entry = controller.entries.single;
+    expect(entry.type, JournalEntryType.note);
+    expect(entry.note, 'A quiet evening updated.');
+  });
+
+  test('controller deletes sleep feeding diaper and note entries', () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.sleep(
+            id: 'sleep-1',
+            startAt: DateTime(2026, 5, 19, 7, 0),
+            endAt: DateTime(2026, 5, 19, 8, 15),
+          ),
+          JournalEntry.feeding(
+            id: 'feeding-1',
+            eventAt: DateTime(2026, 5, 19, 10, 0),
+            feedingType: JournalFeedingType.bottle,
+          ),
+          JournalEntry.diaper(
+            id: 'diaper-1',
+            eventAt: DateTime(2026, 5, 19, 11, 0),
+            diaperType: JournalDiaperType.pee,
+          ),
+          JournalEntry.note(
+            id: 'note-1',
+            eventAt: DateTime(2026, 5, 19, 12, 0),
+            note: 'A quiet evening.',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 12, 30),
+    );
+    await controller.load();
+
+    await controller.deleteEntry('sleep-1');
+    await controller.deleteEntry('feeding-1');
+    await controller.deleteEntry('diaper-1');
+    await controller.deleteEntry('note-1');
+
+    expect(controller.entries, isEmpty);
+  });
+
   test('controller prevents duplicate active sleep and supports stop flow',
       () async {
     var currentTime = DateTime(2026, 5, 19, 9, 30);
