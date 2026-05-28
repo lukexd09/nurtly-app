@@ -2,6 +2,13 @@
 
 This worksheet helps prepare the Google Play store listing for the first MVP release.
 
+Detailed drafts and asset briefs:
+
+- [Store listing copy](store_listing_copy.md)
+- [Screenshot plan](screenshot_plan.md)
+- [Feature graphic brief](feature_graphic_brief.md)
+- [Store assets checklist](store_assets_checklist.md)
+
 ## Positioning
 
 Nurtly is a calm, parent-facing support app.

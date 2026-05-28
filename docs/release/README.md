@@ -13,6 +13,10 @@ This folder holds release preparation notes for the Android MVP release.
 - [Release smoke test](../qa/release_smoke_test.md)
 - [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
 - [Privacy policy drafts](../legal/README.md)
+- [Store listing copy](store_listing_copy.md)
+- [Screenshot plan](screenshot_plan.md)
+- [Feature graphic brief](feature_graphic_brief.md)
+- [Store assets checklist](store_assets_checklist.md)
 
 ## Suggested release order
 
