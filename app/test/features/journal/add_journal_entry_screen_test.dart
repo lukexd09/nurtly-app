@@ -340,4 +340,39 @@ void main() {
 
     expect(selectedDay, DateTime(2026, 5, 28));
   });
+
+  testWidgets('day picker quick chips keep active day flow', (tester) async {
+    DateTime? selectedDay;
+    await tester.pumpWidget(
+      _localizedTestApp(
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () async {
+                selectedDay = await showJournalDayPickerSheet(
+                  context: context,
+                  strings: AppStrings.polish,
+                  initialDay: DateTime(2026, 5, 27),
+                  now: DateTime(2026, 5, 27, 14, 7),
+                );
+              },
+              child: const Text('Open'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    expect(
+        find.byKey(const ValueKey('journal-day-chip-today')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('journal-day-chip-tomorrow')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Zapisz'));
+    await tester.pumpAndSettle();
+
+    expect(selectedDay, DateTime(2026, 5, 28));
+  });
 }

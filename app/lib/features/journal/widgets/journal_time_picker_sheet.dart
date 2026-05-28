@@ -249,9 +249,10 @@ class _TimeStepper extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: AppColors.surfaceBright,
                     side: const BorderSide(color: AppColors.borderSoft),
-                    minimumSize: const Size(0, 48),
+                    minimumSize: const Size(0, 52),
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
+                      vertical: AppSpacing.xs,
                     ),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
@@ -266,9 +267,10 @@ class _TimeStepper extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: AppColors.surfaceBright,
                     side: const BorderSide(color: AppColors.borderSoft),
-                    minimumSize: const Size(0, 48),
+                    minimumSize: const Size(0, 52),
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
+                      vertical: AppSpacing.xs,
                     ),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),

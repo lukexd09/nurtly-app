@@ -177,7 +177,7 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.xl),
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: AppSpacing.xs,
@@ -203,7 +203,7 @@ class _JournalDayPickerSheetState extends State<_JournalDayPickerSheet> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.xl),
                 Row(
                   children: [
                     Expanded(
