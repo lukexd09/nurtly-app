@@ -111,7 +111,9 @@ class PremiumEntitlement {
 
   bool get hasPremiumAccess => hasPremiumAccessAt(DateTime.now());
 
-  bool get shouldShowAds => !hasPremiumAccess;
+  bool get shouldShowAds => shouldShowAdsAt(DateTime.now());
+
+  bool shouldShowAdsAt(DateTime now) => !hasPremiumAccessAt(now);
 
   bool get canAccessPremiumContent => hasPremiumAccess;
 
