@@ -9,6 +9,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Google Play checklist](google_play_checklist.md)
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
+- [Monetization and ads config](monetization_ads_config.md)
 
 ## Suggested release order
 
