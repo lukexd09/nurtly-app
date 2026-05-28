@@ -86,11 +86,13 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Future<void> _openAddEntry(JournalEntryType type) async {
+    final selectedDay = _controller.selectedDay;
     final entry = await Navigator.of(context).push<JournalEntry>(
       MaterialPageRoute<JournalEntry>(
         builder: (_) => AddJournalEntryScreen(
           strings: widget.strings,
           entryType: type,
+          initialDay: selectedDay,
           now: widget.now,
         ),
       ),
@@ -189,6 +191,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 summary: summary,
                 selectedDay: selectedDay,
                 now: widget.now(),
+                hasEntriesForSelectedDay: entries.isNotEmpty,
                 onPreviousDay: _controller.goToPreviousDay,
                 onToday: _controller.goToToday,
                 onNextDay: _controller.goToNextDay,
@@ -302,6 +305,7 @@ class _DashboardSection extends StatelessWidget {
     required this.summary,
     required this.selectedDay,
     required this.now,
+    required this.hasEntriesForSelectedDay,
     required this.onPreviousDay,
     required this.onToday,
     required this.onNextDay,
@@ -311,6 +315,7 @@ class _DashboardSection extends StatelessWidget {
   final JournalSummary summary;
   final DateTime selectedDay;
   final DateTime now;
+  final bool hasEntriesForSelectedDay;
   final VoidCallback onPreviousDay;
   final VoidCallback onToday;
   final VoidCallback onNextDay;
@@ -352,116 +357,41 @@ class _DashboardSection extends StatelessWidget {
             if (_isNotToday(selectedDay, now))
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton(
-                  key: const ValueKey('journal-day-today'),
+                child: OutlinedButton(
+                  key: const ValueKey('journal-go-to-today'),
                   onPressed: onToday,
-                  child: Text(strings.journalTodayLabel),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 32),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: 0,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  child: Text(strings.journalGoToToday),
                 ),
               ),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            final twoColumns = constraints.maxWidth >= 360;
-            final cardWidth = twoColumns
-                ? (constraints.maxWidth - AppSpacing.sm) / 2
-                : constraints.maxWidth;
-            return Wrap(
-              key: const ValueKey('journal-summary-cards'),
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                SizedBox(
-                  width: cardWidth,
-                  child: _SummaryCard(
-                    label: strings.journalTotalSleep,
-                    value: _summaryValue(strings, summary.totalSleep),
-                  ),
-                ),
-                SizedBox(
-                  width: cardWidth,
-                  child: _SummaryCard(
-                    label: strings.journalFeedingsCount,
-                    value: _countValue(summary.feedingsCount),
-                  ),
-                ),
-                SizedBox(
-                  width: cardWidth,
-                  child: _SummaryCard(
-                    label: strings.journalDiapersCount,
-                    value: _countValue(summary.diapersCount),
-                  ),
-                ),
-                SizedBox(
-                  width: cardWidth,
-                  child: _SummaryCard(
-                    label: strings.journalNotesCount,
-                    value: _countValue(summary.notesCount),
-                  ),
-                ),
-              ],
-            );
-          },
+        _CompactSummaryCard(
+          key: const ValueKey('journal-compact-summary-card'),
+          strings: strings,
+          summary: summary,
+          selectedDay: selectedDay,
+          now: now,
         ),
-        const SizedBox(height: AppSpacing.sm),
-        _LastMomentLine(
-          label: strings.journalLastSleep,
-          value: _lastEntryValue(
-            strings,
-            summary.lastSleep,
-            strings.journalNoEntryShort,
+        if (hasEntriesForSelectedDay) ...[
+          const SizedBox(height: AppSpacing.sm),
+          _LastMomentsSection(
+            key: const ValueKey('journal-last-moments-section'),
+            strings: strings,
+            summary: summary,
           ),
-        ),
-        _LastMomentLine(
-          label: strings.journalLastFeeding,
-          value: _lastEntryValue(
-            strings,
-            summary.lastFeeding,
-            strings.journalNoEntryShort,
-          ),
-        ),
-        _LastMomentLine(
-          label: strings.journalLastDiaper,
-          value: _lastEntryValue(
-            strings,
-            summary.lastDiaper,
-            strings.journalNoEntryShort,
-          ),
-        ),
-        _LastMomentLine(
-          label: strings.journalNotesToday,
-          value: _lastEntryValue(
-            strings,
-            summary.latestNote,
-            strings.journalNoEntryShort,
-          ),
-        ),
+        ],
       ],
     );
-  }
-
-  String _summaryValue(
-    AppStrings strings,
-    Duration duration,
-  ) {
-    if (duration == Duration.zero) {
-      return '0 min';
-    }
-    return strings.formatJournalDuration(duration);
-  }
-
-  String _countValue(int count) {
-    return count.toString();
-  }
-
-  String _lastEntryValue(
-      AppStrings strings, JournalEntry? entry, String emptyLabel) {
-    if (entry == null) {
-      return emptyLabel;
-    }
-    final time = entry.effectiveAt;
-    return strings.journalTimeLabel(time);
   }
 
   bool _isNotToday(DateTime selectedDay, DateTime now) {
@@ -472,14 +402,19 @@ class _DashboardSection extends StatelessWidget {
   }
 }
 
-class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
-    required this.label,
-    required this.value,
+class _CompactSummaryCard extends StatelessWidget {
+  const _CompactSummaryCard({
+    super.key,
+    required this.strings,
+    required this.summary,
+    required this.selectedDay,
+    required this.now,
   });
 
-  final String label;
-  final String value;
+  final AppStrings strings;
+  final JournalSummary summary;
+  final DateTime selectedDay;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -490,17 +425,60 @@ class _SummaryCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            label,
+            strings.journalDayLabel(selectedDay, now),
+            key: const ValueKey('journal-compact-summary-label'),
             style: AppTextStyles.caption,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: AppSpacing.xxs),
+          const SizedBox(height: AppSpacing.xs),
+          _SummaryRow(
+            label: strings.journalTotalSleep,
+            value: summary.totalSleep == Duration.zero
+                ? '0 min'
+                : strings.formatJournalDuration(summary.totalSleep),
+          ),
+          _SummaryRow(
+            label: strings.journalFeedingsCount,
+            value: summary.feedingsCount.toString(),
+          ),
+          _SummaryRow(
+            label: strings.journalDiapersCount,
+            value: summary.diapersCount.toString(),
+          ),
+          _SummaryRow(
+            label: strings.journalNotesCount,
+            value: summary.notesCount.toString(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SummaryRow extends StatelessWidget {
+  const _SummaryRow({
+    required this.label,
+    required this.value,
+  });
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.xxs),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(child: Text(label, style: AppTextStyles.body)),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             value,
-            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w800),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.textMuted,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),
@@ -520,25 +498,71 @@ class _LastMomentLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      padding: const EdgeInsets.only(top: AppSpacing.xxs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 2,
             child: Text(label, style: AppTextStyles.body),
           ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: AppTextStyles.body.copyWith(color: AppColors.textMuted),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            value,
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.textMuted,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _LastMomentsSection extends StatelessWidget {
+  const _LastMomentsSection({
+    super.key,
+    required this.strings,
+    required this.summary,
+  });
+
+  final AppStrings strings;
+  final JournalSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    return NurtlyCard(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(strings.journalLastMomentsTitle, style: AppTextStyles.caption),
+          const SizedBox(height: AppSpacing.xs),
+          _LastMomentLine(
+            label: strings.journalLastSleep,
+            value: _lastEntryValue(summary.lastSleep),
+          ),
+          _LastMomentLine(
+            label: strings.journalLastFeeding,
+            value: _lastEntryValue(summary.lastFeeding),
+          ),
+          _LastMomentLine(
+            label: strings.journalLastDiaper,
+            value: _lastEntryValue(summary.lastDiaper),
+          ),
+          _LastMomentLine(
+            label: strings.journalNotesToday,
+            value: _lastEntryValue(summary.latestNote),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _lastEntryValue(JournalEntry? entry) {
+    if (entry == null) {
+      return strings.journalNoEntryShort;
+    }
+    return strings.journalTimeLabel(entry.effectiveAt);
   }
 }
 
@@ -570,71 +594,121 @@ class _QuickActions extends StatelessWidget {
         Text(strings.journalQuickActionsTitle,
             style: AppTextStyles.sectionTitle),
         const SizedBox(height: AppSpacing.sm),
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            FilledButton.tonalIcon(
-              key: const ValueKey('journal-start-sleep'),
-              onPressed: hasActiveSleep
-                  ? null
-                  : () async {
-                      await onStartSleep();
-                    },
-              icon: const Icon(Icons.play_arrow),
-              label: Text(strings.journalStartSleep),
-            ),
-            TextButton(
-              onPressed: onAddSleep,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.tonal(
+            key: const ValueKey('journal-start-sleep'),
+            onPressed: hasActiveSleep
+                ? null
+                : () async {
+                    await onStartSleep();
+                  },
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
               ),
-              child: Text(strings.journalQuickActionSleep),
             ),
-            TextButton(
-              onPressed: onAddFeeding,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.play_arrow, size: 18),
+                const SizedBox(width: AppSpacing.xs),
+                Text(strings.journalStartSleep),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final chipWidth = (constraints.maxWidth - AppSpacing.xs) / 2;
+            return Column(
+              key: const ValueKey('journal-quick-action-chip-grid'),
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-add-sleep'),
+                        label: strings.journalQuickActionSleep,
+                        onPressed: onAddSleep,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-feeding'),
+                        label: strings.journalQuickActionFeeding,
+                        onPressed: onAddFeeding,
+                      ),
+                    ),
+                  ],
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(strings.journalQuickActionFeeding),
-            ),
-            TextButton(
-              onPressed: onAddDiaper,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
+                const SizedBox(height: AppSpacing.xs),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-diaper'),
+                        label: strings.journalQuickActionDiaper,
+                        onPressed: onAddDiaper,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    SizedBox(
+                      width: chipWidth,
+                      child: _JournalQuickActionChip(
+                        key: const ValueKey('journal-quick-action-note'),
+                        label: strings.journalQuickActionNote,
+                        onPressed: onAddNote,
+                      ),
+                    ),
+                  ],
                 ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(strings.journalQuickActionDiaper),
-            ),
-            TextButton(
-              onPressed: onAddNote,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: AppSpacing.xs,
-                ),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(strings.journalQuickActionNote),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ],
+    );
+  }
+}
+
+class _JournalQuickActionChip extends StatelessWidget {
+  const _JournalQuickActionChip({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        minimumSize: const Size.fromHeight(40),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

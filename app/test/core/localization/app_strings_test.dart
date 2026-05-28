@@ -198,9 +198,14 @@ void main() {
       'No care moments logged for this day yet.',
     );
     expect(AppStrings.english.journalNoEntryShort, 'No entry');
+    expect(AppStrings.english.journalYesterdayLabel, 'Yesterday');
+    expect(AppStrings.english.journalGoToToday, 'Go to today');
+    expect(AppStrings.english.journalChangeDay, 'Change day');
     expect(AppStrings.english.journalQuickActionsTitle, 'Quick actions');
     expect(AppStrings.english.journalStartSleep, 'Start sleep');
     expect(AppStrings.english.journalStopSleep, 'Stop sleep');
+    expect(AppStrings.english.journalLastMomentsTitle, 'Latest entries');
+    expect(AppStrings.english.journalAmountLabel, 'Amount / note, optional');
     expect(AppStrings.english.journalQuickActionSleep, 'Sleep');
     expect(AppStrings.english.journalQuickActionFeeding, 'Feeding');
     expect(AppStrings.english.journalQuickActionDiaper, 'Diaper');
@@ -218,9 +223,17 @@ void main() {
       'Dodaj pierwszy wpis, gdy będziesz mieć chwilę.',
     );
     expect(AppStrings.polish.journalNoEntryShort, 'Brak wpisu');
+    expect(AppStrings.polish.journalYesterdayLabel, 'Wczoraj');
+    expect(AppStrings.polish.journalGoToToday, 'Przejdź do dziś');
+    expect(AppStrings.polish.journalChangeDay, 'Zmie\u0144 dzie\u0144');
     expect(AppStrings.polish.journalQuickActionsTitle, 'Szybkie akcje');
     expect(AppStrings.polish.journalStartSleep, 'Rozpocznij sen');
     expect(AppStrings.polish.journalStopSleep, 'Zakończ sen');
+    expect(AppStrings.polish.journalLastMomentsTitle, 'Ostatnie wpisy');
+    expect(
+      AppStrings.polish.journalAmountLabel,
+      'Ilość / opis, opcjonalnie',
+    );
     expect(AppStrings.polish.journalQuickActionSleep, 'Sen');
     expect(AppStrings.polish.journalQuickActionFeeding, 'Karmienie');
     expect(AppStrings.polish.journalQuickActionDiaper, 'Pielucha');

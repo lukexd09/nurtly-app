@@ -6,12 +6,54 @@ import 'package:nurtly/core/navigation/app_shell.dart';
 import 'package:nurtly/core/localization/language_preference_store.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/play/play_screen.dart';
+import 'package:nurtly/main.dart';
 
 import 'test_fakes/fake_content_loader.dart';
 import 'test_fakes/fake_premium_entitlement_provider.dart';
 import 'test_fakes/fake_language_preference_store.dart';
 
 void main() {
+  testWidgets('AppShell bootstrap notifies parent about saved language',
+      (tester) async {
+    AppLanguage? capturedLanguage;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AppShell(
+          contentLoader: const FakeContentLoader(),
+          languagePreferenceStore: FakeLanguagePreferenceStore(
+            saved: AppLanguage.polish,
+          ),
+          premiumEntitlementProvider: FakePremiumEntitlementProvider(),
+          onLanguageChanged: (language) => capturedLanguage = language,
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
+
+    expect(capturedLanguage, AppLanguage.polish);
+  });
+
+  testWidgets('NurtlyApp wires MaterialApp localization for Polish',
+      (tester) async {
+    await tester.pumpWidget(
+      NurtlyApp(
+        languagePreferenceStore: FakeLanguagePreferenceStore(
+          saved: AppLanguage.polish,
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+
+    final materialApp = tester.widget<MaterialApp>(
+      find.byType(MaterialApp),
+    );
+    expect(materialApp.locale, const Locale('pl'));
+    expect(materialApp.localizationsDelegates, isNotEmpty);
+    expect(materialApp.supportedLocales, contains(const Locale('pl')));
+  });
+
   testWidgets('shows Home as the initial app shell tab', (tester) async {
     await _pumpNurtlyApp(tester);
 

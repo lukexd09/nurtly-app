@@ -28,8 +28,11 @@ class AppStrings {
     required this.journalSubtitle,
     required this.journalLocalOnlyHint,
     required this.journalTodayLabel,
+    required this.journalYesterdayLabel,
     required this.journalPreviousDay,
     required this.journalNextDay,
+    required this.journalGoToToday,
+    required this.journalChangeDay,
     required this.journalQuickActionsTitle,
     required this.journalEmptyStateTitle,
     required this.journalEmptyStateMessage,
@@ -56,6 +59,7 @@ class AppStrings {
     required this.journalFeedingsCount,
     required this.journalDiapersCount,
     required this.journalNotesCount,
+    required this.journalLastMomentsTitle,
     required this.journalNoSleepToday,
     required this.journalNoFeedingToday,
     required this.journalNoDiaperToday,
@@ -208,8 +212,11 @@ class AppStrings {
   final String journalSubtitle;
   final String journalLocalOnlyHint;
   final String journalTodayLabel;
+  final String journalYesterdayLabel;
   final String journalPreviousDay;
   final String journalNextDay;
+  final String journalGoToToday;
+  final String journalChangeDay;
   final String journalQuickActionsTitle;
   final String journalEmptyStateTitle;
   final String journalEmptyStateMessage;
@@ -236,6 +243,7 @@ class AppStrings {
   final String journalFeedingsCount;
   final String journalDiapersCount;
   final String journalNotesCount;
+  final String journalLastMomentsTitle;
   final String journalNoSleepToday;
   final String journalNoFeedingToday;
   final String journalNoDiaperToday;
@@ -390,8 +398,11 @@ class AppStrings {
     journalSubtitle: 'A calm log for today’s care moments.',
     journalLocalOnlyHint: 'Saved on this device only.',
     journalTodayLabel: 'Today',
+    journalYesterdayLabel: 'Yesterday',
     journalPreviousDay: 'Previous day',
     journalNextDay: 'Next day',
+    journalGoToToday: 'Go to today',
+    journalChangeDay: 'Change day',
     journalQuickActionsTitle: 'Quick actions',
     journalEmptyStateTitle: 'No care moments logged for this day yet.',
     journalEmptyStateMessage: 'Add the first entry when you are ready.',
@@ -418,6 +429,7 @@ class AppStrings {
     journalFeedingsCount: 'Feedings',
     journalDiapersCount: 'Diapers',
     journalNotesCount: 'Notes',
+    journalLastMomentsTitle: 'Latest entries',
     journalNoSleepToday: 'No sleep logged today.',
     journalNoFeedingToday: 'No feeding logged today.',
     journalNoDiaperToday: 'No diaper logged today.',
@@ -434,7 +446,7 @@ class AppStrings {
     journalSleepStartLabel: 'Start time',
     journalSleepEndLabel: 'End time',
     journalFeedingTypeLabel: 'Feeding type',
-    journalAmountLabel: 'Amount',
+    journalAmountLabel: 'Amount / note, optional',
     journalDiaperTypeLabel: 'Diaper type',
     journalNoteRequired: 'Please add a note first.',
     journalSleepInvalidRange: 'End time must be after start time.',
@@ -583,8 +595,11 @@ class AppStrings {
     journalSubtitle: 'Spokojny zapis dzisiejszych momentów opieki.',
     journalLocalOnlyHint: 'Zapisywane tylko na tym urządzeniu.',
     journalTodayLabel: 'Dzisiaj',
+    journalYesterdayLabel: 'Wczoraj',
     journalPreviousDay: 'Poprzedni dzień',
     journalNextDay: 'Następny dzień',
+    journalGoToToday: 'Przejdź do dziś',
+    journalChangeDay: 'Zmień dzień',
     journalQuickActionsTitle: 'Szybkie akcje',
     journalEmptyStateTitle:
         'Nie zapisano jeszcze momentów opieki dla tego dnia.',
@@ -612,6 +627,7 @@ class AppStrings {
     journalFeedingsCount: 'Karmienia',
     journalDiapersCount: 'Pieluchy',
     journalNotesCount: 'Notatki',
+    journalLastMomentsTitle: 'Ostatnie wpisy',
     journalNoSleepToday: 'Brak snu dzisiaj.',
     journalNoFeedingToday: 'Brak karmienia dzisiaj.',
     journalNoDiaperToday: 'Brak pieluchy dzisiaj.',
@@ -628,7 +644,7 @@ class AppStrings {
     journalSleepStartLabel: 'Godzina rozpoczęcia',
     journalSleepEndLabel: 'Godzina zakończenia',
     journalFeedingTypeLabel: 'Rodzaj karmienia',
-    journalAmountLabel: 'Ilość',
+    journalAmountLabel: 'Ilość / opis, opcjonalnie',
     journalDiaperTypeLabel: 'Rodzaj pieluchy',
     journalNoteRequired: 'Dodaj najpierw notatkę.',
     journalSleepInvalidRange:
@@ -898,10 +914,7 @@ class AppStrings {
       return journalTodayLabel;
     }
     if (day == yesterday) {
-      return switch (language) {
-        AppLanguage.english => 'Yesterday',
-        AppLanguage.polish => 'Wczoraj',
-      };
+      return journalYesterdayLabel;
     }
     if (day == tomorrow) {
       return switch (language) {
@@ -909,7 +922,12 @@ class AppStrings {
         AppLanguage.polish => 'Jutro',
       };
     }
-    return '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+    return switch (language) {
+      AppLanguage.english =>
+        '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
+      AppLanguage.polish =>
+        '${day.day.toString().padLeft(2, '0')}.${day.month.toString().padLeft(2, '0')}.${day.year.toString().padLeft(4, '0')}',
+    };
   }
 
   String journalTimeLabel(DateTime dateTime) {
