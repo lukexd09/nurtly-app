@@ -49,12 +49,17 @@ flutter run
 
 ## Verify
 
-From the repo root:
+From `app/`:
 
 ```powershell
 flutter pub get
 dart format .
 flutter analyze
 flutter test
+```
+
+From the repo root:
+
+```powershell
 powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
 ```
