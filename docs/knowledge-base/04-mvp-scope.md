@@ -241,6 +241,21 @@ The MVP should feel:
 
 It is better to launch fewer features with strong coherence than many unfinished modules.
 
+## Current MVP Status
+
+This document mixes confirmed MVP direction with older scope assumptions.
+
+Current implementation status to keep in mind:
+
+- Journal MVP is now implemented with sleep, feeding, diaper, and note entries.
+- Journal is local-only in the current MVP.
+- Journal includes selected day context, edit/delete, sleep timer, and custom date/time pickers.
+- Play and Sounds are implemented modules in the app.
+- Monetization in the current MVP is monthly/yearly Premium, not lifetime access.
+- Runtime content for the MVP is bundled under `app/assets/content`.
+
+Treat older "Potential" lists below as scope history or deferred ideas when they conflict with the codebase.
+
 ## Store Readiness
 
 MVP must consider:

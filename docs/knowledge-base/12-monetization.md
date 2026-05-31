@@ -10,6 +10,16 @@ This document captures monetization hypotheses for Nurtly.
 
 No monetization model should be treated as final until validated.
 
+## Current MVP Status
+
+The current MVP implementation is more specific than the older options below:
+
+- Premium is implemented as monthly and yearly subscriptions.
+- Lifetime / one-time access is not part of the current MVP and should be treated as deferred unless explicitly reintroduced.
+- Free users may see ads.
+- Premium users should not see ads.
+- Billing and ad platform release configuration still needs final Play Console-side confirmation.
+
 ## Monetization Philosophy
 
 Nurtly should monetize by providing real value, not by exploiting parental anxiety.

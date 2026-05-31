@@ -10,6 +10,20 @@ This document describes the current architectural assumptions for Nurtly.
 
 It is not a final technical specification. It is a working architecture context for future implementation, AI agents, technical planning, and RAG.
 
+## Current MVP Status
+
+This document contains architectural assumptions as well as the current direction. For the shipped MVP, keep these facts in mind:
+
+- the Flutter app lives in `app/`
+- the app shell and navigation are implemented in code, not just planned
+- runtime content is bundled under `app/assets/content`
+- Journal is local-only and does not sync to a backend in the current MVP
+- Journal supports sleep, feeding, diaper, and note entries plus edit/delete, sleep timer, selected day, and custom pickers
+- Premium uses monthly and yearly entitlement paths
+- lifetime / one-time access is not part of the current MVP
+- free users may see ads, while Premium should not
+- release, QA, and legal docs under `docs/release`, `docs/qa`, and `docs/legal` are part of the current shipping flow
+
 ## Architectural Philosophy
 
 Nurtly should be simple enough to launch, but structured enough to grow.

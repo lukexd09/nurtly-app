@@ -10,6 +10,17 @@ This document captures privacy and compliance assumptions for Nurtly.
 
 It is not legal advice. It should be reviewed before production launch, especially before collecting personal data, child-related data, analytics, account data, or payments.
 
+## Current MVP Status
+
+For the current MVP, these implementation facts matter:
+
+- Journal data is stored locally in the app today.
+- Journal notes are not sent to a backend or cloud service in the current implementation.
+- Premium uses Google Play Billing with monthly and yearly entitlement paths.
+- Ads are configured for free users with Premium no-ads behavior.
+- The final production ad platform and billing setup still needs release-side verification before launch.
+- Runtime content is bundled locally under `app/assets/content`.
+
 ## Core Privacy Position
 
 Nurtly should be privacy-conscious from the beginning.
