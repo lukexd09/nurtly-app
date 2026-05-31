@@ -10,6 +10,14 @@ This file is a compact context document for AI agents, coding assistants, RAG sy
 
 It should provide enough context to prevent agents from treating the project as a generic parenting app.
 
+## Current MVP Snapshot
+
+- MVP-1 Journal is completed.
+- MVP-2 release readiness docs are in place.
+- Google Play account setup is still blocked outside the repo, including DUNS-related steps.
+- Current release blockers are external Play Console setup, billing products, production ad platform IDs, privacy policy publication, real screenshots/assets, and manual QA on a real device.
+- Do not propose new product features before release unless explicitly requested.
+
 ## Project Name
 
 Nurtly

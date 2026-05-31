@@ -10,6 +10,21 @@ This document lists known and potential Nurtly features.
 
 It is not a commitment to build everything. It is a structured catalog for planning, prioritization, RAG, and AI-assisted product work.
 
+## Current MVP Status
+
+This catalog mixes implemented features with future ideas.
+
+For the current MVP, keep these corrections in mind:
+
+- Journal is implemented with sleep, feeding, diaper, and note entries.
+- Journal editing, deleting, sleep timer, selected day context, and custom pickers are implemented.
+- Journal data is local-only in the current implementation.
+- Play and Sounds are implemented modules.
+- Monetization is monthly/yearly Premium with free-user ads and Premium no-ads behavior.
+- Lifetime / one-time access is deferred and should be treated as post-MVP unless explicitly reintroduced.
+- Health, mood, observation, search, export, AI summaries, and AI activity suggestions remain deferred or future unless implemented elsewhere.
+- Runtime content for the MVP is bundled under `app/assets/content`.
+
 ## Feature Status Definitions
 
 - MVP Candidate: likely useful for first release.
