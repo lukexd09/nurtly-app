@@ -57,8 +57,9 @@ The repository includes working architecture notes for future AI-assisted delive
 
 - [Nurtly AI Delivery Workflow](ai-delivery-workflow.md)
 - [Nurtly AI Model Routing](model-routing.md)
+- [Nurtly AI Model Usage Matrix](model-usage-matrix.md)
 
-These documents describe how broad epics can be converted into focused tasks, how risk should be assessed, and where local models such as Qwen3 8B may be used safely versus where stronger coding/reasoning models or human approval are required.
+These documents describe how broad epics can be converted into focused tasks, how risk should be assessed, where local models such as Qwen3 8B may be used safely, and where stronger coding/reasoning models or human approval are required.
 
 ## Release and QA
 
