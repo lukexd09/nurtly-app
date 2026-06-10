@@ -145,10 +145,14 @@ class AppStrings {
     required this.privacyTitle,
     required this.privacySubtitle,
     required this.currentMvpBehavior,
+    required this.parentFirstAudience,
+    required this.childNameNotRequired,
+    required this.birthdateNotRequired,
     required this.noAccount,
     required this.noJournalCloudSync,
     required this.noCloudSync,
     required this.noAnalytics,
+    required this.analyticsScopeMayInclude,
     required this.noAds,
     required this.premiumRemovesAdsInFreePlan,
     required this.freePlanMayShowAdsInPassiveSlots,
@@ -339,10 +343,14 @@ class AppStrings {
   final String privacyTitle;
   final String privacySubtitle;
   final String currentMvpBehavior;
+  final String parentFirstAudience;
+  final String childNameNotRequired;
+  final String birthdateNotRequired;
   final String noAccount;
   final String noJournalCloudSync;
   final String noCloudSync;
   final String noAnalytics;
+  final String analyticsScopeMayInclude;
   final String noAds;
   final String premiumRemovesAdsInFreePlan;
   final String freePlanMayShowAdsInPassiveSlots;
@@ -537,10 +545,17 @@ class AppStrings {
     privacyTitle: 'Privacy & Data',
     privacySubtitle: 'What Nurtly does with data in this MVP.',
     currentMvpBehavior: 'Current MVP behavior',
+    parentFirstAudience:
+        'Nurtly is for parents and caregivers, not for children.',
+    childNameNotRequired: 'A child name is not required to use the MVP.',
+    birthdateNotRequired:
+        'An exact child birthdate is not required in the MVP.',
     noAccount: 'No account is used.',
     noJournalCloudSync: 'Journal notes stay on this device only.',
     noCloudSync: 'No cloud sync is currently enabled.',
     noAnalytics: 'No analytics are currently enabled.',
+    analyticsScopeMayInclude:
+        'If analytics is added later, it should stay limited to app quality, module usage, retention, ads, and errors.',
     noAds: 'No ads are currently enabled.',
     premiumRemovesAdsInFreePlan: 'Premium removes ads.',
     freePlanMayShowAdsInPassiveSlots:
@@ -747,11 +762,19 @@ class AppStrings {
     privacyTitle: 'Prywatność i dane',
     privacySubtitle: 'Jak Nurtly używa danych w tym MVP.',
     currentMvpBehavior: 'Obecne działanie MVP',
+    parentFirstAudience:
+        'Nurtly jest dla rodziców i opiekunów, nie dla dzieci.',
+    childNameNotRequired:
+        'Imię dziecka nie jest wymagane do korzystania z MVP.',
+    birthdateNotRequired:
+        'Dokładna data urodzenia dziecka nie jest wymagana w MVP.',
     noAccount: 'Nie używamy konta.',
     noJournalCloudSync:
         'Notatki z dziennika pozostają tylko na tym urządzeniu.',
     noCloudSync: 'Obecnie nie ma synchronizacji z chmurą.',
     noAnalytics: 'Obecnie nie ma analityki.',
+    analyticsScopeMayInclude:
+        'Jeśli analityka zostanie dodana później, powinna ograniczać się do jakości aplikacji, użycia modułów, retencji, reklam i błędów.',
     noAds: 'Obecnie nie ma reklam.',
     premiumRemovesAdsInFreePlan: 'Premium usuwa reklamy.',
     freePlanMayShowAdsInPassiveSlots:

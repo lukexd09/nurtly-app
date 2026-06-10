@@ -41,6 +41,9 @@ class PrivacyDataScreen extends StatelessWidget {
             DetailSection(
               title: strings.currentMvpBehavior,
               children: [
+                _PrivacyLine(strings.parentFirstAudience),
+                _PrivacyLine(strings.childNameNotRequired),
+                _PrivacyLine(strings.birthdateNotRequired),
                 _PrivacyLine(strings.noAccount),
                 _PrivacyLine(
                   strings.noJournalCloudSync,
@@ -48,6 +51,7 @@ class PrivacyDataScreen extends StatelessWidget {
                 _PrivacyLine(strings.premiumRemovesAdsInFreePlan),
                 _PrivacyLine(strings.noCloudSync),
                 _PrivacyLine(strings.noAnalytics),
+                _PrivacyLine(strings.analyticsScopeMayInclude),
                 _PrivacyLine(strings.freePlanMayShowAdsInPassiveSlots),
                 _PrivacyLine(strings.purchasesGoThroughGooglePlay),
                 _PrivacyLine(strings.journalContentNotUsedForAds),

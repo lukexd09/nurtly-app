@@ -11,10 +11,28 @@ void main() {
     );
 
     expect(find.text('Privacy & Data'), findsOneWidget);
+    expect(
+      find.text('- Nurtly is for parents and caregivers, not for children.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('- A child name is not required to use the MVP.'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('- An exact child birthdate is not required in the MVP.'),
+      findsOneWidget,
+    );
     expect(find.text('- No account is used.'), findsOneWidget);
     expect(find.text('- Premium removes ads.'), findsOneWidget);
     expect(find.text('- No cloud sync is currently enabled.'), findsOneWidget);
     expect(find.text('- No analytics are currently enabled.'), findsOneWidget);
+    expect(
+      find.text(
+        '- If analytics is added later, it should stay limited to app quality, module usage, retention, ads, and errors.',
+      ),
+      findsOneWidget,
+    );
     expect(
       find.text('- Free plan may show ads in passive list slots.'),
       findsOneWidget,

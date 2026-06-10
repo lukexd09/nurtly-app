@@ -10,7 +10,7 @@ This document is a draft intended to prepare the privacy policy publication for 
 
 ## 1. Who we are
 
-Nurtly is an app for parents and caregivers. It helps with:
+Nurtly is an app for parents and caregivers, not for children. It helps with:
 
 - calm play and activity ideas,
 - soothing sounds,
@@ -22,7 +22,9 @@ Depending on the features used, the app may process:
 
 - data entered by the user in the journal, including notes and care events,
 - subscription and Premium entitlement data,
-- technical and device information if needed for ads, billing, or diagnostics in the final production setup.
+- technical and device information if needed for ads, billing, analytics, or diagnostics in the final production setup.
+
+The MVP does not require a child name or an exact child birthdate to use the app.
 
 ## 3. Journal
 
@@ -30,7 +32,8 @@ The Journal is local-only in the current implementation.
 
 - journal entries are stored on the device,
 - journal notes are not sent to a backend or cloud in the current implementation,
-- journal data is used to show care history on that device.
+- journal data is used to show care history on that device,
+- journal note content is not intended to be used for ads or child profiling.
 
 The user can uninstall the app to remove local data, subject to any device or account backup behavior provided by the operating system or platform services.
 
@@ -56,7 +59,8 @@ We use data to:
 - store the local care journal,
 - manage Premium subscriptions,
 - show ads to free users,
-- support basic diagnostics and reliability if enabled in the final release.
+- support basic diagnostics and reliability if enabled in the final release,
+- measure app quality, module usage, retention, ads, and errors if analytics is enabled in the final release.
 
 ## 7. What we do not do
 
@@ -66,7 +70,8 @@ In the current implementation, the app is not intended to:
 - diagnose conditions,
 - coach sleep,
 - score child development,
-- send the journal to the cloud.
+- send the journal to the cloud,
+- analyze journal content for advertising or child profiling.
 
 ## 8. Data recipients
 

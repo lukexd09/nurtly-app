@@ -10,7 +10,7 @@ Niniejszy dokument jest wersją roboczą przeznaczoną do przygotowania publikac
 
 ## 1. Kim jesteśmy
 
-Nurtly to aplikacja dla rodziców i opiekunów. Pomaga w spokojnym korzystaniu z:
+Nurtly to aplikacja dla rodziców i opiekunów, nie dla dzieci. Pomaga w spokojnym korzystaniu z:
 
 - pomysłów na zabawy i aktywności,
 - kojących dźwięków,
@@ -22,7 +22,9 @@ W zależności od używanych funkcji aplikacja może przetwarzać:
 
 - dane wpisywane przez użytkownika w dzienniku, w tym notatki i zdarzenia opieki,
 - dane dotyczące subskrypcji i statusu Premium,
-- dane techniczne i informacje o urządzeniu, jeśli są potrzebne do reklam, płatności lub diagnostyki w finalnej konfiguracji produkcyjnej.
+- dane techniczne i informacje o urządzeniu, jeśli są potrzebne do reklam, płatności, analityki lub diagnostyki w finalnej konfiguracji produkcyjnej.
+
+W MVP nie jest wymagane imię dziecka ani dokładna data urodzenia dziecka.
 
 ## 3. Dziennik
 
@@ -30,7 +32,8 @@ Dziennik w obecnej implementacji jest lokalny.
 
 - wpisy dziennika są zapisywane na urządzeniu,
 - notatki dziennika nie są wysyłane do backendu ani chmury w obecnej implementacji,
-- dane dziennika służą do odczytu historii opieki na tym urządzeniu.
+- dane dziennika służą do odczytu historii opieki na tym urządzeniu,
+- treść notatek dziennika nie jest przeznaczona do reklam ani profilowania dziecka.
 
 Użytkownik może usunąć aplikację, aby usunąć lokalne dane, z zastrzeżeniem, że kopie zapasowe systemu lub usług platformy mogą nadal zawierać dane zgodnie z ustawieniami urządzenia i konta.
 
@@ -56,7 +59,8 @@ Dane wykorzystujemy, aby:
 - przechowywać lokalny dziennik opieki,
 - obsługiwać subskrypcje Premium,
 - wyświetlać reklamy użytkownikom darmowym,
-- utrzymywać podstawową diagnostykę i niezawodność aplikacji, jeśli taka funkcja jest włączona w finalnej wersji.
+- utrzymywać podstawową diagnostykę i niezawodność aplikacji, jeśli taka funkcja jest włączona w finalnej wersji,
+- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w finalnej wersji.
 
 ## 7. Czego nie robimy
 
@@ -66,7 +70,8 @@ W obecnej implementacji aplikacja nie jest przeznaczona do:
 - diagnozowania,
 - coachingu snu,
 - oceniania rozwoju dziecka,
-- wysyłania dziennika do chmury.
+- wysyłania dziennika do chmury,
+- analizowania treści dziennika do reklam lub profilowania dziecka.
 
 ## 8. Odbiorcy danych
 
