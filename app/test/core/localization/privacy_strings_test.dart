@@ -28,19 +28,19 @@ void main() {
 
     expect(
       strings.parentFirstAudience,
-      'Nurtly jest dla rodziców i opiekunów, nie dla dzieci.',
+      'Nurtly jest dla rodzicĂłw i opiekunĂłw, nie dla dzieci.',
     );
     expect(
       strings.childNameNotRequired,
-      'Imię dziecka nie jest wymagane do korzystania z MVP.',
+      'ImiÄ™ dziecka nie jest wymagane do korzystania z MVP.',
     );
     expect(
       strings.birthdateNotRequired,
-      'Dokładna data urodzenia dziecka nie jest wymagana w MVP.',
+      'DokĹ‚adna data urodzenia dziecka nie jest wymagana w MVP.',
     );
     expect(
       strings.analyticsScopeMayInclude,
-      'Jeśli analityka zostanie dodana później, powinna ograniczać się do jakości aplikacji, użycia modułów, retencji, reklam i błędów.',
+      'JeĹ›li analityka zostanie dodana pĂłĹşniej, powinna ograniczaÄ‡ siÄ™ do jakoĹ›ci aplikacji, uĹĽycia moduĹ‚Ăłw, retencji, reklam i bĹ‚Ä™dĂłw.',
     );
   });
 }
