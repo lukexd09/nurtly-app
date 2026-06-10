@@ -10,6 +10,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
 - [Monetization and ads config](monetization_ads_config.md)
+- [Sounds MVP behavior](sounds_mvp_behavior.md)
 - [Release smoke test](../qa/release_smoke_test.md)
 - [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
 - [Privacy policy drafts](../legal/README.md)
