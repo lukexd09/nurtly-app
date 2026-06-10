@@ -23,10 +23,18 @@ Use this checklist before closed testing or production rollout. Keep notes short
 
 ## Sounds
 
+- [ ] Test: Open Sounds from the shell. Expected result: The Sounds tab opens without errors. Notes:
 - [ ] Test: Browse sounds. Expected result: Sound list loads and artwork/text render correctly. Notes:
-- [ ] Test: Start and stop a sound. Expected result: Playback behaves predictably. Notes:
-- [ ] Test: Start a second sound while one is active. Expected result: Only one sound remains active. Notes:
-- [ ] Test: Use timer and fade-out controls if present. Expected result: Controls work and do not break playback. Notes:
+- [ ] Test: Start a sound. Expected result: Playback starts from the primary control. Notes:
+- [ ] Test: Pause and resume a sound. Expected result: Playback toggles predictably from the primary control. Notes:
+- [ ] Test: Stop behavior. Expected result: There is no dedicated stop control in the current MVP and the screen behavior matches the release contract. Notes:
+- [ ] Test: Start a second sound while one is active. Expected result: Leaving the first sound detail and opening a second sound works cleanly. Notes:
+- [ ] Test: Use timer controls. Expected result: 15, 30, 60, and continuous play states behave as documented. Notes:
+- [ ] Test: Fade-out behavior. Expected result: Fade-out occurs near the end of a timed session and does not break playback. Notes:
+- [ ] Test: Loop / continuous play. Expected result: Continuous play keeps looping in the current MVP behavior. Notes:
+- [ ] Test: Loading and error states. Expected result: Calm loading and error states are visible when content or playback fails. Notes:
+- [ ] Test: Audio license metadata expectations. Expected result: Bundled sound source/license provenance is documented or marked `Needs owner confirmation`. Notes:
+- [ ] Test: Background audio expectation. Expected result: Background audio is explicitly treated as post-MVP and is not expected in release QA. Notes:
 - [ ] Test: Premium sounds. Expected result: Premium gating behaves correctly. Notes:
 
 ## Journal
@@ -73,4 +81,3 @@ Use this checklist before closed testing or production rollout. Keep notes short
 - [ ] Test: Verify listing assets are ready. Expected result: Screenshots, icon, feature graphic, and descriptions are complete. Notes:
 - [ ] Test: Verify Data Safety answers. Expected result: Answers match actual app behavior. Notes:
 - [ ] Test: Verify privacy policy URL. Expected result: Public privacy policy is reachable. Notes:
-
