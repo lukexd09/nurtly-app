@@ -13,9 +13,10 @@ Use this page to collect the information needed for the Google Play Data Safety 
 - Journal is local-only.
 - Journal data is not synced to a backend or cloud service.
 - Journal note content is not sent to a backend in the current implementation.
+- The MVP does not require a child name or exact child birthdate.
 - Billing is present for subscriptions.
 - Ads are planned and partially wired through the app.
-- Analytics status should be verified before final answers are submitted.
+- Analytics is not currently enabled in the app. If it is added later, scope should stay limited to app quality, module usage, retention, ads, and errors.
 
 ## Data categories to review
 
@@ -25,6 +26,7 @@ Use this page to collect the information needed for the Google Play Data Safety 
 - Advertising ID
 - Diagnostics or crash logs
 - User-provided content, including Journal data
+- Child profile fields, if any are added later
 
 ## Questions to answer before submission
 
@@ -39,7 +41,7 @@ Use this page to collect the information needed for the Google Play Data Safety 
 ## TODO placeholders to finalize later
 
 - [ ] Final ad behavior from the ads setup.
-- [ ] Final analytics behavior.
+- [ ] Final analytics behavior. Needs owner confirmation before release if analytics is enabled.
 - [ ] Final privacy policy URL.
 - [ ] Final Billing data disclosure.
 

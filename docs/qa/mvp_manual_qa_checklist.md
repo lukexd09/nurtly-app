@@ -54,8 +54,12 @@ Use this checklist before closed testing or production rollout. Keep notes short
 
 ## Privacy / Data
 
-- [ ] Test: Open Privacy & Data. Expected result: Local-only and privacy copy is visible. Notes:
+- [ ] Test: Open Privacy & Data in English. Expected result: Parent-first, local-only, ads, and analytics wording is visible. Notes:
+- [ ] Test: Open Privacy & Data in Polish. Expected result: Polish copy matches the MVP behavior. Notes:
 - [ ] Test: Verify Journal content stays local. Expected result: No backend or sync behavior appears in the flow. Notes:
+- [ ] Test: Verify child name and exact birthdate are not required. Expected result: The screen does not imply those fields are required. Notes:
+- [ ] Test: Verify ads wording. Expected result: Free-plan ad wording is calm and non-manipulative. Notes:
+- [ ] Test: Verify analytics wording. Expected result: Any analytics wording stays limited to quality, module usage, retention, ads, and errors. Notes:
 - [ ] Test: Check settings persistence. Expected result: Language and user preferences persist. Notes:
 
 ## Release build / install

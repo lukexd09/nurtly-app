@@ -64,6 +64,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 - [ ] Privacy policy URL is published.
 - [ ] Data Safety is completed.
+- [ ] Privacy & Data screen in the app matches the published policy.
 - [ ] Content rating is completed.
 - [ ] Target audience and families policy are checked.
 - [ ] Ads disclosure is checked.
@@ -81,5 +82,6 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Ads behave correctly.
 - [ ] Settings work.
 - [ ] Privacy screen works.
+- [ ] Privacy & Data wording is clear in EN and PL.
 - [ ] Offline and basic fallback behavior is acceptable.
 - [ ] Release build smoke test passed on a real device.

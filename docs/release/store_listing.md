@@ -27,6 +27,7 @@ Nurtly is a calm, parent-facing support app.
 - [ ] Full description is ready.
 - [ ] Release notes are ready.
 - [ ] Privacy policy URL is ready.
+- [ ] Privacy / local-only reassurance matches the in-app Privacy & Data screen.
 
 ## Copy principles
 
@@ -60,6 +61,7 @@ Nurtly is a calm, parent-facing support app.
 - Journal / daily logging.
 - Premium / optional upgrade.
 - Privacy / local-only reassurance, if useful.
+- Parent-first privacy reassurance, not child-facing wording.
 
 ## Notes
 
