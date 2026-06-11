@@ -16,6 +16,7 @@ Use this page to collect the information needed for the Google Play Data Safety 
 - The MVP does not require a child name or exact child birthdate.
 - Billing is present for subscriptions.
 - Ads are planned and partially wired through the app.
+- MVP ad placement is intended to stay banner-only in passive browse areas, with no ads in Journal edit/create, active audio playback, Privacy / Settings, or startup flows.
 - Analytics is not currently enabled in the app. If it is added later, scope should stay limited to app quality, module usage, retention, ads, and errors.
 
 ## Data categories to review
@@ -41,6 +42,7 @@ Use this page to collect the information needed for the Google Play Data Safety 
 ## TODO placeholders to finalize later
 
 - [ ] Final ad behavior from the ads setup.
+- [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
 - [ ] Final analytics behavior. Needs owner confirmation before release if analytics is enabled.
 - [ ] Final privacy policy URL.
 - [ ] Final Billing data disclosure.

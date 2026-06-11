@@ -49,6 +49,8 @@ The app may show ads to free users.
 
 Premium users should not see ads.
 
+In the MVP, ads are intended to stay passive and banner-style in browse areas only, and not interrupt Journal entry creation or editing, active audio playback, Privacy or Settings flows, or startup moments.
+
 In the final production configuration, device or app information needed for ads may be processed according to Google configuration and device settings.
 
 ## 6. Why we process data
@@ -101,4 +103,3 @@ For privacy questions, contact us at: [CONTACT_EMAIL_TBD]
 - The final text must be reviewed before publication.
 - Data Safety answers must match the final production behavior of the app.
 - Final ad and billing behavior must be verified before publication.
-
