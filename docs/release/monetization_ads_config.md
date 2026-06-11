@@ -19,6 +19,8 @@ This note summarizes the current release-readiness state for monetization and ad
 - Ads are wired through the app.
 - Current Android manifest uses the Google test ads app id for development.
 - Banner ads are the current ad format.
+- The committed banner ad unit IDs use Google test values for development and closed-test validation.
+- Production app and ad unit IDs should be delivered through a secure release process before public release and should not be committed as sensitive release values.
 - Premium users should not load or see ads.
 
 ## 2. Required Google Play Console setup
