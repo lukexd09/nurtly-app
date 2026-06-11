@@ -11,6 +11,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Store listing preparation](store_listing.md)
 - [Monetization and ads config](monetization_ads_config.md)
 - [MVP ad placement contract](ads_mvp_behavior.md)
+- [MVP analytics event taxonomy](analytics_mvp_behavior.md)
 - [Sounds MVP behavior](sounds_mvp_behavior.md)
 - [Release smoke test](../qa/release_smoke_test.md)
 - [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)

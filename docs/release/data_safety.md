@@ -17,7 +17,9 @@ Use this page to collect the information needed for the Google Play Data Safety 
 - Billing is present for subscriptions.
 - Ads are planned and partially wired through the app.
 - MVP ad placement is currently planned to stay banner-only in passive browse areas, with no ads in Journal edit/create, active audio playback, Privacy / Settings, or startup flows. This is pending owner confirmation before it is treated as the final production behavior.
-- Analytics is not currently enabled in the app. If it is added later, scope should stay limited to app quality, module usage, retention, ads, and errors.
+- Analytics is not currently enabled in the app.
+- If analytics is added later, the proposed MVP scope is limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes.
+- Journal note content, child name, exact birthdate, health data, child profiling, precise location, and stable identifiers are out of scope.
 
 ## Data categories to review
 
@@ -43,7 +45,8 @@ Use this page to collect the information needed for the Google Play Data Safety 
 
 - [ ] Final ad behavior from the ads setup. Needs owner confirmation.
 - [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
-- [ ] Final analytics behavior. Needs owner confirmation before release if analytics is enabled.
+- [ ] Final analytics provider, SDK, and consent decisions. Needs owner confirmation.
+- [ ] Final analytics taxonomy and retention window. Needs owner confirmation.
 - [ ] Final privacy policy URL.
 - [ ] Final Billing data disclosure.
 

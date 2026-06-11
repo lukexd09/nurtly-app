@@ -39,6 +39,7 @@ Nurtly is a calm, parent-facing support app.
 - Clear Premium/free distinction.
 - Free users may see passive banner ads only if that MVP contract is confirmed.
 - Premium users do not see ads.
+- If analytics is added later, it should stay limited to app quality, module usage, retention, ads, and errors without Journal or child-related data.
 
 ## Placeholder fields
 

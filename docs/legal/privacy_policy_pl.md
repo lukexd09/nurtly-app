@@ -24,6 +24,8 @@ W zależności od używanych funkcji aplikacja może przetwarzać:
 - dane dotyczące subskrypcji i statusu Premium,
 - dane techniczne i informacje o urządzeniu, jeśli są potrzebne do reklam, płatności, analityki lub diagnostyki w finalnej konfiguracji produkcyjnej.
 
+Jeśli analityka zostanie włączona później, planowany zakres MVP powinien pozostać ograniczony do języka aplikacji, ustawienia regionalnego urządzenia, przybliżonego kraju/regionu, wersji aplikacji, użycia modułów, retencji, zdarzeń reklamowych oraz błędów/awarii. Nie powinien obejmować treści notatek dziennika, imienia dziecka, dokładnej daty urodzenia, danych zdrowotnych ani profilowania dziecka.
+
 W MVP nie jest wymagane imię dziecka ani dokładna data urodzenia dziecka.
 
 ## 3. Dziennik
@@ -62,7 +64,8 @@ Dane wykorzystujemy, aby:
 - obsługiwać subskrypcje Premium,
 - wyświetlać reklamy użytkownikom darmowym,
 - utrzymywać podstawową diagnostykę i niezawodność aplikacji, jeśli taka funkcja jest włączona w finalnej wersji,
-- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w finalnej wersji.
+- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w finalnej wersji,
+- utrzymać przyszłą analitykę w ścisłym zakresie MVP opisanym powyżej.
 
 ## 7. Czego nie robimy
 
@@ -82,6 +85,8 @@ W zależności od finalnej konfiguracji produkcyjnej dane mogą być przetwarzan
 - Google Play Billing,
 - usługi reklamowe,
 - usługi techniczne potrzebne do działania aplikacji.
+
+Jeśli później zostanie dodany dostawca analityki, jego użycie musi zostać zweryfikowane przed publikacją i oznaczone jako `Needs owner confirmation`, dopóki decyzje o SDK, zgodzie i retencji nie będą finalne.
 
 Dokładny zakres musi odpowiadać rzeczywistemu zachowaniu opublikowanej wersji aplikacji i ustawieniom Google Play Console.
 
