@@ -81,7 +81,18 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       ),
     );
 
-    await ad.load();
+    try {
+      await ad.load();
+    } catch (_) {
+      ad.dispose();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _bannerAd = null;
+        _isLoaded = false;
+      });
+    }
   }
 
   @override

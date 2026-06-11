@@ -55,12 +55,15 @@ Use this checklist before closed testing or production rollout. Keep notes short
 
 ## Ads
 
+- [ ] Test: Open Home as a free user. Expected result: A passive banner appears only in the allowed browse area. Notes:
+- [ ] Test: Open Home as a Premium user. Expected result: No ad placeholder is shown. Notes:
 - [ ] Test: Use the app as a free user. Expected result: Only passive banner-style ads appear in the allowed browse areas. Notes:
 - [ ] Test: Use the app as a Premium user. Expected result: Ads are not shown anywhere. Notes:
 - [ ] Test: Open Journal while ads are enabled. Expected result: No ads appear during create or edit flows. Notes:
 - [ ] Test: Play a sound while ads are enabled. Expected result: No ads appear during active audio playback. Notes:
 - [ ] Test: Open Settings or Privacy & Data while ads are enabled. Expected result: No ads appear in sensitive settings or legal flows. Notes:
 - [ ] Test: Restart the app from a cold start. Expected result: No ad appears in the startup path before the main shell is stable. Notes:
+- [ ] Test: Simulate ad load failure. Expected result: The screen stays usable and the ad area collapses gracefully without a crash. Notes:
 
 ## Privacy / Data
 
