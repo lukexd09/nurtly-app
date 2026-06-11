@@ -72,6 +72,14 @@ Use this checklist before closed testing or production rollout. Keep notes short
 - [ ] Test: Verify analytics wording. Expected result: Any analytics wording stays limited to quality, module usage, retention, ads, and errors. Notes:
 - [ ] Test: Check settings persistence. Expected result: Language and user preferences persist. Notes:
 
+## Analytics
+
+- [ ] Test: Review the analytics release note. Expected result: The allowed categories are limited to language, locale, approximate region, app version, module usage, retention, ad events, and errors/crashes. Notes:
+- [ ] Test: Verify forbidden data boundaries. Expected result: Journal note content, child name, exact birthdate, health data, and child profiling are explicitly out of scope. Notes:
+- [ ] Test: Review app start and module taxonomy. Expected result: Only session basics and module open events are described for Play, Sounds, Journal, and Settings. Notes:
+- [ ] Test: Review ad analytics wording. Expected result: Ad events stay aligned with the proposed MVP ad contract and do not include Journal or child payloads. Notes:
+- [ ] Test: Review provider decisions. Expected result: Provider, SDK, consent, and retention-window choices are marked `Needs owner confirmation` if not yet final. Notes:
+
 ## Release build / install
 
 - [ ] Test: Build and install the release artifact. Expected result: App installs and launches from the release build. Notes:
