@@ -5,6 +5,8 @@ Use this checklist on a real device or emulator before uploading a release build
 ## Test context
 
 - [ ] Build type:
+- [ ] Track:
+- [ ] Tester group:
 - [ ] Device:
 - [ ] OS version:
 - [ ] App version:
@@ -18,6 +20,8 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] App launches without crashing.
 - [ ] Bottom navigation is visible.
 - [ ] No debug-only UI is visible.
+- [ ] Release package name and version match the closed-testing gate.
+- [ ] No analytics provider UI or consent flow appears on launch.
 
 ## Localization
 
@@ -36,6 +40,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Activity detail opens.
 - [ ] Ad placement does not break layout.
 - [ ] Premium gating behaves as expected.
+- [ ] No interstitial or rewarded ad surfaces appear.
 
 ## Sounds
 
@@ -48,6 +53,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Loop behavior works if present.
 - [ ] Ads do not interrupt active playback.
 - [ ] Premium gating behaves as expected.
+- [ ] Sounds behavior matches the release contract document.
 
 ## Journal
 
@@ -64,6 +70,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Each entry type can be deleted.
 - [ ] Entries persist after app restart.
 - [ ] Journal create/edit flow stays calm and ad-free.
+- [ ] Journal data stays local-only in the device flow.
 
 ## Premium / Billing
 
@@ -74,6 +81,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Purchase flow can be triggered on a test track.
 - [ ] Cancelled or failed purchase does not unlock Premium.
 - [ ] Premium hides ads.
+- [ ] Billing behavior matches the closed-testing gate and does not prompt for analytics.
 
 ## Ads
 
@@ -82,6 +90,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] No ads appear in Journal create/edit.
 - [ ] No ads appear during active sound playback.
 - [ ] No layout crash occurs when an ad fails to load.
+- [ ] No rewarded or interstitial ads appear anywhere.
 
 ## Privacy / Settings
 
@@ -90,6 +99,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Premium and Settings screens open.
 - [ ] Language setting persists.
 - [ ] Restore purchases is reachable.
+- [ ] No product analytics provider prompt or consent flow appears.
 
 ## Offline / basic fallback
 
@@ -97,6 +107,7 @@ Use this checklist on a real device or emulator before uploading a release build
 - [ ] Bundled content still works.
 - [ ] Failed ad load does not break the app.
 - [ ] Basic Play, Sounds, and Journal flows remain usable.
+- [ ] The app remains usable with the current closed-testing release configuration.
 
 ## Final result
 

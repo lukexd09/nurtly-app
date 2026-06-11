@@ -7,6 +7,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Android signing](android_signing.md)
 - [Android release build](android_release_build.md)
 - [Google Play checklist](google_play_checklist.md)
+- [Closed-testing release gate](closed_testing_release_gate.md)
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
 - [Monetization and ads config](monetization_ads_config.md)
@@ -23,12 +24,13 @@ This folder holds release preparation notes for the Android MVP release.
 ## Suggested release order
 
 1. Android signing/build readiness.
-2. Google Play checklist and store docs.
-3. Production monetization and ads config.
-4. Privacy policy publication.
-5. Closed testing.
-6. Final release smoke.
-7. Production rollout.
+2. Closed-testing release gate.
+3. Google Play checklist and store docs.
+4. Production monetization and ads config.
+5. Privacy policy publication.
+6. Closed testing.
+7. Final release smoke.
+8. Production rollout.
 
 ## QA support
 

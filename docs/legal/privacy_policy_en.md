@@ -24,6 +24,8 @@ Depending on the features used, the app may process:
 - subscription and Premium entitlement data,
 - technical and device information if needed for ads, billing, analytics, or diagnostics in the final production setup.
 
+The MVP does not use a product analytics provider.
+
 The MVP does not require a child name or an exact child birthdate to use the app.
 
 ## 3. Journal
@@ -62,7 +64,7 @@ We use data to:
 - manage Premium subscriptions,
 - show ads to free users,
 - support basic diagnostics and reliability if enabled in the final release,
-- measure app quality, module usage, retention, ads, and errors if analytics is enabled in the final release.
+- measure app quality, module usage, retention, ads, and errors if analytics is enabled in a future release.
 
 ## 7. What we do not do
 

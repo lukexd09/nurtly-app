@@ -80,9 +80,11 @@ Use this checklist before closed testing or production rollout. Keep notes short
 - [ ] Test: Build and install the release artifact. Expected result: App installs and launches from the release build. Notes:
 - [ ] Test: Re-open after install. Expected result: App resumes without startup regressions. Notes:
 - [ ] Test: Run with no network. Expected result: Core offline-friendly flows still work. Notes:
+- [ ] Test: Confirm release identity. Expected result: App package and version match the closed-testing release gate. Notes:
 
 ## Store / Play Console
 
 - [ ] Test: Verify listing assets are ready. Expected result: Screenshots, icon, feature graphic, and descriptions are complete. Notes:
 - [ ] Test: Verify Data Safety answers. Expected result: Answers match actual app behavior. Notes:
 - [ ] Test: Verify privacy policy URL. Expected result: Public privacy policy is reachable. Notes:
+- [ ] Test: Verify no analytics provider is configured for MVP. Expected result: No analytics SDK or consent UI is expected in the release slice. Notes:

@@ -36,6 +36,7 @@ Nurtly is a calm, parent-facing support app.
 - No medical claims.
 - No sleep prediction claims.
 - No manipulation around ads or Premium.
+- No product analytics provider is part of the MVP.
 - Clear Premium/free distinction.
 - Free users may see passive banner ads only if that MVP contract is confirmed.
 - Premium users do not see ads.

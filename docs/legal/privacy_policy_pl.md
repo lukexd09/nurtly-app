@@ -24,6 +24,8 @@ W zależności od używanych funkcji aplikacja może przetwarzać:
 - dane dotyczące subskrypcji i statusu Premium,
 - dane techniczne i informacje o urządzeniu, jeśli są potrzebne do reklam, płatności, analityki lub diagnostyki w finalnej konfiguracji produkcyjnej.
 
+W MVP nie jest używany żaden produktowy dostawca analityki.
+
 W MVP nie jest wymagane imię dziecka ani dokładna data urodzenia dziecka.
 
 ## 3. Dziennik
@@ -62,7 +64,7 @@ Dane wykorzystujemy, aby:
 - obsługiwać subskrypcje Premium,
 - wyświetlać reklamy użytkownikom darmowym,
 - utrzymywać podstawową diagnostykę i niezawodność aplikacji, jeśli taka funkcja jest włączona w finalnej wersji,
-- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w finalnej wersji.
+- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w przyszłej wersji.
 
 ## 7. Czego nie robimy
 
