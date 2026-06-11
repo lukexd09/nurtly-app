@@ -55,10 +55,12 @@ Use this checklist before closed testing or production rollout. Keep notes short
 
 ## Ads
 
-- [ ] Test: Use the app as a free user. Expected result: Ad placements load or fail gracefully. Notes:
-- [ ] Test: Use the app as a Premium user. Expected result: Ads are not shown. Notes:
-- [ ] Test: Open Journal while ads are enabled. Expected result: No ads interrupt create/edit flows. Notes:
-- [ ] Test: Play a sound while ads are enabled. Expected result: Ads do not interrupt playback. Notes:
+- [ ] Test: Use the app as a free user. Expected result: Only passive banner-style ads appear in the allowed browse areas. Notes:
+- [ ] Test: Use the app as a Premium user. Expected result: Ads are not shown anywhere. Notes:
+- [ ] Test: Open Journal while ads are enabled. Expected result: No ads appear during create or edit flows. Notes:
+- [ ] Test: Play a sound while ads are enabled. Expected result: No ads appear during active audio playback. Notes:
+- [ ] Test: Open Settings or Privacy & Data while ads are enabled. Expected result: No ads appear in sensitive settings or legal flows. Notes:
+- [ ] Test: Restart the app from a cold start. Expected result: No ad appears in the startup path before the main shell is stable. Notes:
 
 ## Privacy / Data
 

@@ -55,8 +55,11 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Production ad app id is ready.
 - [ ] Production ad unit ids are ready.
 - [ ] Ad policy is reviewed.
+- [ ] Ads follow the MVP contract: banner-only in passive browse areas.
 - [ ] Ads do not interrupt Journal create or edit flows.
 - [ ] Ads do not interrupt sound playback.
+- [ ] Ads do not appear in Settings, Privacy, or other sensitive flows.
+- [ ] Ads do not appear during startup or aggressive first-run moments.
 - [ ] Premium disables ads.
 - [ ] Production ads app and ad unit ids are ready.
 

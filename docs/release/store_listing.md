@@ -37,6 +37,8 @@ Nurtly is a calm, parent-facing support app.
 - No sleep prediction claims.
 - No manipulation around ads or Premium.
 - Clear Premium/free distinction.
+- Free users may see passive banner ads only if that MVP contract is confirmed.
+- Premium users do not see ads.
 
 ## Placeholder fields
 
@@ -62,6 +64,7 @@ Nurtly is a calm, parent-facing support app.
 - Premium / optional upgrade.
 - Privacy / local-only reassurance, if useful.
 - Parent-first privacy reassurance, not child-facing wording.
+- No ad overlays on Journal, Settings, or active audio screenshots.
 
 ## Notes
 

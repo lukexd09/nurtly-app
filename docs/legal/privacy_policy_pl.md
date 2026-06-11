@@ -49,6 +49,8 @@ Aplikacja może wyświetlać reklamy użytkownikom darmowym.
 
 Premium nie powinien widzieć reklam.
 
+W aktualnym planie wydania MVP reklamy mają pozostać pasywne i banerowe wyłącznie w obszarach przeglądania oraz nie mogą przerywać tworzenia lub edycji wpisów w dzienniku, aktywnego odtwarzania dźwięku, ekranów Prywatność lub Ustawienia ani momentów uruchamiania aplikacji. To pozostaje do potwierdzenia przez właściciela przed uznaniem tego za finalne zachowanie produkcyjne.
+
 W finalnej konfiguracji produkcyjnej mogą być przetwarzane dane urządzenia lub aplikacji potrzebne do działania reklam, zgodnie z konfiguracją Google i ustawieniami urządzenia.
 
 ## 6. Cel przetwarzania
@@ -101,4 +103,3 @@ W sprawach dotyczących prywatności skontaktuj się z nami pod adresem: [CONTAC
 - Finalna treść musi zostać zweryfikowana przed publikacją.
 - Odpowiedzi Data Safety muszą być zgodne z finalnym zachowaniem produkcyjnym aplikacji.
 - Finalne zachowanie reklam i subskrypcji musi być potwierdzone przed publikacją.
-
