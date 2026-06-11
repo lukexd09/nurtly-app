@@ -24,6 +24,8 @@ Depending on the features used, the app may process:
 - subscription and Premium entitlement data,
 - technical and device information if needed for ads, billing, analytics, or diagnostics in the final production setup.
 
+The recommended MVP release does not use a product analytics provider or SDK.
+
 If analytics is enabled later, the planned MVP scope should stay limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes. It should not include journal note content, child name, exact birthdate, health data, or child profiling.
 
 The MVP does not require a child name or an exact child birthdate to use the app.
@@ -85,6 +87,8 @@ Depending on the final production setup, data may be processed by:
 - Google Play Billing,
 - ad services,
 - technical services needed to run the app.
+
+No analytics provider is planned for the MVP release.
 
 If an analytics provider is added later, its use must be reviewed before publication and marked `Needs owner confirmation` until the SDK, consent, and retention decisions are final.
 

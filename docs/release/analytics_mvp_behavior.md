@@ -2,6 +2,8 @@
 
 This document captures the proposed MVP analytics boundary. It is for QA, release readiness, and privacy review, not implementation.
 
+The release-readiness recommendation in `analytics_provider_decision.md` is to ship the MVP without a product analytics provider or SDK. This document therefore serves as the future implementation contract only if a provider is approved later.
+
 ## Allowed data categories
 
 The proposed MVP analytics scope is limited to:
@@ -105,6 +107,7 @@ Errors and crashes should stay free of user-entered content and child data.
 - The analytics provider, SDK, consent, and retention-window decisions are not yet final.
 - If Advertising ID, crash provider enrichment, or any remote analytics provider is considered, mark it `Needs owner confirmation` before release.
 - Data Safety, privacy policy, and store listing copy should describe the same strict boundary.
+- The current MVP release recommendation is no product analytics provider or SDK.
 
 ## Needs owner confirmation
 

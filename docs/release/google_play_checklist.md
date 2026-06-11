@@ -68,8 +68,9 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Privacy policy URL is published.
 - [ ] Data Safety is completed.
 - [ ] Privacy & Data screen in the app matches the published policy.
+- [ ] Analytics provider decision is documented and points to no product analytics provider for MVP.
 - [ ] Analytics taxonomy is reviewed and excludes Journal content and child-related data.
-- [ ] Analytics provider, SDK, and consent decisions are confirmed or marked `Needs owner confirmation`.
+- [ ] If analytics is ever approved, provider, SDK, and consent decisions are confirmed or marked `Needs owner confirmation`.
 - [ ] Content rating is completed.
 - [ ] Target audience and families policy are checked.
 - [ ] Ads disclosure is checked.
