@@ -79,6 +79,8 @@ Use this checklist before closed testing or production rollout. Keep notes short
 - [ ] Test: Review app start and module taxonomy. Expected result: Only session basics and module open events are described for Play, Sounds, Journal, and Settings. Notes:
 - [ ] Test: Review ad analytics wording. Expected result: Ad events stay aligned with the proposed MVP ad contract and do not include Journal or child payloads. Notes:
 - [ ] Test: Review provider decisions. Expected result: Provider, SDK, consent, and retention-window choices are marked `Needs owner confirmation` if not yet final. Notes:
+- [ ] Test: Review the provider decision note. Expected result: MVP release recommendation is no product analytics provider or SDK, with implementation deferred unless owner approval changes the plan. Notes:
+- [ ] Test: Verify no analytics SDK appears in the build scope. Expected result: Release notes and docs do not imply a hidden provider integration. Notes:
 
 ## Release build / install
 
