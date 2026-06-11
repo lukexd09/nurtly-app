@@ -49,7 +49,7 @@ The app may show ads to free users.
 
 Premium users should not see ads.
 
-In the MVP, ads are intended to stay passive and banner-style in browse areas only, and not interrupt Journal entry creation or editing, active audio playback, Privacy or Settings flows, or startup moments.
+In the current MVP release planning, ads are intended to stay passive and banner-style in browse areas only, and not interrupt Journal entry creation or editing, active audio playback, Privacy or Settings flows, or startup moments. This remains subject to owner confirmation before it is treated as the final production behavior.
 
 In the final production configuration, device or app information needed for ads may be processed according to Google configuration and device settings.
 
