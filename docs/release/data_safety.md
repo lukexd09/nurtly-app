@@ -8,6 +8,8 @@ This document is not legal advice. Final answers must match the actual productio
 
 Use this page to collect the information needed for the Google Play Data Safety form before submission.
 
+For the current closed-testing pack, see [Google Play submission content pack](google_play_submission_content_pack.md).
+
 ## Current known behavior from the repository
 
 - Journal is local-only.
