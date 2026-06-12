@@ -58,7 +58,17 @@ try {
 
     $keyPropertiesPath = Join-Path $repoRoot "app\android\key.properties"
     $uploadKeystorePath = Join-Path $repoRoot "app\android\upload-keystore.jks"
-    $localKeystorePatterns = @("*.jks", "*.keystore", "*.aab", "*.apk", "key.properties")
+    $localKeystorePatterns = @(
+        "app/android/key.properties",
+        "app/android/*.jks",
+        "app/android/*.keystore",
+        "*.jks",
+        "*.keystore",
+        "*.aab",
+        "*.apk",
+        "**/*.aab",
+        "**/*.apk"
+    )
 
     if (-not (Test-PathExistsSafe $keyPropertiesPath)) {
         Add-Issue "Missing required local signing file: app/android/key.properties"
