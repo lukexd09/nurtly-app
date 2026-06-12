@@ -29,6 +29,8 @@ Test-Path app\android\upload-keystore.jks
 git status --short
 ```
 
+For a non-secret local preflight check, use [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) together with `tools/release_preflight_check.ps1`.
+
 ## `key.properties` fields
 
 Use these properties:

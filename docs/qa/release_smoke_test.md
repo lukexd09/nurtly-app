@@ -1,6 +1,7 @@
 # Release smoke test
 
 Use this checklist on a real device or emulator before uploading a release build to Google Play.
+Record the outcome in [Closed-testing release candidate evidence](../release/closed_testing_release_candidate_evidence.md) when preparing the release candidate.
 
 Run it:
 

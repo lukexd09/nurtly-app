@@ -8,6 +8,8 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] [Closed-testing upload handoff](closed_testing_upload_handoff.md) has been reviewed.
 - [ ] [Play Console owner decisions](play_console_owner_decisions.md) has been reviewed.
 - [ ] [Closed-testing go/no-go](closed_testing_go_no_go.md) has been reviewed.
+- [ ] [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) has been reviewed.
+- [ ] [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md) is ready for local completion.
 - [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
 - [ ] App package name is `com.nurtly.app`.
 - [ ] App label is `Nurtly`.
@@ -28,6 +30,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] The release build command works on the owner machine.
 - [ ] The AAB can be produced from the current branch without adding secrets to git.
 - [ ] The release smoke test can be run on a real device.
+- [ ] The local release-candidate preflight helper reports clean signing-file and artifact safety checks.
 
 ## 3. Play Console account and app setup
 
@@ -118,6 +121,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Package name, version, and signing expectations match the handoff doc.
 - [ ] Required closed-testing track fields are complete.
 - [ ] Tester group and invite flow are ready.
+- [ ] Release-candidate evidence is recorded locally.
 
 ## 11. Public-release blockers
 
