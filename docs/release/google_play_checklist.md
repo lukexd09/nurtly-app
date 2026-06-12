@@ -2,6 +2,14 @@
 
 Use this checklist to prepare the first MVP release in Google Play Console.
 
+## 0. Closed-testing gate
+
+- [ ] [Closed-testing release gate](closed_testing_release_gate.md) has been reviewed.
+- [ ] App package name is `com.nurtly.app`.
+- [ ] App label is `Nurtly`.
+- [ ] Current release version is confirmed in the release gate.
+- [ ] No private release configuration is committed in the repository.
+
 ## 1. Play Console account and app setup
 
 - [ ] Developer account is ready.
@@ -62,6 +70,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Ads do not appear during startup or aggressive first-run moments.
 - [ ] Premium disables ads.
 - [ ] Production ads app and ad unit ids are ready.
+- [ ] Rewarded and interstitial ads are not part of the MVP contract.
 
 ## 7. Privacy and compliance
 
@@ -75,6 +84,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Target audience and families policy are checked.
 - [ ] Ads disclosure is checked.
 - [ ] In-app purchases disclosure is checked.
+- [ ] No product analytics provider is configured for the MVP.
 
 ## 8. Final QA
 
