@@ -2,7 +2,7 @@
 
 This checklist turns the owner decisions into a simple release gate for the Nurtly closed-testing build.
 
-Use it alongside [Play Console owner decisions](play_console_owner_decisions.md).
+Use it alongside [Play Console owner decisions](play_console_owner_decisions.md) and the [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md).
 
 ## Ready for closed testing
 
@@ -35,6 +35,7 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 - [ ] Public-release rollout settings.
 - [ ] Final public marketing copy refinements, if the closed-testing text already matches the build.
 - [ ] Any future analytics provider decision, if analytics is still out of scope for MVP.
+- [ ] Final release-candidate evidence upload, if the evidence is only needed locally and not committed.
 
 ## Owner must confirm manually in Play Console
 
@@ -55,4 +56,4 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 ## Notes
 
 - This checklist does not change app code.
-- Keep it aligned with the owner decision pack, Data Safety notes, and release gate.
+- Keep it aligned with the owner decision pack, Data Safety notes, release gate, and release-candidate evidence template.

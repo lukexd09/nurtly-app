@@ -10,6 +10,7 @@ This note covers the Android MVP release build path for Nurtly.
 - Google Play App Signing is enabled in Play Console.
 - Production ad IDs, billing products, privacy URL, and Data Safety answers are ready before public release.
 - The closed-testing upload handoff is reviewed before building the bundle.
+- The release-candidate runbook and evidence template are ready before the local build handoff.
 
 ## Commands
 
@@ -57,3 +58,4 @@ Before public release, make sure these are ready outside the repo:
 - Data Safety answers in Play Console
 - store listing assets and copy
 - closed-testing upload handoff checklist
+- release-candidate evidence template

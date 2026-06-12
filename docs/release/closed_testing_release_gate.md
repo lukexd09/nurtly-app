@@ -14,7 +14,7 @@ This document is the operational release gate for inviting closed-test users to 
 ## Location
 
 - Primary gate: [docs/release/closed_testing_release_gate.md](closed_testing_release_gate.md)
-- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [Play Console owner decisions](play_console_owner_decisions.md), [Closed-testing go/no-go](closed_testing_go_no_go.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
+- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [Play Console owner decisions](play_console_owner_decisions.md), [Closed-testing go/no-go](closed_testing_go_no_go.md), [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md), [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
 - Supporting QA docs: [Release smoke test](../qa/release_smoke_test.md), [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
 
 ## Release build readiness
@@ -88,6 +88,7 @@ This document is the operational release gate for inviting closed-test users to 
 - Use [Release smoke test](../qa/release_smoke_test.md) for the closed-testing device pass.
 - Use [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md) for module-level checks.
 - The smoke checklist should cover startup, localization, Play, Sounds, Journal, Premium, ads, privacy, offline fallback, and release install behavior.
+- Record the release-candidate preflight and smoke-test results in the release-candidate evidence template.
 
 ## Launch blockers found
 

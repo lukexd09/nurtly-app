@@ -4,6 +4,8 @@ This document is the practical handoff for producing and uploading the closed-te
 
 It is intentionally release-only. It does not include private signing values, production IDs, or Google Play submission steps.
 
+For the local release-candidate execution flow, use the [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) and record evidence in [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md).
+
 ## Exact local pre-check commands
 
 Run these commands from the repository root:
@@ -33,6 +35,7 @@ flutter build appbundle --release
 - `app/android/key.properties`
 - `app/android/upload-keystore.jks` or the locally chosen upload keystore file
 - any local Play Console export or notes file that contains private release data
+- any local evidence file that contains private release data
 
 ## What to verify before uploading
 
@@ -43,6 +46,7 @@ flutter build appbundle --release
 - the AAB path above exists.
 - the app opens, shows the correct language, and reaches the shell cleanly on a real device.
 - the release smoke test passes for the relevant device and install state.
+- the release-candidate evidence template is ready to be filled locally.
 
 ## What to check in Google Play Console
 

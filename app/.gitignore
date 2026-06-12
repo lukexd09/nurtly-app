@@ -11,6 +11,8 @@ android/local.properties
 android/key.properties
 android/*.jks
 android/*.keystore
+*.aab
+*.apk
 
 # iOS
 ios/Flutter/Generated.xcconfig

@@ -1,6 +1,7 @@
 # MVP manual QA checklist
 
 Use this checklist before closed testing or production rollout. Keep notes short and practical.
+If you are preparing a release candidate, copy the final summary into [Closed-testing release candidate evidence](../release/closed_testing_release_candidate_evidence.md) instead of committing local screenshots or exports.
 
 ## App shell / navigation
 
