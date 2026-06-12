@@ -9,10 +9,11 @@ This note covers the Android MVP release build path for Nurtly.
 - Android release signing is set up through `app/android/key.properties`.
 - Google Play App Signing is enabled in Play Console.
 - Production ad IDs, billing products, privacy URL, and Data Safety answers are ready before public release.
+- The closed-testing upload handoff is reviewed before building the bundle.
 
 ## Commands
 
-Run the quality and release checks from the repository root `C:\Projekty\Nurtly`:
+Run the quality and release checks from the repository root `C:\Serwer\Projekty\Nurtly`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
@@ -29,8 +30,8 @@ flutter build appbundle --release
 
 ## Expected output
 
-- From `C:\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
-- From `C:\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
+- From `C:\Serwer\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
+- From `C:\Serwer\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
 
 ## Manual smoke before upload
 
@@ -44,6 +45,7 @@ Before uploading the bundle, verify on a real device or emulator:
 - premium users do not see ads
 - Journal entries can be added and restored locally
 - Sounds playback still works
+- release smoke test is aligned with the upload flow
 
 ## Release checklist reminders
 
@@ -54,3 +56,4 @@ Before public release, make sure these are ready outside the repo:
 - privacy policy URL
 - Data Safety answers in Play Console
 - store listing assets and copy
+- closed-testing upload handoff checklist

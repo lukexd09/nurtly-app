@@ -5,12 +5,28 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 ## 0. Closed-testing gate
 
 - [ ] [Closed-testing release gate](closed_testing_release_gate.md) has been reviewed.
+- [ ] [Closed-testing upload handoff](closed_testing_upload_handoff.md) has been reviewed.
 - [ ] App package name is `com.nurtly.app`.
 - [ ] App label is `Nurtly`.
 - [ ] Current release version is confirmed in the release gate.
+
+## 1. Repository / build readiness
+
+- [ ] `tools/pre_pr_check.ps1` passes.
+- [ ] `git diff --check` passes.
+- [ ] `git status --short` is clean.
+- [ ] The release AAB path matches the handoff doc.
 - [ ] No private release configuration is committed in the repository.
 
-## 1. Play Console account and app setup
+## 2. Local owner machine readiness
+
+- [ ] `app/android/key.properties` exists locally.
+- [ ] The local upload keystore exists locally if required.
+- [ ] The release build command works on the owner machine.
+- [ ] The AAB can be produced from the current branch without adding secrets to git.
+- [ ] The release smoke test can be run on a real device.
+
+## 3. Play Console account and app setup
 
 - [ ] Developer account is ready.
 - [ ] App exists in Google Play Console.
@@ -19,7 +35,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Contact details are completed.
 - [ ] Financial or payment profile is completed if required for paid products.
 
-## 2. Release track
+## 4. Release track
 
 - [ ] Internal testing track is ready.
 - [ ] Closed testing track is ready.
@@ -28,7 +44,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Tester groups and invite links are organized.
 - [ ] Release notes are prepared.
 
-## 3. Android build upload
+## 5. Android build upload
 
 - [ ] AAB is generated.
 - [ ] Signing and upload key are ready.
@@ -37,7 +53,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] versionName is checked.
 - [ ] Release artifact is uploaded.
 
-## 4. Store listing
+## 6. Store listing
 
 - [ ] App name is finalized.
 - [ ] Short description is finalized.
@@ -49,7 +65,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Default language is chosen.
 - [ ] EN and PL translations are reviewed where applicable.
 
-## 5. Monetization
+## 7. Monetization
 
 - [ ] Subscriptions and products are created.
 - [ ] Monthly and yearly products are configured.
@@ -57,7 +73,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Restore purchases is tested manually.
 - [ ] Premium users do not see ads.
 
-## 6. Ads
+## 8. Ads
 
 - [ ] Ads app is created.
 - [ ] Production ad app id is ready.
@@ -72,7 +88,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Production ads app and ad unit ids are ready.
 - [ ] Rewarded and interstitial ads are not part of the MVP contract.
 
-## 7. Privacy and compliance
+## 9. Privacy and compliance
 
 - [ ] Privacy policy URL is published.
 - [ ] Data Safety is completed.
@@ -84,9 +100,29 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Target audience and families policy are checked.
 - [ ] Ads disclosure is checked.
 - [ ] In-app purchases disclosure is checked.
-- [ ] No product analytics provider is configured for the MVP.
 
-## 8. Final QA
+## 10. Upload-ready blockers
+
+- [ ] Missing or invalid local signing files are resolved.
+- [ ] `tools/pre_pr_check.ps1` passes.
+- [ ] `git diff --check` passes.
+- [ ] The release AAB builds successfully.
+- [ ] The release AAB path exists.
+- [ ] Package name, version, and signing expectations match the handoff doc.
+- [ ] Required closed-testing track fields are complete.
+- [ ] Tester group and invite flow are ready.
+
+## 11. Public-release blockers
+
+- [ ] Privacy policy URL is published.
+- [ ] Store screenshots, icon, feature graphic, and listing copy are final.
+- [ ] Data Safety answers are final.
+- [ ] Content rating is complete.
+- [ ] Target audience and families policy are complete.
+- [ ] Production ad IDs are ready.
+- [ ] Billing products and pricing are final.
+
+## 12. Final QA
 
 - [ ] Startup works.
 - [ ] Localization works in EN and PL.

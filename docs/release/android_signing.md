@@ -21,6 +21,14 @@ Optional local upload keystore file:
 
 Never commit the `.jks`, `.keystore`, or private credential files.
 
+Before building a release AAB, confirm the local signing files exist and are not tracked by git:
+
+```powershell
+Test-Path app\android\key.properties
+Test-Path app\android\upload-keystore.jks
+git status --short
+```
+
 ## `key.properties` fields
 
 Use these properties:
@@ -32,11 +40,11 @@ keyAlias=upload
 storeFile=upload-keystore.jks
 ```
 
-`storeFile` is resolved relative to `C:\Projekty\Nurtly\app\android`.
+`storeFile` is resolved relative to `C:\Serwer\Projekty\Nurtly\app\android`.
 
 ## Create an upload keystore locally
 
-From PowerShell in `C:\Projekty\Nurtly\app\android`:
+From PowerShell in `C:\Serwer\Projekty\Nurtly\app\android`:
 
 ```powershell
 keytool -genkeypair -v `
@@ -51,7 +59,7 @@ You will be prompted for keystore and key passwords. Keep them private.
 
 ## Build a release AAB
 
-From `C:\Projekty\Nurtly`:
+From `C:\Serwer\Projekty\Nurtly`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
@@ -61,8 +69,8 @@ flutter build appbundle --release
 
 Expected output:
 
-- from `C:\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
-- from `C:\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
+- from `C:\Serwer\Projekty\Nurtly`: `app/build/app/outputs/bundle/release/app-release.aab`
+- from `C:\Serwer\Projekty\Nurtly\app`: `build/app/outputs/bundle/release/app-release.aab`
 
 ## Verify the AAB path
 
@@ -81,3 +89,4 @@ If an upload key is lost or needs replacement, use Google Play Console upload ke
 - Debug builds are unchanged.
 - This repo intentionally does not store sensitive release values.
 - Release builds should use the local `key.properties` file when present.
+- For the closed-testing upload handoff, use the output path and pre-checks documented in [Closed-testing upload handoff](closed_testing_upload_handoff.md).

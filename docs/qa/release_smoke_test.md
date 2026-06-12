@@ -2,6 +2,12 @@
 
 Use this checklist on a real device or emulator before uploading a release build to Google Play.
 
+Run it:
+
+- before the AAB build if possible, to catch obvious UI or release-flow regressions early,
+- after installing from the release artifact,
+- after upload or in internal / closed testing when the Play Console flow is available.
+
 ## Test context
 
 - [ ] Build type:
@@ -114,4 +120,3 @@ Use this checklist on a real device or emulator before uploading a release build
 | Result | Notes | Blockers | Screenshots / videos |
 | --- | --- | --- | --- |
 | PASS / FAIL |  |  |  |
-
