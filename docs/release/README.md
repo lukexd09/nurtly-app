@@ -8,6 +8,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Android release build](android_release_build.md)
 - [Google Play checklist](google_play_checklist.md)
 - [Closed-testing release gate](closed_testing_release_gate.md)
+- [Closed-testing upload handoff](closed_testing_upload_handoff.md)
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
 - [Monetization and ads config](monetization_ads_config.md)
@@ -27,12 +28,13 @@ This folder holds release preparation notes for the Android MVP release.
 
 1. Android signing/build readiness.
 2. Closed-testing release gate.
-3. Google Play checklist and store docs.
-4. Production monetization and ads config.
-5. Privacy policy publication.
-6. Closed testing.
-7. Final release smoke.
-8. Production rollout.
+3. Closed-testing upload handoff.
+4. Google Play checklist and store docs.
+5. Production monetization and ads config.
+6. Privacy policy publication.
+7. Closed testing.
+8. Final release smoke.
+9. Production rollout.
 
 ## QA support
 
