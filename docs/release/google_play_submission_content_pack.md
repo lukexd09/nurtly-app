@@ -164,12 +164,7 @@ The final policy URL and production wording must match the published app behavio
 
 ## Owner decisions needed
 
-- Final closed-testing to public-release ad setup
-- Advertising ID and ad personalization decision
-- Final privacy policy URL
-- Final Data Safety answers
-- Final content rating category in Play Console
-- Whether the current passive banner-only MVP contract remains the production contract
+- See [Play Console owner decisions](play_console_owner_decisions.md) for the recommended defaults and remaining confirmations.
 
 ## Submission notes
 

@@ -9,6 +9,7 @@ This document is not legal advice. Final answers must match the actual productio
 Use this page to collect the information needed for the Google Play Data Safety form before submission.
 
 For the current closed-testing pack, see [Google Play submission content pack](google_play_submission_content_pack.md).
+For the owner-confirmation defaults around Advertising ID, ad personalization, and final release wording, see [Play Console owner decisions](play_console_owner_decisions.md).
 
 ## Current known behavior from the repository
 
