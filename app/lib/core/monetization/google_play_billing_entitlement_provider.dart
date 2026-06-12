@@ -26,6 +26,7 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   var _hasPurchaseSubscription = false;
   var _isSyncingPurchases = false;
   var _didReceivePurchaseUpdateDuringSync = false;
+  Completer<void>? _purchaseSyncSignal;
 
   @override
   PremiumProductCatalog get productCatalog => _productCatalog;
@@ -128,13 +129,21 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
 
     _isSyncingPurchases = true;
     _didReceivePurchaseUpdateDuringSync = false;
+    final syncSignal = Completer<void>();
+    _purchaseSyncSignal = syncSignal;
     try {
       await _billingClient.restorePurchases();
-      await Future<void>.delayed(const Duration(milliseconds: 250));
+      await syncSignal.future.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {},
+      );
       return true;
     } catch (_) {
       return false;
     } finally {
+      if (_purchaseSyncSignal == syncSignal) {
+        _purchaseSyncSignal = null;
+      }
       _isSyncingPurchases = false;
     }
   }
@@ -197,6 +206,11 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
       if (purchase.pendingCompletePurchase) {
         unawaited(_billingClient.completePurchase(purchase));
       }
+    }
+
+    final syncSignal = _purchaseSyncSignal;
+    if (_isSyncingPurchases && syncSignal != null && !syncSignal.isCompleted) {
+      syncSignal.complete();
     }
 
     if (updated) {

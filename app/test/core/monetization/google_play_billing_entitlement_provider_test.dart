@@ -141,6 +141,30 @@ void main() {
     expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
   });
 
+  test('restore waits for delayed purchase update before clearing state',
+      () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.restored,
+          ),
+        ],
+      ],
+      restoreEventDelay: const Duration(milliseconds: 400),
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    final entitlement = await provider.loadEntitlement();
+
+    expect(entitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+  });
+
   test('confirmed no active purchase clears stale pending entitlement',
       () async {
     final client = FakeGooglePlayBillingClient(
@@ -174,11 +198,13 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
     this.restoreEventsByCall = const [],
     this.throwOnRestoreCalls = const {},
     this.available = true,
+    this.restoreEventDelay = Duration.zero,
   });
 
   final List<List<PurchaseDetails>> restoreEventsByCall;
   final Set<int> throwOnRestoreCalls;
   final bool available;
+  final Duration restoreEventDelay;
 
   final StreamController<List<PurchaseDetails>> _purchaseController =
       StreamController<List<PurchaseDetails>>.broadcast();
@@ -244,7 +270,16 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
 
     final index = restorePurchasesCalls - 1;
     if (index < restoreEventsByCall.length) {
-      _purchaseController.add(restoreEventsByCall[index]);
+      final events = restoreEventsByCall[index];
+      if (restoreEventDelay == Duration.zero) {
+        _purchaseController.add(events);
+      } else {
+        unawaited(Future<void>.delayed(restoreEventDelay).then((_) {
+          if (!_purchaseController.isClosed) {
+            _purchaseController.add(events);
+          }
+        }));
+      }
     }
   }
 
