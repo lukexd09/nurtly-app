@@ -9,11 +9,12 @@ This document is the operational release gate for inviting closed-test users to 
 - Android release signing expects a local `app/android/key.properties` file and keeps private release credentials out of git.
 - The MVP is parent-facing, privacy-first, and local-only for Journal data.
 - The current MVP release path is banner-only in passive browse areas, Premium users are ad-free, Sounds behavior is documented, and no product analytics provider is selected for MVP.
+- The remaining owner-confirmation items and recommended defaults are documented in [Play Console owner decisions](play_console_owner_decisions.md) and [Closed-testing go/no-go](closed_testing_go_no_go.md).
 
 ## Location
 
 - Primary gate: [docs/release/closed_testing_release_gate.md](closed_testing_release_gate.md)
-- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
+- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [Play Console owner decisions](play_console_owner_decisions.md), [Closed-testing go/no-go](closed_testing_go_no_go.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
 - Supporting QA docs: [Release smoke test](../qa/release_smoke_test.md), [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
 
 ## Release build readiness
@@ -95,6 +96,7 @@ This document is the operational release gate for inviting closed-test users to 
 - Data Safety answers still need final confirmation.
 - Content rating and target audience setup still need Play Console confirmation.
 - Closed-testing track, tester group, and invite flow still need final Play Console setup.
+- The remaining blocker decisions are tracked in [Play Console owner decisions](play_console_owner_decisions.md).
 
 ## Non-blockers
 
@@ -106,13 +108,7 @@ This document is the operational release gate for inviting closed-test users to 
 
 ## Owner decisions needed
 
-- Final privacy policy URL.
-- Final store screenshots, icon, feature graphic, and listing copy.
-- Final Data Safety answers.
-- Final content rating and target audience settings.
-- Final closed-testing tester group and track setup.
-- Final Google Play Billing products and pricing confirmation.
-- Final production ad app and ad unit IDs for public release.
+- See [Play Console owner decisions](play_console_owner_decisions.md) for the current recommended defaults and remaining confirmations.
 
 ## Notes
 

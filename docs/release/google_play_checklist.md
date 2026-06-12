@@ -6,6 +6,8 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 - [ ] [Closed-testing release gate](closed_testing_release_gate.md) has been reviewed.
 - [ ] [Closed-testing upload handoff](closed_testing_upload_handoff.md) has been reviewed.
+- [ ] [Play Console owner decisions](play_console_owner_decisions.md) has been reviewed.
+- [ ] [Closed-testing go/no-go](closed_testing_go_no_go.md) has been reviewed.
 - [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
 - [ ] App package name is `com.nurtly.app`.
 - [ ] App label is `Nurtly`.
@@ -74,6 +76,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Introductory or early pricing is configured if applicable.
 - [ ] Restore purchases is tested manually.
 - [ ] Premium users do not see ads.
+- [ ] Premium billing products match the owner decision pack.
 
 ## 8. Ads
 
@@ -89,6 +92,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Premium disables ads.
 - [ ] Production ads app and ad unit ids are ready.
 - [ ] Rewarded and interstitial ads are not part of the MVP contract.
+- [ ] Advertising ID and ad personalization are marked as owner-confirmation items until final ad setup is approved.
 
 ## 9. Privacy and compliance
 
@@ -102,6 +106,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Target audience and families policy are checked.
 - [ ] Ads disclosure is checked.
 - [ ] In-app purchases disclosure is checked.
+- [ ] Owner decision pack is used to confirm Advertising ID, ad personalization, and Data Safety wording.
 
 ## 10. Upload-ready blockers
 
@@ -123,6 +128,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Target audience and families policy are complete.
 - [ ] Production ad IDs are ready.
 - [ ] Billing products and pricing are final.
+- [ ] Any remaining items marked "Allowed to defer until public release" in the go/no-go checklist have been resolved before launch.
 
 ## 12. Final QA
 
