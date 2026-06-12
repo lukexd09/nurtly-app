@@ -13,6 +13,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md)
 - [Play Console owner decisions](play_console_owner_decisions.md)
 - [Closed-testing go/no-go](closed_testing_go_no_go.md)
+- [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md)
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
 - [Google Play submission content pack](google_play_submission_content_pack.md)

@@ -14,7 +14,7 @@ This document is the operational release gate for inviting closed-test users to 
 ## Location
 
 - Primary gate: [docs/release/closed_testing_release_gate.md](closed_testing_release_gate.md)
-- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [Play Console owner decisions](play_console_owner_decisions.md), [Closed-testing go/no-go](closed_testing_go_no_go.md), [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md), [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
+- Supporting release docs: [Google Play checklist](google_play_checklist.md), [Android release build](android_release_build.md), [Android signing](android_signing.md), [Store listing preparation](store_listing.md), [Data Safety preparation](data_safety.md), [Monetization and ads release config](monetization_ads_config.md), [Play Console owner decisions](play_console_owner_decisions.md), [Closed-testing go/no-go](closed_testing_go_no_go.md), [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md), [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md), [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md), [MVP ad placement contract](ads_mvp_behavior.md), [Sounds MVP behavior](sounds_mvp_behavior.md)
 - Supporting QA docs: [Release smoke test](../qa/release_smoke_test.md), [MVP manual QA checklist](../qa/mvp_manual_qa_checklist.md)
 
 ## Release build readiness
@@ -50,7 +50,8 @@ This document is the operational release gate for inviting closed-test users to 
 ## Privacy policy readiness
 
 - Draft privacy policies exist in English and Polish.
-- The privacy policy URL is still an owner decision before publication.
+- The privacy policy publication handoff documents the recommended public URL structure and owner-side publication steps.
+- The final privacy policy URL is still an owner decision before publication.
 - The policy text must continue to match the current MVP behavior: local-only Journal, banner-only passive ads, Premium ad-free, and no product analytics provider for MVP.
 
 ## Ads / Premium readiness
@@ -93,6 +94,7 @@ This document is the operational release gate for inviting closed-test users to 
 ## Launch blockers found
 
 - Privacy policy URL is still a placeholder.
+- Privacy policy publication and live hosting still need owner confirmation.
 - Store assets and listing copy still need final Play Console publication values.
 - Data Safety answers still need final confirmation.
 - Content rating and target audience setup still need Play Console confirmation.
@@ -109,7 +111,7 @@ This document is the operational release gate for inviting closed-test users to 
 
 ## Owner decisions needed
 
-- See [Play Console owner decisions](play_console_owner_decisions.md) for the current recommended defaults and remaining confirmations.
+- See [Play Console owner decisions](play_console_owner_decisions.md) and [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md) for the current recommended defaults and remaining confirmations.
 
 ## Notes
 

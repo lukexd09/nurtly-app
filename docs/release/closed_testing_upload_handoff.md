@@ -5,6 +5,7 @@ This document is the practical handoff for producing and uploading the closed-te
 It is intentionally release-only. It does not include private signing values, production IDs, or Google Play submission steps.
 
 For the local release-candidate execution flow, use the [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) and record evidence in [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md).
+For privacy URL handoff, use [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md).
 
 ## Exact local pre-check commands
 
@@ -56,6 +57,7 @@ flutter build appbundle --release
 - signing and upload flow are ready
 - store listing fields are complete enough for closed testing
 - privacy policy URL is available or intentionally blocked by an owner decision
+- privacy policy publication handoff is reviewed and the live URL is known
 - Data Safety answers match the actual app behavior
 - content rating and target audience are ready
 - billing products are ready if Premium is being exercised in testing
@@ -63,6 +65,7 @@ flutter build appbundle --release
 ## Owner decisions still required
 
 - final privacy policy URL
+- final privacy policy publication handoff and live URL
 - final store listing copy and assets
 - final Data Safety answers
 - final content rating and target audience settings
@@ -82,6 +85,7 @@ flutter build appbundle --release
 ## What blocks public release
 
 - placeholder privacy policy URL
+- privacy policy publication handoff not reviewed
 - incomplete store assets or listing copy
 - incomplete Data Safety answers
 - incomplete content rating or target audience setup

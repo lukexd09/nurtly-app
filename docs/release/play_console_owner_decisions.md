@@ -11,7 +11,7 @@ It is a decision pack for release readiness only. It does not change app behavio
 | Target audience | Adults 18+, parents/caregivers | Matches the product's parent-focused positioning and keeps the app out of child-directed framing. | Sets the store audience, families posture, and rating questionnaire tone. | Misstated audience could create policy mismatch or review delay. | Yes | Yes | Yes |
 | Child-directed / Families Program posture | Not directed to children; do not opt into Families Program unless explicitly approved later | The app is a calm support tool for adults, with local Journal and parent-facing content. | Influences families compliance, listing language, and content review. | Incorrect Families posture could trigger policy issues or the wrong audience labeling. | Yes | Yes | Yes |
 | Content rating posture | Use the lowest truthful rating from Play Console; keep the app non-medical, non-violent, non-sexual, and not child-directed | Conservative truthfulness keeps the review aligned with the app's actual calm parenting scope. | Affects the content rating questionnaire and final badge shown in Play Console. | Wrong answers can raise the rating or create compliance risk. | Yes | Yes | Yes |
-| Privacy policy URL handoff | Keep the URL as an owner-owned release item and publish only when the final text matches the shipped behavior | The URL should point to the final policy, not a placeholder. | Required for public release and expected for closed-testing readiness planning. | A placeholder URL breaks trust and can block publication. | Yes | Yes | Yes |
+| Privacy policy URL handoff | Publish the live policy only after the publication handoff is reviewed and the final text matches the shipped behavior | The URL should point to the final policy, not a placeholder. | Required for public release and expected for closed-testing readiness planning. | A placeholder URL breaks trust and can block publication. | Yes | Yes | Yes |
 | Data Safety draft posture | Local-only Journal, no product analytics provider for MVP, no Journal note content in analytics or Data Safety narratives, billing disclosed, ads described as passive banner-only in allowed browse areas | Keeps the Data Safety answers conservative and aligned with the current repo posture. | Drives Data Safety disclosure categories and free-text answers. | Wrong disclosure can block review or require a resubmission. | Yes | Yes | Yes |
 | Advertising ID | Do not claim Advertising ID is in use unless the final ad setup explicitly requires it | Keeps ad disclosures cautious while the final ad setup remains owner-confirmed. | May affect Data Safety and ads declarations. | Over-claiming use can create privacy mismatch; under-claiming if used is also risky. | Yes | No | Yes |
 | Ad personalization | Default to no personalized ads in the MVP decision pack; keep personalization as owner-confirmed if it is ever introduced | The calm parenting position is stronger with the simplest ad model. | Affects Data Safety, privacy wording, and ads policy language. | Wrong choice can change disclosure obligations and user trust. | Yes | No | Yes |
@@ -27,6 +27,7 @@ It is a decision pack for release readiness only. It does not change app behavio
 - Child posture: not directed to children; do not opt into Families Program unless owner-approved later.
 - Content rating posture: answer conservatively and truthfully; keep the app non-medical and not child-directed.
 - Privacy policy: publish only when the final text and URL match the shipped build.
+- Privacy policy publication: use the handoff in `docs/legal/privacy_policy_publication_handoff.md` and publish the live URL only after owner review.
 - Data Safety: keep the MVP disclosure limited to local-only Journal, billing, passive ads, and no product analytics provider.
 - Advertising ID: treat as owner-confirmed and do not assume it is required.
 - Ad personalization: default to no personalization for MVP.
@@ -38,5 +39,6 @@ It is a decision pack for release readiness only. It does not change app behavio
 ## Notes
 
 - Production ad IDs, billing products, and privacy policy URL remain outside the repository.
+- The recommended public privacy URL structure is described in the privacy publication handoff.
 - If any of the above defaults change, update the Data Safety, privacy, store listing, and QA docs together.
 - For a concise go/no-go view, see [Closed-testing go/no-go](closed_testing_go_no_go.md).

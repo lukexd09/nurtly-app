@@ -159,6 +159,7 @@ Draft policies live here:
 
 - [English privacy policy draft](../legal/privacy_policy_en.md)
 - [Polish privacy policy draft](../legal/privacy_policy_pl.md)
+- [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md)
 
 The final policy URL and production wording must match the published app behavior and Play Console answers.
 

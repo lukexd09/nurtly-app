@@ -11,6 +11,7 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 - [ ] App is not directed to children and is not placed in Families Program by default.
 - [ ] Content rating questionnaire has been answered truthfully and reviewed.
 - [ ] Privacy policy draft matches the current app behavior.
+- [ ] Privacy policy publication handoff has been reviewed.
 - [ ] Data Safety draft matches the current app behavior.
 - [ ] Banner-only passive ads are the confirmed MVP closed-testing model.
 - [ ] Premium users are ad-free.
@@ -21,6 +22,7 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 ## Blocked for closed testing
 
 - [ ] Privacy policy URL is still a placeholder.
+- [ ] Privacy policy publication handoff has not been reviewed or the live URL has not been chosen.
 - [ ] Data Safety answers contradict the current app behavior.
 - [ ] The app is being positioned as child-directed or Families-Program-first without explicit owner approval.
 - [ ] Interstitial or rewarded ads are treated as part of the MVP closed-testing model.
@@ -42,6 +44,7 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 - [ ] Target audience and families posture.
 - [ ] Content rating questionnaire.
 - [ ] Privacy policy URL.
+- [ ] Privacy policy publication handoff and live URL.
 - [ ] Data Safety answers.
 - [ ] Billing products and pricing.
 - [ ] Closed-testing tester group and invite flow.
