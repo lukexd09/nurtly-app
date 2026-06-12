@@ -50,19 +50,28 @@ If you are preparing a release candidate, copy the final summary into [Closed-te
 ## Premium / Billing
 
 - [ ] Test: Open the paywall. Expected result: Monthly and yearly plans are visible. Notes:
+- [ ] Test: Monthly purchase. Expected result: Monthly purchase unlocks Premium. Notes:
+- [ ] Test: Yearly purchase. Expected result: Yearly purchase unlocks Premium. Notes:
+- [ ] Test: Pending purchase. Expected result: Premium stays pending until the final outcome is received. Notes:
+- [ ] Test: Cancel a purchase after pending. Expected result: Pending clears back to Free. Notes:
+- [ ] Test: Fail a purchase after pending. Expected result: Pending clears back to Free. Notes:
 - [ ] Test: Restore purchases. Expected result: Premium entitlement restores when a valid purchase exists. Notes:
+- [ ] Test: Restore with no purchase. Expected result: Free remains free and the flow reports no purchase found. Notes:
+- [ ] Test: Restore after reinstall or restart. Expected result: Premium state comes back when Google Play still has a valid entitlement. Notes:
 - [ ] Test: Cancel a purchase. Expected result: Premium is not unlocked. Notes:
 - [ ] Test: Fail a purchase flow. Expected result: Premium is not unlocked and the app remains usable. Notes:
 
 ## Ads
 
 - [ ] Test: Open Home as a free user. Expected result: A passive banner appears only in the allowed browse area. Notes:
+- [ ] Test: Open Play as a free user. Expected result: A passive banner appears only in the allowed browse area. Notes:
+- [ ] Test: Open Sounds as a free user. Expected result: A passive banner appears only in the allowed browse area. Notes:
 - [ ] Test: Open Home as a Premium user. Expected result: No ad placeholder is shown. Notes:
 - [ ] Test: Use the app as a free user. Expected result: Only passive banner-style ads appear in the allowed browse areas. Notes:
 - [ ] Test: Use the app as a Premium user. Expected result: Ads are not shown anywhere. Notes:
 - [ ] Test: Open Journal while ads are enabled. Expected result: No ads appear during create or edit flows. Notes:
 - [ ] Test: Play a sound while ads are enabled. Expected result: No ads appear during active audio playback. Notes:
-- [ ] Test: Open Settings or Privacy & Data while ads are enabled. Expected result: No ads appear in sensitive settings or legal flows. Notes:
+- [ ] Test: Open Settings, Privacy & Data, legal pages, paywall, or startup while ads are enabled. Expected result: No ads appear in sensitive or startup flows. Notes:
 - [ ] Test: Restart the app from a cold start. Expected result: No ad appears in the startup path before the main shell is stable. Notes:
 - [ ] Test: Simulate ad load failure. Expected result: The screen stays usable and the ad area collapses gracefully without a crash. Notes:
 
