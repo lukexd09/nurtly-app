@@ -11,6 +11,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) has been reviewed.
 - [ ] [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md) is ready for local completion.
 - [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
+- [ ] [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md) has been reviewed.
 - [ ] App package name is `com.nurtly.app`.
 - [ ] App label is `Nurtly`.
 - [ ] Current release version is confirmed in the release gate.
@@ -99,7 +100,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 ## 9. Privacy and compliance
 
-- [ ] Privacy policy URL is published.
+- [ ] Privacy policy publication handoff is reviewed and the owner knows the live URL plan.
 - [ ] Data Safety is completed.
 - [ ] Privacy & Data screen in the app matches the published policy.
 - [ ] Analytics provider decision is documented and points to no product analytics provider for MVP.
@@ -110,6 +111,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Ads disclosure is checked.
 - [ ] In-app purchases disclosure is checked.
 - [ ] Owner decision pack is used to confirm Advertising ID, ad personalization, and Data Safety wording.
+- [ ] Privacy policy publication handoff is aligned with the final Play Console URL.
 
 ## 10. Upload-ready blockers
 
@@ -125,7 +127,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 ## 11. Public-release blockers
 
-- [ ] Privacy policy URL is published.
+- [ ] Privacy policy URL is published and matches the public handoff.
 - [ ] Store screenshots, icon, feature graphic, and listing copy are final.
 - [ ] Data Safety answers are final.
 - [ ] Content rating is complete.

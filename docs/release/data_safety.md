@@ -10,6 +10,7 @@ Use this page to collect the information needed for the Google Play Data Safety 
 
 For the current closed-testing pack, see [Google Play submission content pack](google_play_submission_content_pack.md).
 For the owner-confirmation defaults around Advertising ID, ad personalization, and final release wording, see [Play Console owner decisions](play_console_owner_decisions.md).
+For the public privacy policy publication flow, see [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md).
 
 ## Current known behavior from the repository
 
@@ -51,7 +52,7 @@ For the owner-confirmation defaults around Advertising ID, ad personalization, a
 - [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
 - [ ] Final analytics provider, SDK, and consent decisions. Needs owner confirmation if a provider is ever approved.
 - [ ] Final analytics taxonomy and retention window. Needs owner confirmation if analytics is ever approved.
-- [ ] Final privacy policy URL.
+- [ ] Final privacy policy URL and public hosting plan. Needs owner confirmation.
 - [ ] Final Billing data disclosure.
 
 ## Notes
