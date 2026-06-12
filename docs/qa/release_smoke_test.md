@@ -85,17 +85,24 @@ Run it:
 - [ ] Monthly plan is visible.
 - [ ] Yearly plan is visible.
 - [ ] Restore purchases is visible.
+- [ ] Monthly purchase unlocks Premium on the test track.
+- [ ] Yearly purchase unlocks Premium on the test track.
+- [ ] Pending purchase keeps Premium pending until the final outcome arrives.
+- [ ] Canceled purchase after pending returns the account to Free.
+- [ ] Failed purchase after pending returns the account to Free.
+- [ ] Restore success restores Premium after reinstall or restart.
+- [ ] Restore with no purchase leaves the account Free and reports no purchase found.
 - [ ] Purchase flow can be triggered on a test track.
-- [ ] Cancelled or failed purchase does not unlock Premium.
 - [ ] Premium hides ads.
 - [ ] Billing behavior matches the closed-testing gate and does not prompt for analytics.
 
 ## Ads
 
-- [ ] Free user ad placements render or fail gracefully.
+- [ ] Free user sees passive banners only in the allowed browse areas.
 - [ ] Premium user sees no ads.
-- [ ] No ads appear in Journal create/edit.
-- [ ] No ads appear during active sound playback.
+- [ ] Free banners stay out of Journal create/edit.
+- [ ] Free banners stay out of active sound playback.
+- [ ] Free banners stay out of Settings, Privacy, legal, paywall, and startup flows.
 - [ ] No layout crash occurs when an ad fails to load.
 - [ ] No rewarded or interstitial ads appear anywhere.
 
@@ -107,6 +114,13 @@ Run it:
 - [ ] Language setting persists.
 - [ ] Restore purchases is reachable.
 - [ ] No product analytics provider prompt or consent flow appears.
+
+## Runtime matrix
+
+- [ ] Premium still resolves correctly after app restart.
+- [ ] Premium state is restored after reinstall when Google Play returns a valid purchase.
+- [ ] Ad suppression matches Premium state after restart.
+- [ ] Ad suppression remains passive and non-blocking when the banner slot fails to load.
 
 ## Offline / basic fallback
 

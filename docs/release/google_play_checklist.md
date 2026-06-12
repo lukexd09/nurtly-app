@@ -29,7 +29,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] `app/android/key.properties` exists locally.
 - [ ] The local upload keystore exists locally if required.
 - [ ] The release build command works on the owner machine.
-- [ ] The AAB can be produced from the current branch without adding secrets to git.
+- [ ] The AAB can be produced from the current branch without adding private release values to git.
 - [ ] The release smoke test can be run on a real device.
 - [ ] The local release-candidate preflight helper reports clean signing-file and artifact safety checks.
 
@@ -145,6 +145,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Journal flow works.
 - [ ] Premium and paywall work.
 - [ ] Restore purchases works.
+- [ ] Monetization runtime matrix is covered for monthly, yearly, pending, canceled, error, restore, restart, and ad suppression cases.
 - [ ] Ads behave correctly.
 - [ ] Settings work.
 - [ ] Privacy screen works.

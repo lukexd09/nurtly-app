@@ -106,19 +106,23 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
   }
 
   Future<void> _loadProductCatalog() async {
-    final response = await _billingClient.queryProductDetails({
-      kMonthlyPremiumProductId,
-      kYearlyPremiumProductId,
-    });
+    try {
+      final response = await _billingClient.queryProductDetails({
+        kMonthlyPremiumProductId,
+        kYearlyPremiumProductId,
+      });
 
-    _productCatalog = PremiumProductCatalog(
-      monthly: response.productDetails.firstWhereOrNull(
-        (product) => product.id == kMonthlyPremiumProductId,
-      ),
-      yearly: response.productDetails.firstWhereOrNull(
-        (product) => product.id == kYearlyPremiumProductId,
-      ),
-    );
+      _productCatalog = PremiumProductCatalog(
+        monthly: response.productDetails.firstWhereOrNull(
+          (product) => product.id == kMonthlyPremiumProductId,
+        ),
+        yearly: response.productDetails.firstWhereOrNull(
+          (product) => product.id == kYearlyPremiumProductId,
+        ),
+      );
+    } catch (_) {
+      _productCatalog = PremiumProductCatalog.empty();
+    }
     notifyListeners();
   }
 
@@ -204,7 +208,7 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
       }
 
       if (purchase.pendingCompletePurchase) {
-        unawaited(_billingClient.completePurchase(purchase));
+        unawaited(_completePurchaseSafely(purchase));
       }
     }
 
@@ -229,11 +233,55 @@ class GooglePlayBillingEntitlementProvider extends ChangeNotifier
 
   PremiumEntitlement? _entitlementFromPurchase(PurchaseDetails purchase) {
     final now = DateTime.now();
-    return entitlementFromPurchaseDetails(
-      productId: purchase.productID,
-      status: purchase.status,
-      checkedAt: now,
+    final source = sourceForBillingProductId(purchase.productID);
+    if (source == PremiumSource.none) {
+      return null;
+    }
+
+    return switch (purchase.status) {
+      PurchaseStatus.pending => _pendingEntitlementForPurchase(
+          source: source,
+          checkedAt: now,
+        ),
+      PurchaseStatus.purchased || PurchaseStatus.restored => switch (source) {
+          PremiumSource.monthly =>
+            PremiumEntitlement.monthlyActive(checkedAt: now),
+          PremiumSource.yearly =>
+            PremiumEntitlement.yearlyActive(checkedAt: now),
+          PremiumSource.none => PremiumEntitlement.free(checkedAt: now),
+        },
+      PurchaseStatus.canceled || PurchaseStatus.error => switch (
+            _canClearPendingPurchase(source)) {
+          true => PremiumEntitlement.free(checkedAt: now),
+          false => null,
+        },
+    };
+  }
+
+  PremiumEntitlement? _pendingEntitlementForPurchase({
+    required PremiumSource source,
+    required DateTime checkedAt,
+  }) {
+    if (_entitlement.hasPremiumAccess &&
+        _entitlement.state != PremiumState.pending) {
+      return null;
+    }
+
+    return PremiumEntitlement.pending(
+      checkedAt: checkedAt,
+      source: source,
     );
+  }
+
+  bool _canClearPendingPurchase(PremiumSource source) {
+    return _entitlement.state == PremiumState.pending &&
+        _entitlement.source == source;
+  }
+
+  Future<void> _completePurchaseSafely(PurchaseDetails purchase) async {
+    try {
+      await _billingClient.completePurchase(purchase);
+    } catch (_) {}
   }
 
   @override

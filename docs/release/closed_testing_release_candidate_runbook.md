@@ -2,12 +2,12 @@
 
 This runbook describes the local release-candidate preflight and handoff flow for the Nurtly closed-testing build.
 
-It is a local execution guide only. It does not commit secrets, build artifacts, screenshots, or Play Console exports.
+It is a local execution guide only. It does not commit private release values, build artifacts, screenshots, or Play Console exports.
 
 ## Purpose
 
 - Prepare a safe closed-testing release candidate from the current branch.
-- Validate signing-file presence without exposing secret values.
+- Validate signing-file presence without exposing private values.
 - Record the AAB build and smoke-test handoff steps.
 - Keep the repo clean and separate from local release evidence.
 
@@ -37,7 +37,7 @@ powershell -ExecutionPolicy Bypass -File tools/pre_pr_check.ps1
 
 ## Signing-file existence checks
 
-Check the local release signing files without printing secret contents:
+Check the local release signing files without printing private contents:
 
 ```powershell
 Test-Path app\android\key.properties
@@ -68,7 +68,7 @@ flutter build appbundle --release
 - `*.aab`
 - `*.apk`
 - local Play Console exports or notes with private data
-- passwords, tokens, or other release secrets
+- passwords, tokens, or other private release values
 
 ## How to verify `git status`
 
@@ -88,6 +88,36 @@ Any generated release artifact or signing file must stay outside git.
 3. Confirm localization in English and Polish.
 4. Confirm Play, Sounds, Journal, Premium, ads, and Privacy / Data flows.
 5. Confirm the release smoke test notes are written down in the evidence template.
+
+## Monetization runtime matrix
+
+Record the following cases in the evidence notes and keep them aligned with the QA checklist:
+
+- monthly purchase
+- yearly purchase
+- pending purchase
+- canceled purchase
+- failed purchase
+- restore success
+- restore with no purchase
+- restore after reinstall
+- Premium after restart
+- Premium ad suppression
+- Free banner behavior in allowed areas only
+- blocked Journal, active audio, Settings, Privacy, legal, paywall, and startup flows
+- ad failure remains non-blocking
+
+Relevant automated coverage lives in:
+
+- `app/test/core/monetization/google_play_billing_entitlement_provider_test.dart`
+- `app/test/core/monetization/ad_policy_test.dart`
+- `app/test/features/home/home_screen_test.dart`
+- `app/test/features/play/play_screen_test.dart`
+- `app/test/features/sounds/sounds_screen_test.dart`
+- `app/test/features/journal/journal_screen_test.dart`
+- `app/test/features/privacy/privacy_data_screen_test.dart`
+- `app/test/app_shell_test.dart`
+- `app/test/core/monetization/premium_paywall_sheet_test.dart`
 
 Use these docs as the test references:
 
@@ -114,7 +144,7 @@ Use these docs as the test references:
 - [ ] Preflight checks passed.
 - [ ] AAB built successfully at the expected path.
 - [ ] Smoke-test evidence was recorded.
-- [ ] `git status --short` is clean of release artifacts and secrets.
+- [ ] `git status --short` is clean of release artifacts and private release values.
 - [ ] No Google Play submission was performed from the repository.
 - [ ] No private release configuration was committed.
 - [ ] No production IDs were committed.

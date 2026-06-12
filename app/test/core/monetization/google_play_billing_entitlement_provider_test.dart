@@ -141,6 +141,62 @@ void main() {
     expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
   });
 
+  test('monthly pending then canceled clears to free', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kMonthlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kMonthlyPremiumProductId,
+        status: PurchaseStatus.canceled,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
+  });
+
+  test('monthly pending then error clears to free', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kMonthlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kMonthlyPremiumProductId,
+        status: PurchaseStatus.error,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
+  });
+
   test('restore waits for delayed purchase update before clearing state',
       () async {
     final client = FakeGooglePlayBillingClient(
@@ -191,6 +247,407 @@ void main() {
     expect(provider.currentEntitlement.state, PremiumState.free);
     expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
   });
+
+  test('yearly pending then canceled clears to free', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.canceled,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
+  });
+
+  test('yearly pending then error clears to free', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.error,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(provider.currentEntitlement.hasPremiumAccess, isFalse);
+  });
+
+  test('canceled event does not revoke active premium entitlement', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.restored,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.canceled,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+  });
+
+  test('error event does not revoke active premium entitlement', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.restored,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.error,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+  });
+
+  test('unknown product updates do not change entitlement', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kMonthlyPremiumProductId,
+            status: PurchaseStatus.pending,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    final before = provider.currentEntitlement;
+    client.emit([
+      _purchase(
+        productId: 'unknown.product',
+        status: PurchaseStatus.pending,
+      ),
+      _purchase(
+        productId: 'unknown.product',
+        status: PurchaseStatus.canceled,
+      ),
+      _purchase(
+        productId: 'unknown.product',
+        status: PurchaseStatus.error,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, before.state);
+    expect(provider.currentEntitlement.source, before.source);
+  });
+
+  test('delayed restored callback still grants Premium', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.restored,
+          ),
+        ],
+      ],
+      restoreEventDelay: const Duration(milliseconds: 400),
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    final entitlement = await provider.loadEntitlement();
+
+    expect(entitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+  });
+
+  test(
+      'restore timeout with no valid purchase results in free and noPurchaseFound',
+      () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      restoreEventDelay: const Duration(seconds: 3),
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    final result = await provider.restorePurchases();
+
+    expect(result.status, PurchaseActionStatus.noPurchaseFound);
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    provider.dispose();
+    await Future<void>.delayed(Duration.zero);
+  });
+
+  test('duplicate restored updates remain idempotent', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    client.emit([
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.restored,
+      ),
+      _purchase(
+        productId: kYearlyPremiumProductId,
+        status: PurchaseStatus.restored,
+      ),
+    ]);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+  });
+
+  test('pendingCompletePurchase is completed safely', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kMonthlyPremiumProductId,
+            status: PurchaseStatus.purchased,
+            pendingCompletePurchase: true,
+          ),
+        ],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(client.completePurchaseCalls, 1);
+  });
+
+  test('completion failure does not crash or corrupt entitlement', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: [
+        [
+          _purchase(
+            productId: kYearlyPremiumProductId,
+            status: PurchaseStatus.restored,
+            pendingCompletePurchase: true,
+          ),
+        ],
+      ],
+      throwOnCompleteCalls: {1},
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+
+    expect(provider.currentEntitlement.state, PremiumState.active);
+    expect(provider.currentEntitlement.source, PremiumSource.yearly);
+    expect(client.completePurchaseCalls, 1);
+  });
+
+  test(
+      'store unavailable keeps entitlement free and purchase actions unavailable',
+      () async {
+    final client = FakeGooglePlayBillingClient(available: false);
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    final entitlement = await provider.loadEntitlement();
+    final restoreResult = await provider.restorePurchases();
+    final monthlyResult = await provider.buyMonthly();
+    final yearlyResult = await provider.buyYearly();
+
+    expect(entitlement.state, PremiumState.free);
+    expect(restoreResult.status, PurchaseActionStatus.unavailable);
+    expect(monthlyResult.status, PurchaseActionStatus.unavailable);
+    expect(yearlyResult.status, PurchaseActionStatus.unavailable);
+    expect(provider.productCatalog.hasMonthly, isFalse);
+    expect(provider.productCatalog.hasYearly, isFalse);
+  });
+
+  test('product query error falls back to empty catalog', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      throwOnQueryCalls: {1},
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+
+    expect(provider.productCatalog.hasMonthly, isFalse);
+    expect(provider.productCatalog.hasYearly, isFalse);
+    expect(await provider.buyMonthly(), isUnavailablePurchase());
+    expect(await provider.buyYearly(), isUnavailablePurchase());
+  });
+
+  test('partial monthly product catalog keeps yearly available', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      hasMonthlyProduct: false,
+      hasYearlyProduct: true,
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+
+    expect(provider.productCatalog.hasMonthly, isFalse);
+    expect(provider.productCatalog.hasYearly, isTrue);
+    expect(await provider.buyMonthly(), isUnavailablePurchase());
+  });
+
+  test('partial yearly product catalog keeps monthly available', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      hasMonthlyProduct: true,
+      hasYearlyProduct: false,
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+
+    expect(provider.productCatalog.hasMonthly, isTrue);
+    expect(provider.productCatalog.hasYearly, isFalse);
+    expect(await provider.buyYearly(), isUnavailablePurchase());
+  });
+
+  test('purchase start returning false is canceled without corrupting state',
+      () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      buyNonConsumableResult: false,
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    final result = await provider.buyMonthly();
+
+    expect(result.status, PurchaseActionStatus.canceled);
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(client.buyNonConsumableCalls, 1);
+  });
+
+  test('purchase start exception is reported as error without corrupting state',
+      () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+      throwOnBuyCalls: {1},
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    final result = await provider.buyYearly();
+
+    expect(result.status, PurchaseActionStatus.error);
+    expect(provider.currentEntitlement.state, PremiumState.free);
+    expect(client.buyNonConsumableCalls, 1);
+  });
+
+  test('provider disposal cancels the purchase subscription', () async {
+    final client = FakeGooglePlayBillingClient(
+      restoreEventsByCall: const [
+        [],
+      ],
+    );
+    final provider = GooglePlayBillingEntitlementProvider(
+      billingClient: client,
+    );
+
+    await provider.loadEntitlement();
+    provider.dispose();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(client.purchaseStreamCancelCalls, 1);
+  });
 }
 
 class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
@@ -199,18 +656,37 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
     this.throwOnRestoreCalls = const {},
     this.available = true,
     this.restoreEventDelay = Duration.zero,
-  });
+    this.throwOnQueryCalls = const {},
+    this.hasMonthlyProduct = true,
+    this.hasYearlyProduct = true,
+    this.buyNonConsumableResult = true,
+    this.throwOnBuyCalls = const {},
+    this.throwOnCompleteCalls = const {},
+  }) {
+    _purchaseController = StreamController<List<PurchaseDetails>>.broadcast(
+      onCancel: () {
+        purchaseStreamCancelCalls++;
+      },
+    );
+  }
 
   final List<List<PurchaseDetails>> restoreEventsByCall;
   final Set<int> throwOnRestoreCalls;
   final bool available;
   final Duration restoreEventDelay;
+  final Set<int> throwOnQueryCalls;
+  final bool hasMonthlyProduct;
+  final bool hasYearlyProduct;
+  final bool buyNonConsumableResult;
+  final Set<int> throwOnBuyCalls;
+  final Set<int> throwOnCompleteCalls;
 
-  final StreamController<List<PurchaseDetails>> _purchaseController =
-      StreamController<List<PurchaseDetails>>.broadcast();
+  late final StreamController<List<PurchaseDetails>> _purchaseController;
   int restorePurchasesCalls = 0;
+  int queryProductDetailsCalls = 0;
   int completePurchaseCalls = 0;
   int buyNonConsumableCalls = 0;
+  int purchaseStreamCancelCalls = 0;
 
   void emit(List<PurchaseDetails> purchases) {
     _purchaseController.add(purchases);
@@ -227,15 +703,20 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
   Future<ProductDetailsResponse> queryProductDetails(
     Set<String> identifiers,
   ) async {
+    queryProductDetailsCalls++;
+    if (throwOnQueryCalls.contains(queryProductDetailsCalls)) {
+      throw StateError('query failed');
+    }
+
     final products = <ProductDetails>[
-      if (identifiers.contains(kMonthlyPremiumProductId))
+      if (identifiers.contains(kMonthlyPremiumProductId) && hasMonthlyProduct)
         _product(
           id: kMonthlyPremiumProductId,
           title: 'Monthly',
           description: 'Monthly premium',
           price: '14.99 PLN',
         ),
-      if (identifiers.contains(kYearlyPremiumProductId))
+      if (identifiers.contains(kYearlyPremiumProductId) && hasYearlyProduct)
         _product(
           id: kYearlyPremiumProductId,
           title: 'Yearly',
@@ -253,12 +734,18 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
   @override
   Future<bool> buyNonConsumable({required PurchaseParam purchaseParam}) async {
     buyNonConsumableCalls++;
-    return true;
+    if (throwOnBuyCalls.contains(buyNonConsumableCalls)) {
+      throw StateError('buy failed');
+    }
+    return buyNonConsumableResult;
   }
 
   @override
   Future<void> completePurchase(PurchaseDetails purchase) async {
     completePurchaseCalls++;
+    if (throwOnCompleteCalls.contains(completePurchaseCalls)) {
+      throw StateError('complete failed');
+    }
   }
 
   @override
@@ -306,8 +793,9 @@ class FakeGooglePlayBillingClient implements GooglePlayBillingClient {
 PurchaseDetails _purchase({
   required String productId,
   required PurchaseStatus status,
+  bool pendingCompletePurchase = false,
 }) {
-  return PurchaseDetails(
+  final purchase = PurchaseDetails(
     productID: productId,
     verificationData: PurchaseVerificationData(
       localVerificationData: 'local',
@@ -317,6 +805,8 @@ PurchaseDetails _purchase({
     transactionDate: '0',
     status: status,
   );
+  purchase.pendingCompletePurchase = pendingCompletePurchase;
+  return purchase;
 }
 
 Future<void> _waitFor(bool Function() predicate) async {
@@ -326,4 +816,12 @@ Future<void> _waitFor(bool Function() predicate) async {
     }
     await Future<void>.delayed(const Duration(milliseconds: 20));
   }
+}
+
+Matcher isUnavailablePurchase() {
+  return isA<PurchaseActionResult>().having(
+    (result) => result.status,
+    'status',
+    PurchaseActionStatus.unavailable,
+  );
 }
