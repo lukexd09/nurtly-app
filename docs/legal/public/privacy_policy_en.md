@@ -4,8 +4,6 @@
 
 **Contact:** [CONTACT_EMAIL_TBD]
 
-This page is the publication copy for the Nurtly privacy policy. It must match the shipped app behavior and the Google Play Data Safety answers before publication.
-
 ## 1. Who we are
 
 Nurtly is an app for parents and caregivers, not for children. It helps with:
@@ -16,24 +14,19 @@ Nurtly is an app for parents and caregivers, not for children. It helps with:
 
 ## 2. What data we process
 
-Depending on the features used, the app may process:
-
 - data entered by the user in the journal, including notes and care events,
 - subscription and Premium entitlement data,
-- technical and device information if needed for ads, billing, analytics, or diagnostics in the final production setup.
-
-The recommended MVP release does not use a product analytics provider or SDK.
-
-If analytics is enabled later, the planned MVP scope should stay limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes. It should not include journal note content, child name, exact birthdate, health data, or child profiling.
-
-The MVP does not require a child name or an exact child birthdate to use the app.
+- technical and device information used for ads, billing, or basic diagnostics.
+- free users may see passive banner ads in allowed areas,
+- Premium users do not see ads,
+- the app does not use a product analytics provider in the MVP.
 
 ## 3. Journal
 
-The Journal is local-only in the current implementation.
+The Journal is local-only on the device.
 
 - journal entries are stored on the device,
-- journal notes are not sent to a backend or cloud in the current implementation,
+- journal notes are not sent to a Nurtly backend or cloud,
 - journal data is used to show care history on that device,
 - journal note content is not intended to be used for ads or child profiling.
 
@@ -47,13 +40,9 @@ We may process purchase, activation, renewal, cancellation, expiry, or restore s
 
 ## 5. Ads
 
-The app may show ads to free users.
+The app may show passive banner ads to free users in allowed areas.
 
-Premium users should not see ads.
-
-In the current MVP release planning, ads are intended to stay passive and banner-style in browse areas only, and not interrupt Journal entry creation or editing, active audio playback, Privacy or Settings flows, or startup moments. This remains subject to owner confirmation before it is treated as the final production behavior.
-
-In the final production configuration, device or app information needed for ads may be processed according to Google configuration and device settings.
+Premium users do not see ads.
 
 ## 6. Why we process data
 
@@ -63,13 +52,12 @@ We use data to:
 - store the local care journal,
 - manage Premium subscriptions,
 - show ads to free users,
-- support basic diagnostics and reliability if enabled in the final release,
-- measure app quality, module usage, retention, ads, and errors if analytics is enabled in the final release,
-- keep any future analytics within the strict MVP boundary described above.
+- support basic diagnostics and reliability,
+- keep the app calm, useful, and privacy-conscious.
 
 ## 7. What we do not do
 
-In the current implementation, the app is not intended to:
+The app is not intended to:
 
 - provide medical advice,
 - diagnose conditions,
@@ -80,21 +68,17 @@ In the current implementation, the app is not intended to:
 
 ## 8. Data recipients
 
-Depending on the final production setup, data may be processed by:
+Depending on how you use the app, data may be processed by:
 
 - Google Play Billing,
 - ad services,
 - technical services needed to run the app.
 
-No analytics provider is planned for the MVP release.
-
-If an analytics provider is added later, its use must be reviewed before publication and marked `Needs owner confirmation` until the SDK, consent, and retention decisions are final.
-
-The exact scope must match the behavior of the published app and the Google Play Console configuration.
+No analytics provider is used in the MVP.
 
 ## 9. Security
 
-We use technical and organizational safeguards appropriate for an MVP-scale app. The final security setup must match the production deployment.
+We use technical and organizational safeguards appropriate for an MVP-scale app.
 
 ## 10. Changes to this policy
 
@@ -103,10 +87,3 @@ We may update this policy as the app evolves, features change, or legal requirem
 ## 11. Contact
 
 For privacy questions, contact us at: [CONTACT_EMAIL_TBD]
-
-## 12. Important notes
-
-- This document is a publication copy and is not legal advice.
-- The final text must be reviewed before publication.
-- Data Safety answers must match the final production behavior of the app.
-- Final ad and billing behavior must be verified before publication.

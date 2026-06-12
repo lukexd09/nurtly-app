@@ -9,6 +9,7 @@ It is a publication handoff only. It is not legal advice.
 - Prepare a publishable privacy-policy URL structure for the MVP release.
 - Keep the public policy aligned with the shipped app behavior and Play Console answers.
 - Separate the source drafts from the publication copy and owner-side hosting decisions.
+- Publication is blocked until `[DATE_TBD]` and `[CONTACT_EMAIL_TBD]` are replaced with final values.
 
 ## Source documents
 
