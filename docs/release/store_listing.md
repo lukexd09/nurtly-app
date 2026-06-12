@@ -5,6 +5,7 @@ This worksheet helps prepare the Google Play store listing for the first MVP rel
 Detailed drafts and asset briefs:
 
 - [Store listing copy](store_listing_copy.md)
+- [Google Play submission content pack](google_play_submission_content_pack.md)
 - [Screenshot plan](screenshot_plan.md)
 - [Feature graphic brief](feature_graphic_brief.md)
 - [Store assets checklist](store_assets_checklist.md)
@@ -72,4 +73,5 @@ Nurtly is a calm, parent-facing support app.
 ## Notes
 
 - Keep the listing grounded and practical.
+- The submission content pack is the current handoff source for Play Console text, screenshots, and release notes.
 - Final marketing copy can be written later once the release scope is stable.

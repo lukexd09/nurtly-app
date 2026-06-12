@@ -6,6 +6,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 - [ ] [Closed-testing release gate](closed_testing_release_gate.md) has been reviewed.
 - [ ] [Closed-testing upload handoff](closed_testing_upload_handoff.md) has been reviewed.
+- [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
 - [ ] App package name is `com.nurtly.app`.
 - [ ] App label is `Nurtly`.
 - [ ] Current release version is confirmed in the release gate.
@@ -58,6 +59,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] App name is finalized.
 - [ ] Short description is finalized.
 - [ ] Full description is finalized.
+- [ ] Closed-testing release notes are finalized.
 - [ ] App icon is ready.
 - [ ] Feature graphic is ready.
 - [ ] Phone screenshots are ready.
