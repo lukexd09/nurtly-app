@@ -2,6 +2,14 @@
 
 This folder holds release preparation notes for the Android MVP release.
 
+## Final readiness pack
+
+- [Final MVP release readiness](final_mvp_release_readiness.md)
+- [Final release blockers](final_release_blockers.md)
+- [Audio asset license inventory](audio_asset_license_inventory.md)
+- [Store asset inventory](store_asset_inventory.md)
+- [Store screenshot plan](store_screenshot_plan.md)
+
 ## Docs
 
 - [Android signing](android_signing.md)

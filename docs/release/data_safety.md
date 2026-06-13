@@ -1,5 +1,7 @@
 # Data Safety preparation
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This worksheet helps prepare the Google Play Data Safety answers for the first MVP release.
 
 This document is not legal advice. Final answers must match the actual production behavior and Play Console configuration.

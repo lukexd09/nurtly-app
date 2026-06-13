@@ -1,0 +1,276 @@
+# Nurtly Final MVP Release Readiness
+
+## Executive Summary
+
+Assessment date: `2026-06-13`
+
+Assessed commit: `0b412e5a9c18a0b11af40da200c7cc87f6aef78d`
+
+Assessed branch: `codex/issue-158-final-mvp-release-readiness`
+
+Overall status: `BLOCKED`
+
+Repo-side readiness status: `BLOCKED`
+
+Owner-side readiness status: `BLOCKED`
+
+Play Console readiness status: `BLOCKED`
+
+The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, Journal, Privacy & Data, ads policy, localization, and the monetization flows all have code, tests, and release documentation aligned with the current MVP contract. The release pack is still blocked because release-critical evidence is missing or incomplete for bundled sound licensing, release signing, store assets, privacy publication, and Play Console setup.
+
+## Current Assessment
+
+- App behavior is mostly in line with the release contract already documented in `docs/release/`.
+- The current repo does not contain a final release blocker register, so one is added in `docs/release/final_release_blockers.md`.
+- The current repo does not contain a final readiness summary, so this document becomes the single repo-side source of truth for closed-testing go/no-go.
+- Background audio is explicitly deferred post-MVP.
+- Interstitial ads, rewarded ads, cloud sync, accounts, backend validation, analytics SDKs, and production IDs remain out of scope.
+
+## Scope
+
+- Review the current repo-side MVP release readiness across code, tests, docs, and release assets.
+- Consolidate the release-critical blockers into one authoritative register.
+- Record evidence-based closure recommendations for #125, #127, and #131.
+- Keep owner-only Play Console and hosting actions separate from repo-side evidence.
+
+## Out of Scope
+
+- Play Console submission.
+- Production rollout.
+- Creating or committing private release values, signing keys, `.aab`, `.apk`, `.jks`, `.keystore`, or `key.properties`.
+- New SDKs, dependencies, analytics providers, backend services, or ad formats.
+- Background audio architecture changes.
+- Lock-screen or notification controls.
+- Major UI redesign or broad refactoring.
+
+## Changed Files / Affected Areas
+
+- `docs/release/final_mvp_release_readiness.md`
+- `docs/release/final_release_blockers.md`
+- `docs/release/audio_asset_license_inventory.md`
+- `docs/release/store_asset_inventory.md`
+- `docs/release/store_screenshot_plan.md`
+- `docs/release/README.md`
+- Supporting release docs updated to link the authoritative final pack
+
+## #104 Acceptance Traceability
+
+| Area | Implementation location | Test location | Documentation location | Result | Remaining owner action |
+| --- | --- | --- | --- | --- | --- |
+| Monetization, purchases, restore, Free/Premium gating | `app/lib/core/monetization/*`, `app/lib/core/navigation/app_shell.dart` | `app/test/core/monetization/*`, `app/test/core/navigation/*`, `app/test/app_shell_test.dart` | `docs/release/ads_mvp_behavior.md`, `docs/release/monetization_ads_config.md`, `docs/release/google_play_submission_content_pack.md` | `PASS WITH OWNER ACTION` | Confirm Play Console billing products, prices, and final production IDs. |
+| Ads behavior and blocked-flow rules | `app/lib/core/ads/ad_widget_factory.dart`, `app/lib/core/monetization/ad_policy.dart`, screen placements in `app/lib/features/*` | `app/test/core/monetization/ad_policy_test.dart`, `app/test/features/home/home_screen_test.dart`, `app/test/features/play/play_screen_test.dart`, `app/test/features/sounds/sounds_screen_test.dart` | `docs/release/ads_mvp_behavior.md`, `docs/release/data_safety.md`, `docs/release/play_console_owner_decisions.md` | `PASS WITH OWNER ACTION` | Confirm Advertising ID and any final ad-disclosure decisions in Play Console. |
+| Play, Sounds, Journal, startup, Settings, and Privacy & Data UX | `app/lib/core/navigation/app_shell.dart`, `app/lib/features/play/*`, `app/lib/features/sounds/*`, `app/lib/features/journal/*`, `app/lib/features/privacy/*`, `app/lib/features/home/*` | `app/test/app_shell_test.dart`, `app/test/features/play/play_screen_test.dart`, `app/test/features/sounds/sounds_screen_test.dart`, `app/test/features/journal/journal_screen_test.dart`, `app/test/features/privacy/privacy_data_screen_test.dart` | `docs/release/closed_testing_go_no_go.md`, `docs/release/closed_testing_release_gate.md`, `docs/qa/release_smoke_test.md`, `docs/qa/mvp_manual_qa_checklist.md` | `PASS WITH OWNER ACTION` | Complete the final device smoke test and closed-testing evidence capture. |
+| Localization EN/PL | `app/lib/core/localization/app_strings.dart` | `app/test/core/localization/privacy_strings_test.dart`, `app/test/app_shell_test.dart`, `app/test/content_loader_test.dart` | `docs/release/google_play_submission_content_pack.md`, `docs/release/store_listing.md`, `docs/legal/privacy_policy_en.md`, `docs/legal/privacy_policy_pl.md` | `PASS` | None in repo; keep final public copy aligned with the published policy URL. |
+| Privacy and Data policy surfaces | `app/lib/features/privacy/privacy_data_screen.dart`, privacy string constants in `app/lib/core/localization/app_strings.dart` | `app/test/features/privacy/privacy_data_screen_test.dart`, `app/test/core/localization/privacy_strings_test.dart` | `docs/legal/privacy_policy_en.md`, `docs/legal/privacy_policy_pl.md`, `docs/legal/privacy_policy_publication_handoff.md`, `docs/legal/public/privacy_policy.md`, `docs/legal/public/privacy_policy_en.md`, `docs/legal/public/privacy_policy_pl.md`, `docs/release/data_safety.md` | `PASS WITH OWNER ACTION` | Publish the live privacy URL and replace all placeholders outside the repo. |
+| Store listing, target audience, content rating, and Families posture | Store copy and submission handoff docs | `app/test/app_shell_test.dart`, `app/test/features/privacy/privacy_data_screen_test.dart` | `docs/release/store_listing.md`, `docs/release/google_play_submission_content_pack.md`, `docs/release/play_console_owner_decisions.md` | `PASS WITH OWNER ACTION` | Finish Play Console audience, content-rating, and Families posture decisions. |
+| Store assets and screenshots | Current repo assets and release docs | N/A for exported store assets | `docs/release/store_asset_inventory.md`, `docs/release/store_screenshot_plan.md`, `docs/release/feature_graphic_brief.md`, `docs/release/store_assets_checklist.md` | `BLOCKED` | Export final icon, feature graphic, and screenshot set. |
+| Android technical release config, permissions, signing, and release build | `app/pubspec.yaml`, `app/android/app/build.gradle`, `app/android/app/src/main/AndroidManifest.xml`, `app/android/app/src/debug/AndroidManifest.xml`, `app/android/app/src/profile/AndroidManifest.xml` | `tools/pre_pr_check.ps1`, `tools/release_preflight_check.ps1`, Flutter quality checks | `docs/release/android_release_build.md`, `docs/release/android_signing.md`, `docs/release/closed_testing_release_gate.md`, `docs/release/closed_testing_upload_handoff.md` | `BLOCKED` | Provide local release signing files on the owner machine and produce the signed AAB there. |
+| Content loading and validation | `app/assets/content/*`, `app/lib/core/content/*`, `content/*` | `app/test/content_loader_test.dart`, `app/test/content_repository_test.dart` | `docs/release/google_play_submission_content_pack.md`, `docs/release/store_listing_copy.md` | `PASS` | Keep source content and published content aligned if new content is added. |
+| Performance, install sanity, and smoke coverage | Startup, release install, and content loading paths in the app shell | `app/test/app_shell_test.dart`, `app/test/features/home/home_screen_test.dart`, `app/test/features/play/play_screen_test.dart`, `app/test/features/sounds/sounds_screen_test.dart`, `app/test/features/journal/journal_screen_test.dart` | `docs/qa/release_smoke_test.md`, `docs/qa/mvp_manual_qa_checklist.md`, `docs/release/closed_testing_release_candidate_runbook.md` | `PASS WITH OWNER ACTION` | Run the real-device smoke pass and record the evidence outside git. |
+
+## Sounds Readiness
+
+- Playback: `PASS`
+- Timer: `PASS`
+- Loop: `PASS`
+- Fade-out: `PASS`
+- Lifecycle: `PASS`
+- Background audio decision: `DEFERRED POST-MVP`
+- Licensing: `BLOCKED`
+- #125 recommendation: `keep open` until bundled sound provenance is documented or assets are replaced
+
+Evidence:
+
+- `app/lib/features/sounds/sounds_screen.dart`
+- `app/lib/features/sounds/audio/looping_sound_loader.dart`
+- `app/test/features/sounds/sounds_screen_test.dart`
+- `docs/release/sounds_mvp_behavior.md`
+- `docs/release/audio_asset_license_inventory.md`
+
+Release notes:
+
+- Only one in-screen player is used at a time.
+- Play/pause, timer presets, looping, and fade-out are implemented in the current architecture.
+- Background audio remains a post-MVP decision rather than a closed-testing requirement.
+- Missing or unclear sound provenance is a release blocker until confirmed by the owner.
+
+## Privacy and Data Readiness
+
+- In-app screen: `PASS`
+- EN/PL: `PASS`
+- Journal local-only alignment: `PASS`
+- Ads / purchases / analytics alignment: `PASS WITH OWNER ACTION`
+- Privacy URL status: `BLOCKED`
+- #127 recommendation: `close after owner confirmation`
+
+Evidence:
+
+- `app/lib/features/privacy/privacy_data_screen.dart`
+- `app/test/features/privacy/privacy_data_screen_test.dart`
+- `app/test/core/localization/privacy_strings_test.dart`
+- `docs/legal/privacy_policy_en.md`
+- `docs/legal/privacy_policy_pl.md`
+- `docs/legal/privacy_policy_publication_handoff.md`
+- `docs/legal/public/privacy_policy.md`
+- `docs/legal/public/privacy_policy_en.md`
+- `docs/legal/public/privacy_policy_pl.md`
+- `docs/release/data_safety.md`
+
+Release notes:
+
+- The app is parent/caregiver-facing and not child-directed.
+- Journal remains local-only in the current implementation.
+- The public policy body matches the shipped MVP behavior described in the repo.
+- The live policy URL and publication timestamp are still owner-side actions.
+
+## Ads Readiness
+
+- Free placements: `PASS`
+- Premium suppression: `PASS`
+- Blocked flows: `PASS`
+- Failure behavior: `PASS`
+- Manifest/config: `PASS WITH OWNER ACTION`
+- #131 recommendation: `close after owner confirmation`
+
+Evidence:
+
+- `app/lib/core/ads/ad_widget_factory.dart`
+- `app/lib/core/monetization/ad_policy.dart`
+- `app/test/core/monetization/ad_policy_test.dart`
+- `app/test/features/home/home_screen_test.dart`
+- `app/test/features/play/play_screen_test.dart`
+- `app/test/features/sounds/sounds_screen_test.dart`
+- `docs/release/ads_mvp_behavior.md`
+- `docs/release/data_safety.md`
+- `docs/release/play_console_owner_decisions.md`
+
+Release notes:
+
+- Free users only see passive banner placements in approved browse areas.
+- Premium users do not construct or display banner placeholders in the blocked flows.
+- No interstitial, rewarded, or startup ad expansion is in the MVP contract.
+- Final ad IDs and ad-disclosure decisions remain owner-confirmed Play Console work.
+
+## Store Listing Readiness
+
+- EN copy: `PASS WITH OWNER ACTION`
+- PL copy: `PASS WITH OWNER ACTION`
+- Target audience: `PASS WITH OWNER ACTION`
+- Families posture: `PASS WITH OWNER ACTION`
+- Content rating: `PASS WITH OWNER ACTION`
+- Ads declaration: `PASS WITH OWNER ACTION`
+- Subscriptions: `PASS WITH OWNER ACTION`
+- Privacy URL: `BLOCKED`
+
+Evidence:
+
+- `docs/release/store_listing.md`
+- `docs/release/store_listing_copy.md`
+- `docs/release/google_play_submission_content_pack.md`
+- `docs/release/play_console_owner_decisions.md`
+- `docs/legal/privacy_policy_publication_handoff.md`
+
+## Store Asset Inventory
+
+- Icon: `BLOCKED`
+- Adaptive icon: `BLOCKED`
+- Feature graphic: `BLOCKED`
+- Phone screenshots: `BLOCKED`
+- EN assets: `BLOCKED`
+- PL assets: `BLOCKED`
+- Remaining owner exports: final icon set, feature graphic, screenshot exports, and any Play Console asset uploads
+
+Evidence:
+
+- `docs/release/store_asset_inventory.md`
+- `docs/release/store_screenshot_plan.md`
+- `docs/release/feature_graphic_brief.md`
+- `docs/release/store_assets_checklist.md`
+- `app/android/app/src/main/res/drawable/ic_launcher.xml`
+
+## Android Technical Release Audit
+
+- Application ID: `PASS`
+- Version: `PASS`
+- SDK configuration: `PASS`
+- Permissions: `PASS`
+- Signing: `BLOCKED`
+- Debug/release separation: `PASS`
+- Production ID separation: `PASS WITH OWNER ACTION`
+
+Evidence:
+
+- `app/pubspec.yaml`
+- `app/android/app/build.gradle`
+- `app/android/app/src/main/AndroidManifest.xml`
+- `app/android/app/src/debug/AndroidManifest.xml`
+- `app/android/app/src/profile/AndroidManifest.xml`
+- `docs/release/android_release_build.md`
+- `docs/release/android_signing.md`
+
+## Content and Localization Validation
+
+- JSON parsing and bundled content validation: `PASS`
+- Required EN/PL fields: `PASS`
+- Draft-only content exposure: `PASS`
+- Premium/free flags: `PASS`
+- No broken placeholder copy: `PASS`
+
+Evidence:
+
+- `app/test/content_loader_test.dart`
+- `app/test/content_repository_test.dart`
+- `app/test/core/localization/privacy_strings_test.dart`
+- `app/test/app_shell_test.dart`
+
+## Manual Verification Still Required
+
+- Owner-machine signing-file check for release AAB generation.
+- Final Play Console entry, audience, rating, billing, and tester-group setup.
+- Privacy policy publication and live URL confirmation.
+- Closed-testing upload and real-device smoke evidence.
+- Final store asset export and upload.
+
+## Remaining Blockers
+
+See the authoritative register in `docs/release/final_release_blockers.md`.
+
+## Deferred Post-MVP Items
+
+- Background audio.
+- Lock-screen controls.
+- Notification controls.
+- Interstitial ads.
+- Rewarded ads.
+- Startup ads.
+- Personalized ad expansion.
+- Analytics SDK/provider integration.
+- Cloud sync and accounts.
+
+## Issue Closure Recommendations
+
+- `#125`: keep open until bundled audio provenance is documented or the bundled assets are replaced.
+- `#127`: close after owner confirmation for the live privacy URL and Play Console publication steps.
+- `#131`: close after owner confirmation for the final Play Console ad configuration and disclosures.
+- `#104 remains open`: do not close automatically.
+
+## Automated Verification
+
+| Command | Result | Notes |
+| --- | --- | --- |
+| `tools/pre_pr_check.ps1` | `BLOCKED at clean-status gate` | Flutter verification, scope guard, and Flutter quality checks passed; the script then stopped because the intended docs changes leave the working tree dirty. |
+| `tools/release_preflight_check.ps1` | `FAILED` | Safe failure: `app/android/key.properties` is missing. The script still confirmed `git diff --check` and reported no release artifact leakage. |
+| `git diff --check` | `PASS` | Clean diff format. |
+| `git status --short` | `PASS WITH INTENDED CHANGES` | Only the intended release docs and inventories remain changed. |
+| `flutter pub get` | `PASS` | Ran from `app/` with `C:\src\flutter\bin` on `PATH`. |
+| `dart format --output=none --set-exit-if-changed .` | `PASS` | No formatting changes required. |
+| `flutter analyze` | `PASS` | No issues found. |
+| `flutter test` | `PASS` | All app tests passed. |
+| `flutter build apk --debug` | `FAILED` | No Android SDK was available on this machine (`No Android SDK found`). |
+| `flutter build appbundle --release` | `BLOCKED / NOT RUN` | Not run because local release signing is unavailable and the owner-machine signing file is missing. |
+
+## Final Go / No-Go Recommendation
+
+No-go for closed testing until the blockers in `docs/release/final_release_blockers.md` are resolved.
+
+Public release is deferred until the same blockers and the Play Console owner actions are completed.

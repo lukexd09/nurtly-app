@@ -1,5 +1,7 @@
 # MVP Ad Placement Contract
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This document captures the proposed release-time ad behavior for the MVP. It is a contract note for QA, store readiness, and privacy review, not an implementation file.
 
 ## Allowed placements

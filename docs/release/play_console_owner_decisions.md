@@ -1,5 +1,7 @@
 # Play Console owner decisions
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This document turns the remaining Play Console and release-blocker questions into recommended MVP defaults for the Nurtly closed-testing path.
 
 It is a decision pack for release readiness only. It does not change app behavior or commit production configuration.
