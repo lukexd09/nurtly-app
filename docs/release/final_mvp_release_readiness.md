@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Assessment date: `2026-06-13`
+Assessment date: `2026-06-14`
 
 Assessed commit: `0b412e5a9c18a0b11af40da200c7cc87f6aef78d`
 
@@ -70,11 +70,11 @@ The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, J
 
 ## Sounds Readiness
 
-- Playback: `PASS`
-- Timer: `PASS`
-- Loop: `PASS`
-- Fade-out: `PASS`
-- Lifecycle: `PASS`
+- Playback: `PASS WITH OWNER ACTION`
+- Timer: `PASS WITH OWNER ACTION`
+- Loop: `PASS WITH OWNER ACTION`
+- Fade-out: `PASS WITH OWNER ACTION`
+- Lifecycle: `BLOCKED`
 - Background audio decision: `DEFERRED POST-MVP`
 - Licensing: `BLOCKED`
 - #125 recommendation: `keep open` until bundled sound provenance is documented or assets are replaced
@@ -89,8 +89,9 @@ Evidence:
 
 Release notes:
 
-- Only one in-screen player is used at a time.
-- Play/pause, timer presets, looping, and fade-out are implemented in the current architecture.
+- The implementation exists for the in-screen audio player, timer presets, looping, and fade-out.
+- `sounds_screen_test.dart` covers rendering, navigation, premium gating, and ad placement, but it does not exercise the real `just_audio` runtime, countdown behavior, fade-volume transition, or app lifecycle transitions on a device.
+- Real-device verification is still required for play, pause, resume, loop, timer countdown, timer completion, fade-out, navigation away from the player, screen lock or background transition, missing or corrupt asset handling, repeated rapid controls, and audio interruption by paywall or ads.
 - Background audio remains a post-MVP decision rather than a closed-testing requirement.
 - Missing or unclear sound provenance is a release blocker until confirmed by the owner.
 
@@ -195,6 +196,7 @@ Evidence:
 - SDK configuration: `PASS`
 - Permissions: `PASS`
 - Signing: `BLOCKED`
+- Android build environment / install sanity: `BLOCKED`
 - Debug/release separation: `PASS`
 - Production ID separation: `PASS WITH OWNER ACTION`
 
@@ -208,13 +210,20 @@ Evidence:
 - `docs/release/android_release_build.md`
 - `docs/release/android_signing.md`
 
+Notes:
+
+- `flutter build apk --debug` failed because no Android SDK was available on this machine.
+- `flutter build appbundle --release` was not run because the local release signing file is missing.
+- The owner/release machine still needs Android SDK configuration, debug APK build, signed AAB build, install path verification, and artifact evidence capture.
+
 ## Content and Localization Validation
 
 - JSON parsing and bundled content validation: `PASS`
 - Required EN/PL fields: `PASS`
 - Draft-only content exposure: `PASS`
 - Premium/free flags: `PASS`
-- No broken placeholder copy: `PASS`
+- App UI and bundled user content contain no release placeholder copy: `PASS`
+- Legal publication templates still contain tracked owner placeholders: `BLOCKED under BLK-004`
 
 Evidence:
 
@@ -226,6 +235,8 @@ Evidence:
 ## Manual Verification Still Required
 
 - Owner-machine signing-file check for release AAB generation.
+- Owner-machine Android SDK / build-environment setup and install-path evidence.
+- Real-device Sounds verification.
 - Final Play Console entry, audience, rating, billing, and tester-group setup.
 - Privacy policy publication and live URL confirmation.
 - Closed-testing upload and real-device smoke evidence.
