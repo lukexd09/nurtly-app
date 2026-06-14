@@ -269,10 +269,10 @@ See the authoritative register in `docs/release/final_release_blockers.md`.
 
 | Command | Result | Notes |
 | --- | --- | --- |
-| `tools/pre_pr_check.ps1` | `BLOCKED at clean-status gate` | Flutter verification, scope guard, and Flutter quality checks passed; the script then stopped because the intended docs changes leave the working tree dirty. |
-| `tools/release_preflight_check.ps1` | `FAILED` | Safe failure: `app/android/key.properties` is missing. The script still confirmed `git diff --check` and reported no release artifact leakage. |
+| `tools/pre_pr_check.ps1` | `PASS` | Re-ran on the clean committed branch. Flutter verification, scope guard, Flutter quality checks, and git status all passed. |
+| `tools/release_preflight_check.ps1` | `FAILED SAFELY` | Missing `app/android/key.properties`. The script reported the missing local signing file and confirmed `git diff --check`. |
 | `git diff --check` | `PASS` | Clean diff format. |
-| `git status --short` | `PASS WITH INTENDED CHANGES` | Only the intended release docs and inventories remain changed. |
+| `git status --short` | `PASS` | Clean before and after the verification rerun. |
 | `flutter pub get` | `PASS` | Ran from `app/` with `C:\src\flutter\bin` on `PATH`. |
 | `dart format --output=none --set-exit-if-changed .` | `PASS` | No formatting changes required. |
 | `flutter analyze` | `PASS` | No issues found. |
