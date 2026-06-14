@@ -1,5 +1,7 @@
 # Closed Testing Release Gate
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This document is the operational release gate for inviting closed-test users to the Nurtly MVP. It consolidates the current release posture, the remaining owner decisions, and the documents that must stay aligned before testers are invited.
 
 ## Current release posture
@@ -60,7 +62,7 @@ This document is the operational release gate for inviting closed-test users to 
 - Premium users should not see ads.
 - Interstitial and rewarded ads are not part of the MVP contract.
 - Production ad app and unit IDs remain an owner decision before public release.
-- The current repository should not contain production ad IDs or secrets.
+- The current repository should not contain production ad IDs or private release values.
 
 ## Analytics readiness
 

@@ -1,5 +1,7 @@
 # Closed-testing go/no-go
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This checklist turns the owner decisions into a simple release gate for the Nurtly closed-testing build.
 
 Use it alongside [Play Console owner decisions](play_console_owner_decisions.md) and the [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md).

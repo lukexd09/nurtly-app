@@ -1,5 +1,7 @@
 # Closed-testing release candidate evidence
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 Use this template to record local release-candidate evidence for the Nurtly closed-testing build.
 
 This file is safe to commit because it contains placeholders only. Fill it locally when preparing the release candidate.
@@ -35,5 +37,5 @@ This file is safe to commit because it contains placeholders only. Fill it local
 
 ## Reminder
 
-- Do not paste secrets, private keys, local Play Console exports, or screenshots containing private data into this file.
+- Do not paste private release values, private keys, local Play Console exports, or screenshots containing private data into this file.
 - Keep final submission evidence outside git unless the owner explicitly requests otherwise.

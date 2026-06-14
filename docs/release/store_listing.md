@@ -1,5 +1,7 @@
 # Store listing preparation
 
+For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
+
 This worksheet helps prepare the Google Play store listing for the first MVP release.
 
 Detailed drafts and asset briefs:
