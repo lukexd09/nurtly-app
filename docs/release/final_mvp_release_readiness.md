@@ -90,7 +90,7 @@ Evidence:
 Release notes:
 
 - The implementation exists for the in-screen audio player, timer presets, looping, and fade-out.
-- `sounds_screen_test.dart` covers rendering, navigation, premium gating, and ad placement, but it does not exercise the real `just_audio` runtime, countdown behavior, fade-volume transition, or app lifecycle transitions on a device.
+- `sounds_screen_test.dart` covers rendering, navigation, premium gating, and ad placement, but it does not exercise the real audio-player runtime, countdown behavior, fade-volume transition, or app lifecycle transitions on a device.
 - Real-device verification is still required for play, pause, resume, loop, timer countdown, timer completion, fade-out, navigation away from the player, screen lock or background transition, missing or corrupt asset handling, repeated rapid controls, and audio interruption by paywall or ads.
 - Background audio remains a post-MVP decision rather than a closed-testing requirement.
 - Missing or unclear sound provenance is a release blocker until confirmed by the owner.
