@@ -8,6 +8,8 @@ abstract interface class JournalStore {
   Future<List<JournalEntry>> loadEntries();
 
   Future<void> saveEntries(List<JournalEntry> entries);
+
+  Future<void> deleteAllEntries();
 }
 
 class SharedPreferencesJournalStore implements JournalStore {
@@ -40,6 +42,12 @@ class SharedPreferencesJournalStore implements JournalStore {
     final payload = jsonEncode(entries.map((entry) => entry.toJson()).toList());
     await prefs.setString(key, payload);
   }
+
+  @override
+  Future<void> deleteAllEntries() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
 }
 
 class InMemoryJournalStore implements JournalStore {
@@ -61,6 +69,12 @@ class InMemoryJournalStore implements JournalStore {
   Future<void> saveEntries(List<JournalEntry> entries) async {
     saveCalls++;
     _entries = List<JournalEntry>.from(entries);
+  }
+
+  @override
+  Future<void> deleteAllEntries() async {
+    saveCalls++;
+    _entries = <JournalEntry>[];
   }
 
   List<JournalEntry> get entries => List<JournalEntry>.unmodifiable(_entries);

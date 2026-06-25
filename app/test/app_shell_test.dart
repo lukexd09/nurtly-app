@@ -1,11 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/core/ads/consent_flow_controller.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
 import 'package:nurtly/core/navigation/app_shell.dart';
 import 'package:nurtly/core/localization/language_preference_store.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 import 'package:nurtly/features/play/play_screen.dart';
+import 'package:nurtly/features/journal/journal_controller.dart';
+import 'package:nurtly/features/journal/journal_entry.dart';
+import 'package:nurtly/features/journal/journal_store.dart';
 import 'package:nurtly/main.dart';
 
 import 'test_fakes/fake_content_loader.dart';
@@ -124,7 +128,7 @@ void main() {
       (tester) async {
     await _pumpNurtlyApp(tester, size: const Size(600, 4000));
 
-    await tester.tap(find.byTooltip('Settings'));
+    await _tapSettings(tester);
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Settings'), findsOneWidget);
@@ -146,7 +150,7 @@ void main() {
       (tester) async {
     await _pumpNurtlyApp(tester, size: const Size(600, 4000));
 
-    await tester.tap(find.byTooltip('Settings'));
+    await _tapSettings(tester);
     await tester.pumpAndSettle();
 
     expect(find.text('Premium'), findsOneWidget);
@@ -267,6 +271,67 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Current MVP behavior'), findsOneWidget);
+  });
+
+  testWidgets('Delete all local data clears journal and preferences',
+      (tester) async {
+    final journalStore = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'entry-1',
+          createdAt: DateTime(2026, 6, 25, 10),
+          eventAt: DateTime(2026, 6, 25, 10),
+          note: 'Test note',
+        ),
+      ],
+    );
+    final journalController = JournalController(store: journalStore);
+    await journalController.load();
+    final languageStore = FakeLanguagePreferenceStore(
+      saved: AppLanguage.polish,
+    );
+    await _pumpNurtlyApp(
+      tester,
+      journalController: journalController,
+      languagePreferenceStore: languageStore,
+    );
+
+    expect(find.text('Brak wpisu'), findsNothing);
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Usuń wszystkie dane lokalne').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Usuń wszystkie dane lokalne').last);
+    await tester.pumpAndSettle();
+
+    expect(journalStore.entries, isEmpty);
+    expect(languageStore.saved, isNull);
+    await _tapBack(tester);
+    await tester.pumpAndSettle();
+    await _tapJournalTab(tester);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('journal-empty-state')), findsOneWidget);
+  });
+
+  testWidgets('Privacy choices only appear when required', (tester) async {
+    final consentFlow = _FakeConsentFlow(privacyRequired: true);
+    await _pumpNurtlyApp(
+      tester,
+      consentFlow: consentFlow,
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Privacy choices'), findsOneWidget);
   });
 
   testWidgets('saved Polish language overrides system locale on startup',
@@ -416,12 +481,44 @@ Future<void> _pumpUntilAnyText(
   }
 }
 
+Future<void> _tapSettings(WidgetTester tester) async {
+  final english = find.byTooltip('Settings');
+  final polish = find.byTooltip('Ustawienia');
+  if (english.evaluate().isNotEmpty) {
+    await tester.tap(english);
+    return;
+  }
+  await tester.tap(polish);
+}
+
+Future<void> _tapJournalTab(WidgetTester tester) async {
+  final english = find.text('Journal');
+  final polish = find.text('Dziennik');
+  if (english.evaluate().isNotEmpty) {
+    await tester.tap(english.first);
+    return;
+  }
+  await tester.tap(polish.first);
+}
+
+Future<void> _tapBack(WidgetTester tester) async {
+  final english = find.byTooltip('Back');
+  final polish = find.byTooltip('Wstecz');
+  if (english.evaluate().isNotEmpty) {
+    await tester.tap(english.first);
+    return;
+  }
+  await tester.tap(polish.first);
+}
+
 Future<void> _pumpNurtlyApp(
   WidgetTester tester, {
   Size size = const Size(600, 1200),
   Locale? systemLocale,
   LanguagePreferenceStore? languagePreferenceStore,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
+  ConsentFlow? consentFlow,
+  JournalController? journalController,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -442,6 +539,8 @@ Future<void> _pumpNurtlyApp(
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
         premiumEntitlementProvider:
             premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
+        consentFlow: consentFlow,
+        journalController: journalController,
       ),
     ),
   );
@@ -483,6 +582,8 @@ Future<void> _pumpRealNurtlyApp(
   Size size = const Size(600, 1200),
   LanguagePreferenceStore? languagePreferenceStore,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
+  ConsentFlow? consentFlow,
+  JournalController? journalController,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -498,6 +599,8 @@ Future<void> _pumpRealNurtlyApp(
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
         premiumEntitlementProvider:
             premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
+        consentFlow: consentFlow,
+        journalController: journalController,
       ),
     ),
   );
@@ -539,4 +642,28 @@ class _ThrowingLanguagePreferenceStore implements LanguagePreferenceStore {
       throw StateError('save failed');
     }
   }
+
+  @override
+  Future<void> delete() async {}
 }
+
+class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
+  _FakeConsentFlow({
+    this.privacyRequired = false,
+  });
+
+  final bool privacyRequired;
+
+  @override
+  bool get canRequestAds => false;
+
+  @override
+  bool get privacyOptionsRequired => privacyRequired;
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> showPrivacyOptions() async {}
+}
+

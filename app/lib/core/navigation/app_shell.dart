@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app_config.dart';
+import '../ads/consent_flow_controller.dart';
 import '../ads/ad_widget_factory.dart';
 import '../content/bundled_content_source.dart';
 import '../content/content_loader.dart';
@@ -15,6 +16,8 @@ import '../monetization/purchase_result.dart';
 import '../monetization/premium_purchase_provider.dart';
 import '../monetization/premium_paywall_sheet.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/journal/journal_controller.dart';
+import '../../features/journal/journal_store.dart';
 import '../../features/journal/journal_screen.dart';
 import '../../features/play/play_screen.dart';
 import '../../features/privacy/privacy_data_screen.dart';
@@ -34,6 +37,8 @@ class AppShell extends StatefulWidget {
     PremiumEntitlementProvider? premiumEntitlementProvider,
     PremiumPurchaseProvider? premiumPurchaseProvider,
     AdWidgetFactory? adWidgetFactory,
+    ConsentFlow? consentFlow,
+    JournalController? journalController,
     this.onLanguageChanged,
     super.key,
   })  : languagePreferenceStore = languagePreferenceStore ??
@@ -42,12 +47,21 @@ class AppShell extends StatefulWidget {
             premiumEntitlementProvider ?? LocalPremiumEntitlementProvider(),
         premiumPurchaseProvider =
             premiumPurchaseProvider ?? const LocalPremiumPurchaseProvider(),
+        _ownsJournalController = journalController == null,
+        consentFlow = consentFlow ?? const NoopConsentFlow(),
+        journalController = journalController ??
+            JournalController(
+              store: const SharedPreferencesJournalStore(),
+            ),
         adWidgetFactory = adWidgetFactory ?? const FakeAdWidgetFactory();
 
   final ContentLoader? contentLoader;
   final LanguagePreferenceStore languagePreferenceStore;
   final PremiumEntitlementProvider premiumEntitlementProvider;
   final PremiumPurchaseProvider premiumPurchaseProvider;
+  final bool _ownsJournalController;
+  final ConsentFlow consentFlow;
+  final JournalController journalController;
   final AdWidgetFactory adWidgetFactory;
   final ValueChanged<AppLanguage>? onLanguageChanged;
 
@@ -73,6 +87,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       provider: widget.premiumEntitlementProvider,
       purchaseProvider: widget.premiumPurchaseProvider,
     );
+    if (widget.consentFlow is Listenable) {
+      (widget.consentFlow as Listenable).addListener(_handleConsentChanged);
+    }
+    widget.consentFlow.initialize();
+    widget.journalController.addListener(_handleJournalChanged);
     _premiumController.addListener(_handlePremiumChanged);
     _selectedLanguage = const AppLocaleResolver().resolve(
       preference: AppLanguagePreference.system,
@@ -84,8 +103,15 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    if (widget.consentFlow is Listenable) {
+      (widget.consentFlow as Listenable).removeListener(_handleConsentChanged);
+    }
+    widget.journalController.removeListener(_handleJournalChanged);
     _premiumController.removeListener(_handlePremiumChanged);
     _premiumController.dispose();
+    if (widget._ownsJournalController) {
+      widget.journalController.dispose();
+    }
     super.dispose();
   }
 
@@ -97,6 +123,20 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   }
 
   void _handlePremiumChanged() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {});
+  }
+
+  void _handleJournalChanged() {
+    if (!mounted) {
+      return;
+    }
+    setState(() {});
+  }
+
+  void _handleConsentChanged() {
     if (!mounted) {
       return;
     }
@@ -401,6 +441,23 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                         MaterialPageRoute<void>(
                           builder: (_) => PrivacyDataScreen(
                             strings: AppStrings.forLanguage(_selectedLanguage),
+                            privacyChoicesVisible:
+                                widget.consentFlow.privacyOptionsRequired,
+                            onOpenPrivacyChoices:
+                                widget.consentFlow.privacyOptionsRequired
+                                    ? () {
+                                        unawaited(
+                                          widget.consentFlow
+                                              .showPrivacyOptions(),
+                                        );
+                                      }
+                                    : null,
+                            onDeleteAllLocalData: () async {
+                              await widget.journalController.deleteAllEntries();
+                              try {
+                                await widget.languagePreferenceStore.delete();
+                              } catch (_) {}
+                            },
                           ),
                         ),
                       );
@@ -502,7 +559,10 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         showAdPlaceholder: adPolicy.allows(AdPlacement.playListPassiveSlot),
         adWidgetFactory: widget.adWidgetFactory,
       ),
-      JournalScreen(strings: _strings),
+      JournalScreen(
+        strings: _strings,
+        controller: widget.journalController,
+      ),
       SoundsScreen(
         strings: _strings,
         contentLoader: _contentLoaderForCurrentLanguage(),

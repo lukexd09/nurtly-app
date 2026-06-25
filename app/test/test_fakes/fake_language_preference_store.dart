@@ -15,4 +15,9 @@ class FakeLanguagePreferenceStore implements LanguagePreferenceStore {
     saved = language;
     savedValues.add(language);
   }
+
+  @override
+  Future<void> delete() async {
+    saved = null;
+  }
 }

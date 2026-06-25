@@ -95,6 +95,9 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Ads do not appear during startup or aggressive first-run moments.
 - [ ] Premium disables ads.
 - [ ] Production ads app and ad unit ids are ready.
+- [ ] UMP consent flow is verified on Android before banner loading.
+- [ ] Debug EEA testing is enabled only in debug builds.
+- [ ] Local debug test device IDs are configured only for debug builds.
 - [ ] Rewarded and interstitial ads are not part of the MVP contract.
 - [ ] Advertising ID and ad personalization are marked as owner-confirmation items until final ad setup is approved.
 
@@ -150,5 +153,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Settings work.
 - [ ] Privacy screen works.
 - [ ] Privacy & Data wording is clear in EN and PL.
+- [ ] Privacy choices only show when required.
+- [ ] Delete all local data returns the app to an empty local state.
 - [ ] Offline and basic fallback behavior is acceptable.
 - [ ] Release build smoke test passed on a real device.
