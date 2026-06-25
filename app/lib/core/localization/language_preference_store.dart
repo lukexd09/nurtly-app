@@ -6,6 +6,8 @@ abstract interface class LanguagePreferenceStore {
   Future<AppLanguage?> load();
 
   Future<void> save(AppLanguage language);
+
+  Future<void> delete();
 }
 
 class SharedPreferencesLanguagePreferenceStore
@@ -29,5 +31,11 @@ class SharedPreferencesLanguagePreferenceStore
   Future<void> save(AppLanguage language) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, language.languageCode);
+  }
+
+  @override
+  Future<void> delete() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
   }
 }

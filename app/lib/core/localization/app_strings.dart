@@ -144,6 +144,12 @@ class AppStrings {
     required this.premium,
     required this.privacyTitle,
     required this.privacySubtitle,
+    required this.privacyChoices,
+    required this.deleteAllLocalData,
+    required this.deleteAllLocalDataTitle,
+    required this.deleteAllLocalDataBody,
+    required this.deleteAllLocalDataSuccess,
+    required this.deleteAllLocalDataFailed,
     required this.currentMvpBehavior,
     required this.parentFirstAudience,
     required this.childNameNotRequired,
@@ -342,6 +348,12 @@ class AppStrings {
   final String premium;
   final String privacyTitle;
   final String privacySubtitle;
+  final String privacyChoices;
+  final String deleteAllLocalData;
+  final String deleteAllLocalDataTitle;
+  final String deleteAllLocalDataBody;
+  final String deleteAllLocalDataSuccess;
+  final String deleteAllLocalDataFailed;
   final String currentMvpBehavior;
   final String parentFirstAudience;
   final String childNameNotRequired;
@@ -544,6 +556,13 @@ class AppStrings {
     premium: 'Premium',
     privacyTitle: 'Privacy & Data',
     privacySubtitle: 'What Nurtly does with data in this MVP.',
+    privacyChoices: 'Privacy choices',
+    deleteAllLocalData: 'Delete all local data',
+    deleteAllLocalDataTitle: 'Delete all local data?',
+    deleteAllLocalDataBody:
+        'This removes local journal entries and resettable app preferences from this device.',
+    deleteAllLocalDataSuccess: 'Local data deleted.',
+    deleteAllLocalDataFailed: 'Could not delete local data.',
     currentMvpBehavior: 'Current MVP behavior',
     parentFirstAudience:
         'Nurtly is for parents and caregivers, not for children.',
@@ -761,6 +780,13 @@ class AppStrings {
     premium: 'Premium',
     privacyTitle: 'Prywatność i dane',
     privacySubtitle: 'Jak Nurtly używa danych w tym MVP.',
+    privacyChoices: 'Ustawienia prywatności reklam',
+    deleteAllLocalData: 'Usuń wszystkie dane lokalne',
+    deleteAllLocalDataTitle: 'Usunąć wszystkie dane lokalne?',
+    deleteAllLocalDataBody:
+        'To usunie lokalne wpisy dziennika i możliwe do resetu preferencje aplikacji z tego urządzenia.',
+    deleteAllLocalDataSuccess: 'Dane lokalne usunięte.',
+    deleteAllLocalDataFailed: 'Nie udało się usunąć danych lokalnych.',
     currentMvpBehavior: 'Obecne działanie MVP',
     parentFirstAudience:
         'Nurtly jest dla rodziców i opiekunów, nie dla dzieci.',

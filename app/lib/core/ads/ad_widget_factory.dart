@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'consent_flow_controller.dart';
 import '../localization/app_strings.dart';
 import '../monetization/ad_placeholder.dart';
 import 'ad_unit_ids.dart';
@@ -20,19 +23,23 @@ class FakeAdWidgetFactory implements AdWidgetFactory {
 }
 
 class RealAdWidgetFactory implements AdWidgetFactory {
-  const RealAdWidgetFactory();
+  const RealAdWidgetFactory({required this.consentFlow});
+
+  final ConsentFlow consentFlow;
 
   @override
   Widget buildPassiveSlot({required AppStrings strings}) {
     if (defaultTargetPlatform != TargetPlatform.android) {
       return const SizedBox.shrink();
     }
-    return const _RealBannerAdSlot();
+    return _RealBannerAdSlot(consentFlow: consentFlow);
   }
 }
 
 class _RealBannerAdSlot extends StatefulWidget {
-  const _RealBannerAdSlot();
+  const _RealBannerAdSlot({required this.consentFlow});
+
+  final ConsentFlow consentFlow;
 
   @override
   State<_RealBannerAdSlot> createState() => _RealBannerAdSlotState();
@@ -40,16 +47,54 @@ class _RealBannerAdSlot extends StatefulWidget {
 
 class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   BannerAd? _bannerAd;
+  final BannerLoadGate _loadGate = BannerLoadGate();
   var _isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    if (widget.consentFlow is Listenable) {
+      (widget.consentFlow as Listenable).addListener(_syncConsentState);
+    }
+    _syncConsentState();
+  }
+
+  @override
+  void didUpdateWidget(covariant _RealBannerAdSlot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.consentFlow != widget.consentFlow) {
+      if (oldWidget.consentFlow is Listenable) {
+        (oldWidget.consentFlow as Listenable).removeListener(_syncConsentState);
+      }
+      if (widget.consentFlow is Listenable) {
+        (widget.consentFlow as Listenable).addListener(_syncConsentState);
+      }
+      _syncConsentState();
+    }
+  }
+
+  void _syncConsentState() {
+    if (!mounted) {
+      return;
+    }
+    if (!widget.consentFlow.canRequestAds) {
+      _bannerAd?.dispose();
+      _bannerAd = null;
+      _isLoaded = false;
+      _loadGate.markConsentRevoked();
+    } else {
+      _loadGate.markConsentGranted();
+      if (_loadGate.canAttemptLoad) {
+        unawaited(_loadAd());
+      }
+    }
+    setState(() {});
   }
 
   Future<void> _loadAd() async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
+    if (defaultTargetPlatform != TargetPlatform.android ||
+        !_loadGate.beginLoadAttempt() ||
+        !widget.consentFlow.canRequestAds) {
       return;
     }
 
@@ -70,6 +115,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
         },
         onAdFailedToLoad: (ad, _) {
           ad.dispose();
+          _loadGate.markLoadFailed();
           if (!mounted) {
             return;
           }
@@ -97,13 +143,16 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
   @override
   void dispose() {
+    if (widget.consentFlow is Listenable) {
+      (widget.consentFlow as Listenable).removeListener(_syncConsentState);
+    }
     _bannerAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_isLoaded || _bannerAd == null) {
+    if (!widget.consentFlow.canRequestAds || !_isLoaded || _bannerAd == null) {
       return const SizedBox.shrink();
     }
 
@@ -115,13 +164,41 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   }
 }
 
+class BannerLoadGate {
+  var _consentAllowed = false;
+  var _loadAttempted = false;
+
+  bool get canAttemptLoad => _consentAllowed && !_loadAttempted;
+
+  bool beginLoadAttempt() {
+    if (!canAttemptLoad) {
+      return false;
+    }
+    _loadAttempted = true;
+    return true;
+  }
+
+  void markConsentRevoked() {
+    _consentAllowed = false;
+    _loadAttempted = false;
+  }
+
+  void markConsentGranted() {
+    _consentAllowed = true;
+  }
+
+  void markLoadFailed() {
+    _loadAttempted = false;
+  }
+}
+
 class AdSlotFactory {
   const AdSlotFactory._();
 
-  static AdWidgetFactory defaultForRuntime() {
+  static AdWidgetFactory defaultForRuntime({required ConsentFlow consentFlow}) {
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
       return const FakeAdWidgetFactory();
     }
-    return const RealAdWidgetFactory();
+    return RealAdWidgetFactory(consentFlow: consentFlow);
   }
 }
