@@ -441,22 +441,21 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                         MaterialPageRoute<void>(
                           builder: (_) => PrivacyDataScreen(
                             strings: AppStrings.forLanguage(_selectedLanguage),
-                            privacyChoicesVisible:
-                                widget.consentFlow.privacyOptionsRequired,
-                            onOpenPrivacyChoices:
-                                widget.consentFlow.privacyOptionsRequired
-                                    ? () {
-                                        unawaited(
-                                          widget.consentFlow
-                                              .showPrivacyOptions(),
-                                        );
-                                      }
-                                    : null,
+                            refreshListenable: widget.consentFlow is Listenable
+                                ? widget.consentFlow as Listenable
+                                : null,
+                            consentFlow: widget.consentFlow,
+                            onOpenPrivacyChoices: widget
+                                    .consentFlow.privacyOptionsRequired
+                                ? () {
+                                    unawaited(
+                                      widget.consentFlow.showPrivacyOptions(),
+                                    );
+                                  }
+                                : null,
                             onDeleteAllLocalData: () async {
                               await widget.journalController.deleteAllEntries();
-                              try {
-                                await widget.languagePreferenceStore.delete();
-                              } catch (_) {}
+                              await widget.languagePreferenceStore.delete();
                             },
                           ),
                         ),

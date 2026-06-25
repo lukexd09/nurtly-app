@@ -149,6 +149,7 @@ class AppStrings {
     required this.deleteAllLocalDataTitle,
     required this.deleteAllLocalDataBody,
     required this.deleteAllLocalDataSuccess,
+    required this.deleteAllLocalDataFailed,
     required this.currentMvpBehavior,
     required this.parentFirstAudience,
     required this.childNameNotRequired,
@@ -352,6 +353,7 @@ class AppStrings {
   final String deleteAllLocalDataTitle;
   final String deleteAllLocalDataBody;
   final String deleteAllLocalDataSuccess;
+  final String deleteAllLocalDataFailed;
   final String currentMvpBehavior;
   final String parentFirstAudience;
   final String childNameNotRequired;
@@ -560,6 +562,7 @@ class AppStrings {
     deleteAllLocalDataBody:
         'This removes local journal entries and resettable app preferences from this device.',
     deleteAllLocalDataSuccess: 'Local data deleted.',
+    deleteAllLocalDataFailed: 'Could not delete local data.',
     currentMvpBehavior: 'Current MVP behavior',
     parentFirstAudience:
         'Nurtly is for parents and caregivers, not for children.',
@@ -783,6 +786,7 @@ class AppStrings {
     deleteAllLocalDataBody:
         'To usunie lokalne wpisy dziennika i możliwe do resetu preferencje aplikacji z tego urządzenia.',
     deleteAllLocalDataSuccess: 'Dane lokalne usunięte.',
+    deleteAllLocalDataFailed: 'Nie udało się usunąć danych lokalnych.',
     currentMvpBehavior: 'Obecne działanie MVP',
     parentFirstAudience:
         'Nurtly jest dla rodziców i opiekunów, nie dla dzieci.',

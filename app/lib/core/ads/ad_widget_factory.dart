@@ -77,7 +77,11 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     if (!mounted) {
       return;
     }
-    if (widget.consentFlow.canRequestAds && !_loadAttempted) {
+    if (!widget.consentFlow.canRequestAds) {
+      _bannerAd?.dispose();
+      _bannerAd = null;
+      _isLoaded = false;
+    } else if (!_loadAttempted) {
       unawaited(_loadAd());
     }
     setState(() {});

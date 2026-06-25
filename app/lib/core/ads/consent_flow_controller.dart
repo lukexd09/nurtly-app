@@ -27,13 +27,18 @@ class NoopConsentFlow implements ConsentFlow {
 }
 
 class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
-  GoogleConsentFlow({required bool debugGeographyEnabled})
-      : _debugGeographyEnabled = debugGeographyEnabled;
+  GoogleConsentFlow({
+    required bool debugGeographyEnabled,
+    List<String>? debugTestDeviceIds,
+  })  : _debugGeographyEnabled = debugGeographyEnabled,
+        _debugTestDeviceIds = debugTestDeviceIds ?? const <String>[];
 
   final bool _debugGeographyEnabled;
+  final List<String> _debugTestDeviceIds;
   bool _isInitialized = false;
   bool _canRequestAds = false;
   bool _privacyOptionsRequired = false;
+  bool _adsInitialized = false;
 
   @override
   bool get canRequestAds => _canRequestAds;
@@ -51,16 +56,14 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
       final params = ConsentRequestParameters(
         consentDebugSettings: kDebugMode && _debugGeographyEnabled
             ? ConsentDebugSettings(
+                testIdentifiers: _debugTestDeviceIds,
                 debugGeography: DebugGeography.debugGeographyEea,
               )
             : null,
       );
       await _requestConsentInfoUpdate(params);
       await _loadAndShowConsentFormIfRequired();
-      _canRequestAds = await ConsentInformation.instance.canRequestAds();
-      _privacyOptionsRequired =
-          await ConsentInformation.instance.getPrivacyOptionsRequirementStatus() ==
-              PrivacyOptionsRequirementStatus.required;
+      await _refreshConsentState();
     } catch (_) {
       _canRequestAds = false;
       _privacyOptionsRequired = false;
@@ -77,7 +80,20 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
         return;
       }
       await ConsentForm.showPrivacyOptionsForm((_) {});
+      await _refreshConsentState();
+      notifyListeners();
     } catch (_) {}
+  }
+
+  Future<void> _refreshConsentState() async {
+    _canRequestAds = await ConsentInformation.instance.canRequestAds();
+    _privacyOptionsRequired = await ConsentInformation.instance
+            .getPrivacyOptionsRequirementStatus() ==
+        PrivacyOptionsRequirementStatus.required;
+    if (_canRequestAds && !_adsInitialized) {
+      _adsInitialized = true;
+      await MobileAds.instance.initialize();
+    }
   }
 
   Future<void> _requestConsentInfoUpdate(ConsentRequestParameters params) {

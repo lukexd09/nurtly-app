@@ -20,6 +20,8 @@ For the current MVP, these implementation facts matter:
 - Ads are configured for free users with Premium no-ads behavior.
 - The final production ad platform and billing setup still needs release-side verification before launch.
 - Runtime content is bundled locally under `app/assets/content`.
+- The Android app uses UMP consent gating before banner loading.
+- Debug EEA testing is debug-only, and debug test device IDs are supplied locally rather than committed.
 
 ## Core Privacy Position
 
@@ -104,6 +106,8 @@ Recommended safeguards:
 - avoid sharing by default
 - do not use Journal content for advertising
 - consider local-first storage for MVP
+- local data deletion should only remove Nurtly-owned journal entries and resettable preferences
+- do not delete Google Play purchase history or other external account history during local cleanup
 
 ## Analytics
 

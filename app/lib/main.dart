@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'app_config.dart';
 import 'core/ads/consent_flow_controller.dart';
@@ -20,11 +17,21 @@ void main() {
   final isAndroidRuntime =
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
   GooglePlayBillingEntitlementProvider? billing;
+  final debugTestDeviceIds = const String.fromEnvironment(
+    'UMP_TEST_DEVICE_IDS',
+  )
+      .split(',')
+      .map((value) => value.trim())
+      .where((value) => value.isNotEmpty)
+      .toList();
   final consentFlow = isAndroidRuntime
-      ? GoogleConsentFlow(debugGeographyEnabled: true)
+      ? GoogleConsentFlow(
+          debugGeographyEnabled: kDebugMode,
+          debugTestDeviceIds:
+              kDebugMode ? debugTestDeviceIds : const <String>[],
+        )
       : const NoopConsentFlow();
   if (isAndroidRuntime) {
-    unawaited(MobileAds.instance.initialize());
     billing = GooglePlayBillingEntitlementProvider();
   }
   final PremiumEntitlementProvider premiumProvider =

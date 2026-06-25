@@ -160,12 +160,10 @@ class JournalController extends ChangeNotifier {
   }
 
   Future<void> deleteAllEntries() async {
+    await _store.deleteAllEntries();
     _entries.clear();
     _selectedDay = DateTime(_now().year, _now().month, _now().day);
     notifyListeners();
-    try {
-      await _store.deleteAllEntries();
-    } catch (_) {}
   }
 
   Future<void> _persist() async {

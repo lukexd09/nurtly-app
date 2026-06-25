@@ -30,6 +30,22 @@ Journal data is local-only in the current MVP implementation.
 
 Current MVP monetization uses monthly and yearly product IDs, premium entitlement, and test/placeholder ad configuration. Premium users are expected to see no ads.
 
+### UMP consent flow
+
+- On Android, the app requests UMP consent info during startup.
+- The app only allows banner requests after `canRequestAds()` becomes true.
+- If privacy options are required, the Privacy & Data screen shows `Privacy choices` / `Ustawienia prywatności reklam`.
+- Banner ads are not initialized before consent allows requests.
+- Debug EEA testing is enabled only in debug builds.
+- Local debug test device IDs can be passed with `--dart-define=UMP_TEST_DEVICE_IDS=ID1,ID2`.
+
+### Local data deletion
+
+- The Privacy & Data screen includes `Delete all local data` / `Usuń wszystkie dane lokalne`.
+- The action deletes local journal entries and safe resettable preferences.
+- It does not touch Google Play purchase history.
+- The UI returns to the empty journal state after deletion succeeds.
+
 ## Run locally
 
 From the repo root:

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/consent_flow_controller.dart';
 import 'package:nurtly/core/localization/app_language.dart';
@@ -299,7 +299,8 @@ void main() {
     expect(find.text('Brak wpisu'), findsNothing);
     await _tapSettings(tester);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
@@ -317,6 +318,34 @@ void main() {
     expect(find.byKey(const ValueKey('journal-empty-state')), findsOneWidget);
   });
 
+  testWidgets('Delete all local data surfaces preference delete failures',
+      (tester) async {
+    final journalStore = InMemoryJournalStore();
+    final journalController = JournalController(store: journalStore);
+    await journalController.load();
+    final languageStore = _ThrowingLanguagePreferenceStore(failOnDelete: true);
+    await _pumpNurtlyApp(
+      tester,
+      journalController: journalController,
+      languagePreferenceStore: languageStore,
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete all local data').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete all local data').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Could not delete local data.'), findsOneWidget);
+    expect(journalStore.entries, isEmpty);
+  });
+
   testWidgets('Privacy choices only appear when required', (tester) async {
     final consentFlow = _FakeConsentFlow(privacyRequired: true);
     await _pumpNurtlyApp(
@@ -326,12 +355,41 @@ void main() {
 
     await _tapSettings(tester);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
 
     expect(find.text('Privacy choices'), findsOneWidget);
+  });
+
+  testWidgets('Privacy choices hide again when consent state changes',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(
+      privacyRequired: true,
+      canRequestAdsValue: true,
+    );
+    await _pumpNurtlyApp(
+      tester,
+      consentFlow: consentFlow,
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Privacy choices'), findsOneWidget);
+
+    consentFlow.privacyRequired = false;
+    consentFlow.notifyListeners();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Privacy choices'), findsNothing);
   });
 
   testWidgets('saved Polish language overrides system locale on startup',
@@ -621,10 +679,12 @@ class _ThrowingLanguagePreferenceStore implements LanguagePreferenceStore {
   _ThrowingLanguagePreferenceStore({
     this.failOnLoad = false,
     this.failOnSave = false,
+    this.failOnDelete = false,
   });
 
   final bool failOnLoad;
   final bool failOnSave;
+  final bool failOnDelete;
   final List<AppLanguage> savedValues = [];
 
   @override
@@ -644,26 +704,37 @@ class _ThrowingLanguagePreferenceStore implements LanguagePreferenceStore {
   }
 
   @override
-  Future<void> delete() async {}
+  Future<void> delete() async {
+    if (failOnDelete) {
+      throw StateError('delete failed');
+    }
+  }
 }
 
 class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
   _FakeConsentFlow({
+    this.canRequestAdsValue = false,
     this.privacyRequired = false,
   });
 
-  final bool privacyRequired;
+  bool canRequestAdsValue;
+  bool privacyRequired;
+  int initializeCalls = 0;
+  int showPrivacyOptionsCalls = 0;
 
   @override
-  bool get canRequestAds => false;
+  bool get canRequestAds => canRequestAdsValue;
 
   @override
   bool get privacyOptionsRequired => privacyRequired;
 
   @override
-  Future<void> initialize() async {}
+  Future<void> initialize() async {
+    initializeCalls++;
+  }
 
   @override
-  Future<void> showPrivacyOptions() async {}
+  Future<void> showPrivacyOptions() async {
+    showPrivacyOptionsCalls++;
+  }
 }
-

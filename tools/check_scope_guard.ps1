@@ -165,6 +165,7 @@ function Test-IsAllowedGoogleMobileAdsUsage {
         "app/pubspec.yaml",
         "app/pubspec.lock",
         "app/lib/core/ads/ad_widget_factory.dart",
+        "app/lib/core/ads/consent_flow_controller.dart",
         "app/lib/main.dart"
     )
 }

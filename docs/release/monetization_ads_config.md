@@ -23,6 +23,14 @@ This note summarizes the current release-readiness state for monetization and ad
 - Production app and ad unit IDs should be delivered through a secure release process before public release and should not be committed as sensitive release values.
 - Premium users should not load or see ads.
 
+### UMP consent flow
+
+- Android startup requests UMP consent info before banner loading.
+- Banner ads are only initialized after `canRequestAds()` becomes true.
+- If privacy options are required, the app surfaces a privacy choices action in Privacy & Data.
+- Debug EEA testing is enabled only in debug builds.
+- Local debug test device IDs can be supplied with `--dart-define=UMP_TEST_DEVICE_IDS=ID1,ID2`.
+
 ## 2. Required Google Play Console setup
 
 - [ ] Create the monthly subscription product.
@@ -48,13 +56,21 @@ This note summarizes the current release-readiness state for monetization and ad
 - Failed, expired, or cancelled purchase states should be smoke-tested where practical.
 - The app uses the entitlement state, not hardcoded paid/free UI assumptions, to control ad visibility.
 
-## 5. Release checklist
+## 5. Local data deletion
+
+- Privacy & Data includes a delete-all-local-data action.
+- The action clears local journal entries and safe resettable preferences.
+- It does not delete Google Play purchase history.
+- The UI should land back on an empty journal state after success.
+
+## 6. Release checklist
 
 - [ ] Test IDs are not used in public production release.
 - [ ] Production IDs are not committed as sensitive values if avoidable.
 - [ ] Data Safety is updated after final ads behavior is confirmed.
 - [ ] Privacy policy is updated after final ads behavior is confirmed.
 - [ ] Play Console billing and ads configuration matches the release build.
+- [ ] Debug geography is not forced in release builds.
 
 ## Notes
 
