@@ -47,8 +47,8 @@ class _RealBannerAdSlot extends StatefulWidget {
 
 class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   BannerAd? _bannerAd;
+  final BannerLoadGate _loadGate = BannerLoadGate();
   var _isLoaded = false;
-  var _loadAttempted = false;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     if (widget.consentFlow is Listenable) {
       (widget.consentFlow as Listenable).addListener(_syncConsentState);
     }
-    _loadAd();
+    _syncConsentState();
   }
 
   @override
@@ -81,19 +81,22 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       _bannerAd?.dispose();
       _bannerAd = null;
       _isLoaded = false;
-    } else if (!_loadAttempted) {
-      unawaited(_loadAd());
+      _loadGate.markConsentRevoked();
+    } else {
+      _loadGate.markConsentGranted();
+      if (_loadGate.canAttemptLoad) {
+        unawaited(_loadAd());
+      }
     }
     setState(() {});
   }
 
   Future<void> _loadAd() async {
     if (defaultTargetPlatform != TargetPlatform.android ||
-        _loadAttempted ||
+        !_loadGate.beginLoadAttempt() ||
         !widget.consentFlow.canRequestAds) {
       return;
     }
-    _loadAttempted = true;
 
     final ad = BannerAd(
       size: AdSize.banner,
@@ -112,6 +115,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
         },
         onAdFailedToLoad: (ad, _) {
           ad.dispose();
+          _loadGate.markLoadFailed();
           if (!mounted) {
             return;
           }
@@ -157,6 +161,34 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       height: _bannerAd!.size.height.toDouble(),
       child: AdWidget(ad: _bannerAd!),
     );
+  }
+}
+
+class BannerLoadGate {
+  var _consentAllowed = false;
+  var _loadAttempted = false;
+
+  bool get canAttemptLoad => _consentAllowed && !_loadAttempted;
+
+  bool beginLoadAttempt() {
+    if (!canAttemptLoad) {
+      return false;
+    }
+    _loadAttempted = true;
+    return true;
+  }
+
+  void markConsentRevoked() {
+    _consentAllowed = false;
+    _loadAttempted = false;
+  }
+
+  void markConsentGranted() {
+    _consentAllowed = true;
+  }
+
+  void markLoadFailed() {
+    _loadAttempted = false;
   }
 }
 
