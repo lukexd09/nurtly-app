@@ -8,7 +8,7 @@ import '../../test_fakes/fake_premium_purchase_provider.dart';
 import '../../test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
-  final now = DateTime.utc(2026, 5, 26, 12);
+  final now = DateTime.utc(2099, 5, 26, 12);
 
   test('default provider returns free', () async {
     final controller = PremiumAccessController(
