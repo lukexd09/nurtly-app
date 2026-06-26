@@ -29,6 +29,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
 import 'app_tab.dart';
+import '../monetization/reviewer_access_store.dart';
 
 class AppShell extends StatefulWidget {
   AppShell({
@@ -315,9 +316,12 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     var statusMessage = '';
     var isProcessing = false;
     await showDialog<void>(
+      barrierDismissible: false,
       context: context,
       builder: (dialogContext) {
-        return StatefulBuilder(
+        return PopScope(
+          canPop: !isProcessing,
+          child: StatefulBuilder(
           builder: (context, setDialogState) {
             final strings = _strings;
             final isEnabled = _premiumController.reviewerAccessEnabled;
@@ -332,7 +336,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
               try {
                 await _premiumController.enableReviewerAccess(code);
               } catch (_) {
-                if (!mounted) {
+                if (!context.mounted || !dialogContext.mounted) {
                   return;
                 }
                 setDialogState(() {
@@ -341,7 +345,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 });
                 return;
               }
-              if (!mounted) {
+              if (!context.mounted || !dialogContext.mounted) {
                 return;
               }
               if (_premiumController.reviewerAccessEnabled) {
@@ -369,7 +373,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
               try {
                 await _premiumController.disableReviewerAccess();
               } catch (_) {
-                if (!mounted) {
+                if (!context.mounted || !dialogContext.mounted) {
                   return;
                 }
                 setDialogState(() {
@@ -378,7 +382,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 });
                 return;
               }
-              if (!mounted) {
+              if (!context.mounted || !dialogContext.mounted) {
                 return;
               }
               dialogNavigator.pop();
@@ -440,7 +444,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 ),
               ],
             );
-          },
+          }),
         );
       },
     );

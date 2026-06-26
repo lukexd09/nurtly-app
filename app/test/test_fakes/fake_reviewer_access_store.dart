@@ -1,4 +1,4 @@
-import 'package:nurtly/core/localization/language_preference_store.dart';
+import 'package:nurtly/core/monetization/reviewer_access_store.dart';
 
 class FakeReviewerAccessStore implements ReviewerAccessStore {
   FakeReviewerAccessStore({
