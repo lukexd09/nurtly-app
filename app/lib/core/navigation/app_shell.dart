@@ -319,10 +319,12 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       barrierDismissible: false,
       context: context,
       builder: (dialogContext) {
-        return PopScope(
-          canPop: !isProcessing,
-          child: StatefulBuilder(
+        return StatefulBuilder(
           builder: (context, setDialogState) {
+            return PopScope(
+              canPop: !isProcessing,
+              child: Builder(
+                builder: (context) {
             final strings = _strings;
             final isEnabled = _premiumController.reviewerAccessEnabled;
             Future<void> submitCode() async {
@@ -444,7 +446,10 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 ),
               ],
             );
-          }),
+                },
+              ),
+            );
+          },
         );
       },
     );

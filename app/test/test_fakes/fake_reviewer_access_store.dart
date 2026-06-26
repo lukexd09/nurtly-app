@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:nurtly/core/monetization/reviewer_access_store.dart';
 
 class FakeReviewerAccessStore implements ReviewerAccessStore {
@@ -6,6 +8,8 @@ class FakeReviewerAccessStore implements ReviewerAccessStore {
     this.failOnLoad = false,
     this.failOnSave = false,
     this.failOnDelete = false,
+    this.saveCompleter,
+    this.deleteCompleter,
   });
 
   bool saved;
@@ -13,6 +17,8 @@ class FakeReviewerAccessStore implements ReviewerAccessStore {
   final bool failOnLoad;
   final bool failOnSave;
   final bool failOnDelete;
+  final Completer<void>? saveCompleter;
+  final Completer<void>? deleteCompleter;
 
   @override
   Future<bool> load() async {
@@ -27,6 +33,7 @@ class FakeReviewerAccessStore implements ReviewerAccessStore {
     if (failOnSave) {
       throw StateError('save failed');
     }
+    await saveCompleter?.future;
     saved = enabled;
     savedValues.add(enabled);
   }
@@ -36,6 +43,7 @@ class FakeReviewerAccessStore implements ReviewerAccessStore {
     if (failOnDelete) {
       throw StateError('delete failed');
     }
+    await deleteCompleter?.future;
     saved = false;
   }
 }

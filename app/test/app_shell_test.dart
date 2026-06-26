@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/consent_flow_controller.dart';
@@ -344,6 +346,36 @@ void main() {
       isFalse,
     );
     expect(reviewerStore.saved, isTrue);
+  });
+
+  testWidgets('Reviewer access stays open while save is in progress',
+      (tester) async {
+    final saveCompleter = Completer<void>();
+    final reviewerStore = FakeReviewerAccessStore(saveCompleter: saveCompleter);
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await _openReviewerAccessDialog(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('reviewer-access-code-field')),
+      'NURTLY-REVIEWER-162',
+    );
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-activate')));
+    await tester.pump();
+
+    await tester.binding.handlePopRoute();
+    await tester.pump();
+
+    expect(find.byKey(const ValueKey('reviewer-access-code-field')), findsOneWidget);
+
+    saveCompleter.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reviewer access is active on this installation.'),
+        findsOneWidget);
   });
 
   testWidgets('Tapping Language opens language selector and updates row',
