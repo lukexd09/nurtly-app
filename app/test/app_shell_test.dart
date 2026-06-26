@@ -369,7 +369,8 @@ void main() {
     await tester.binding.handlePopRoute();
     await tester.pump();
 
-    expect(find.byKey(const ValueKey('reviewer-access-code-field')), findsOneWidget);
+    expect(find.byKey(const ValueKey('reviewer-access-code-field')),
+        findsOneWidget);
 
     saveCompleter.complete();
     await tester.pumpAndSettle();

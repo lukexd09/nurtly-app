@@ -125,10 +125,7 @@ void main() {
       () async {
     final controller = PremiumAccessController(
       provider: FakePremiumEntitlementProvider(
-        loadEntitlement: PremiumEntitlement.monthlyActive(
-          checkedAt: now,
-          expiresAt: now.add(const Duration(days: 30)),
-        ),
+        loadEntitlement: PremiumEntitlement.monthlyActive(checkedAt: now),
         failOnRefresh: true,
       ),
     );

@@ -16,7 +16,7 @@ jobs:
   pr-ci-gate:
     name: PR CI gate
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 45
 
     defaults:
       run:
@@ -24,19 +24,19 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Java
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: '3.41.9'
           channel: stable
@@ -51,8 +51,30 @@ jobs:
       - name: Print Dart version
         run: dart --version
 
-      - name: Get package dependencies
+      - name: Resolve dependencies
         run: flutter pub get --enforce-lockfile
 
       - name: Verify lockfile unchanged
         run: git diff --exit-code -- pubspec.lock
+
+      - name: Check Dart formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Run Flutter analyze
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        run: flutter test --reporter expanded
+
+      - name: Cleanup Flutter generated local files
+        run: pwsh -NoLogo -NoProfile -File ../tools/cleanup_flutter_local.ps1
+
+      - name: Run scope guard
+        run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1
+
+      - name: Build debug Android APK
+        run: flutter build apk --debug --no-pub
+
+      - name: Verify tracked files unchanged
+        working-directory: .
+        run: git diff --exit-code
