@@ -21,6 +21,10 @@ void main() {
       strings.reviewerAccessInvalidCode,
       'That reviewer code is not valid.',
     );
+    expect(
+      strings.reviewerAccessActionFailed,
+      'Reviewer access could not be updated. Please try again.',
+    );
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Free plan');
@@ -122,6 +126,10 @@ void main() {
     expect(
       strings.reviewerAccessInvalidCode,
       'Kod recenzencki jest nieprawidłowy.',
+    );
+    expect(
+      strings.reviewerAccessActionFailed,
+      'Nie udało się zaktualizować dostępu recenzenckiego. Spróbuj ponownie.',
     );
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');

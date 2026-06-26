@@ -70,6 +70,8 @@ void main() {
     expect(find.text('Sounds'), findsWidgets);
     expect(find.byTooltip('Settings'), findsOneWidget);
     expect(find.byTooltip('Privacy & Data'), findsNothing);
+    expect(
+        find.byKey(const ValueKey('settings-reviewer-access')), findsNothing);
     expect(find.byKey(const ValueKey('settings-language-row')), findsNothing);
 
     expect(find.text('Start with one small moment'), findsOneWidget);
@@ -183,6 +185,165 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Nurtly Premium'), findsNothing);
+  });
+
+  testWidgets('Hidden About gesture opens reviewer access dialog',
+      (tester) async {
+    await _pumpNurtlyApp(tester, size: const Size(600, 4000));
+
+    await _openReviewerAccessDialog(tester);
+
+    expect(find.text('Reviewer access'), findsWidgets);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(find.text('Activate reviewer access'), findsOneWidget);
+  });
+
+  testWidgets('Reviewer access accepts valid code and enables premium',
+      (tester) async {
+    final reviewerStore = FakeReviewerAccessStore();
+    final premiumProvider = FakePremiumEntitlementProvider();
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      premiumEntitlementProvider: premiumProvider,
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await _openReviewerAccessDialog(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('reviewer-access-code-field')),
+      'NURTLY-REVIEWER-162',
+    );
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-activate')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Reviewer access'), findsNothing);
+    expect(find.text('Reviewer access is active on this installation.'),
+        findsOneWidget);
+    expect(reviewerStore.saved, isTrue);
+  });
+
+  testWidgets('Reviewer access rejects invalid code and stays open',
+      (tester) async {
+    await _pumpNurtlyApp(tester, size: const Size(600, 4000));
+
+    await _openReviewerAccessDialog(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('reviewer-access-code-field')),
+      'wrong-code',
+    );
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-activate')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('That reviewer code is not valid.'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('Reviewer access reset clears local access only', (tester) async {
+    final reviewerStore = FakeReviewerAccessStore(saved: true);
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await _openReviewerAccessDialog(tester);
+    expect(find.byKey(const ValueKey('reviewer-access-reset')), findsOneWidget);
+    expect(
+      tester
+          .widget<TextField>(
+            find.byKey(const ValueKey('reviewer-access-code-field')),
+          )
+          .enabled,
+      isFalse,
+    );
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey('reviewer-access-activate')),
+          )
+          .onPressed,
+      isNull,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-reset')));
+    await tester.pumpAndSettle();
+
+    expect(reviewerStore.saved, isFalse);
+
+    await _tapAboutFiveTimes(tester);
+    expect(
+      tester
+          .widget<TextField>(
+            find.byKey(const ValueKey('reviewer-access-code-field')),
+          )
+          .enabled,
+      isTrue,
+    );
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.byKey(const ValueKey('reviewer-access-activate')),
+          )
+          .onPressed,
+      isNotNull,
+    );
+  });
+
+  testWidgets('Reviewer access save errors keep dialog interactive',
+      (tester) async {
+    final reviewerStore = FakeReviewerAccessStore(failOnSave: true);
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await _openReviewerAccessDialog(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey('reviewer-access-code-field')),
+      'NURTLY-REVIEWER-162',
+    );
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-activate')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Reviewer access could not be updated. Please try again.'),
+      findsOneWidget,
+    );
+    expect(find.byType(TextField), findsOneWidget);
+    expect(reviewerStore.savedValues, isEmpty);
+  });
+
+  testWidgets('Reviewer access delete errors keep dialog interactive',
+      (tester) async {
+    final reviewerStore = FakeReviewerAccessStore(
+      saved: true,
+      failOnDelete: true,
+    );
+    await _pumpNurtlyApp(
+      tester,
+      size: const Size(600, 4000),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await _openReviewerAccessDialog(tester);
+    await tester.tap(find.byKey(const ValueKey('reviewer-access-reset')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Reviewer access could not be updated. Please try again.'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<TextField>(
+            find.byKey(const ValueKey('reviewer-access-code-field')),
+          )
+          .enabled,
+      isFalse,
+    );
+    expect(reviewerStore.saved, isTrue);
   });
 
   testWidgets('Tapping Language opens language selector and updates row',
@@ -548,6 +709,25 @@ Future<void> _tapSettings(WidgetTester tester) async {
     return;
   }
   await tester.tap(polish.first, warnIfMissed: false);
+}
+
+Future<void> _openReviewerAccessDialog(WidgetTester tester) async {
+  await _tapSettings(tester);
+  await tester.pumpAndSettle();
+  await _tapAboutFiveTimes(tester);
+}
+
+Future<void> _tapAboutFiveTimes(WidgetTester tester) async {
+  await tester.ensureVisible(
+    find.byKey(const ValueKey('settings-about-title')),
+  );
+  await tester.pumpAndSettle();
+  final about = find.byKey(const ValueKey('settings-about-title'));
+  for (var index = 0; index < 5; index++) {
+    await tester.tap(about, warnIfMissed: false);
+    await tester.pump(const Duration(milliseconds: 120));
+  }
+  await tester.pumpAndSettle();
 }
 
 Future<void> _tapJournalTab(WidgetTester tester) async {

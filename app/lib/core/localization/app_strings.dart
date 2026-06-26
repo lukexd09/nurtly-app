@@ -21,6 +21,7 @@ class AppStrings {
     required this.reviewerAccessEnabledStatus,
     required this.reviewerAccessEnabledMessage,
     required this.reviewerAccessInvalidCode,
+    required this.reviewerAccessActionFailed,
     required this.homeShellSubtitle,
     required this.homeTitle,
     required this.homeSubtitle,
@@ -237,6 +238,7 @@ class AppStrings {
   final String reviewerAccessEnabledStatus;
   final String reviewerAccessEnabledMessage;
   final String reviewerAccessInvalidCode;
+  final String reviewerAccessActionFailed;
   final String homeShellSubtitle;
   final String homeTitle;
   final String homeSubtitle;
@@ -455,6 +457,8 @@ class AppStrings {
     reviewerAccessEnabledMessage:
         'Reviewer access is active on this installation.',
     reviewerAccessInvalidCode: 'That reviewer code is not valid.',
+    reviewerAccessActionFailed:
+        'Reviewer access could not be updated. Please try again.',
     homeShellSubtitle: 'A quieter start',
     homeTitle: 'Start',
     homeSubtitle: 'Start with one small moment',
@@ -690,6 +694,8 @@ class AppStrings {
     reviewerAccessEnabledMessage:
         'Dostęp recenzencki jest aktywny na tej instalacji.',
     reviewerAccessInvalidCode: 'Kod recenzencki jest nieprawidłowy.',
+    reviewerAccessActionFailed:
+        'Nie udało się zaktualizować dostępu recenzenckiego. Spróbuj ponownie.',
     homeShellSubtitle: 'Spokojniejszy start',
     homeTitle: 'Start',
     homeSubtitle: 'Zacznij od jednej małej chwili',

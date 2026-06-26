@@ -78,6 +78,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   late AppLanguage _selectedLanguage;
   late final PremiumAccessController _premiumController;
   var _isReady = false;
+  var _aboutTapCount = 0;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
 
@@ -328,14 +329,27 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 isProcessing = true;
                 statusMessage = '';
               });
-              await _premiumController.enableReviewerAccess(code);
+              try {
+                await _premiumController.enableReviewerAccess(code);
+              } catch (_) {
+                if (!mounted) {
+                  return;
+                }
+                setDialogState(() {
+                  isProcessing = false;
+                  statusMessage = strings.reviewerAccessActionFailed;
+                });
+                return;
+              }
               if (!mounted) {
                 return;
               }
               if (_premiumController.reviewerAccessEnabled) {
                 dialogNavigator.pop();
                 messenger.showSnackBar(
-                  SnackBar(content: Text(strings.reviewerAccessEnabledMessage)),
+                  SnackBar(
+                    content: Text(strings.reviewerAccessEnabledMessage),
+                  ),
                 );
                 return;
               }
@@ -352,7 +366,18 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 isProcessing = true;
                 statusMessage = '';
               });
-              await _premiumController.disableReviewerAccess();
+              try {
+                await _premiumController.disableReviewerAccess();
+              } catch (_) {
+                if (!mounted) {
+                  return;
+                }
+                setDialogState(() {
+                  isProcessing = false;
+                  statusMessage = strings.reviewerAccessActionFailed;
+                });
+                return;
+              }
               if (!mounted) {
                 return;
               }
@@ -371,6 +396,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                   Text(strings.reviewerAccessDialogBody),
                   const SizedBox(height: AppSpacing.md),
                   TextField(
+                    key: const ValueKey('reviewer-access-code-field'),
                     controller: codeController,
                     enabled: !isEnabled && !isProcessing,
                     decoration: InputDecoration(
@@ -396,16 +422,19 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
               ),
               actions: [
                 TextButton(
+                  key: const ValueKey('reviewer-access-back'),
                   onPressed: isProcessing
                       ? null
                       : () => Navigator.of(dialogContext).pop(),
                   child: Text(strings.back),
                 ),
                 TextButton(
+                  key: const ValueKey('reviewer-access-reset'),
                   onPressed: isProcessing || !isEnabled ? null : resetAccess,
                   child: Text(strings.reviewerAccessReset),
                 ),
                 FilledButton(
+                  key: const ValueKey('reviewer-access-activate'),
                   onPressed: isProcessing || isEnabled ? null : submitCode,
                   child: Text(strings.reviewerAccessActivate),
                 ),
@@ -576,22 +605,19 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                     },
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    strings.about,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textMuted,
-                      fontWeight: FontWeight.w700,
+                  GestureDetector(
+                    key: const ValueKey('settings-about-title'),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _handleAboutTap,
+                    child: Text(
+                      strings.about,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textMuted,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
-                  _SettingsRow(
-                    key: const ValueKey('settings-reviewer-access'),
-                    title: strings.reviewerAccessTitle,
-                    value: _premiumController.reviewerAccessEnabled
-                        ? strings.reviewerAccessEnabledStatus
-                        : strings.reviewerAccessSubtitle,
-                    onTap: _openReviewerAccessDialog,
-                  ),
                 ],
               ),
             );
@@ -599,6 +625,15 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         );
       },
     );
+  }
+
+  void _handleAboutTap() {
+    _aboutTapCount += 1;
+    if (_aboutTapCount < 5) {
+      return;
+    }
+    _aboutTapCount = 0;
+    unawaited(_openReviewerAccessDialog());
   }
 
   Future<AppLanguage?> _openLanguageSheet(
