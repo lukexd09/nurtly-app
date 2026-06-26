@@ -29,6 +29,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
 import 'app_tab.dart';
+import '../monetization/reviewer_access_store.dart';
 
 class AppShell extends StatefulWidget {
   AppShell({
@@ -36,6 +37,7 @@ class AppShell extends StatefulWidget {
     LanguagePreferenceStore? languagePreferenceStore,
     PremiumEntitlementProvider? premiumEntitlementProvider,
     PremiumPurchaseProvider? premiumPurchaseProvider,
+    ReviewerAccessStore? reviewerAccessStore,
     AdWidgetFactory? adWidgetFactory,
     ConsentFlow? consentFlow,
     JournalController? journalController,
@@ -47,6 +49,8 @@ class AppShell extends StatefulWidget {
             premiumEntitlementProvider ?? LocalPremiumEntitlementProvider(),
         premiumPurchaseProvider =
             premiumPurchaseProvider ?? const LocalPremiumPurchaseProvider(),
+        reviewerAccessStore =
+            reviewerAccessStore ?? const SharedPreferencesReviewerAccessStore(),
         _ownsJournalController = journalController == null,
         consentFlow = consentFlow ?? const NoopConsentFlow(),
         journalController = journalController ??
@@ -59,6 +63,7 @@ class AppShell extends StatefulWidget {
   final LanguagePreferenceStore languagePreferenceStore;
   final PremiumEntitlementProvider premiumEntitlementProvider;
   final PremiumPurchaseProvider premiumPurchaseProvider;
+  final ReviewerAccessStore reviewerAccessStore;
   final bool _ownsJournalController;
   final ConsentFlow consentFlow;
   final JournalController journalController;
@@ -74,6 +79,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   late AppLanguage _selectedLanguage;
   late final PremiumAccessController _premiumController;
   var _isReady = false;
+  var _aboutTapCount = 0;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
 
@@ -86,6 +92,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     _premiumController = PremiumAccessController(
       provider: widget.premiumEntitlementProvider,
       purchaseProvider: widget.premiumPurchaseProvider,
+      reviewerAccessStore: widget.reviewerAccessStore,
     );
     if (widget.consentFlow is Listenable) {
       (widget.consentFlow as Listenable).addListener(_handleConsentChanged);
@@ -304,6 +311,150 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     );
   }
 
+  Future<void> _openReviewerAccessDialog() async {
+    final codeController = TextEditingController();
+    var statusMessage = '';
+    var isProcessing = false;
+    await showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return PopScope(
+              canPop: !isProcessing,
+              child: Builder(
+                builder: (context) {
+            final strings = _strings;
+            final isEnabled = _premiumController.reviewerAccessEnabled;
+            Future<void> submitCode() async {
+              final messenger = ScaffoldMessenger.of(context);
+              final dialogNavigator = Navigator.of(dialogContext);
+              final code = codeController.text;
+              setDialogState(() {
+                isProcessing = true;
+                statusMessage = '';
+              });
+              try {
+                await _premiumController.enableReviewerAccess(code);
+              } catch (_) {
+                if (!context.mounted || !dialogContext.mounted) {
+                  return;
+                }
+                setDialogState(() {
+                  isProcessing = false;
+                  statusMessage = strings.reviewerAccessActionFailed;
+                });
+                return;
+              }
+              if (!context.mounted || !dialogContext.mounted) {
+                return;
+              }
+              if (_premiumController.reviewerAccessEnabled) {
+                dialogNavigator.pop();
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(strings.reviewerAccessEnabledMessage),
+                  ),
+                );
+                return;
+              }
+              setDialogState(() {
+                isProcessing = false;
+                statusMessage = strings.reviewerAccessInvalidCode;
+              });
+            }
+
+            Future<void> resetAccess() async {
+              final messenger = ScaffoldMessenger.of(context);
+              final dialogNavigator = Navigator.of(dialogContext);
+              setDialogState(() {
+                isProcessing = true;
+                statusMessage = '';
+              });
+              try {
+                await _premiumController.disableReviewerAccess();
+              } catch (_) {
+                if (!context.mounted || !dialogContext.mounted) {
+                  return;
+                }
+                setDialogState(() {
+                  isProcessing = false;
+                  statusMessage = strings.reviewerAccessActionFailed;
+                });
+                return;
+              }
+              if (!context.mounted || !dialogContext.mounted) {
+                return;
+              }
+              dialogNavigator.pop();
+              messenger.showSnackBar(
+                SnackBar(content: Text(strings.reviewerAccessReset)),
+              );
+            }
+
+            return AlertDialog(
+              title: Text(strings.reviewerAccessDialogTitle),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(strings.reviewerAccessDialogBody),
+                  const SizedBox(height: AppSpacing.md),
+                  TextField(
+                    key: const ValueKey('reviewer-access-code-field'),
+                    controller: codeController,
+                    enabled: !isEnabled && !isProcessing,
+                    decoration: InputDecoration(
+                      labelText: strings.reviewerAccessCodeLabel,
+                    ),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) {
+                      if (!isEnabled && !isProcessing) {
+                        unawaited(submitCode());
+                      }
+                    },
+                  ),
+                  if (statusMessage.isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      statusMessage,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  key: const ValueKey('reviewer-access-back'),
+                  onPressed: isProcessing
+                      ? null
+                      : () => Navigator.of(dialogContext).pop(),
+                  child: Text(strings.back),
+                ),
+                TextButton(
+                  key: const ValueKey('reviewer-access-reset'),
+                  onPressed: isProcessing || !isEnabled ? null : resetAccess,
+                  child: Text(strings.reviewerAccessReset),
+                ),
+                FilledButton(
+                  key: const ValueKey('reviewer-access-activate'),
+                  onPressed: isProcessing || isEnabled ? null : submitCode,
+                  child: Text(strings.reviewerAccessActivate),
+                ),
+              ],
+            );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   String _restoreMessageTitle(
     AppStrings strings,
     PurchaseActionResult result,
@@ -462,6 +613,20 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       );
                     },
                   ),
+                  const SizedBox(height: AppSpacing.sm),
+                  GestureDetector(
+                    key: const ValueKey('settings-about-title'),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _handleAboutTap,
+                    child: Text(
+                      strings.about,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textMuted,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
                 ],
               ),
             );
@@ -469,6 +634,15 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         );
       },
     );
+  }
+
+  void _handleAboutTap() {
+    _aboutTapCount += 1;
+    if (_aboutTapCount < 5) {
+      return;
+    }
+    _aboutTapCount = 0;
+    unawaited(_openReviewerAccessDialog());
   }
 
   Future<AppLanguage?> _openLanguageSheet(

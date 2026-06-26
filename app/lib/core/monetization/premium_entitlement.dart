@@ -19,6 +19,7 @@ class PremiumEntitlement {
     required this.source,
     required this.checkedAt,
     this.expiresAt,
+    this.reviewerAccessEnabled = false,
   });
 
   factory PremiumEntitlement.free({DateTime? checkedAt}) {
@@ -108,6 +109,7 @@ class PremiumEntitlement {
   final PremiumSource source;
   final DateTime checkedAt;
   final DateTime? expiresAt;
+  final bool reviewerAccessEnabled;
 
   bool get hasPremiumAccess => hasPremiumAccessAt(DateTime.now());
 
@@ -118,6 +120,9 @@ class PremiumEntitlement {
   bool get canAccessPremiumContent => hasPremiumAccess;
 
   bool hasPremiumAccessAt(DateTime now) {
+    if (reviewerAccessEnabled) {
+      return true;
+    }
     if (state == PremiumState.gracePeriod) {
       return true;
     }
@@ -135,6 +140,16 @@ class PremiumEntitlement {
   }
 
   bool canAccessPremiumContentAt(DateTime now) => hasPremiumAccessAt(now);
+
+  PremiumEntitlement withReviewerAccess(bool enabled) {
+    return PremiumEntitlement(
+      state: state,
+      source: source,
+      checkedAt: checkedAt,
+      expiresAt: expiresAt,
+      reviewerAccessEnabled: enabled,
+    );
+  }
 
   bool needsRefresh(DateTime now) {
     return switch (source) {

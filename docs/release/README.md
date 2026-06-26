@@ -25,6 +25,7 @@ This folder holds release preparation notes for the Android MVP release.
 - [Data Safety preparation](data_safety.md)
 - [Store listing preparation](store_listing.md)
 - [Google Play submission content pack](google_play_submission_content_pack.md)
+- [Google Play reviewer access](google_play_reviewer_access.md)
 - [Monetization and ads config](monetization_ads_config.md)
 - [MVP ad placement contract](ads_mvp_behavior.md)
 - [MVP analytics event taxonomy](analytics_mvp_behavior.md)

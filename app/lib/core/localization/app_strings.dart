@@ -9,6 +9,19 @@ class AppStrings {
     required this.languageLabel,
     required this.privacy,
     required this.privacyData,
+    required this.about,
+    required this.reviewerAccess,
+    required this.reviewerAccessTitle,
+    required this.reviewerAccessSubtitle,
+    required this.reviewerAccessDialogTitle,
+    required this.reviewerAccessDialogBody,
+    required this.reviewerAccessCodeLabel,
+    required this.reviewerAccessActivate,
+    required this.reviewerAccessReset,
+    required this.reviewerAccessEnabledStatus,
+    required this.reviewerAccessEnabledMessage,
+    required this.reviewerAccessInvalidCode,
+    required this.reviewerAccessActionFailed,
     required this.homeShellSubtitle,
     required this.homeTitle,
     required this.homeSubtitle,
@@ -213,6 +226,19 @@ class AppStrings {
   final String languageLabel;
   final String privacy;
   final String privacyData;
+  final String about;
+  final String reviewerAccess;
+  final String reviewerAccessTitle;
+  final String reviewerAccessSubtitle;
+  final String reviewerAccessDialogTitle;
+  final String reviewerAccessDialogBody;
+  final String reviewerAccessCodeLabel;
+  final String reviewerAccessActivate;
+  final String reviewerAccessReset;
+  final String reviewerAccessEnabledStatus;
+  final String reviewerAccessEnabledMessage;
+  final String reviewerAccessInvalidCode;
+  final String reviewerAccessActionFailed;
   final String homeShellSubtitle;
   final String homeTitle;
   final String homeSubtitle;
@@ -417,6 +443,22 @@ class AppStrings {
     languageLabel: 'Language',
     privacy: 'Privacy',
     privacyData: 'Privacy & Data',
+    about: 'About',
+    reviewerAccess: 'Reviewer access',
+    reviewerAccessTitle: 'Reviewer access',
+    reviewerAccessSubtitle: 'Local only',
+    reviewerAccessDialogTitle: 'Reviewer access',
+    reviewerAccessDialogBody:
+        'Enter the Play Console reviewer code to unlock all restricted areas on this installation.',
+    reviewerAccessCodeLabel: 'Reviewer code',
+    reviewerAccessActivate: 'Activate reviewer access',
+    reviewerAccessReset: 'Reset reviewer access',
+    reviewerAccessEnabledStatus: 'On',
+    reviewerAccessEnabledMessage:
+        'Reviewer access is active on this installation.',
+    reviewerAccessInvalidCode: 'That reviewer code is not valid.',
+    reviewerAccessActionFailed:
+        'Reviewer access could not be updated. Please try again.',
     homeShellSubtitle: 'A quieter start',
     homeTitle: 'Start',
     homeSubtitle: 'Start with one small moment',
@@ -638,6 +680,22 @@ class AppStrings {
     languageLabel: 'Język',
     privacy: 'Prywatność',
     privacyData: 'Prywatność i dane',
+    about: 'Informacje',
+    reviewerAccess: 'Dostęp recenzencki',
+    reviewerAccessTitle: 'Dostęp recenzencki',
+    reviewerAccessSubtitle: 'Lokalny',
+    reviewerAccessDialogTitle: 'Dostęp recenzencki',
+    reviewerAccessDialogBody:
+        'Wpisz kod recenzencki z Play Console, aby odblokować wszystkie ograniczone obszary na tej instalacji.',
+    reviewerAccessCodeLabel: 'Kod recenzencki',
+    reviewerAccessActivate: 'Aktywuj dostęp recenzencki',
+    reviewerAccessReset: 'Wyłącz dostęp recenzencki',
+    reviewerAccessEnabledStatus: 'Tak',
+    reviewerAccessEnabledMessage:
+        'Dostęp recenzencki jest aktywny na tej instalacji.',
+    reviewerAccessInvalidCode: 'Kod recenzencki jest nieprawidłowy.',
+    reviewerAccessActionFailed:
+        'Nie udało się zaktualizować dostępu recenzenckiego. Spróbuj ponownie.',
     homeShellSubtitle: 'Spokojniejszy start',
     homeTitle: 'Start',
     homeSubtitle: 'Zacznij od jednej małej chwili',

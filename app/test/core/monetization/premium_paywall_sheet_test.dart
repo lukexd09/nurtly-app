@@ -12,6 +12,7 @@ import 'package:nurtly/core/theme/app_theme.dart';
 
 import '../../test_fakes/fake_premium_entitlement_provider.dart';
 import '../../test_fakes/fake_premium_purchase_provider.dart';
+import '../../test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,7 @@ void main() {
             ),
           ),
         ),
+        reviewerAccessStore: FakeReviewerAccessStore(),
       );
 
       await controller.load();
@@ -52,7 +54,8 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(
         find.byKey(const ValueKey('premium-paywall-yearly-title')),

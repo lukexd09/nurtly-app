@@ -8,6 +8,7 @@ import 'core/ads/ad_widget_factory.dart';
 import 'core/monetization/google_play_billing_entitlement_provider.dart';
 import 'core/monetization/premium_entitlement_provider.dart';
 import 'core/monetization/premium_purchase_provider.dart';
+import 'core/monetization/reviewer_access_store.dart';
 import 'core/localization/language_preference_store.dart';
 import 'core/theme/app_theme.dart';
 import 'core/navigation/app_shell.dart';
@@ -53,6 +54,7 @@ void main() {
 class NurtlyApp extends StatefulWidget {
   NurtlyApp({
     this.languagePreferenceStore,
+    this.reviewerAccessStore,
     PremiumEntitlementProvider? premiumProvider,
     PremiumPurchaseProvider? purchaseProvider,
     AdWidgetFactory? adWidgetFactory,
@@ -65,6 +67,7 @@ class NurtlyApp extends StatefulWidget {
         adWidgetFactory = adWidgetFactory ?? const FakeAdWidgetFactory();
 
   final LanguagePreferenceStore? languagePreferenceStore;
+  final ReviewerAccessStore? reviewerAccessStore;
   final PremiumEntitlementProvider premiumProvider;
   final PremiumPurchaseProvider purchaseProvider;
   final ConsentFlow consentFlow;
@@ -107,6 +110,7 @@ class _NurtlyAppState extends State<NurtlyApp> {
         consentFlow: widget.consentFlow,
         adWidgetFactory: widget.adWidgetFactory,
         onLanguageChanged: _handleLocaleChanged,
+        reviewerAccessStore: widget.reviewerAccessStore,
       ),
     );
   }
