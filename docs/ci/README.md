@@ -11,38 +11,24 @@
 - Permissions: `contents: read`
 - Concurrency cancels obsolete runs per pull request
 - Cache is disabled
-- Manual merge is still required
+- Manual merge remains required
 - Flutter: `3.41.9`
 - Bundled Dart: `3.11.5`
 - Java: Temurin `17`
-- Required job / check name: `PR CI gate`
-- Workflow sequence: checkout, Java, Flutter, Java/Flutter/Dart version prints, dependency resolution, lockfile drift check, formatting, analyzer, full test suite, scope guard, debug Android APK build, repository-wide tracked-file integrity check
-- The workflow runs the existing Flutter cleanup helper before the scope guard to remove generated local noise
-- `actions/checkout` pinned to `v7.0.0` via full SHA
-- `actions/setup-java` pinned to `v5.4.0` via full SHA
-- `subosito/flutter-action` pinned to `v2.23.0` via full SHA
+- The workflow is pinned to complete immutable SHAs for all direct Actions references
+- `actions/checkout` pinned to `v7.0.0`
+- `actions/setup-java` pinned to `v5.4.0`
+- `subosito/flutter-action` pinned to `v2.23.0`
+- Validation scope for #190: checkout, toolchain setup, version prints, `flutter pub get`, and lockfile drift check
+- The application lockfile was normalized with Flutter `3.41.9`
+- The lockfile change is limited to SDK-pinned transitive test dependencies (`meta` and `test_api`)
 - CI enforces the committed lockfile with `flutter pub get --enforce-lockfile` and `git diff --exit-code -- pubspec.lock`
-- Formatting uses `dart format --output=none --set-exit-if-changed .`
-- Tests use `flutter test --reporter expanded`
-- Android output is a clean unsigned debug APK at `app/build/app/outputs/flutter-apk/app-debug.apk`
 - Signing and Play credentials: not included
-- Local Java verification is unavailable in this Codex environment
-- GitHub Actions provides Temurin Java 17 independently
-- Local CI runs do not replace GitHub CI evidence or manual QA
+- Local Android build parity requires Java 17. GitHub Actions provisions Temurin Java 17 explicitly.
 
 Deferred to later issues:
 
 - #193: branch protection
-
-## Failure triage
-
-When a CI run fails, capture:
-
-1. workflow run ID and URL;
-2. head SHA;
-3. job and failing step;
-4. first real root-cause log line;
-5. whether the failure is deterministic or transient infrastructure-related.
 
 ## Local Windows parity
 
@@ -50,12 +36,12 @@ Start from `C:\Projekty\Nurtly`.
 
 ```powershell
 cd C:\Projekty\Nurtly
+
 git status --short
 git branch --show-current
 git fetch origin
 git rev-parse origin/main
 git log -1 --oneline origin/main
-gh pr view 202 --json state,headRefName,headRefOid,url
 
 cd app
 flutter pub get --enforce-lockfile
@@ -63,14 +49,31 @@ git diff --exit-code -- pubspec.lock
 dart format --output=none --set-exit-if-changed .
 flutter analyze
 flutter test --reporter expanded
+cd ..
+
+pwsh -NoLogo -NoProfile -File .\tools\cleanup_flutter_local.ps1
+pwsh -NoLogo -NoProfile -File .\tools\check_scope_guard.ps1
+
+cd app
 flutter build apk --debug --no-pub
 cd ..
 
-pwsh -NoLogo -NoProfile -File .\tools\check_scope_guard.ps1
 git diff --exit-code
 ```
 
-The direct non-mutating commands above are the authoritative CI parity path.
+The documented order is:
+
+1. dependency resolution;
+2. lockfile check;
+3. formatting;
+4. analyzer;
+5. full tests;
+6. cleanup generated Flutter files;
+7. scope guard;
+8. Android debug build;
+9. repository-wide tracked-file integrity check.
+
+Cleanup runs before the scope guard because Flutter commands can generate ignored or local platform files that the scope guard intentionally treats as generated noise.
 
 ## Existing scripts
 
