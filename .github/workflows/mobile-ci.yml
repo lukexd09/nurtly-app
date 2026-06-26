@@ -66,6 +66,9 @@ jobs:
       - name: Run Flutter tests
         run: flutter test --reporter expanded
 
+      - name: Cleanup Flutter generated local files
+        run: pwsh -NoLogo -NoProfile -File ../tools/cleanup_flutter_local.ps1
+
       - name: Run scope guard
         run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1
 

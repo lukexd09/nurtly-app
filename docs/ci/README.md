@@ -17,6 +17,7 @@
 - Java: Temurin `17`
 - Required job / check name: `PR CI gate`
 - Workflow sequence: checkout, Java, Flutter, Java/Flutter/Dart version prints, dependency resolution, lockfile drift check, formatting, analyzer, full test suite, scope guard, debug Android APK build, repository-wide tracked-file integrity check
+- The workflow runs the existing Flutter cleanup helper before the scope guard to remove generated local noise
 - `actions/checkout` pinned to `v7.0.0` via full SHA
 - `actions/setup-java` pinned to `v5.4.0` via full SHA
 - `subosito/flutter-action` pinned to `v2.23.0` via full SHA
@@ -75,6 +76,7 @@ The direct non-mutating commands above are the authoritative CI parity path.
 
 - `tools/verify_flutter.ps1` runs mutating `dart format .`
 - `tools/pre_pr_check.ps1` runs Flutter verification, cleanup, scope guard and quality checks, then checks repository cleanliness
+- `tools/cleanup_flutter_local.ps1` removes generated Flutter local noise such as iOS registrant files
 - `-AllowDirty` only relaxes the final clean-tree requirement
 - `-AllowPlatformChanges` relaxes platform-file restrictions and requires explicit task approval
 - These scripts are useful locally, but the direct non-mutating commands above match CI more closely
