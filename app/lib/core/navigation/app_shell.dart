@@ -325,127 +325,129 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
               canPop: !isProcessing,
               child: Builder(
                 builder: (context) {
-            final strings = _strings;
-            final isEnabled = _premiumController.reviewerAccessEnabled;
-            Future<void> submitCode() async {
-              final messenger = ScaffoldMessenger.of(context);
-              final dialogNavigator = Navigator.of(dialogContext);
-              final code = codeController.text;
-              setDialogState(() {
-                isProcessing = true;
-                statusMessage = '';
-              });
-              try {
-                await _premiumController.enableReviewerAccess(code);
-              } catch (_) {
-                if (!context.mounted || !dialogContext.mounted) {
-                  return;
-                }
-                setDialogState(() {
-                  isProcessing = false;
-                  statusMessage = strings.reviewerAccessActionFailed;
-                });
-                return;
-              }
-              if (!context.mounted || !dialogContext.mounted) {
-                return;
-              }
-              if (_premiumController.reviewerAccessEnabled) {
-                dialogNavigator.pop();
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text(strings.reviewerAccessEnabledMessage),
-                  ),
-                );
-                return;
-              }
-              setDialogState(() {
-                isProcessing = false;
-                statusMessage = strings.reviewerAccessInvalidCode;
-              });
-            }
-
-            Future<void> resetAccess() async {
-              final messenger = ScaffoldMessenger.of(context);
-              final dialogNavigator = Navigator.of(dialogContext);
-              setDialogState(() {
-                isProcessing = true;
-                statusMessage = '';
-              });
-              try {
-                await _premiumController.disableReviewerAccess();
-              } catch (_) {
-                if (!context.mounted || !dialogContext.mounted) {
-                  return;
-                }
-                setDialogState(() {
-                  isProcessing = false;
-                  statusMessage = strings.reviewerAccessActionFailed;
-                });
-                return;
-              }
-              if (!context.mounted || !dialogContext.mounted) {
-                return;
-              }
-              dialogNavigator.pop();
-              messenger.showSnackBar(
-                SnackBar(content: Text(strings.reviewerAccessReset)),
-              );
-            }
-
-            return AlertDialog(
-              title: Text(strings.reviewerAccessDialogTitle),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(strings.reviewerAccessDialogBody),
-                  const SizedBox(height: AppSpacing.md),
-                  TextField(
-                    key: const ValueKey('reviewer-access-code-field'),
-                    controller: codeController,
-                    enabled: !isEnabled && !isProcessing,
-                    decoration: InputDecoration(
-                      labelText: strings.reviewerAccessCodeLabel,
-                    ),
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) {
-                      if (!isEnabled && !isProcessing) {
-                        unawaited(submitCode());
+                  final strings = _strings;
+                  final isEnabled = _premiumController.reviewerAccessEnabled;
+                  Future<void> submitCode() async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final dialogNavigator = Navigator.of(dialogContext);
+                    final code = codeController.text;
+                    setDialogState(() {
+                      isProcessing = true;
+                      statusMessage = '';
+                    });
+                    try {
+                      await _premiumController.enableReviewerAccess(code);
+                    } catch (_) {
+                      if (!context.mounted || !dialogContext.mounted) {
+                        return;
                       }
-                    },
-                  ),
-                  if (statusMessage.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      statusMessage,
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textMuted,
-                      ),
+                      setDialogState(() {
+                        isProcessing = false;
+                        statusMessage = strings.reviewerAccessActionFailed;
+                      });
+                      return;
+                    }
+                    if (!context.mounted || !dialogContext.mounted) {
+                      return;
+                    }
+                    if (_premiumController.reviewerAccessEnabled) {
+                      dialogNavigator.pop();
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(strings.reviewerAccessEnabledMessage),
+                        ),
+                      );
+                      return;
+                    }
+                    setDialogState(() {
+                      isProcessing = false;
+                      statusMessage = strings.reviewerAccessInvalidCode;
+                    });
+                  }
+
+                  Future<void> resetAccess() async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final dialogNavigator = Navigator.of(dialogContext);
+                    setDialogState(() {
+                      isProcessing = true;
+                      statusMessage = '';
+                    });
+                    try {
+                      await _premiumController.disableReviewerAccess();
+                    } catch (_) {
+                      if (!context.mounted || !dialogContext.mounted) {
+                        return;
+                      }
+                      setDialogState(() {
+                        isProcessing = false;
+                        statusMessage = strings.reviewerAccessActionFailed;
+                      });
+                      return;
+                    }
+                    if (!context.mounted || !dialogContext.mounted) {
+                      return;
+                    }
+                    dialogNavigator.pop();
+                    messenger.showSnackBar(
+                      SnackBar(content: Text(strings.reviewerAccessReset)),
+                    );
+                  }
+
+                  return AlertDialog(
+                    title: Text(strings.reviewerAccessDialogTitle),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(strings.reviewerAccessDialogBody),
+                        const SizedBox(height: AppSpacing.md),
+                        TextField(
+                          key: const ValueKey('reviewer-access-code-field'),
+                          controller: codeController,
+                          enabled: !isEnabled && !isProcessing,
+                          decoration: InputDecoration(
+                            labelText: strings.reviewerAccessCodeLabel,
+                          ),
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) {
+                            if (!isEnabled && !isProcessing) {
+                              unawaited(submitCode());
+                            }
+                          },
+                        ),
+                        if (statusMessage.isNotEmpty) ...[
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            statusMessage,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textMuted,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                ],
-              ),
-              actions: [
-                TextButton(
-                  key: const ValueKey('reviewer-access-back'),
-                  onPressed: isProcessing
-                      ? null
-                      : () => Navigator.of(dialogContext).pop(),
-                  child: Text(strings.back),
-                ),
-                TextButton(
-                  key: const ValueKey('reviewer-access-reset'),
-                  onPressed: isProcessing || !isEnabled ? null : resetAccess,
-                  child: Text(strings.reviewerAccessReset),
-                ),
-                FilledButton(
-                  key: const ValueKey('reviewer-access-activate'),
-                  onPressed: isProcessing || isEnabled ? null : submitCode,
-                  child: Text(strings.reviewerAccessActivate),
-                ),
-              ],
-            );
+                    actions: [
+                      TextButton(
+                        key: const ValueKey('reviewer-access-back'),
+                        onPressed: isProcessing
+                            ? null
+                            : () => Navigator.of(dialogContext).pop(),
+                        child: Text(strings.back),
+                      ),
+                      TextButton(
+                        key: const ValueKey('reviewer-access-reset'),
+                        onPressed:
+                            isProcessing || !isEnabled ? null : resetAccess,
+                        child: Text(strings.reviewerAccessReset),
+                      ),
+                      FilledButton(
+                        key: const ValueKey('reviewer-access-activate'),
+                        onPressed:
+                            isProcessing || isEnabled ? null : submitCode,
+                        child: Text(strings.reviewerAccessActivate),
+                      ),
+                    ],
+                  );
                 },
               ),
             );
