@@ -53,6 +53,7 @@ void main() {
 class NurtlyApp extends StatefulWidget {
   NurtlyApp({
     this.languagePreferenceStore,
+    this.reviewerAccessStore,
     PremiumEntitlementProvider? premiumProvider,
     PremiumPurchaseProvider? purchaseProvider,
     AdWidgetFactory? adWidgetFactory,
@@ -65,6 +66,7 @@ class NurtlyApp extends StatefulWidget {
         adWidgetFactory = adWidgetFactory ?? const FakeAdWidgetFactory();
 
   final LanguagePreferenceStore? languagePreferenceStore;
+  final ReviewerAccessStore? reviewerAccessStore;
   final PremiumEntitlementProvider premiumProvider;
   final PremiumPurchaseProvider purchaseProvider;
   final ConsentFlow consentFlow;
@@ -107,6 +109,7 @@ class _NurtlyAppState extends State<NurtlyApp> {
         consentFlow: widget.consentFlow,
         adWidgetFactory: widget.adWidgetFactory,
         onLanguageChanged: _handleLocaleChanged,
+        reviewerAccessStore: widget.reviewerAccessStore,
       ),
     );
   }

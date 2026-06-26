@@ -5,6 +5,7 @@ import 'package:nurtly/core/monetization/purchase_result.dart';
 
 import '../../test_fakes/fake_premium_entitlement_provider.dart';
 import '../../test_fakes/fake_premium_purchase_provider.dart';
+import '../../test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
   final now = DateTime.utc(2026, 5, 26, 12);
@@ -174,5 +175,59 @@ void main() {
     expect(result.status, PurchaseActionStatus.success);
     expect(controller.entitlement.state, PremiumState.active);
     expect(controller.entitlement.source, PremiumSource.yearly);
+  });
+
+  test('valid reviewer code enables reviewer access and persists it', () async {
+    final reviewerStore = FakeReviewerAccessStore();
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      ),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await controller.load();
+    await controller.enableReviewerAccess('NURTLY-REVIEWER-162');
+
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+    expect(controller.shouldShowAds, isFalse);
+    expect(reviewerStore.saved, isTrue);
+  });
+
+  test('invalid reviewer code does not enable reviewer access', () async {
+    final reviewerStore = FakeReviewerAccessStore();
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      ),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await controller.load();
+    await controller.enableReviewerAccess('wrong-code');
+
+    expect(controller.reviewerAccessEnabled, isFalse);
+    expect(controller.hasPremiumAccess, isFalse);
+    expect(reviewerStore.savedValues, isEmpty);
+  });
+
+  test('reset only clears reviewer access and keeps true premium', () async {
+    final reviewerStore = FakeReviewerAccessStore(saved: true);
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.yearlyActive(checkedAt: now),
+      ),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await controller.load();
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+
+    await controller.disableReviewerAccess();
+
+    expect(controller.reviewerAccessEnabled, isFalse);
+    expect(controller.hasPremiumAccess, isTrue);
   });
 }

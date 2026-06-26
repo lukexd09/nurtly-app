@@ -11,6 +11,16 @@ void main() {
     expect(strings.general, 'General');
     expect(strings.languageLabel, 'Language');
     expect(strings.privacyData, 'Privacy & Data');
+    expect(strings.about, 'About');
+    expect(strings.reviewerAccessTitle, 'Reviewer access');
+    expect(strings.reviewerAccessSubtitle, 'Local only');
+    expect(strings.reviewerAccessDialogTitle, 'Reviewer access');
+    expect(strings.reviewerAccessActivate, 'Activate reviewer access');
+    expect(strings.reviewerAccessEnabledStatus, 'On');
+    expect(
+      strings.reviewerAccessInvalidCode,
+      'That reviewer code is not valid.',
+    );
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Free plan');
@@ -100,6 +110,19 @@ void main() {
     expect(strings.general, 'Ogólne');
     expect(strings.languageLabel, 'Język');
     expect(strings.privacyData, 'Prywatność i dane');
+    expect(strings.about, 'Informacje');
+    expect(strings.reviewerAccessTitle, 'Dostęp recenzencki');
+    expect(
+      strings.reviewerAccessSubtitle,
+      'Lokalny',
+    );
+    expect(strings.reviewerAccessDialogTitle, 'Dostęp recenzencki');
+    expect(strings.reviewerAccessActivate, 'Aktywuj dostęp recenzencki');
+    expect(strings.reviewerAccessEnabledStatus, 'Tak');
+    expect(
+      strings.reviewerAccessInvalidCode,
+      'Kod recenzencki jest nieprawidłowy.',
+    );
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Darmowy plan');

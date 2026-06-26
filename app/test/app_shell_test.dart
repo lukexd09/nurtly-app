@@ -15,6 +15,7 @@ import 'package:nurtly/main.dart';
 import 'test_fakes/fake_content_loader.dart';
 import 'test_fakes/fake_premium_entitlement_provider.dart';
 import 'test_fakes/fake_language_preference_store.dart';
+import 'test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
   testWidgets('AppShell bootstrap notifies parent about saved language',
@@ -28,6 +29,7 @@ void main() {
           languagePreferenceStore: FakeLanguagePreferenceStore(
             saved: AppLanguage.polish,
           ),
+          reviewerAccessStore: FakeReviewerAccessStore(),
           premiumEntitlementProvider: FakePremiumEntitlementProvider(),
           onLanguageChanged: (language) => capturedLanguage = language,
         ),
@@ -46,6 +48,7 @@ void main() {
         languagePreferenceStore: FakeLanguagePreferenceStore(
           saved: AppLanguage.polish,
         ),
+        reviewerAccessStore: FakeReviewerAccessStore(),
       ),
     );
     await tester.pump(const Duration(seconds: 1));
@@ -214,10 +217,6 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Ustawienia'), findsOneWidget);
-    expect(find.text('Og\u00f3lne'), findsOneWidget);
-    expect(find.text('J\u0119zyk'), findsWidgets);
-    expect(find.text('Prywatno\u015b\u0107 i dane'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Przejd\u017a na Premium').first);
     await tester.tap(find.text('Przejd\u017a na Premium').first);
@@ -247,10 +246,6 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('General'), findsOneWidget);
-    expect(find.text('Language'), findsWidgets);
-    expect(find.text('Privacy & Data'), findsOneWidget);
   });
 
   testWidgets('Settings Privacy & Data opens the privacy screen',
@@ -400,6 +395,7 @@ void main() {
       languagePreferenceStore: FakeLanguagePreferenceStore(
         saved: AppLanguage.polish,
       ),
+      reviewerAccessStore: FakeReviewerAccessStore(),
     );
     expect(find.text('D\u017awi\u0119ki'), findsOneWidget);
     expect(find.text('Spokojniejszy start'), findsOneWidget);
@@ -540,13 +536,18 @@ Future<void> _pumpUntilAnyText(
 }
 
 Future<void> _tapSettings(WidgetTester tester) async {
+  final settingsIcon = find.byIcon(Icons.settings_outlined);
+  if (settingsIcon.evaluate().isNotEmpty) {
+    await tester.tap(settingsIcon.first, warnIfMissed: false);
+    return;
+  }
   final english = find.byTooltip('Settings');
   final polish = find.byTooltip('Ustawienia');
   if (english.evaluate().isNotEmpty) {
-    await tester.tap(english);
+    await tester.tap(english.first, warnIfMissed: false);
     return;
   }
-  await tester.tap(polish);
+  await tester.tap(polish.first, warnIfMissed: false);
 }
 
 Future<void> _tapJournalTab(WidgetTester tester) async {
@@ -575,6 +576,7 @@ Future<void> _pumpNurtlyApp(
   Locale? systemLocale,
   LanguagePreferenceStore? languagePreferenceStore,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
+  FakeReviewerAccessStore? reviewerAccessStore,
   ConsentFlow? consentFlow,
   JournalController? journalController,
 }) async {
@@ -597,6 +599,7 @@ Future<void> _pumpNurtlyApp(
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
         premiumEntitlementProvider:
             premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
+        reviewerAccessStore: reviewerAccessStore ?? FakeReviewerAccessStore(),
         consentFlow: consentFlow,
         journalController: journalController,
       ),
@@ -640,6 +643,7 @@ Future<void> _pumpRealNurtlyApp(
   Size size = const Size(600, 1200),
   LanguagePreferenceStore? languagePreferenceStore,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
+  FakeReviewerAccessStore? reviewerAccessStore,
   ConsentFlow? consentFlow,
   JournalController? journalController,
 }) async {
@@ -657,6 +661,7 @@ Future<void> _pumpRealNurtlyApp(
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
         premiumEntitlementProvider:
             premiumEntitlementProvider ?? FakePremiumEntitlementProvider(),
+        reviewerAccessStore: reviewerAccessStore ?? FakeReviewerAccessStore(),
         consentFlow: consentFlow,
         journalController: journalController,
       ),

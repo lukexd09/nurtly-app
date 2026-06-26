@@ -23,6 +23,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] `git status --short` is clean.
 - [ ] The release AAB path matches the handoff doc.
 - [ ] No private release configuration is committed in the repository.
+- [ ] Reviewer access instructions are documented in [Google Play reviewer access](google_play_reviewer_access.md).
 
 ## 2. Local owner machine readiness
 
@@ -81,6 +82,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Restore purchases is tested manually.
 - [ ] Premium users do not see ads.
 - [ ] Premium billing products match the owner decision pack.
+- [ ] Reviewer access flow is tested on a signed release candidate and matches the Play Console instructions.
 
 ## 8. Ads
 
@@ -115,6 +117,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] In-app purchases disclosure is checked.
 - [ ] Owner decision pack is used to confirm Advertising ID, ad personalization, and Data Safety wording.
 - [ ] Privacy policy publication handoff is aligned with the final Play Console URL.
+- [ ] Reviewer access does not change privacy, UMP, or local-data deletion behavior.
 
 ## 10. Upload-ready blockers
 
@@ -127,6 +130,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Required closed-testing track fields are complete.
 - [ ] Tester group and invite flow are ready.
 - [ ] Release-candidate evidence is recorded locally.
+- [ ] OWNER / MANUAL QA PENDING: reviewer access, restricted areas, reset flow, and restart persistence are verified on a signed release candidate.
 
 ## 11. Public-release blockers
 
@@ -150,6 +154,8 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Restore purchases works.
 - [ ] Monetization runtime matrix is covered for monthly, yearly, pending, canceled, error, restore, restart, and ad suppression cases.
 - [ ] Ads behave correctly.
+- [ ] Reviewer access gives access to restricted areas without affecting Google Play billing or purchase history.
+- [ ] Reviewer access reset only disables reviewer access and leaves true Premium untouched.
 - [ ] Settings work.
 - [ ] Privacy screen works.
 - [ ] Privacy & Data wording is clear in EN and PL.

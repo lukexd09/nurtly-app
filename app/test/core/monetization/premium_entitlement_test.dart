@@ -12,6 +12,16 @@ void main() {
     expect(entitlement.canAccessPremiumContent, isFalse);
   });
 
+  test('reviewer access grants premium access and hides ads', () {
+    final entitlement = PremiumEntitlement.free(
+      checkedAt: now,
+    ).withReviewerAccess(true);
+
+    expect(entitlement.hasPremiumAccessAt(now), isTrue);
+    expect(entitlement.shouldShowAdsAt(now), isFalse);
+    expect(entitlement.canAccessPremiumContentAt(now), isTrue);
+  });
+
   test('active monthly before expiresAt has premium access and no ads', () {
     final entitlement = PremiumEntitlement.monthlyActive(
       checkedAt: now,
