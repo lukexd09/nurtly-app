@@ -124,5 +124,11 @@ $evidence = @"
 "@
 Write-Utf8NoBom -Path (Join-Path $OutputDirectory "$baseName.release-evidence.md") -Content ($evidence + "`n")
 
+if ($env:GITHUB_OUTPUT) {
+    "metadata_version_name=$VersionName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+    "metadata_build_number=$BuildNumber" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+    "metadata_basename=$baseName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+}
+
 Write-Host "Metadata package written to: $OutputDirectory"
 Write-Host "Release artifact basename: $baseName"

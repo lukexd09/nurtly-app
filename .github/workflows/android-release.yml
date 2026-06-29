@@ -252,6 +252,7 @@ jobs:
         run: flutter build appbundle --release --no-pub
 
       - name: Generate release metadata
+        id: metadata
         shell: pwsh
         env:
           SOURCE_REF: ${{ inputs.source_ref }}
@@ -287,9 +288,15 @@ jobs:
           BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
           SHORT_SHA: ${{ needs.validate.outputs.short_sha }}
           METADATA_BASENAME: ${{ needs.validate.outputs.metadata_basename }}
+          METADATA_HELPER_VERSION: ${{ steps.metadata.outputs.metadata_version_name }}
+          METADATA_HELPER_BUILD: ${{ steps.metadata.outputs.metadata_build_number }}
+          METADATA_HELPER_BASENAME: ${{ steps.metadata.outputs.metadata_basename }}
         run: |
+          if ($env:VERSION_NAME -ne $env:METADATA_HELPER_VERSION) { throw "Version mismatch." }
+          if ($env:BUILD_NUMBER -ne $env:METADATA_HELPER_BUILD) { throw "Build mismatch." }
           $expected = "nurtly-android-$env:VERSION_NAME-$env:BUILD_NUMBER-$env:SHORT_SHA"
           if ($expected -ne $env:METADATA_BASENAME) { throw "Metadata basename mismatch." }
+          if ($expected -ne $env:METADATA_HELPER_BASENAME) { throw "Helper basename mismatch." }
 
       - name: Upload release artifact
         id: upload

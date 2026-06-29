@@ -26,6 +26,13 @@ $approvedTerminologyPhrases = @(
     'secret values'
 )
 
+$protectedNames = @(
+    'ANDROID_KEYSTORE_BASE64',
+    'ANDROID_KEYSTORE_PASSWORD',
+    'ANDROID_KEY_ALIAS',
+    'ANDROID_KEY_PASSWORD'
+)
+
 function Test-ApprovedSecretTerminologyLine {
     param([string] $Line)
     $sanitized = $Line
@@ -120,6 +127,11 @@ foreach ($doc in $docsToCheck) {
         $line = $entry.Line
         if ($line -match '^\s*[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
             Add-Failure "Literal secret assignment on line $($entry.LineNumber) in $doc"
+        }
+        foreach ($name in $protectedNames) {
+            if ($line -match "^\s*$name\s*[:=]" -and $doc -notmatch 'android_release_workflow\.md$') {
+                Add-Failure "Protected name assignment on line $($entry.LineNumber) in $doc"
+            }
         }
         if ($line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}') {
             Add-Failure "Workflow secret reference in documentation on line $($entry.LineNumber) in $doc"
