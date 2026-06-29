@@ -72,7 +72,7 @@ $forbiddenPatterns = @(
     "audioplayers",
     "shared_preferences",
     "sqflite",
-    "hive",
+    "\bhive\b",
     "http:",
     "API_KEY",
     "SECRET",
@@ -147,7 +147,16 @@ function Test-ShouldScanForbiddenPatterns {
         return $false
     }
 
-    if ($normalized -match '^(docs/|\.github/)') {
+    if ($normalized -eq ".github/workflows/android-release.yml") {
+        return $false
+    }
+
+    if ($normalized -in @(
+        "docs/ci/README.md",
+        "docs/ci/branch-protection.md",
+        "docs/release/android_signing.md",
+        "docs/release/android_release_workflow.md"
+    )) {
         return $false
     }
 
@@ -293,14 +302,14 @@ try {
     if (-not (Test-Path $signingHelper)) { throw "Missing signing helper." }
 
     $changedFiles = @(Get-ChangedFiles)
-    $failures = @()
+    $script:failures = New-Object 'System.Collections.Generic.List[string]'
 
     foreach ($file in $changedFiles) {
         $normalized = $file -replace "\\", "/"
 
         foreach ($pattern in $generatedNoisePatterns) {
             if ($normalized -match $pattern) {
-                $failures += "Generated/local noise changed: $normalized"
+                Add-Failure "Generated/local noise changed: $normalized"
             }
         }
 
@@ -309,7 +318,7 @@ try {
             $isAllowedPlatformFile = $normalized -match '^app/android/app/src/main/AndroidManifest\.xml$'
 
             if ($isPlatformFile -and -not $isAllowedPlatformFile) {
-                $failures += "Platform file changed without -AllowPlatformChanges: $normalized"
+                Add-Failure "Platform file changed without -AllowPlatformChanges: $normalized"
             }
         }
 
@@ -325,7 +334,7 @@ try {
                         if ($line -notmatch '(?i)SECRET') { continue }
                         if ($normalized -in $approvedSecretTerminologyPaths -and
                             $line -match '(?i)\b[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
-                            $failures += "Forbidden pattern '$pattern' found in $normalized"
+                            Add-Failure "Forbidden pattern '$pattern' found in $normalized on line content: $line"
                             continue
                         }
 
@@ -335,14 +344,14 @@ try {
                         }
 
                         if ($sanitizedLine -match '(?i)SECRET') {
-                            $failures += "Forbidden pattern '$pattern' found in $normalized"
+                            Add-Failure "Forbidden pattern '$pattern' found in $normalized on line content: $line"
                         }
                     }
                     continue
                 }
 
                 if (Test-ForbiddenPatternMatch $content $pattern) {
-                    $failures += "Forbidden pattern '$pattern' found in $normalized"
+                    Add-Failure "Forbidden pattern '$pattern' found in $normalized"
                 }
             }
         }
@@ -434,9 +443,9 @@ try {
         }
     }
 
-    if ($failures.Count -gt 0) {
+    if ($script:failures.Count -gt 0) {
         Write-Host "Scope guard failed." -ForegroundColor Red
-        $failures | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" }
+        $script:failures | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" }
         throw "Scope guard failed."
     }
 
