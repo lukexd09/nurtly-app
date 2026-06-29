@@ -24,6 +24,23 @@ $allowedPlatformFiles = @(
     "^app/android/app/src/main/AndroidManifest\\.xml$"
 )
 
+$approvedSecretTerminologyPaths = @(
+    "docs/ci/branch-protection.md",
+    "docs/release/android_signing.md",
+    "docs/ci/README.md"
+)
+
+$approvedSecretTerminologyPhrases = @(
+    'GitHub Environment secret',
+    'GitHub Environment secrets',
+    'Environment secret',
+    'Environment secrets',
+    'environment secret name',
+    'environment secret names',
+    'environment secret value',
+    'environment secret values'
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -192,6 +209,34 @@ function Test-ForbiddenPatternMatch {
     return $false
 }
 
+function Remove-ApprovedSecretTerminology {
+    param([string] $Line)
+
+    $sanitized = $Line
+    foreach ($phrase in $approvedSecretTerminologyPhrases) {
+        $sanitized = [regex]::Replace(
+            $sanitized,
+            [regex]::Escape($phrase),
+            '',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+        )
+    }
+
+    return $sanitized
+}
+
+function Test-LineContainsApprovedSecretTerminology {
+    param([string] $Line)
+
+    foreach ($phrase in $approvedSecretTerminologyPhrases) {
+        if ($Line -match [regex]::Escape($phrase)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 try {
     Set-Location $repoRoot
     $changedFiles = @(Get-ChangedFiles)
@@ -229,6 +274,32 @@ try {
                 if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) {
                     continue
                 }
+                if ($pattern -eq "SECRET") {
+                    $lines = $content -split "`r?`n"
+                    foreach ($line in $lines) {
+                        if ($line -notmatch '(?i)SECRET') {
+                            continue
+                        }
+
+                        if ($normalized -in $approvedSecretTerminologyPaths -and
+                            $line -match '(?i)\b[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
+                            $failures += "Forbidden pattern '$pattern' found in $file"
+                            continue
+                        }
+
+                        $sanitizedLine = $line
+                        if ($normalized -in $approvedSecretTerminologyPaths -and
+                            (Test-LineContainsApprovedSecretTerminology $line)) {
+                            $sanitizedLine = Remove-ApprovedSecretTerminology $line
+                        }
+
+                        if ($sanitizedLine -match '(?i)SECRET') {
+                            $failures += "Forbidden pattern '$pattern' found in $file"
+                        }
+                    }
+                    continue
+                }
+
                 if (Test-ForbiddenPatternMatch $content $pattern) {
                     $failures += "Forbidden pattern '$pattern' found in $file"
                 }
