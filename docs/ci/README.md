@@ -26,9 +26,16 @@
 - Signing and Play credentials: not included
 - Local Android build parity requires Java 17. GitHub Actions provisions Temurin Java 17 explicitly.
 
-Deferred to later issues:
+## Governance docs
 
-- #193: branch protection
+- [Branch protection guide](branch-protection.md)
+- [Android signing strategy](../release/android_signing.md)
+
+## #193 preparation
+
+- The required check candidate is `PR CI gate`.
+- The authoritative branch-protection guide is [Branch protection guide](branch-protection.md).
+- Branch protection is not asserted here as already configured.
 
 ## Local Windows parity
 
