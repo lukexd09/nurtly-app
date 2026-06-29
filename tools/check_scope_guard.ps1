@@ -10,10 +10,22 @@ $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path $RepoRoot).Path
 $controlRoot = (Resolve-Path $ControlRoot).Path
 $sourceRoot = (Resolve-Path $SourceRoot).Path
-$nestedControlRoot = Join-Path $repoRoot "control"
-if (-not (Test-Path (Join-Path $controlRoot ".github/workflows/android-release.yml")) -and (Test-Path (Join-Path $nestedControlRoot ".github/workflows/android-release.yml"))) {
-    $controlRoot = (Resolve-Path $nestedControlRoot).Path
+$controlCandidates = @(
+    $controlRoot,
+    (Join-Path $repoRoot "control")
+) | Select-Object -Unique
+$controlRoot = $null
+$releaseWorkflow = $null
+foreach ($candidate in $controlCandidates) {
+    $workflowCandidate = Join-Path $candidate ".github/workflows/android-release.yml"
+    if (Test-Path $workflowCandidate) {
+        $controlRoot = (Resolve-Path $candidate).Path
+        $releaseWorkflow = $workflowCandidate
+        break
+    }
 }
+$signingHelper = $null
+$docsToCheck = $null
 $failures = New-Object System.Collections.Generic.List[string]
 
 $approvedTerminologyPhrases = @(
@@ -59,15 +71,13 @@ function Add-Failure {
     $script:failures.Add($Message) | Out-Null
 }
 
-$releaseWorkflow = Join-Path $controlRoot ".github/workflows/android-release.yml"
+if (-not $controlRoot) { throw "Missing release workflow." }
 $signingHelper = Join-Path $controlRoot "tools/prepare_android_signing.ps1"
 $docsToCheck = @(
     (Join-Path $controlRoot "docs/ci/branch-protection.md"),
     (Join-Path $controlRoot "docs/release/android_signing.md"),
     (Join-Path $controlRoot "docs/release/android_release_workflow.md")
 )
-
-if (-not (Test-Path $releaseWorkflow)) { throw "Missing release workflow." }
 if (-not (Test-Path $signingHelper)) { throw "Missing signing helper." }
 
 $releaseAllowed = @{
