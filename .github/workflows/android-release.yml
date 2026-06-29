@@ -187,7 +187,7 @@ jobs:
 
       - name: Run scope guard
         working-directory: control
-        run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1 -RepoRoot .. -ControlRoot . -SourceRoot ../source
+        run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1 -RepoRoot .. -ControlRoot .. -SourceRoot ../source
 
       - name: Verify tracked files unchanged
         working-directory: control
