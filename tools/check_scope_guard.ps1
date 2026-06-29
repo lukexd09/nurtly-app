@@ -24,6 +24,12 @@ $allowedPlatformFiles = @(
     "^app/android/app/src/main/AndroidManifest\\.xml$"
 )
 
+$approvedSecretTerminologyPaths = @(
+    "docs/ci/branch-protection.md",
+    "docs/release/android_signing.md",
+    "docs/ci/README.md"
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -192,6 +198,35 @@ function Test-ForbiddenPatternMatch {
     return $false
 }
 
+function Test-IsApprovedSecretTerminology {
+    param(
+        [string] $Path,
+        [string] $Content
+    )
+
+    $normalized = $Path -replace "\\", "/"
+    if ($normalized -notin $approvedSecretTerminologyPaths) {
+        return $false
+    }
+
+    $approvedPhrases = @(
+        'GitHub Environment secret',
+        'GitHub Environment secrets',
+        'environment secret name',
+        'environment secret value',
+        'GitHub Environment secret names',
+        'GitHub Environment secret values'
+    )
+
+    foreach ($phrase in $approvedPhrases) {
+        if ($Content -match [regex]::Escape($phrase)) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 try {
     Set-Location $repoRoot
     $changedFiles = @(Get-ChangedFiles)
@@ -220,6 +255,12 @@ try {
             (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
+                if ($pattern -eq "SECRET" -and (Test-IsApprovedSecretTerminology $normalized $content)) {
+                    if ($content -match '(?i)\bSECRET\s*[:=]') {
+                        $failures += "Forbidden pattern '$pattern' found in $file"
+                    }
+                    continue
+                }
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
                     continue
                 }

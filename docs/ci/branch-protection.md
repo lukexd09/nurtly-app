@@ -40,6 +40,38 @@ Recommended owner-facing GitHub UI policy:
 
 Do not require a review count that could deadlock a single-owner repository unless the repository governance already supports it.
 
+## Executable owner UI steps
+
+### Preferred ruleset procedure
+
+1. Open the repository on GitHub.
+2. Go to `Settings`.
+3. Go to `Rules` and then `Rulesets`.
+4. Create a new branch ruleset.
+5. Give it a clear name such as `main-required-ci`.
+6. Set enforcement to `Active`.
+7. Target the `main` branch or the repository default branch.
+8. Require changes through a pull request.
+9. Require status checks to pass before merging.
+10. Add the exact status check `PR CI gate`.
+11. Do not allow force pushes.
+12. Do not allow branch deletion.
+13. Do not configure automatic merge.
+14. Avoid an approval-count requirement that would deadlock the single-owner workflow.
+15. Save the ruleset.
+
+### Fallback classic branch-protection procedure
+
+1. Go to `Settings` and then `Branches`.
+2. Add a branch protection rule for `main`.
+3. Require a pull request before merging.
+4. Require status checks to pass before merging.
+5. Select `PR CI gate`.
+6. Keep force pushes and branch deletion disabled.
+7. Save the rule.
+
+Rulesets are preferred for new configuration, but either mechanism is acceptable if it produces the required behavior.
+
 Interpretation of the rule:
 
 - A passing check permits an owner decision.

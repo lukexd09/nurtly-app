@@ -35,7 +35,7 @@
 
 - The required check candidate is `PR CI gate`.
 - The authoritative branch-protection guide is [Branch protection guide](branch-protection.md).
-- Branch protection is not asserted here as already configured.
+- Branch protection or repository-ruleset configuration could not be confirmed from the available API credentials.
 
 ## Local Windows parity
 
@@ -136,13 +136,6 @@ Before fixing a failure, record:
 - green CI does not prove signing, Play configuration or store delivery
 - manual QA must not be inferred
 - owner approval and manual merge are required
-
-## #193 preparation
-
-- required check candidate is `PR CI gate`
-- #193 will configure or verify branch protection
-- branch protection is not yet configured
-- auto-merge remains disabled
 
 Do not weaken the workflow to hide a failure.
 Do not treat local success as a substitute for GitHub CI.
