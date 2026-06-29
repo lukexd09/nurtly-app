@@ -162,19 +162,12 @@ foreach ($doc in $docsToCheck) {
 
 if (-not $AllowPlatformChanges) {
     $changedFiles = @()
-    $tempFiles = @()
     foreach ($command in @(
-        "git -C `"$repoRootPath`" diff --name-only",
-        "git -C `"$repoRootPath`" diff --cached --name-only",
-        "git -C `"$repoRootPath`" ls-files --others --exclude-standard"
+        @('diff', '--name-only'),
+        @('diff', '--cached', '--name-only'),
+        @('ls-files', '--others', '--exclude-standard')
     )) {
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        $tempFiles += $tempFile
-        cmd /c "$command > `"$tempFile`" 2>nul" | Out-Null
-        $changedFiles += Get-Content -LiteralPath $tempFile
-    }
-    foreach ($tempFile in $tempFiles) {
-        Remove-Item -LiteralPath $tempFile -Force -ErrorAction SilentlyContinue
+        $changedFiles += & git -C $repoRootPath @command
     }
     if ($changedFiles -match '^app/android/' -or $changedFiles -match '^app/ios/') {
         Add-Failure "Platform files changed without -AllowPlatformChanges."
