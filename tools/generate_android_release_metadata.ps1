@@ -1,38 +1,60 @@
 param(
+    [Parameter(Mandatory = $true)][string] $RepoRoot,
     [Parameter(Mandatory = $true)][string] $AabPath,
     [Parameter(Mandatory = $true)][string] $OutputDirectory,
     [Parameter(Mandatory = $true)][string] $SourceRef,
     [Parameter(Mandatory = $true)][string] $ResolvedSourceSha,
     [Parameter(Mandatory = $true)][string] $ReleaseNotesFrom,
+    [Parameter(Mandatory = $true)][string] $ReleaseNotesRange,
     [Parameter(Mandatory = $true)][string] $RunId,
     [Parameter(Mandatory = $true)][string] $RunAttempt,
     [Parameter(Mandatory = $true)][string] $Repository,
     [Parameter(Mandatory = $true)][string] $WorkflowSha,
-    [Parameter(Mandatory = $true)][string] $UtcBuildTimestamp
+    [Parameter(Mandatory = $true)][string] $UtcBuildTimestamp,
+    [Parameter(Mandatory = $true)][string] $VersionName,
+    [Parameter(Mandatory = $true)][string] $BuildNumber,
+    [Parameter(Mandatory = $true)][string] $ExpectedBasename
 )
 
 $ErrorActionPreference = "Stop"
 
-if (-not (Test-Path -LiteralPath $AabPath -PathType Leaf)) {
-    throw "AAB not found: $AabPath"
+if (-not (Test-Path -LiteralPath $RepoRoot -PathType Container)) {
+    throw "Repo root not found: $RepoRoot"
 }
-
+if (-not (Test-Path -LiteralPath $AabPath -PathType Leaf)) {
+    throw "AAB not found."
+}
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 
-$repoRoot = Split-Path -Parent $PSScriptRoot
-$pubspec = Get-Content -Raw -LiteralPath (Join-Path $repoRoot "app/pubspec.yaml")
-$versionMatch = [regex]::Match($pubspec, '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
-if (-not $versionMatch.Success) { throw "version: entry not found in app/pubspec.yaml." }
+$pubspecPath = Join-Path $RepoRoot "app/pubspec.yaml"
+if (-not (Test-Path -LiteralPath $pubspecPath -PathType Leaf)) {
+    throw "pubspec.yaml not found."
+}
 
-$versionName = $versionMatch.Groups[1].Value
-$buildNumber = $versionMatch.Groups[2].Value
+$pubspec = Get-Content -Raw -LiteralPath $pubspecPath
+$versionMatch = [regex]::Match($pubspec, '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
+if (-not $versionMatch.Success) { throw "version: entry not found in pubspec.yaml." }
+if ($versionMatch.Groups[1].Value -ne $VersionName) { throw "Version mismatch." }
+if ($versionMatch.Groups[2].Value -ne $BuildNumber) { throw "Build number mismatch." }
+
+function Write-Utf8NoBom {
+    param(
+        [string] $Path,
+        [string] $Content
+    )
+
+    $encoding = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $Content, $encoding)
+}
+
 $shortSha = $ResolvedSourceSha.Substring(0, 7)
-$baseName = "nurtly-android-$versionName-$buildNumber-$shortSha"
+$baseName = "nurtly-android-$VersionName-$BuildNumber-$shortSha"
+if ($baseName -ne $ExpectedBasename) { throw "Basename mismatch." }
+
 $targetAab = Join-Path $OutputDirectory "$baseName.aab"
 Copy-Item -LiteralPath $AabPath -Destination $targetAab -Force
-
 $checksum = (Get-FileHash -Algorithm SHA256 -LiteralPath $targetAab).Hash.ToLowerInvariant()
-Set-Content -LiteralPath (Join-Path $OutputDirectory "$baseName.sha256") -Value "$checksum  $baseName.aab"
+Write-Utf8NoBom -Path (Join-Path $OutputDirectory "$baseName.sha256") -Content "$checksum  $baseName.aab`n"
 
 $metadata = [ordered]@{
     schema_version = 1
@@ -45,8 +67,8 @@ $metadata = [ordered]@{
     original_source_ref = $SourceRef
     resolved_source_sha = $ResolvedSourceSha
     short_sha = $shortSha
-    version = $versionName
-    build_number = $buildNumber
+    version = $VersionName
+    build_number = $BuildNumber
     utc_timestamp = $UtcBuildTimestamp
     aab_filename = "$baseName.aab"
     aab_sha256 = $checksum
@@ -60,44 +82,14 @@ $metadata = [ordered]@{
     )
 }
 
-$metadata | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $OutputDirectory "$baseName.metadata.json")
+Write-Utf8NoBom -Path (Join-Path $OutputDirectory "$baseName.metadata.json") -Content (($metadata | ConvertTo-Json -Depth 5) + "`n")
 
-$releaseRange = if ($ReleaseNotesFrom -and $ReleaseNotesFrom -ne $ResolvedSourceSha) {
-    "$ReleaseNotesFrom..$ResolvedSourceSha"
-}
-else {
-    $ResolvedSourceSha
-}
 $commitSummaries = @()
-$sourceCommitExists = $false
- $previousPreference = $ErrorActionPreference
- $ErrorActionPreference = "SilentlyContinue"
- try {
-     & git cat-file -e "$ResolvedSourceSha^{commit}" 2>$null
-     if ($LASTEXITCODE -eq 0) {
-         $sourceCommitExists = $true
-     }
- }
- finally {
-     $ErrorActionPreference = $previousPreference
- }
-if ($releaseRange -eq $ResolvedSourceSha) {
-    if ($sourceCommitExists) {
-        $commitSummaries = @(& git show --no-patch --format="%h %s" $ResolvedSourceSha)
-    }
+if ($ReleaseNotesRange -and $ReleaseNotesRange -ne $ResolvedSourceSha) {
+    $commitSummaries = @(& git -C $RepoRoot log --no-merges --format="%h %s" $ReleaseNotesRange 2>$null)
 }
-else {
-    $previousPreference = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
-    try {
-        $commitSummaries = @(& git log --no-merges --format="%h %s" $releaseRange 2>$null)
-    }
-    finally {
-        $ErrorActionPreference = $previousPreference
-    }
-    if (($LASTEXITCODE -ne 0 -or $commitSummaries.Count -eq 0) -and $sourceCommitExists) {
-        $commitSummaries = @(& git show --no-patch --format="%h %s" $ResolvedSourceSha)
-    }
+if (-not $commitSummaries -or $commitSummaries.Count -eq 0) {
+    $commitSummaries = @(& git -C $RepoRoot show --no-patch --format="%h %s" $ResolvedSourceSha 2>$null)
 }
 
 $releaseNotes = @"
@@ -106,14 +98,14 @@ $releaseNotes = @"
 - Source ref: $SourceRef
 - Resolved SHA: $ResolvedSourceSha
 - Release notes boundary: $ReleaseNotesFrom
-- Version: $versionName
-- Build number: $buildNumber
+- Version: $VersionName
+- Build number: $BuildNumber
 
 ## Commit summaries
 
 $($commitSummaries -join "`n")
 "@
-Set-Content -LiteralPath (Join-Path $OutputDirectory "$baseName.release-notes.md") -Value $releaseNotes
+Write-Utf8NoBom -Path (Join-Path $OutputDirectory "$baseName.release-notes.md") -Content ($releaseNotes + "`n")
 
 $evidence = @"
 # Android Release Evidence
@@ -125,12 +117,12 @@ $evidence = @"
 - Resolved source SHA: $ResolvedSourceSha
 - Artifact name: $baseName
 - AAB SHA-256: $checksum
-- Version/build: $versionName+$buildNumber
+- Version/build: $VersionName+$BuildNumber
 - Automated validation: PASS
 - Manual QA: NOT_RUN
 - Store delivery: NOT_RUN
 "@
-Set-Content -LiteralPath (Join-Path $OutputDirectory "$baseName.release-evidence.md") -Value $evidence
+Write-Utf8NoBom -Path (Join-Path $OutputDirectory "$baseName.release-evidence.md") -Content ($evidence + "`n")
 
 Write-Host "Metadata package written to: $OutputDirectory"
 Write-Host "Release artifact basename: $baseName"

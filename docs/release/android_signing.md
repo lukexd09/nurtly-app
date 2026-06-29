@@ -42,6 +42,8 @@ Owner setup steps:
 6. Do not expose them to pull-request workflows.
 7. Keep the release workflow manual and owner-only.
 
+Implementation of #196 may exist before repository signing values are created. The first real signed run remains blocked until values, backups and recovery are confirmed.
+
 The release workflow decodes the keystore into a temporary runner path and generates `app/android/key.properties` only for the signed release job.
 
 Temporary signing files must be removed during cleanup even after failure.
@@ -162,12 +164,11 @@ Forbidden repository evidence:
 
 ## Handoff to #196
 
-The release implementation task should not start until all of the following are true:
+The release implementation task can be implemented before all repository signing values exist, but the first signed run should not start until all of the following are true:
 
 - All four credential names exist at repository level.
 - The owner confirms backup and recovery ownership.
 - PR CI remains green.
-- No signing material is present in the repository.
 - The release workflow design uses `workflow_dispatch`.
 - No Play upload is included in #196.
 

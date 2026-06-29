@@ -23,6 +23,7 @@ This file is safe to commit because it contains placeholders only. Fill it local
 | Archive digest | TBD |
 | AAB SHA-256 | TBD |
 | Version/build | TBD |
+| Metadata basename | TBD |
 | Package name | TBD |
 | Preflight command result | TBD |
 | Automated validation | TBD |

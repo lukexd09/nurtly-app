@@ -43,26 +43,32 @@ jobs:
     outputs:
       source_sha: ${{ steps.resolve.outputs.source_sha }}
       short_sha: ${{ steps.resolve.outputs.short_sha }}
-      version_name: ${{ steps.version.outputs.version_name }}
-      build_number: ${{ steps.version.outputs.build_number }}
+      version_name: ${{ steps.source_version.outputs.version_name }}
+      build_number: ${{ steps.source_version.outputs.build_number }}
       release_notes_from: ${{ steps.notes.outputs.release_notes_from }}
-    defaults:
-      run:
-        working-directory: app
+      release_notes_range: ${{ steps.notes.outputs.release_notes_range }}
+      metadata_basename: ${{ steps.metadata.outputs.metadata_basename }}
     steps:
-      - name: Checkout full history
+      - name: Checkout control source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
+          ref: main
+          path: control
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Fetch refs
+      - name: Confirm control history
         shell: pwsh
-        run: git fetch origin main --tags --force
+        working-directory: control
+        run: |
+          git rev-parse origin/main
+          git log -1 --oneline origin/main
+          git tag --list | Out-Null
 
       - name: Resolve source ref
         id: resolve
         shell: pwsh
+        working-directory: control
         env:
           SOURCE_REF: ${{ inputs.source_ref }}
         run: |
@@ -82,19 +88,29 @@ jobs:
           "source_sha=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           "short_sha=$($sha.Substring(0,7))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      - name: Capture version
-        id: version
+      - name: Check out selected source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ steps.resolve.outputs.source_sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Capture source version
+        id: source_version
         shell: pwsh
+        working-directory: source/app
         run: |
           $pubspec = Get-Content -Raw -LiteralPath pubspec.yaml
           $versionMatch = [regex]::Match($pubspec, '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
-          if (-not $versionMatch.Success) { throw "version: entry not found in app/pubspec.yaml." }
+          if (-not $versionMatch.Success) { throw "version: entry not found in source/app/pubspec.yaml." }
           "version_name=$($versionMatch.Groups[1].Value)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           "build_number=$($versionMatch.Groups[2].Value)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Validate release notes boundary
         id: notes
         shell: pwsh
+        working-directory: source
         env:
           RELEASE_NOTES_FROM: ${{ inputs.release_notes_from }}
           SOURCE_SHA: ${{ steps.resolve.outputs.source_sha }}
@@ -106,19 +122,26 @@ jobs:
             & git merge-base --is-ancestor $resolvedBoundary $env:SOURCE_SHA
             if ($LASTEXITCODE -ne 0) { throw "release_notes_from must be an ancestor of the selected source commit." }
             "release_notes_from=$resolvedBoundary" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "release_notes_range=$resolvedBoundary..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           }
           else {
             $tag = (& git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null).Trim()
-            if (-not $tag) { $tag = $env:SOURCE_SHA }
-            "release_notes_from=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            if ($tag) {
+              "release_notes_from=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              "release_notes_range=$tag..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            }
+            else {
+              "release_notes_from=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              "release_notes_range=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            }
           }
 
-      - name: Check out selected commit
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          ref: ${{ steps.resolve.outputs.source_sha }}
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Derive metadata basename
+        id: metadata
+        shell: pwsh
+        run: |
+          $basename = "nurtly-android-${{ steps.source_version.outputs.version_name }}-${{ steps.source_version.outputs.build_number }}-${{ steps.resolve.outputs.short_sha }}"
+          "metadata_basename=$basename" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Set up Java
         uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
@@ -139,30 +162,35 @@ jobs:
           dart --version
 
       - name: Resolve dependencies
+        working-directory: source/app
         run: flutter pub get --enforce-lockfile
 
       - name: Verify lockfile unchanged
+        working-directory: source/app
         run: git diff --exit-code -- pubspec.lock
 
       - name: Check Dart formatting
+        working-directory: source/app
         run: dart format --output=none --set-exit-if-changed .
 
       - name: Run Flutter analyze
+        working-directory: source/app
         run: flutter analyze
 
       - name: Run Flutter tests
+        working-directory: source/app
         run: flutter test --reporter expanded
 
       - name: Cleanup Flutter generated local files
-        working-directory: ..
-        run: pwsh -NoLogo -NoProfile -File tools/cleanup_flutter_local.ps1
+        working-directory: control
+        run: pwsh -NoLogo -NoProfile -File ../tools/cleanup_flutter_local.ps1 -RepoRoot ../source
 
       - name: Run scope guard
-        working-directory: ..
-        run: pwsh -NoLogo -NoProfile -File tools/check_scope_guard.ps1
+        working-directory: control
+        run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1 -RepoRoot .. -ControlRoot . -SourceRoot ../source
 
       - name: Verify tracked files unchanged
-        working-directory: ..
+        working-directory: control
         run: git diff --exit-code
 
   build:
@@ -171,12 +199,21 @@ jobs:
     needs: validate
     defaults:
       run:
-        working-directory: app
+        working-directory: source/app
     steps:
-      - name: Checkout selected commit
+      - name: Checkout control source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: main
+          path: control
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out selected source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: ${{ needs.validate.outputs.source_sha }}
+          path: source
           fetch-depth: 0
           persist-credentials: false
 
@@ -209,7 +246,7 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: pwsh -NoLogo -NoProfile -File ../tools/prepare_android_signing.ps1 -TempDirectory $env:RUNNER_TEMP
+        run: pwsh -NoLogo -NoProfile -File ../tools/prepare_android_signing.ps1 -RepoRoot ../source -TempDirectory $env:RUNNER_TEMP
 
       - name: Build app bundle
         run: flutter build appbundle --release --no-pub
@@ -220,25 +257,45 @@ jobs:
           SOURCE_REF: ${{ inputs.source_ref }}
           SOURCE_SHA: ${{ needs.validate.outputs.source_sha }}
           RELEASE_NOTES_FROM: ${{ needs.validate.outputs.release_notes_from }}
+          RELEASE_NOTES_RANGE: ${{ needs.validate.outputs.release_notes_range }}
+          METADATA_BASENAME: ${{ needs.validate.outputs.metadata_basename }}
+          VERSION_NAME: ${{ needs.validate.outputs.version_name }}
+          BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
         run: |
           $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
           pwsh -NoLogo -NoProfile -File ../tools/generate_android_release_metadata.ps1 `
+            -RepoRoot ../source `
             -AabPath (Join-Path $PWD 'build/app/outputs/bundle/release/app-release.aab') `
             -OutputDirectory (Join-Path $env:RUNNER_TEMP 'android-release-metadata') `
             -SourceRef $env:SOURCE_REF `
             -ResolvedSourceSha $env:SOURCE_SHA `
             -ReleaseNotesFrom $env:RELEASE_NOTES_FROM `
+            -ReleaseNotesRange $env:RELEASE_NOTES_RANGE `
             -RunId $env:GITHUB_RUN_ID `
             -RunAttempt $env:GITHUB_RUN_ATTEMPT `
             -Repository $env:GITHUB_REPOSITORY `
             -WorkflowSha $env:GITHUB_SHA `
-            -UtcBuildTimestamp $timestamp
+            -UtcBuildTimestamp $timestamp `
+            -VersionName $env:VERSION_NAME `
+            -BuildNumber $env:BUILD_NUMBER `
+            -ExpectedBasename $env:METADATA_BASENAME
+
+      - name: Verify naming consistency
+        shell: pwsh
+        env:
+          VERSION_NAME: ${{ needs.validate.outputs.version_name }}
+          BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
+          SHORT_SHA: ${{ needs.validate.outputs.short_sha }}
+          METADATA_BASENAME: ${{ needs.validate.outputs.metadata_basename }}
+        run: |
+          $expected = "nurtly-android-$env:VERSION_NAME-$env:BUILD_NUMBER-$env:SHORT_SHA"
+          if ($expected -ne $env:METADATA_BASENAME) { throw "Metadata basename mismatch." }
 
       - name: Upload release artifact
         id: upload
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ${{ needs.validate.outputs.version_name }}-${{ needs.validate.outputs.build_number }}-${{ needs.validate.outputs.short_sha }}
+          name: ${{ needs.validate.outputs.metadata_basename }}
           path: ${{ runner.temp }}/android-release-metadata/*
           if-no-files-found: error
           retention-days: 14

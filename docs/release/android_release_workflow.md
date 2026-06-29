@@ -115,6 +115,24 @@ gh run download <run-id> -n <artifact-name>
 
 Verify the checksum with the downloaded `*.sha256` file.
 
+## Artifact package contents
+
+- signed AAB
+- AAB SHA-256 checksum file
+- metadata JSON
+- release notes Markdown
+- release evidence Markdown
+
+## Job summary outputs
+
+- artifact ID
+- artifact URL
+- archive digest
+
+The artifact package does not contain job-summary-only outputs.
+
+The AAB SHA-256 is the checksum of the app bundle file. The GitHub artifact archive digest is the checksum of the uploaded artifact archive and is a separate value.
+
 ## Cleanup and rollback
 
 - Cleanup removes temporary signing material with `if: always()`.
