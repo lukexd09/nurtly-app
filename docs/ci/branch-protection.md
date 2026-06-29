@@ -2,6 +2,14 @@
 
 Status: documented strategy only. No repository settings are changed by this file.
 
+Current decision for the single-owner GitHub Free repository:
+
+- branch protection is not currently available in this repository plan or visibility setup;
+- issue #193 was closed as not planned;
+- PR CI remains advisory and must still be checked manually by the owner before merge;
+- this is an intentional KISS choice for the current single-owner MVP;
+- revisit if collaborators are added or repository risk increases.
+
 ## CI identity
 
 - Workflow file: `.github/workflows/mobile-ci.yml`

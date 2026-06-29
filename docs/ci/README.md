@@ -19,6 +19,7 @@
 - `actions/checkout` pinned to `v7.0.0`
 - `actions/setup-java` pinned to `v5.4.0`
 - `subosito/flutter-action` pinned to `v2.23.0`
+- `actions/upload-artifact` pinned to `v4.6.2`
 - Validation scope for #190: checkout, toolchain setup, version prints, `flutter pub get`, and lockfile drift check
 - The application lockfile was normalized with Flutter `3.41.9`
 - The lockfile change is limited to SDK-pinned transitive test dependencies (`meta` and `test_api`)

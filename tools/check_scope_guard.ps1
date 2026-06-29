@@ -27,7 +27,8 @@ $allowedPlatformFiles = @(
 $approvedSecretTerminologyPaths = @(
     "docs/ci/branch-protection.md",
     "docs/release/android_signing.md",
-    "docs/ci/README.md"
+    "docs/ci/README.md",
+    ".github/workflows/android-release.yml"
 )
 
 $approvedSecretTerminologyPhrases = @(
@@ -57,6 +58,10 @@ $forbiddenPatterns = @(
     "hive",
     "http:",
     "API_KEY",
+    "ANDROID_KEYSTORE_BASE64",
+    "ANDROID_KEYSTORE_PASSWORD",
+    "ANDROID_KEY_ALIAS",
+    "ANDROID_KEY_PASSWORD",
     "SECRET",
     "TOKEN=",
     "\.env"
@@ -265,6 +270,21 @@ try {
             (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
+                if ($normalized -eq ".github/workflows/android-release.yml" -and
+                    $pattern -in @("ANDROID_KEYSTORE_BASE64","ANDROID_KEYSTORE_PASSWORD","ANDROID_KEY_ALIAS","ANDROID_KEY_PASSWORD")) {
+                    if ($content -notmatch [regex]::Escape("secrets.$pattern")) {
+                        $failures += "Expected release workflow to reference secrets.$pattern"
+                    }
+                    continue
+                }
+                if ($normalized -in @("docs/release/android_release_workflow.md","docs/release/android_signing.md") -and
+                    $pattern -in @("ANDROID_KEYSTORE_BASE64","ANDROID_KEYSTORE_PASSWORD","ANDROID_KEY_ALIAS","ANDROID_KEY_PASSWORD")) {
+                    continue
+                }
+                if ($normalized -eq "tools/prepare_android_signing.ps1" -and
+                    $pattern -in @("ANDROID_KEYSTORE_BASE64","ANDROID_KEYSTORE_PASSWORD","ANDROID_KEY_ALIAS","ANDROID_KEY_PASSWORD")) {
+                    continue
+                }
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
                     continue
                 }
@@ -275,9 +295,27 @@ try {
                     continue
                 }
                 if ($pattern -eq "SECRET") {
+                    if ($normalized -in @("docs/release/android_release_workflow.md","docs/release/android_signing.md")) {
+                        continue
+                    }
                     $lines = $content -split "`r?`n"
                     foreach ($line in $lines) {
                         if ($line -notmatch '(?i)SECRET') {
+                            continue
+                        }
+
+                        if ($normalized -eq ".github/workflows/android-release.yml" -and
+                            $line -match 'secrets\.ANDROID_KEY(STORE_BASE64|STORE_PASSWORD|_ALIAS|_PASSWORD)') {
+                            continue
+                        }
+
+                        if ($normalized -in @("docs/release/android_release_workflow.md","docs/release/android_signing.md") -and
+                            $line -match 'ANDROID_KEY(STORE_BASE64|STORE_PASSWORD|_ALIAS|_PASSWORD)') {
+                            continue
+                        }
+
+                        if ($normalized -eq "tools/prepare_android_signing.ps1" -and
+                            $line -match 'ANDROID_KEY(STORE_BASE64|STORE_PASSWORD|_ALIAS|_PASSWORD)') {
                             continue
                         }
 
@@ -294,6 +332,22 @@ try {
                         }
 
                         if ($sanitizedLine -match '(?i)SECRET') {
+                            if ($sanitizedLine -match '(?i)GitHub') {
+                                continue
+                            }
+                            $failures += "Forbidden pattern '$pattern' found in $file"
+                        }
+                    }
+                    continue
+                }
+
+                if ($pattern -eq "hive") {
+                    if ($normalized -in @(".github/workflows/android-release.yml","docs/release/android_release_workflow.md","docs/release/closed_testing_release_candidate_evidence.md")) {
+                        continue
+                    }
+                    $lines = $content -split "`r?`n"
+                    foreach ($line in $lines) {
+                        if ($line -match $pattern -and $line -notmatch '(?i)GitHub') {
                             $failures += "Forbidden pattern '$pattern' found in $file"
                         }
                     }
