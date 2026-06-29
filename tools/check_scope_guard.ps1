@@ -48,12 +48,12 @@ function Add-Failure {
     $script:failures.Add($Message) | Out-Null
 }
 
-$releaseWorkflow = Join-Path $repoRoot ".github/workflows/android-release.yml"
-$signingHelper = Join-Path $repoRoot "tools/prepare_android_signing.ps1"
+$releaseWorkflow = Join-Path $controlRoot ".github/workflows/android-release.yml"
+$signingHelper = Join-Path $controlRoot "tools/prepare_android_signing.ps1"
 $docsToCheck = @(
-    (Join-Path $repoRoot "docs/ci/branch-protection.md"),
-    (Join-Path $repoRoot "docs/release/android_signing.md"),
-    (Join-Path $repoRoot "docs/release/android_release_workflow.md")
+    (Join-Path $controlRoot "docs/ci/branch-protection.md"),
+    (Join-Path $controlRoot "docs/release/android_signing.md"),
+    (Join-Path $controlRoot "docs/release/android_release_workflow.md")
 )
 
 if (-not (Test-Path $releaseWorkflow)) { throw "Missing release workflow." }
