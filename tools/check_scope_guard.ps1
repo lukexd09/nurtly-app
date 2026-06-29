@@ -1,31 +1,38 @@
 param(
-    [string] $RepoRoot = ".",
-    [string] $ControlRoot = ".",
-    [string] $SourceRoot = ".",
+    [string] $RepoRoot,
+    [string] $ControlRoot,
+    [string] $SourceRoot,
     [switch] $AllowPlatformChanges
 )
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path $RepoRoot).Path
-$controlRoot = (Resolve-Path $ControlRoot).Path
-$sourceRoot = (Resolve-Path $SourceRoot).Path
-$controlCandidates = @(
-    $controlRoot,
-    (Join-Path $repoRoot "control")
-) | Select-Object -Unique
-$controlRoot = $null
-$releaseWorkflow = $null
-foreach ($candidate in $controlCandidates) {
-    $workflowCandidate = Join-Path $candidate ".github/workflows/android-release.yml"
-    if (Test-Path $workflowCandidate) {
-        $controlRoot = (Resolve-Path $candidate).Path
-        $releaseWorkflow = $workflowCandidate
-        break
-    }
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$defaultRepoRoot = Join-Path $scriptDir ".."
+
+if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+    $RepoRoot = $defaultRepoRoot
 }
-$signingHelper = $null
-$docsToCheck = $null
+
+$repoRootPath = (Resolve-Path $RepoRoot).Path
+
+if ([string]::IsNullOrWhiteSpace($ControlRoot)) {
+    $ControlRoot = $repoRootPath
+}
+
+if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
+    $SourceRoot = $repoRootPath
+}
+
+$controlRootPath = (Resolve-Path $ControlRoot).Path
+$sourceRootPath = (Resolve-Path $SourceRoot).Path
+$releaseWorkflow = Join-Path $controlRootPath ".github/workflows/android-release.yml"
+$signingHelper = Join-Path $controlRootPath "tools/prepare_android_signing.ps1"
+$docsToCheck = @(
+    (Join-Path $controlRootPath "docs/ci/branch-protection.md"),
+    (Join-Path $controlRootPath "docs/release/android_signing.md"),
+    (Join-Path $controlRootPath "docs/release/android_release_workflow.md")
+)
 $failures = New-Object System.Collections.Generic.List[string]
 
 $approvedTerminologyPhrases = @(
@@ -71,13 +78,7 @@ function Add-Failure {
     $script:failures.Add($Message) | Out-Null
 }
 
-if (-not $controlRoot) { throw "Missing release workflow." }
-$signingHelper = Join-Path $controlRoot "tools/prepare_android_signing.ps1"
-$docsToCheck = @(
-    (Join-Path $controlRoot "docs/ci/branch-protection.md"),
-    (Join-Path $controlRoot "docs/release/android_signing.md"),
-    (Join-Path $controlRoot "docs/release/android_release_workflow.md")
-)
+if (-not (Test-Path $releaseWorkflow)) { throw "Missing release workflow." }
 if (-not (Test-Path $signingHelper)) { throw "Missing signing helper." }
 
 $releaseAllowed = @{
@@ -97,6 +98,9 @@ foreach ($entry in Get-LineRefs $releaseWorkflow) {
             }
             $workflowCounts[$key]++
         }
+    }
+    if ($entry.Line -match '^\s*[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]' -and $entry.Line -notmatch '^\s*(ANDROID_KEYSTORE_BASE64|ANDROID_KEYSTORE_PASSWORD|ANDROID_KEY_ALIAS|ANDROID_KEY_PASSWORD)\s*:\s*\$\{\{\s*secrets\.(ANDROID_KEYSTORE_BASE64|ANDROID_KEYSTORE_PASSWORD|ANDROID_KEY_ALIAS|ANDROID_KEY_PASSWORD)\s*\}\}\s*$') {
+        Add-Failure "Forbidden secret assignment in release workflow on line $($entry.LineNumber): $($entry.Line)"
     }
     if ($entry.Line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}' -and $entry.Line -notmatch 'secrets\.ANDROID_KEY(STORE_BASE64|STORE_PASSWORD|_ALIAS|_PASSWORD)') {
         Add-Failure "Unexpected secrets reference in release workflow on line $($entry.LineNumber): $($entry.Line)"
@@ -160,9 +164,9 @@ if (-not $AllowPlatformChanges) {
     $changedFiles = @()
     $tempFiles = @()
     foreach ($command in @(
-        "git -C `"$repoRoot`" diff --name-only",
-        "git -C `"$repoRoot`" diff --cached --name-only",
-        "git -C `"$repoRoot`" ls-files --others --exclude-standard"
+        "git -C `"$repoRootPath`" diff --name-only",
+        "git -C `"$repoRootPath`" diff --cached --name-only",
+        "git -C `"$repoRootPath`" ls-files --others --exclude-standard"
     )) {
         $tempFile = [System.IO.Path]::GetTempFileName()
         $tempFiles += $tempFile
