@@ -52,7 +52,7 @@ jobs:
       - name: Checkout control source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          ref: main
+          ref: ${{ github.sha }}
           path: control
           fetch-depth: 0
           persist-credentials: false
@@ -193,9 +193,17 @@ jobs:
         run: |
           pwsh -NoLogo -NoProfile `
             -File tools/check_scope_guard.ps1 `
-            -RepoRoot .. `
+            -RepoRoot . `
             -ControlRoot . `
             -SourceRoot ../source
+
+      - name: Verify control checkout unchanged
+        working-directory: control
+        run: git diff --exit-code
+
+      - name: Verify selected source unchanged
+        working-directory: source
+        run: git diff --exit-code
 
       - name: Verify tracked files unchanged
         working-directory: control
@@ -212,7 +220,7 @@ jobs:
       - name: Checkout control source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          ref: main
+          ref: ${{ github.sha }}
           path: control
           fetch-depth: 0
           persist-credentials: false
