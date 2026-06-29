@@ -30,6 +30,17 @@ $approvedSecretTerminologyPaths = @(
     "docs/ci/README.md"
 )
 
+$approvedSecretTerminologyPhrases = @(
+    'GitHub Environment secret',
+    'GitHub Environment secrets',
+    'Environment secret',
+    'Environment secrets',
+    'environment secret name',
+    'environment secret names',
+    'environment secret value',
+    'environment secret values'
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -198,28 +209,27 @@ function Test-ForbiddenPatternMatch {
     return $false
 }
 
-function Test-IsApprovedSecretTerminology {
-    param(
-        [string] $Path,
-        [string] $Content
-    )
+function Remove-ApprovedSecretTerminology {
+    param([string] $Line)
 
-    $normalized = $Path -replace "\\", "/"
-    if ($normalized -notin $approvedSecretTerminologyPaths) {
-        return $false
+    $sanitized = $Line
+    foreach ($phrase in $approvedSecretTerminologyPhrases) {
+        $sanitized = [regex]::Replace(
+            $sanitized,
+            [regex]::Escape($phrase),
+            '',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+        )
     }
 
-    $approvedPhrases = @(
-        'GitHub Environment secret',
-        'GitHub Environment secrets',
-        'environment secret name',
-        'environment secret value',
-        'GitHub Environment secret names',
-        'GitHub Environment secret values'
-    )
+    return $sanitized
+}
 
-    foreach ($phrase in $approvedPhrases) {
-        if ($Content -match [regex]::Escape($phrase)) {
+function Test-LineContainsApprovedSecretTerminology {
+    param([string] $Line)
+
+    foreach ($phrase in $approvedSecretTerminologyPhrases) {
+        if ($Line -match [regex]::Escape($phrase)) {
             return $true
         }
     }
@@ -255,12 +265,6 @@ try {
             (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
             foreach ($pattern in $forbiddenPatterns) {
-                if ($pattern -eq "SECRET" -and (Test-IsApprovedSecretTerminology $normalized $content)) {
-                    if ($content -match '(?i)\bSECRET\s*[:=]') {
-                        $failures += "Forbidden pattern '$pattern' found in $file"
-                    }
-                    continue
-                }
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
                     continue
                 }
@@ -270,6 +274,32 @@ try {
                 if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) {
                     continue
                 }
+                if ($pattern -eq "SECRET") {
+                    $lines = $content -split "`r?`n"
+                    foreach ($line in $lines) {
+                        if ($line -notmatch '(?i)SECRET') {
+                            continue
+                        }
+
+                        if ($normalized -in $approvedSecretTerminologyPaths -and
+                            $line -match '(?i)\b[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
+                            $failures += "Forbidden pattern '$pattern' found in $file"
+                            continue
+                        }
+
+                        $sanitizedLine = $line
+                        if ($normalized -in $approvedSecretTerminologyPaths -and
+                            (Test-LineContainsApprovedSecretTerminology $line)) {
+                            $sanitizedLine = Remove-ApprovedSecretTerminology $line
+                        }
+
+                        if ($sanitizedLine -match '(?i)SECRET') {
+                            $failures += "Forbidden pattern '$pattern' found in $file"
+                        }
+                    }
+                    continue
+                }
+
                 if (Test-ForbiddenPatternMatch $content $pattern) {
                     $failures += "Forbidden pattern '$pattern' found in $file"
                 }
