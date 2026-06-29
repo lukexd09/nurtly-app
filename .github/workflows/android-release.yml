@@ -183,7 +183,10 @@ jobs:
 
       - name: Cleanup Flutter generated local files
         working-directory: control
-        run: pwsh -NoLogo -NoProfile -File ../tools/cleanup_flutter_local.ps1 -RepoRoot ../source
+        run: |
+          pwsh -NoLogo -NoProfile `
+            -File tools/cleanup_flutter_local.ps1 `
+            -RepoRoot ../source
 
       - name: Run scope guard
         working-directory: control
@@ -251,7 +254,7 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: pwsh -NoLogo -NoProfile -File ../../control/tools/prepare_android_signing.ps1 -RepoRoot ../source -TempDirectory $env:RUNNER_TEMP
+        run: pwsh -NoLogo -NoProfile -File ../../control/tools/prepare_android_signing.ps1 -RepoRoot ../.. -TempDirectory $env:RUNNER_TEMP
 
       - name: Build app bundle
         run: flutter build appbundle --release --no-pub
@@ -270,7 +273,7 @@ jobs:
         run: |
           $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
           pwsh -NoLogo -NoProfile -File ../../control/tools/generate_android_release_metadata.ps1 `
-            -RepoRoot ../source `
+            -RepoRoot ../.. `
             -AabPath (Join-Path $PWD 'build/app/outputs/bundle/release/app-release.aab') `
             -OutputDirectory (Join-Path $env:RUNNER_TEMP 'android-release-metadata') `
             -SourceRef $env:SOURCE_REF `

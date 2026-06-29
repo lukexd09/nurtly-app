@@ -1,13 +1,18 @@
 param(
-    [string] $RepoRoot = "."
+    [string] $RepoRoot
 )
 
 $ErrorActionPreference = "Stop"
 
 $originalLocation = Get-Location
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+
+if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+    $RepoRoot = Join-Path $scriptDir ".."
+}
 
 try {
-    $repositoryRoot = Resolve-Path $RepoRoot
+    $repositoryRoot = (Resolve-Path $RepoRoot).Path
 
     Set-Location $repositoryRoot
 
@@ -18,9 +23,13 @@ try {
 
     foreach ($file in $filesToRestore) {
         if (Test-Path $file) {
-            & git ls-files --error-unmatch -- $file 1>$null 2>$null
+            $null = & git ls-files --error-unmatch -- $file 1>$null 2>$null
             if ($LASTEXITCODE -eq 0) {
-                git restore -- $file
+                try {
+                    & git -C $repositoryRoot restore -- $file 1>$null 2>$null
+                }
+                catch {
+                }
             }
         }
     }

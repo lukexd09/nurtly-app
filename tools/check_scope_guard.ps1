@@ -169,8 +169,9 @@ if (-not $AllowPlatformChanges) {
     )) {
         $changedFiles += & git -C $repoRootPath @command
     }
-    if ($changedFiles -match '^app/android/' -or $changedFiles -match '^app/ios/') {
-        Add-Failure "Platform files changed without -AllowPlatformChanges."
+    $platformChanges = $changedFiles | Where-Object { $_ -match '^app/(android|ios)/' }
+    foreach ($platformChange in $platformChanges) {
+        Add-Failure "Platform file changed without -AllowPlatformChanges: $($platformChange -replace '\\','/')"
     }
 }
 
