@@ -143,24 +143,8 @@ function Test-ShouldScanForbiddenPatterns {
     param([string] $Path)
 
     $normalized = $Path -replace "\\", "/"
-    if ($normalized -eq "AGENTS.md" -or $normalized -eq "tools/check_scope_guard.ps1") {
-        return $false
-    }
-
-    if ($normalized -eq ".github/workflows/android-release.yml") {
-        return $false
-    }
-
-    if ($normalized -in @(
-        "docs/ci/README.md",
-        "docs/ci/branch-protection.md",
-        "docs/release/android_signing.md",
-        "docs/release/android_release_workflow.md"
-    )) {
-        return $false
-    }
-
-    return $true
+    return $normalized -ne "AGENTS.md" -and
+        $normalized -ne "tools/check_scope_guard.ps1"
 }
 
 function Test-IsAllowedJustAudioUsage {
@@ -306,6 +290,9 @@ try {
 
     foreach ($file in $changedFiles) {
         $normalized = $file -replace "\\", "/"
+        $isDedicatedSecretFile =
+            $normalized -eq ".github/workflows/android-release.yml" -or
+            $normalized -in $approvedSecretTerminologyPaths
 
         foreach ($pattern in $generatedNoisePatterns) {
             if ($normalized -match $pattern) {
@@ -328,23 +315,14 @@ try {
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) { continue }
+                if ($pattern -eq "SECRET" -and $isDedicatedSecretFile) { continue }
                 if ($pattern -eq "SECRET") {
                     $lines = $content -split "`r?`n"
                     foreach ($line in $lines) {
                         if ($line -notmatch '(?i)SECRET') { continue }
-                        if ($normalized -in $approvedSecretTerminologyPaths -and
-                            $line -match '(?i)\b[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
-                            Add-Failure "Forbidden pattern '$pattern' found in $normalized on line content: $line"
-                            continue
-                        }
-
-                        $sanitizedLine = $line
-                        if ($normalized -in $approvedSecretTerminologyPaths -and (Test-LineContainsApprovedSecretTerminology $line)) {
-                            $sanitizedLine = Remove-ApprovedSecretTerminology $line
-                        }
-
+                        $sanitizedLine = Remove-ApprovedSecretTerminology $line
                         if ($sanitizedLine -match '(?i)SECRET') {
-                            Add-Failure "Forbidden pattern '$pattern' found in $normalized on line content: $line"
+                            Add-Failure "Forbidden SECRET wording on line content in ${normalized}: $line"
                         }
                     }
                     continue
@@ -430,8 +408,11 @@ try {
             if ($line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}') {
                 Add-Failure "Workflow secret reference in documentation on line $($entry.LineNumber) in $doc"
             }
-            if ($line -match '(?i)SECRET' -and $line -match '^\s*[^`#-][^:=]*[:=]' -and -not (Test-LineContainsApprovedSecretTerminology $line)) {
-                Add-Failure "Forbidden SECRET wording on line $($entry.LineNumber) in $doc"
+            if ($line -match '(?i)SECRET') {
+                $sanitizedLine = Remove-ApprovedSecretTerminology $line
+                if ($sanitizedLine -match '(?i)SECRET') {
+                    Add-Failure "Forbidden SECRET wording on line $($entry.LineNumber) in $doc"
+                }
             }
         }
     }
