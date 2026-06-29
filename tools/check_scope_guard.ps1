@@ -10,6 +10,10 @@ $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path $RepoRoot).Path
 $controlRoot = (Resolve-Path $ControlRoot).Path
 $sourceRoot = (Resolve-Path $SourceRoot).Path
+$nestedControlRoot = Join-Path $repoRoot "control"
+if (-not (Test-Path (Join-Path $controlRoot ".github/workflows/android-release.yml")) -and (Test-Path (Join-Path $nestedControlRoot ".github/workflows/android-release.yml"))) {
+    $controlRoot = (Resolve-Path $nestedControlRoot).Path
+}
 $failures = New-Object System.Collections.Generic.List[string]
 
 $approvedTerminologyPhrases = @(
