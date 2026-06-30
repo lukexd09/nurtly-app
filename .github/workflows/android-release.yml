@@ -77,7 +77,8 @@ jobs:
             $sha = $sourceRef.ToLowerInvariant()
           }
           elseif (& git show-ref --tags --verify --quiet "refs/tags/$sourceRef") {
-            $sha = (& git rev-parse --verify "refs/tags/$sourceRef^{commit}" 2>$null).Trim()
+            $resolvedSourceRef = & git rev-parse --verify "refs/tags/$sourceRef^{commit}" 2>$null
+            $sha = (($resolvedSourceRef | Select-Object -First 1) ?? '').Trim()
           }
           else {
             throw "source_ref must be an exact commit SHA or an existing tag."
@@ -117,7 +118,8 @@ jobs:
         run: |
           $boundary = $env:RELEASE_NOTES_FROM
           if ($boundary) {
-            $resolvedBoundary = (& git rev-parse --verify "$boundary^{commit}" 2>$null).Trim()
+            $resolvedBoundaryOutput = & git rev-parse --verify "$boundary^{commit}" 2>$null
+            $resolvedBoundary = (($resolvedBoundaryOutput | Select-Object -First 1) ?? '').Trim()
             if (-not $resolvedBoundary) { throw "release_notes_from did not resolve to a commit." }
             & git merge-base --is-ancestor $resolvedBoundary $env:SOURCE_SHA
             if ($LASTEXITCODE -ne 0) { throw "release_notes_from must be an ancestor of the selected source commit." }
@@ -125,7 +127,8 @@ jobs:
             "release_notes_range=$resolvedBoundary..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           }
           else {
-            $tag = (& git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null).Trim()
+            $tagOutput = & git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null
+            $tag = (($tagOutput | Select-Object -First 1) ?? '').Trim()
             if ($tag) {
               "release_notes_from=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
               "release_notes_range=$tag..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
