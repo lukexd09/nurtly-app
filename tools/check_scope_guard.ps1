@@ -277,6 +277,7 @@ try {
     $releaseWorkflow = Join-Path $controlRootPath ".github/workflows/android-release.yml"
     $signingHelper = Join-Path $controlRootPath "tools/prepare_android_signing.ps1"
     $docsToCheck = @(
+        (Join-Path $controlRootPath "docs/ci/README.md"),
         (Join-Path $controlRootPath "docs/ci/branch-protection.md"),
         (Join-Path $controlRootPath "docs/release/android_signing.md"),
         (Join-Path $controlRootPath "docs/release/android_release_workflow.md")
