@@ -1,4 +1,7 @@
 param(
+    [string] $RepoRoot,
+    [string] $ControlRoot,
+    [string] $SourceRoot,
     [switch] $AllowPlatformChanges
 )
 
@@ -6,18 +9,30 @@ $ErrorActionPreference = "Stop"
 
 $originalLocation = Get-Location
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$repoRoot = Resolve-Path (Join-Path $scriptDir "..")
+$defaultRepoRoot = Join-Path $scriptDir ".."
+
+if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+    $RepoRoot = $defaultRepoRoot
+}
+
+$repoRootPath = (Resolve-Path $RepoRoot).Path
+
+if ([string]::IsNullOrWhiteSpace($ControlRoot)) {
+    $ControlRoot = $repoRootPath
+}
+
+if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
+    $SourceRoot = $repoRootPath
+}
+
+$controlRootPath = (Resolve-Path $ControlRoot).Path
+$sourceRootPath = (Resolve-Path $SourceRoot).Path
 
 $generatedNoisePatterns = @(
     "^\.idea/",
     "^\.gradle/",
     "^app/ios/Flutter/ephemeral/",
     "^app/android/app/src/main/java/"
-)
-
-$platformPatterns = @(
-    "^app/android/",
-    "^app/ios/"
 )
 
 $allowedPlatformFiles = @(
@@ -31,14 +46,17 @@ $approvedSecretTerminologyPaths = @(
 )
 
 $approvedSecretTerminologyPhrases = @(
-    'GitHub Environment secret',
-    'GitHub Environment secrets',
-    'Environment secret',
-    'Environment secrets',
-    'environment secret name',
-    'environment secret names',
-    'environment secret value',
-    'environment secret values'
+    'GitHub Actions secret',
+    'GitHub Actions secrets',
+    'repository secret',
+    'repository secrets',
+    'repository-level Actions secret',
+    'repository-level Actions secrets',
+    'Secrets and variables',
+    'secret name',
+    'secret names',
+    'secret value',
+    'secret values'
 )
 
 $forbiddenPatterns = @(
@@ -54,13 +72,28 @@ $forbiddenPatterns = @(
     "audioplayers",
     "shared_preferences",
     "sqflite",
-    "hive",
+    "\bhive\b",
     "http:",
     "API_KEY",
     "SECRET",
     "TOKEN=",
     "\.env"
 )
+
+function Invoke-GitLines {
+    param([string[]] $Arguments)
+
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        $output = & git -C $sourceRootPath @Arguments 2>$null
+        $script:LastGitExitCode = $LASTEXITCODE
+        return $output
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
+}
 
 function Get-ChangedFiles {
     $files = @()
@@ -72,7 +105,10 @@ function Get-ChangedFiles {
     foreach ($candidate in @("origin/main", "main")) {
         Invoke-GitLines @("rev-parse", "--verify", $candidate) | Out-Null
         if ($script:LastGitExitCode -eq 0) {
-            $base = git merge-base HEAD $candidate
+            $base = & git -C $sourceRootPath merge-base HEAD $candidate
+            if ($LASTEXITCODE -ne 0) {
+                $base = $null
+            }
             break
         }
     }
@@ -84,25 +120,10 @@ function Get-ChangedFiles {
     return $files | Where-Object { $_ } | Sort-Object -Unique
 }
 
-function Invoke-GitLines {
-    param([string[]] $Arguments)
-
-    $previousPreference = $ErrorActionPreference
-    $ErrorActionPreference = "Continue"
-    try {
-        $output = & git @Arguments 2>$null
-        $script:LastGitExitCode = $LASTEXITCODE
-        return $output
-    }
-    finally {
-        $ErrorActionPreference = $previousPreference
-    }
-}
-
 function Test-IsTextFile {
     param([string] $Path)
 
-    $fullPath = Join-Path $repoRoot $Path
+    $fullPath = Join-Path $sourceRootPath $Path
     if (-not (Test-Path $fullPath -PathType Leaf)) {
         return $false
     }
@@ -237,79 +258,176 @@ function Test-LineContainsApprovedSecretTerminology {
     return $false
 }
 
+function Get-LineRefs {
+    param([string] $Path)
+    $content = Get-Content -LiteralPath $Path
+    for ($i = 0; $i -lt $content.Count; $i++) {
+        [pscustomobject]@{ LineNumber = $i + 1; Line = $content[$i] }
+    }
+}
+
+function Add-Failure {
+    param([string] $Message)
+    $script:failures.Add($Message) | Out-Null
+}
+
 try {
-    Set-Location $repoRoot
+    Set-Location $sourceRootPath
+
+    $releaseWorkflow = Join-Path $controlRootPath ".github/workflows/android-release.yml"
+    $signingHelper = Join-Path $controlRootPath "tools/prepare_android_signing.ps1"
+    $docsToCheck = @(
+        (Join-Path $controlRootPath "docs/ci/README.md"),
+        (Join-Path $controlRootPath "docs/ci/branch-protection.md"),
+        (Join-Path $controlRootPath "docs/release/android_signing.md"),
+        (Join-Path $controlRootPath "docs/release/android_release_workflow.md")
+    )
+
+    if (-not (Test-Path $releaseWorkflow)) { throw "Missing release workflow." }
+    if (-not (Test-Path $signingHelper)) { throw "Missing signing helper." }
+
     $changedFiles = @(Get-ChangedFiles)
-    $failures = @()
+    $script:failures = New-Object 'System.Collections.Generic.List[string]'
 
     foreach ($file in $changedFiles) {
         $normalized = $file -replace "\\", "/"
+        $isDedicatedSecretFile =
+            $normalized -eq ".github/workflows/android-release.yml" -or
+            $normalized -in $approvedSecretTerminologyPaths
 
         foreach ($pattern in $generatedNoisePatterns) {
             if ($normalized -match $pattern) {
-                $failures += "Generated/local noise changed: $file"
+                Add-Failure "Generated/local noise changed: $normalized"
             }
         }
 
         if (-not $AllowPlatformChanges) {
             $isPlatformFile = $normalized -match '^app/android/' -or $normalized -match '^app/ios/'
-            $isAllowedPlatformFile =
-                $normalized -eq 'app/android/app/src/main/AndroidManifest.xml'
+            $isAllowedPlatformFile = $normalized -match '^app/android/app/src/main/AndroidManifest\.xml$'
 
             if ($isPlatformFile -and -not $isAllowedPlatformFile) {
-                $failures += "Platform file changed without -AllowPlatformChanges: $file"
+                Add-Failure "Platform file changed without -AllowPlatformChanges: $normalized"
             }
         }
 
-        if ((Test-ShouldScanForbiddenPatterns $normalized) -and
-            (Test-IsTextFile $normalized)) {
-            $content = Get-Content -Raw -LiteralPath (Join-Path $repoRoot $normalized)
+        if ((Test-ShouldScanForbiddenPatterns $normalized) -and (Test-IsTextFile $normalized)) {
+            $content = Get-Content -Raw -LiteralPath (Join-Path $sourceRootPath $normalized)
             foreach ($pattern in $forbiddenPatterns) {
-                if (Test-IsAllowedJustAudioUsage $normalized $pattern) {
-                    continue
-                }
-                if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) {
-                    continue
-                }
-                if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) {
-                    continue
-                }
+                if (Test-IsAllowedJustAudioUsage $normalized $pattern) { continue }
+                if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) { continue }
+                if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) { continue }
+                if ($pattern -eq "SECRET" -and $isDedicatedSecretFile) { continue }
                 if ($pattern -eq "SECRET") {
                     $lines = $content -split "`r?`n"
                     foreach ($line in $lines) {
-                        if ($line -notmatch '(?i)SECRET') {
-                            continue
-                        }
-
-                        if ($normalized -in $approvedSecretTerminologyPaths -and
-                            $line -match '(?i)\b[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
-                            $failures += "Forbidden pattern '$pattern' found in $file"
-                            continue
-                        }
-
-                        $sanitizedLine = $line
-                        if ($normalized -in $approvedSecretTerminologyPaths -and
-                            (Test-LineContainsApprovedSecretTerminology $line)) {
-                            $sanitizedLine = Remove-ApprovedSecretTerminology $line
-                        }
-
+                        if ($line -notmatch '(?i)SECRET') { continue }
+                        $sanitizedLine = Remove-ApprovedSecretTerminology $line
                         if ($sanitizedLine -match '(?i)SECRET') {
-                            $failures += "Forbidden pattern '$pattern' found in $file"
+                            Add-Failure "Forbidden SECRET wording on line content in ${normalized}: $line"
                         }
                     }
                     continue
                 }
 
                 if (Test-ForbiddenPatternMatch $content $pattern) {
-                    $failures += "Forbidden pattern '$pattern' found in $file"
+                    Add-Failure "Forbidden pattern '$pattern' found in $normalized"
                 }
             }
         }
     }
 
-    if ($failures.Count -gt 0) {
+    $releaseAllowed = @{
+        'ANDROID_KEYSTORE_BASE64' = 'secrets.ANDROID_KEYSTORE_BASE64'
+        'ANDROID_KEYSTORE_PASSWORD' = 'secrets.ANDROID_KEYSTORE_PASSWORD'
+        'ANDROID_KEY_ALIAS' = 'secrets.ANDROID_KEY_ALIAS'
+        'ANDROID_KEY_PASSWORD' = 'secrets.ANDROID_KEY_PASSWORD'
+    }
+
+    $workflowCounts = @{}
+    foreach ($key in $releaseAllowed.Keys) { $workflowCounts[$key] = 0 }
+    foreach ($entry in Get-LineRefs $releaseWorkflow) {
+        foreach ($key in $releaseAllowed.Keys) {
+            if ($entry.Line -match [regex]::Escape($key)) {
+                if ($entry.Line -notmatch "^\s*$key\s*:\s*\$\{\{\s*$($releaseAllowed[$key])\s*\}\}\s*$") {
+                    Add-Failure "Forbidden release workflow reference on line $($entry.LineNumber): $($entry.Line)"
+                }
+                $workflowCounts[$key]++
+            }
+        }
+        if ($entry.Line -match '^\s*[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]' -and $entry.Line -notmatch '^\s*(ANDROID_KEYSTORE_BASE64|ANDROID_KEYSTORE_PASSWORD|ANDROID_KEY_ALIAS|ANDROID_KEY_PASSWORD)\s*:\s*\$\{\{\s*secrets\.(ANDROID_KEYSTORE_BASE64|ANDROID_KEYSTORE_PASSWORD|ANDROID_KEY_ALIAS|ANDROID_KEY_PASSWORD)\s*\}\}\s*$') {
+            Add-Failure "Forbidden secret assignment in release workflow on line $($entry.LineNumber): $($entry.Line)"
+        }
+        if ($entry.Line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}' -and $entry.Line -notmatch 'secrets\.ANDROID_KEY(STORE_BASE64|STORE_PASSWORD|_ALIAS|_PASSWORD)') {
+            Add-Failure "Unexpected secrets reference in release workflow on line $($entry.LineNumber): $($entry.Line)"
+        }
+    }
+    foreach ($key in $releaseAllowed.Keys) {
+        if ($workflowCounts[$key] -ne 1) {
+            Add-Failure "Expected exactly one workflow mapping for $key but found $($workflowCounts[$key])."
+        }
+    }
+
+    $helperAllowed = @{
+        'ANDROID_KEYSTORE_BASE64' = 'Get-RequiredEnvironmentValue "ANDROID_KEYSTORE_BASE64"'
+        'ANDROID_KEYSTORE_PASSWORD' = 'Get-RequiredEnvironmentValue "ANDROID_KEYSTORE_PASSWORD"'
+        'ANDROID_KEY_ALIAS' = 'Get-RequiredEnvironmentValue "ANDROID_KEY_ALIAS"'
+        'ANDROID_KEY_PASSWORD' = 'Get-RequiredEnvironmentValue "ANDROID_KEY_PASSWORD"'
+    }
+
+    $helperCounts = @{}
+    foreach ($key in $helperAllowed.Keys) { $helperCounts[$key] = 0 }
+    foreach ($entry in Get-LineRefs $signingHelper) {
+        foreach ($key in $helperAllowed.Keys) {
+            if ($entry.Line -match [regex]::Escape($key)) {
+                if ($entry.Line -notmatch $helperAllowed[$key]) {
+                    Add-Failure "Forbidden helper reference on line $($entry.LineNumber): $($entry.Line)"
+                }
+                $helperCounts[$key]++
+            }
+        }
+        if ($entry.Line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}') {
+            Add-Failure "Unexpected workflow secret reference in signing helper on line $($entry.LineNumber): $($entry.Line)"
+        }
+    }
+    foreach ($key in $helperAllowed.Keys) {
+        if ($helperCounts[$key] -ne 1) {
+            Add-Failure "Expected exactly one helper occurrence for $key but found $($helperCounts[$key])."
+        }
+    }
+
+    foreach ($doc in $docsToCheck) {
+        foreach ($entry in Get-LineRefs $doc) {
+            $line = $entry.Line
+            if ($line -match '^\s*[A-Z0-9_]*SECRET[A-Z0-9_]*\s*[:=]') {
+                Add-Failure "Literal secret assignment on line $($entry.LineNumber) in $doc"
+            }
+            foreach ($name in @('ANDROID_KEYSTORE_BASE64', 'ANDROID_KEYSTORE_PASSWORD', 'ANDROID_KEY_ALIAS', 'ANDROID_KEY_PASSWORD')) {
+                if ($line -match "^\s*$name\s*[:=]") {
+                    Add-Failure "Protected name assignment on line $($entry.LineNumber) in $doc"
+                }
+            }
+            if ($line -match '\$\{\{\s*secrets\.[A-Z0-9_]+\s*\}\}') {
+                Add-Failure "Workflow secret reference in documentation on line $($entry.LineNumber) in $doc"
+            }
+            if ($line -match '(?i)SECRET') {
+                $sanitizedLine = Remove-ApprovedSecretTerminology $line
+                if ($sanitizedLine -match '(?i)SECRET') {
+                    Add-Failure "Forbidden SECRET wording on line $($entry.LineNumber) in $doc"
+                }
+            }
+        }
+    }
+
+    if (-not $AllowPlatformChanges) {
+        $platformChanges = $changedFiles | Where-Object { $_ -replace "\\", "/" -match '^app/(android|ios)/' -and $_ -replace "\\", "/" -notmatch '^app/android/app/src/main/AndroidManifest\.xml$' }
+        foreach ($platformChange in $platformChanges) {
+            Add-Failure "Platform file changed without -AllowPlatformChanges: $($platformChange -replace '\\','/')"
+        }
+    }
+
+    if ($script:failures.Count -gt 0) {
         Write-Host "Scope guard failed." -ForegroundColor Red
-        $failures | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" }
+        $script:failures | Sort-Object -Unique | ForEach-Object { Write-Host " - $_" }
         throw "Scope guard failed."
     }
 

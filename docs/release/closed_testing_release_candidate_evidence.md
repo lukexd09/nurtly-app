@@ -1,5 +1,3 @@
-# Closed-testing release candidate evidence
-
 For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
 
 Use this template to record local release-candidate evidence for the Nurtly closed-testing build.
@@ -11,16 +9,31 @@ This file is safe to commit because it contains placeholders only. Fill it local
 | Field | Value |
 | --- | --- |
 | Date / time | TBD |
+| Workflow run ID | TBD |
+| Run attempt | TBD |
+| Workflow SHA | TBD |
+| Source ref | TBD |
+| Resolved source SHA | TBD |
 | Commit SHA | TBD |
 | Branch | TBD |
 | App version | TBD |
+| Artifact name | TBD |
+| Artifact ID | TBD |
+| Artifact URL | TBD |
+| Archive digest | TBD |
+| AAB SHA-256 | TBD |
+| Version/build | TBD |
+| Metadata basename | TBD |
 | Package name | TBD |
 | Preflight command result | TBD |
+| Automated validation | TBD |
 | Signing file check result | TBD |
 | AAB output path | TBD |
 | AAB file size | TBD |
 | Smoke test device | TBD |
 | Smoke test result | TBD |
+| Manual QA | TBD |
+| Store delivery | TBD |
 | Known blockers | TBD |
 | Owner confirmation | TBD |
 | Play Console upload status | TBD |

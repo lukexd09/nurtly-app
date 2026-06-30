@@ -6,7 +6,7 @@ Status: strategy documented. Protected values are not created by this repository
 
 This guide documents the owner-controlled signing strategy for the Android release path and prepares the handoff for #196 without adding a signed release workflow.
 
-#195 remains BLOCKED until the owner confirms the signing owner, two encrypted backups, recovery method, protected GitHub environment and required environment credentials.
+#195 remains BLOCKED until the owner confirms the signing owner, two encrypted backups, recovery method, repository-level GitHub Actions secrets and required recovery records.
 
 ## Ownership and responsibilities
 
@@ -16,25 +16,9 @@ This guide documents the owner-controlled signing strategy for the Android relea
 - Pull-request workflows: must never access release signing credentials.
 - Store delivery owner: explicitly approves any future Internal Testing upload.
 
-## Protected environment
+## Repository-level Actions secrets
 
-Recommended GitHub Environment name:
-
-```text
-android-release
-```
-
-Recommended controls:
-
-- Restrict deployment access to the owner or approved maintainers.
-- Require reviewer approval before a protected release job can access protected values.
-- Prefer environment-level protected values over repository-level protected values when both are available.
-- Do not expose release protected values to pull-request workflows.
-- Verify environment protection before #196 is executed.
-
-## Required GitHub Environment secret names
-
-Document names and purposes only:
+Required secret names:
 
 ```text
 ANDROID_KEYSTORE_BASE64
@@ -51,18 +35,16 @@ ANDROID_KEY_PASSWORD
 Owner setup steps:
 
 1. Open repository `Settings`.
-2. Open `Environments`.
-3. Create or open `android-release`.
-4. Configure the available deployment protection rules.
-5. Configure a required reviewer where the repository plan and visibility support it.
-6. Under `Environment secrets`, add the four names above.
-7. Do not create them as repository variables.
-8. Do not place them at repository level unless environment-level storage is unavailable and the owner explicitly approves the fallback.
-9. Record only that each name exists; never record or print its value.
+2. Open `Secrets and variables`, then `Actions`.
+3. Add the four names above as repository secrets.
+4. Do not create them as repository variables.
+5. Do not print or commit their values.
+6. Do not expose them to pull-request workflows.
+7. Keep the release workflow manual and owner-only.
 
-GitHub plan and repository visibility can affect required-reviewer availability. If required reviewers are unavailable, record that as an owner-visible blocker or select another owner-approved protected mechanism before #196.
+Implementation of #196 may exist before repository signing values are created. The first real signed run remains blocked until values, backups and recovery are confirmed.
 
-The follow-up release workflow in #196 should decode the keystore into a temporary runner path and generate `app/android/key.properties` only for the protected release job.
+The release workflow decodes the keystore into a temporary runner path and generates `app/android/key.properties` only for the signed release job.
 
 Temporary signing files must be removed during cleanup even after failure.
 
@@ -117,9 +99,8 @@ Owner confirmation checklist:
 [ ] Secondary encrypted backup confirmed
 [ ] Password recovery method confirmed
 [ ] Signing owner confirmed
-[ ] Protected GitHub environment confirmed
-[ ] Required environment credentials created
-[ ] Required reviewer protection confirmed
+[ ] Required repository secrets confirmed
+[ ] Recovery records confirmed
 ```
 
 ## Rotation and recovery
@@ -137,9 +118,9 @@ Before activation of new material:
 
 - back up the new signing material in encrypted form;
 - confirm the recovery method;
-- verify the protected environment credentials are ready.
+- verify the repository secrets are ready.
 
-Replace GitHub environment credentials by updating the protected `android-release` environment values only.
+Replace GitHub Actions credentials by updating the repository-level secret values only.
 
 Retain or revoke old material according to Google Play signing and upload-key requirements and the owner-approved Play Console procedure.
 
@@ -161,13 +142,13 @@ Do not duplicate their procedures here.
 
 Allowed repository evidence:
 
-- GitHub Environment secret names;
+- GitHub Actions secret names;
 - workflow run IDs;
 - commit SHA;
 - app version or build number;
 - artifact filename;
 - checksum;
-- environment name;
+- repository secret names;
 - PASS / FAIL / BLOCKED outcome.
 
 Forbidden repository evidence:
@@ -183,14 +164,11 @@ Forbidden repository evidence:
 
 ## Handoff to #196
 
-The release implementation task should not start until all of the following are true:
+The release implementation task can be implemented before all repository signing values exist, but the first signed run should not start until all of the following are true:
 
-- `android-release` environment exists.
-- Required reviewer protection exists.
-- All four credential names exist at environment level.
+- All four credential names exist at repository level.
 - The owner confirms backup and recovery ownership.
 - PR CI remains green.
-- No signing material is present in the repository.
 - The release workflow design uses `workflow_dispatch`.
 - No Play upload is included in #196.
 

@@ -1,0 +1,345 @@
+name: Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Commit SHA or tag to release
+        required: true
+        type: string
+      release_notes_from:
+        description: Optional lower boundary for release notes
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-release
+  cancel-in-progress: false
+
+jobs:
+  authorize:
+    name: Authorize release
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Guard owner and workflow ref
+        shell: pwsh
+        run: |
+          Write-Host "actor=$($env:GITHUB_ACTOR)"
+          Write-Host "repository_owner=$($env:GITHUB_REPOSITORY_OWNER)"
+          Write-Host "workflow_ref=$($env:GITHUB_REF)"
+          Write-Host "workflow_sha=$($env:GITHUB_SHA)"
+          Write-Host "run_id=$($env:GITHUB_RUN_ID)"
+          Write-Host "run_attempt=$($env:GITHUB_RUN_ATTEMPT)"
+          if ($env:GITHUB_REF -ne 'refs/heads/main') { throw "Android release must run from refs/heads/main." }
+          if ($env:GITHUB_ACTOR -ne $env:GITHUB_REPOSITORY_OWNER) { throw "Android release must be invoked by the repository owner." }
+
+  validate:
+    name: Validate source
+    runs-on: ubuntu-24.04
+    needs: authorize
+    outputs:
+      source_sha: ${{ steps.resolve.outputs.source_sha }}
+      short_sha: ${{ steps.resolve.outputs.short_sha }}
+      version_name: ${{ steps.source_version.outputs.version_name }}
+      build_number: ${{ steps.source_version.outputs.build_number }}
+      release_notes_from: ${{ steps.notes.outputs.release_notes_from }}
+      release_notes_range: ${{ steps.notes.outputs.release_notes_range }}
+      metadata_basename: ${{ steps.metadata.outputs.metadata_basename }}
+    steps:
+      - name: Checkout control source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.sha }}
+          path: control
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Confirm control history
+        shell: pwsh
+        working-directory: control
+        run: |
+          git rev-parse origin/main
+          git log -1 --oneline origin/main
+          git tag --list | Out-Null
+
+      - name: Resolve source ref
+        id: resolve
+        shell: pwsh
+        working-directory: control
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          $sourceRef = $env:SOURCE_REF
+          if ($sourceRef -match '^[0-9a-fA-F]{40}$') {
+            $sha = $sourceRef.ToLowerInvariant()
+          }
+          elseif (& git show-ref --tags --verify --quiet "refs/tags/$sourceRef") {
+            $sha = (& git rev-parse --verify "refs/tags/$sourceRef^{commit}" 2>$null).Trim()
+          }
+          else {
+            throw "source_ref must be an exact commit SHA or an existing tag."
+          }
+          if (-not $sha) { throw "source_ref did not resolve to a commit." }
+          & git merge-base --is-ancestor $sha origin/main
+          if ($LASTEXITCODE -ne 0) { throw "Selected source commit is not on main history." }
+          "source_sha=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "short_sha=$($sha.Substring(0,7))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Check out selected source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ steps.resolve.outputs.source_sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Capture source version
+        id: source_version
+        shell: pwsh
+        working-directory: source/app
+        run: |
+          $pubspec = Get-Content -Raw -LiteralPath pubspec.yaml
+          $versionMatch = [regex]::Match($pubspec, '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$')
+          if (-not $versionMatch.Success) { throw "version: entry not found in source/app/pubspec.yaml." }
+          "version_name=$($versionMatch.Groups[1].Value)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "build_number=$($versionMatch.Groups[2].Value)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Validate release notes boundary
+        id: notes
+        shell: pwsh
+        working-directory: source
+        env:
+          RELEASE_NOTES_FROM: ${{ inputs.release_notes_from }}
+          SOURCE_SHA: ${{ steps.resolve.outputs.source_sha }}
+        run: |
+          $boundary = $env:RELEASE_NOTES_FROM
+          if ($boundary) {
+            $resolvedBoundary = (& git rev-parse --verify "$boundary^{commit}" 2>$null).Trim()
+            if (-not $resolvedBoundary) { throw "release_notes_from did not resolve to a commit." }
+            & git merge-base --is-ancestor $resolvedBoundary $env:SOURCE_SHA
+            if ($LASTEXITCODE -ne 0) { throw "release_notes_from must be an ancestor of the selected source commit." }
+            "release_notes_from=$resolvedBoundary" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "release_notes_range=$resolvedBoundary..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+          else {
+            $tag = (& git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null).Trim()
+            if ($tag) {
+              "release_notes_from=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              "release_notes_range=$tag..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            }
+            else {
+              "release_notes_from=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              "release_notes_range=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            }
+          }
+
+      - name: Derive metadata basename
+        id: metadata
+        shell: pwsh
+        run: |
+          $basename = "nurtly-android-${{ steps.source_version.outputs.version_name }}-${{ steps.source_version.outputs.build_number }}-${{ steps.resolve.outputs.short_sha }}"
+          "metadata_basename=$basename" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Set up Java
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: '3.41.9'
+          channel: stable
+          cache: false
+
+      - name: Print toolchain versions
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Resolve dependencies
+        working-directory: source/app
+        run: flutter pub get --enforce-lockfile
+
+      - name: Verify lockfile unchanged
+        working-directory: source/app
+        run: git diff --exit-code -- pubspec.lock
+
+      - name: Check Dart formatting
+        working-directory: source/app
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Run Flutter analyze
+        working-directory: source/app
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        working-directory: source/app
+        run: flutter test --reporter expanded
+
+      - name: Cleanup Flutter generated local files
+        working-directory: control
+        run: |
+          pwsh -NoLogo -NoProfile `
+            -File tools/cleanup_flutter_local.ps1 `
+            -RepoRoot ../source
+
+      - name: Run scope guard
+        working-directory: control
+        run: |
+          pwsh -NoLogo -NoProfile `
+            -File tools/check_scope_guard.ps1 `
+            -RepoRoot . `
+            -ControlRoot . `
+            -SourceRoot ../source
+
+      - name: Verify control checkout unchanged
+        working-directory: control
+        run: git diff --exit-code
+
+      - name: Verify selected source unchanged
+        working-directory: source
+        run: git diff --exit-code
+
+      - name: Verify tracked files unchanged
+        working-directory: control
+        run: git diff --exit-code
+
+  build:
+    name: Build signed release bundle
+    runs-on: ubuntu-24.04
+    needs: validate
+    defaults:
+      run:
+        working-directory: source/app
+    steps:
+      - name: Checkout control source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.sha }}
+          path: control
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check out selected source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ needs.validate.outputs.source_sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Guard owner and workflow ref
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -ne 'refs/heads/main') { throw "Android release must run from refs/heads/main." }
+          if ($env:GITHUB_ACTOR -ne $env:GITHUB_REPOSITORY_OWNER) { throw "Android release must be invoked by the repository owner." }
+
+      - name: Set up Java
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: '3.41.9'
+          channel: stable
+          cache: false
+
+      - name: Resolve dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Prepare Android signing
+        shell: pwsh
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: pwsh -NoLogo -NoProfile -File ../../control/tools/prepare_android_signing.ps1 -RepoRoot ../.. -TempDirectory $env:RUNNER_TEMP
+
+      - name: Build app bundle
+        run: flutter build appbundle --release --no-pub
+
+      - name: Generate release metadata
+        id: metadata
+        shell: pwsh
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+          SOURCE_SHA: ${{ needs.validate.outputs.source_sha }}
+          RELEASE_NOTES_FROM: ${{ needs.validate.outputs.release_notes_from }}
+          RELEASE_NOTES_RANGE: ${{ needs.validate.outputs.release_notes_range }}
+          METADATA_BASENAME: ${{ needs.validate.outputs.metadata_basename }}
+          VERSION_NAME: ${{ needs.validate.outputs.version_name }}
+          BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
+        run: |
+          $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+          pwsh -NoLogo -NoProfile -File ../../control/tools/generate_android_release_metadata.ps1 `
+            -RepoRoot ../.. `
+            -AabPath (Join-Path $PWD 'build/app/outputs/bundle/release/app-release.aab') `
+            -OutputDirectory (Join-Path $env:RUNNER_TEMP 'android-release-metadata') `
+            -SourceRef $env:SOURCE_REF `
+            -ResolvedSourceSha $env:SOURCE_SHA `
+            -ReleaseNotesFrom $env:RELEASE_NOTES_FROM `
+            -ReleaseNotesRange $env:RELEASE_NOTES_RANGE `
+            -RunId $env:GITHUB_RUN_ID `
+            -RunAttempt $env:GITHUB_RUN_ATTEMPT `
+            -Repository $env:GITHUB_REPOSITORY `
+            -WorkflowSha $env:GITHUB_SHA `
+            -UtcBuildTimestamp $timestamp `
+            -VersionName $env:VERSION_NAME `
+            -BuildNumber $env:BUILD_NUMBER `
+            -ExpectedBasename $env:METADATA_BASENAME
+
+      - name: Verify naming consistency
+        shell: pwsh
+        env:
+          VERSION_NAME: ${{ needs.validate.outputs.version_name }}
+          BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
+          SHORT_SHA: ${{ needs.validate.outputs.short_sha }}
+          METADATA_BASENAME: ${{ needs.validate.outputs.metadata_basename }}
+          METADATA_HELPER_VERSION: ${{ steps.metadata.outputs.metadata_version_name }}
+          METADATA_HELPER_BUILD: ${{ steps.metadata.outputs.metadata_build_number }}
+          METADATA_HELPER_BASENAME: ${{ steps.metadata.outputs.metadata_basename }}
+        run: |
+          if ($env:VERSION_NAME -ne $env:METADATA_HELPER_VERSION) { throw "Version mismatch." }
+          if ($env:BUILD_NUMBER -ne $env:METADATA_HELPER_BUILD) { throw "Build mismatch." }
+          $expected = "nurtly-android-$env:VERSION_NAME-$env:BUILD_NUMBER-$env:SHORT_SHA"
+          if ($expected -ne $env:METADATA_BASENAME) { throw "Metadata basename mismatch." }
+          if ($expected -ne $env:METADATA_HELPER_BASENAME) { throw "Helper basename mismatch." }
+
+      - name: Upload release artifact
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ needs.validate.outputs.metadata_basename }}
+          path: ${{ runner.temp }}/android-release-metadata/*
+          if-no-files-found: error
+          retention-days: 14
+          include-hidden-files: false
+          compression-level: 0
+          overwrite: false
+
+      - name: Summarize upload
+        shell: pwsh
+        run: |
+          @"
+          Artifact ID: ${{ steps.upload.outputs.artifact-id }}
+          Artifact URL: ${{ steps.upload.outputs.artifact-url }}
+          Archive digest: ${{ steps.upload.outputs.artifact-digest }}
+          "@ | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: Cleanup signing files
+        if: always()
+        shell: pwsh
+        run: |
+          Remove-Item -LiteralPath (Join-Path $PWD 'android/key.properties') -Force -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-signing') -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-metadata') -Recurse -Force -ErrorAction SilentlyContinue
+          git diff --exit-code
