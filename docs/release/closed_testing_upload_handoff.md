@@ -51,7 +51,7 @@ flutter build appbundle --release
 
 ## What to check in Google Play Console
 
-- app entry exists and package name matches `com.nurtly.app`
+- app entry exists and package name matches `com.graylion.nurtly`
 - release track is the intended closed-testing track
 - tester group and invite link are prepared
 - signing and upload flow are ready

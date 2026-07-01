@@ -12,7 +12,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md) is ready for local completion.
 - [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
 - [ ] [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md) has been reviewed.
-- [ ] App package name is `com.nurtly.app`.
+- [ ] App package name is `com.graylion.nurtly`.
 - [ ] App label is `Nurtly`.
 - [ ] Current release version is confirmed in the release gate.
 

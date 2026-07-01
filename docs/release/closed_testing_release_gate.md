@@ -6,7 +6,8 @@ This document is the operational release gate for inviting closed-test users to 
 
 ## Current release posture
 
-- App identity is set in the repo as `com.nurtly.app` with app label `Nurtly`.
+- Canonical production Android application ID is `com.graylion.nurtly` with app label `Nurtly`.
+- It must match the existing Google Play Console application and must not change after publication.
 - The current app version in `app/pubspec.yaml` is `0.1.0+1`.
 - Android release signing expects a local `app/android/key.properties` file and keeps private release credentials out of git.
 - The MVP is parent-facing, privacy-first, and local-only for Journal data.
