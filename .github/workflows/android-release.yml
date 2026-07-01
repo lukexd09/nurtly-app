@@ -210,17 +210,16 @@ jobs:
         run: flutter test --reporter expanded
 
       - name: Cleanup Flutter generated local files
+        shell: pwsh
         working-directory: control
         run: |
-          pwsh -NoLogo -NoProfile `
-            -File tools/cleanup_flutter_local.ps1 `
-            -RepoRoot ../source
+          & ./tools/cleanup_flutter_local.ps1 -RepoRoot ../source
 
       - name: Run scope guard
+        shell: pwsh
         working-directory: control
         run: |
-          pwsh -NoLogo -NoProfile `
-            -File tools/check_scope_guard.ps1 `
+          & ./tools/check_scope_guard.ps1 `
             -RepoRoot . `
             -ControlRoot . `
             -SourceRoot ../source
