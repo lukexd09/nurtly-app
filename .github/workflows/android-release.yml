@@ -77,7 +77,14 @@ jobs:
             $sha = $sourceRef.ToLowerInvariant()
           }
           elseif (& git show-ref --tags --verify --quiet "refs/tags/$sourceRef") {
-            $resolvedSourceRef = & git rev-parse --verify "refs/tags/$sourceRef^{commit}" 2>$null
+            $previousPreference = $ErrorActionPreference
+            $ErrorActionPreference = 'Continue'
+            try {
+              $resolvedSourceRef = & git rev-parse --verify "refs/tags/$sourceRef^{commit}" 2>$null
+            }
+            finally {
+              $ErrorActionPreference = $previousPreference
+            }
             $sha = (($resolvedSourceRef | Select-Object -First 1) ?? '').Trim()
           }
           else {
@@ -118,7 +125,14 @@ jobs:
         run: |
           $boundary = $env:RELEASE_NOTES_FROM
           if ($boundary) {
-            $resolvedBoundaryOutput = & git rev-parse --verify "$boundary^{commit}" 2>$null
+            $previousPreference = $ErrorActionPreference
+            $ErrorActionPreference = 'Continue'
+            try {
+              $resolvedBoundaryOutput = & git rev-parse --verify "$boundary^{commit}" 2>$null
+            }
+            finally {
+              $ErrorActionPreference = $previousPreference
+            }
             $resolvedBoundary = (($resolvedBoundaryOutput | Select-Object -First 1) ?? '').Trim()
             if (-not $resolvedBoundary) { throw "release_notes_from did not resolve to a commit." }
             & git merge-base --is-ancestor $resolvedBoundary $env:SOURCE_SHA
@@ -127,13 +141,24 @@ jobs:
             "release_notes_range=$resolvedBoundary..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           }
           else {
-            $tagOutput = & git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null
+            $previousPreference = $ErrorActionPreference
+            $ErrorActionPreference = 'Continue'
+            try {
+              $tagOutput = & git describe --tags --abbrev=0 $env:SOURCE_SHA 2>$null
+            }
+            finally {
+              $ErrorActionPreference = $previousPreference
+            }
+            $describeExitCode = $LASTEXITCODE
             $tag = (($tagOutput | Select-Object -First 1) ?? '').Trim()
             if ($tag) {
               "release_notes_from=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
               "release_notes_range=$tag..$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
             }
             else {
+              if ($describeExitCode -ne 0) {
+                $global:LASTEXITCODE = 0
+              }
               "release_notes_from=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
               "release_notes_range=$env:SOURCE_SHA" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
             }
