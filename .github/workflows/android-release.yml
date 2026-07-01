@@ -289,7 +289,10 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: pwsh -NoLogo -NoProfile -File ../../control/tools/prepare_android_signing.ps1 -RepoRoot ../.. -TempDirectory $env:RUNNER_TEMP
+        run: |
+          & ../../control/tools/prepare_android_signing.ps1 `
+            -RepoRoot .. `
+            -TempDirectory $env:RUNNER_TEMP
 
       - name: Build app bundle
         run: flutter build appbundle --release --no-pub
@@ -307,8 +310,8 @@ jobs:
           BUILD_NUMBER: ${{ needs.validate.outputs.build_number }}
         run: |
           $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-          pwsh -NoLogo -NoProfile -File ../../control/tools/generate_android_release_metadata.ps1 `
-            -RepoRoot ../.. `
+          & ../../control/tools/generate_android_release_metadata.ps1 `
+            -RepoRoot .. `
             -AabPath (Join-Path $PWD 'build/app/outputs/bundle/release/app-release.aab') `
             -OutputDirectory (Join-Path $env:RUNNER_TEMP 'android-release-metadata') `
             -SourceRef $env:SOURCE_REF `
@@ -366,7 +369,12 @@ jobs:
         if: always()
         shell: pwsh
         run: |
-          Remove-Item -LiteralPath (Join-Path $PWD 'android/key.properties') -Force -ErrorAction SilentlyContinue
-          Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-signing') -Recurse -Force -ErrorAction SilentlyContinue
-          Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-metadata') -Recurse -Force -ErrorAction SilentlyContinue
+          try {
+            & ../../control/tools/cleanup_flutter_local.ps1 -RepoRoot ..
+          }
+          finally {
+            Remove-Item -LiteralPath (Join-Path $PWD 'android/key.properties') -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-signing') -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -LiteralPath (Join-Path $env:RUNNER_TEMP 'android-release-metadata') -Recurse -Force -ErrorAction SilentlyContinue
+          }
           git diff --exit-code
