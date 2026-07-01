@@ -38,8 +38,7 @@ $generatedNoisePatterns = @(
 $allowedPlatformFiles = @(
     "^app/android/app/src/main/AndroidManifest\\.xml$",
     "^app/android/app/build\\.gradle$",
-    "^app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity\\.kt$",
-    "^app/android/app/src/main/kotlin/com/nurtly/app/MainActivity\\.kt$"
+    "^app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity\\.kt$"
 )
 
 $approvedSecretTerminologyPaths = @(
@@ -288,9 +287,35 @@ function Test-IsAllowedPlatformFile {
     return $normalized -in @(
         "app/android/app/src/main/AndroidManifest.xml",
         "app/android/app/build.gradle",
-        "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt",
-        "app/android/app/src/main/kotlin/com/nurtly/app/MainActivity.kt"
+        "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt"
     )
+}
+
+function Test-AndroidMainActivityIdentity {
+    param(
+        [string] $RepoRootPath,
+        [string] $ExpectedMainActivityPath,
+        [string] $ObsoleteMainActivityPath,
+        [string] $ExpectedPackageLine
+    )
+
+    $expectedFullPath = Join-Path $RepoRootPath $ExpectedMainActivityPath
+    $obsoleteFullPath = Join-Path $RepoRootPath $ObsoleteMainActivityPath
+
+    if (-not (Test-Path $expectedFullPath -PathType Leaf)) {
+        Add-Failure "Expected Android MainActivity file is missing: $ExpectedMainActivityPath"
+    }
+
+    if (Test-Path $obsoleteFullPath -PathType Leaf) {
+        Add-Failure "Obsolete Android MainActivity file still exists: $ObsoleteMainActivityPath"
+    }
+
+    if (Test-Path $expectedFullPath -PathType Leaf) {
+        $firstLine = Get-Content -LiteralPath $expectedFullPath -TotalCount 1
+        if ($firstLine -ne $ExpectedPackageLine) {
+            Add-Failure "Android MainActivity package declaration must be exactly '$ExpectedPackageLine' in $ExpectedMainActivityPath"
+        }
+    }
 }
 
 function Add-Failure {
@@ -447,6 +472,11 @@ try {
     }
 
     Test-AndroidApplicationId -BuildFilePath $androidBuildFile -ExpectedApplicationId "com.graylion.nurtly"
+    Test-AndroidMainActivityIdentity `
+        -RepoRootPath $sourceRootPath `
+        -ExpectedMainActivityPath "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt" `
+        -ObsoleteMainActivityPath "app/android/app/src/main/kotlin/com/nurtly/app/MainActivity.kt" `
+        -ExpectedPackageLine "package com.graylion.nurtly"
 
     if (-not $AllowPlatformChanges) {
         $platformChanges = $changedFiles | Where-Object {
