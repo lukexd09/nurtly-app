@@ -36,7 +36,9 @@ $generatedNoisePatterns = @(
 )
 
 $allowedPlatformFiles = @(
-    "^app/android/app/src/main/AndroidManifest\\.xml$"
+    "^app/android/app/src/main/AndroidManifest\\.xml$",
+    "^app/android/app/build\\.gradle$",
+    "^app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity\\.kt$"
 )
 
 $approvedSecretTerminologyPaths = @(
@@ -266,6 +268,56 @@ function Get-LineRefs {
     }
 }
 
+function Test-AndroidApplicationId {
+    param(
+        [string] $BuildFilePath,
+        [string] $ExpectedApplicationId
+    )
+
+    $content = Get-Content -Raw -LiteralPath $BuildFilePath
+    if ($content -notmatch "applicationId\s*=\s*`"$([regex]::Escape($ExpectedApplicationId))`"") {
+        Add-Failure "Production Android applicationId must be exactly $ExpectedApplicationId in $BuildFilePath"
+    }
+}
+
+function Test-IsAllowedPlatformFile {
+    param([string] $Path)
+
+    $normalized = $Path -replace "\\", "/"
+    return $normalized -in @(
+        "app/android/app/src/main/AndroidManifest.xml",
+        "app/android/app/build.gradle",
+        "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt"
+    )
+}
+
+function Test-AndroidMainActivityIdentity {
+    param(
+        [string] $RepoRootPath,
+        [string] $ExpectedMainActivityPath,
+        [string] $ObsoleteMainActivityPath,
+        [string] $ExpectedPackageLine
+    )
+
+    $expectedFullPath = Join-Path $RepoRootPath $ExpectedMainActivityPath
+    $obsoleteFullPath = Join-Path $RepoRootPath $ObsoleteMainActivityPath
+
+    if (-not (Test-Path $expectedFullPath -PathType Leaf)) {
+        Add-Failure "Expected Android MainActivity file is missing: $ExpectedMainActivityPath"
+    }
+
+    if (Test-Path $obsoleteFullPath -PathType Leaf) {
+        Add-Failure "Obsolete Android MainActivity file still exists: $ObsoleteMainActivityPath"
+    }
+
+    if (Test-Path $expectedFullPath -PathType Leaf) {
+        $firstLine = Get-Content -LiteralPath $expectedFullPath -TotalCount 1
+        if ($firstLine -ne $ExpectedPackageLine) {
+            Add-Failure "Android MainActivity package declaration must be exactly '$ExpectedPackageLine' in $ExpectedMainActivityPath"
+        }
+    }
+}
+
 function Add-Failure {
     param([string] $Message)
     $script:failures.Add($Message) | Out-Null
@@ -282,6 +334,7 @@ try {
         (Join-Path $controlRootPath "docs/release/android_signing.md"),
         (Join-Path $controlRootPath "docs/release/android_release_workflow.md")
     )
+    $androidBuildFile = Join-Path $controlRootPath "app/android/app/build.gradle"
 
     if (-not (Test-Path $releaseWorkflow)) { throw "Missing release workflow." }
     if (-not (Test-Path $signingHelper)) { throw "Missing signing helper." }
@@ -303,7 +356,7 @@ try {
 
         if (-not $AllowPlatformChanges) {
             $isPlatformFile = $normalized -match '^app/android/' -or $normalized -match '^app/ios/'
-            $isAllowedPlatformFile = $normalized -match '^app/android/app/src/main/AndroidManifest\.xml$'
+            $isAllowedPlatformFile = Test-IsAllowedPlatformFile $normalized
 
             if ($isPlatformFile -and -not $isAllowedPlatformFile) {
                 Add-Failure "Platform file changed without -AllowPlatformChanges: $normalized"
@@ -418,8 +471,18 @@ try {
         }
     }
 
+    Test-AndroidApplicationId -BuildFilePath $androidBuildFile -ExpectedApplicationId "com.graylion.nurtly"
+    Test-AndroidMainActivityIdentity `
+        -RepoRootPath $sourceRootPath `
+        -ExpectedMainActivityPath "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt" `
+        -ObsoleteMainActivityPath "app/android/app/src/main/kotlin/com/nurtly/app/MainActivity.kt" `
+        -ExpectedPackageLine "package com.graylion.nurtly"
+
     if (-not $AllowPlatformChanges) {
-        $platformChanges = $changedFiles | Where-Object { $_ -replace "\\", "/" -match '^app/(android|ios)/' -and $_ -replace "\\", "/" -notmatch '^app/android/app/src/main/AndroidManifest\.xml$' }
+        $platformChanges = $changedFiles | Where-Object {
+            $normalized = $_ -replace "\\", "/"
+            $normalized -match '^app/(android|ios)/' -and -not (Test-IsAllowedPlatformFile $normalized)
+        }
         foreach ($platformChange in $platformChanges) {
             Add-Failure "Platform file changed without -AllowPlatformChanges: $($platformChange -replace '\\','/')"
         }

@@ -28,7 +28,7 @@ if (releaseBuildRequested && keystorePropertiesFile.exists() && !missingReleaseS
 }
 
 android {
-    namespace = "com.nurtly.app"
+    namespace = "com.graylion.nurtly"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.nurtly.app"
+        applicationId = "com.graylion.nurtly"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
