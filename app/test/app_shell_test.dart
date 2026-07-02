@@ -5,9 +5,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/consent_flow_controller.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 import 'package:nurtly/core/content/bundled_content_source.dart';
+import 'package:nurtly/core/content/content_loader.dart';
+import 'package:nurtly/core/content/content_package.dart';
+import 'package:nurtly/core/content/content_taxonomy.dart';
+import 'package:nurtly/core/content/play_idea.dart';
+import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/core/navigation/app_shell.dart';
 import 'package:nurtly/core/localization/language_preference_store.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
+import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 import 'package:nurtly/features/journal/journal_controller.dart';
 import 'package:nurtly/features/journal/journal_entry.dart';
@@ -291,6 +297,68 @@ void main() {
       isNotNull,
     );
   });
+
+  testWidgets(
+    'saved reviewer access wires premium access across the shell',
+    (tester) async {
+      final reviewerStore = FakeReviewerAccessStore(saved: true);
+      await _pumpNurtlyApp(
+        tester,
+        size: const Size(600, 4000),
+        reviewerAccessStore: reviewerStore,
+        premiumEntitlementProvider: FakePremiumEntitlementProvider(
+          loadEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          refreshEntitlement: PremiumEntitlement.free(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+        ),
+        contentLoader: const _PremiumShellContentLoader(),
+      );
+
+      expect(find.text('Sponsored space'), findsNothing);
+
+      await tester.tap(find.text('Play'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sponsored space'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('Premium play idea'),
+        80,
+      );
+      await tester.tap(find.text('Premium play idea'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Premium play idea'), findsWidgets);
+      expect(find.text('What to expect'), findsOneWidget);
+      expect(find.text('Unlock this with Premium.'), findsOneWidget);
+      expect(find.text('Sponsored space'), findsNothing);
+      expect(find.text('Upgrade to Premium'), findsNothing);
+
+      await _tapBack(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Sounds'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sponsored space'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('Premium sound'),
+        80,
+      );
+      await tester.tap(find.text('Premium sound'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Premium sound'), findsWidgets);
+      expect(find.byKey(const ValueKey('sound-player-card')), findsOneWidget);
+      expect(find.text('Sponsored space'), findsNothing);
+
+      await _tapBack(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Home'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sponsored space'), findsNothing);
+    },
+  );
 
   testWidgets('Reviewer access save errors keep dialog interactive',
       (tester) async {
@@ -788,6 +856,7 @@ Future<void> _pumpNurtlyApp(
   Size size = const Size(600, 1200),
   Locale? systemLocale,
   LanguagePreferenceStore? languagePreferenceStore,
+  ContentLoader? contentLoader,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
   FakeReviewerAccessStore? reviewerAccessStore,
   ConsentFlow? consentFlow,
@@ -807,7 +876,7 @@ Future<void> _pumpNurtlyApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: AppShell(
-        contentLoader: const FakeContentLoader(),
+        contentLoader: contentLoader ?? const FakeContentLoader(),
         languagePreferenceStore:
             languagePreferenceStore ?? FakeLanguagePreferenceStore(),
         premiumEntitlementProvider:
@@ -956,3 +1025,78 @@ class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
     showPrivacyOptionsCalls++;
   }
 }
+
+class _PremiumShellContentLoader extends ContentLoader {
+  const _PremiumShellContentLoader();
+
+  @override
+  Future<ContentPackage> load() async {
+    return const ContentPackage(
+      metadata: ContentMetadata(
+        packageId: 'premium-shell-test',
+        schemaVersion: 1,
+        version: '1.0.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _shellTaxonomy,
+      playFilters: [],
+      playIdeas: [
+        PlayIdea(
+          id: 'play_premium',
+          title: 'Premium play idea',
+          summary: 'A premium idea for reviewer coverage.',
+          ageGroup: '2-5 years',
+          ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+          place: 'place_home',
+          messLevel: 'mess_low',
+          childEngagement: 'child_engagement_low',
+          parentInvolvement: 'parent_involvement_low',
+          activityType: 'activity_quiet_time',
+          unlockType: 'premium',
+          contexts: ['context_home'],
+          neededItems: ['Item'],
+          steps: ['Step'],
+          whatToExpect: 'Unlock this with Premium.',
+          parentNote: 'Keep it calm.',
+          safetyNote: 'Use safe items.',
+        ),
+      ],
+      sounds: [
+        SoundItem(
+          id: 'sound_premium',
+          title: 'Premium sound',
+          category: 'Nature',
+          summary: 'A premium sound for reviewer coverage.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'premium',
+        ),
+      ],
+    );
+  }
+}
+
+const _shellTaxonomy = ContentTaxonomy(
+  places: [
+    TaxonomyTerm(id: 'place_home', label: 'Home'),
+  ],
+  messLevels: [
+    TaxonomyTerm(id: 'mess_low', label: 'Low'),
+  ],
+  childEngagementLevels: [
+    TaxonomyTerm(id: 'child_engagement_low', label: 'Low'),
+  ],
+  parentInvolvementLevels: [
+    TaxonomyTerm(id: 'parent_involvement_low', label: 'Low'),
+  ],
+  activityTypes: [
+    TaxonomyTerm(id: 'activity_quiet_time', label: 'Quiet time'),
+  ],
+  contexts: [
+    TaxonomyTerm(id: 'context_home', label: 'home'),
+  ],
+  soundCategories: [
+    TaxonomyTerm(id: 'sound_category_nature', label: 'Nature'),
+  ],
+);

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/monetization/premium_access_controller.dart';
+import 'package:nurtly/core/monetization/reviewer_access_code.dart';
 import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/core/monetization/purchase_result.dart';
 
@@ -226,5 +227,66 @@ void main() {
 
     expect(controller.reviewerAccessEnabled, isFalse);
     expect(controller.hasPremiumAccess, isTrue);
+  });
+
+  test(
+      'reviewer access stays active after refresh picks up a new billing entitlement',
+      () async {
+    final reviewerStore = FakeReviewerAccessStore(saved: true);
+    final provider = FakePremiumEntitlementProvider(
+      loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      refreshEntitlement: PremiumEntitlement.yearlyActive(checkedAt: now),
+    );
+    final controller = PremiumAccessController(
+      provider: provider,
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await controller.load();
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+    expect(controller.shouldShowAds, isFalse);
+
+    await controller.refresh();
+
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+    expect(controller.shouldShowAds, isFalse);
+    expect(controller.entitlement.source, PremiumSource.yearly);
+    expect(provider.refreshCalls, 1);
+  });
+
+  test('reviewer reset and reactivation preserve premium gating on one store',
+      () async {
+    final reviewerStore = FakeReviewerAccessStore();
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      ),
+      reviewerAccessStore: reviewerStore,
+    );
+
+    await controller.load();
+    await controller.enableReviewerAccess('NURTLY-REVIEWER-162');
+
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+    expect(controller.shouldShowAds, isFalse);
+
+    await controller.disableReviewerAccess();
+
+    expect(controller.reviewerAccessEnabled, isFalse);
+    expect(controller.hasPremiumAccess, isFalse);
+    expect(controller.shouldShowAds, isTrue);
+
+    await controller.enableReviewerAccess(reviewerAccessCode);
+
+    expect(controller.reviewerAccessEnabled, isTrue);
+    expect(controller.hasPremiumAccess, isTrue);
+    expect(controller.shouldShowAds, isFalse);
+    expect(reviewerStore.savedValues, [
+      true,
+      true,
+    ]);
   });
 }
