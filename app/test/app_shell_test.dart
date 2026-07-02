@@ -1054,6 +1054,7 @@ class _PremiumShellContentLoader extends ContentLoader {
           childEngagement: 'child_engagement_low',
           parentInvolvement: 'parent_involvement_low',
           activityType: 'activity_quiet_time',
+          unlockType: 'premium',
           contexts: ['context_home'],
           neededItems: ['Item'],
           steps: ['Step'],

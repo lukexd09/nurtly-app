@@ -73,11 +73,9 @@ The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, J
 | Privacy and Data policy surfaces | `app/lib/features/privacy/privacy_data_screen.dart`, privacy string constants in `app/lib/core/localization/app_strings.dart` | `app/test/features/privacy/privacy_data_screen_test.dart`, `app/test/core/localization/privacy_strings_test.dart` | `docs/legal/privacy_policy_en.md`, `docs/legal/privacy_policy_pl.md`, `docs/legal/privacy_policy_publication_handoff.md`, `docs/legal/public/privacy_policy.md`, `docs/legal/public/privacy_policy_en.md`, `docs/legal/public/privacy_policy_pl.md`, `docs/release/data_safety.md` | `PASS WITH OWNER ACTION` | Publish the live privacy URL and replace all placeholders outside the repo. |
 | Store listing, target audience, content rating, and Families posture | Store copy and submission handoff docs | `app/test/app_shell_test.dart`, `app/test/features/privacy/privacy_data_screen_test.dart` | `docs/release/store_listing.md`, `docs/release/google_play_submission_content_pack.md`, `docs/release/play_console_owner_decisions.md` | `PASS WITH OWNER ACTION` | Finish Play Console audience, content-rating, and Families posture decisions. |
 | Store assets and screenshots | Current repo assets and release docs | N/A for exported store assets | `docs/release/store_asset_inventory.md`, `docs/release/store_screenshot_plan.md`, `docs/release/feature_graphic_brief.md`, `docs/release/store_assets_checklist.md` | `BLOCKED` | Export final icon, feature graphic, and screenshot set. |
-| Android technical release config, permissions, signing, and release build | `app/pubspec.yaml`, `app/android/app/build.gradle`, `app/android/app/src/main/AndroidManifest.xml`, `app/android/app/src/debug/AndroidManifest.xml`, `app/android/app/src/profile/AndroidManifest.xml` | `tools/pre_pr_check.ps1`, `tools/release_preflight_check.ps1`, Flutter quality checks | `docs/release/android_release_build.md`, `docs/release/android_signing.md`, `docs/release/closed_testing_release_gate.md`, `docs/release/closed_testing_upload_handoff.md` | `BLOCKED` | Provide local release signing files on the owner machine and produce the signed AAB there. |
+| Android technical release config, permissions, signing, and release build | `app/pubspec.yaml`, `app/android/app/build.gradle`, `app/android/app/src/main/AndroidManifest.xml`, `app/android/app/src/debug/AndroidManifest.xml`, `app/android/app/src/profile/AndroidManifest.xml` | `docs/release/internal_testing_0_1_0_1_evidence.md`, `docs/release/README.md` | `docs/release/android_release_build.md`, `docs/release/android_signing.md`, `docs/release/internal_testing_0_1_0_1_evidence.md` | `PASS` | Historical signed AAB, upload, and tester-install evidence are captured in the evidence pack. |
 | Content loading and validation | `app/assets/content/*`, `app/lib/core/content/*`, `content/*` | `app/test/content_loader_test.dart`, `app/test/content_repository_test.dart` | `docs/release/google_play_submission_content_pack.md`, `docs/release/store_listing_copy.md` | `PASS` | Keep source content and published content aligned if new content is added. |
 | Performance, install sanity, and smoke coverage | Startup, release install, and content loading paths in the app shell | `app/test/app_shell_test.dart`, `app/test/features/home/home_screen_test.dart`, `app/test/features/play/play_screen_test.dart`, `app/test/features/sounds/sounds_screen_test.dart`, `app/test/features/journal/journal_screen_test.dart` | `docs/qa/release_smoke_test.md`, `docs/qa/mvp_manual_qa_checklist.md`, `docs/release/closed_testing_release_candidate_runbook.md` | `PASS WITH OWNER ACTION` | Run the real-device smoke pass and record the evidence outside git. |
-| Android signing and install evidence | Local release setup and tester-install path | `tools/release_preflight_check.ps1`, `tools/pre_pr_check.ps1`, `flutter test --coverage` | `docs/release/internal_testing_0_1_0_1_evidence.md`, `docs/release/README.md` | `PASS` | None for the resolved historical evidence pack. |
-
 ## Sounds Readiness
 
 - Playback: `FAIL`
@@ -244,10 +242,8 @@ Evidence:
 ## Manual Verification Still Required
 
 - Real-device Sounds verification.
-- Sounds playback fix validation for `#212`.
 - Final Play Console entry, audience, rating, billing, and tester-group setup.
 - Privacy policy publication and live URL confirmation.
-- Closed-testing upload and real-device smoke evidence.
 - Final store asset export and upload.
 
 ## Remaining Blockers
@@ -279,16 +275,16 @@ See the authoritative register in `docs/release/final_release_blockers.md`.
 
 | Command | Result | Notes |
 | --- | --- | --- |
-| `tools/pre_pr_check.ps1` | `PASS` | Re-ran on the clean committed branch. Flutter verification, scope guard, Flutter quality checks, and git status all passed. |
-| `tools/release_preflight_check.ps1` | `PASS` | Historical release evidence is now recorded; no unresolved signing-file blocker remains in the current state. |
+| `tools/pre_pr_check.ps1` | `NOT RUN IN THIS TASK` | Covered by historical release evidence; not rerun in this correction-only task. |
+| `tools/release_preflight_check.ps1` | `NOT RUN IN THIS TASK` | Covered by historical release evidence; not rerun in this correction-only task. |
 | `git diff --check` | `PASS` | Clean diff format. |
 | `git status --short` | `PASS` | Clean before and after the verification rerun. |
 | `flutter pub get` | `PASS` | Ran from `app/` with `C:\src\flutter\bin` on `PATH`. |
 | `dart format --output=none --set-exit-if-changed .` | `PASS` | No formatting changes required on the final checked state. |
 | `flutter analyze` | `PASS` | No issues found. |
 | `flutter test` | `PASS` | All app tests passed. |
-| `flutter build apk --debug` | `PASS` | No current blocker is recorded for Android build evidence in the release pack. |
-| `flutter build appbundle --release` | `PASS` | Signed AAB evidence is already captured in the release evidence pack. |
+| `flutter build apk --debug` | `NOT RUN IN THIS TASK` | Covered by historical release evidence; not rerun in this correction-only task. |
+| `flutter build appbundle --release` | `NOT RUN IN THIS TASK` | Covered by historical release evidence; not rerun in this correction-only task. |
 
 ## Final Go / No-Go Recommendation
 
