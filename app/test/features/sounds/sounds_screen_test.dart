@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/content/content_loader.dart';
@@ -137,9 +139,15 @@ void main() {
     );
   });
 
-  testWidgets('passes the configured asset path to the sound loader',
+  testWidgets('starts playback only after ready and starts timer then',
       (tester) async {
-    String? capturedAssetPath;
+    final harness = SoundPlaybackHarness();
+    final playStarted = Completer<void>();
+    final startCompleter = Completer<void>();
+    harness.onStartRequested = () async {
+      playStarted.complete();
+      await startCompleter.future;
+    };
 
     await tester.pumpWidget(
       MaterialApp(
@@ -153,24 +161,113 @@ void main() {
             assetPath: 'assets/audio/soft_rain.mp3',
             unlockType: 'free',
           ),
+          playbackHarness: harness,
           loadSoundAsset: (player, assetPath) async {
-            capturedAssetPath = assetPath;
+            expect(assetPath, 'assets/audio/soft_rain.mp3');
           },
-          startPlayback: (_) async {},
         ),
       ),
     );
 
-    await tester.tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester
+        .tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pump();
+    await tester.tap(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('sound-player-session-options')),
+            matching: find.text('15'),
+          )
+          .first,
+    );
+    await tester.pump();
+
+    expect(find.text(AppStrings.english.loading), findsOneWidget);
+    expect(find.text('15:00 left'), findsOneWidget);
+    expect(harness.startAttempts, 1);
+    expect(playStarted.isCompleted, isTrue);
+
+    harness.markReadyPlaying(currentIndex: 0);
+    startCompleter.complete();
     await tester.pumpAndSettle();
 
-    expect(capturedAssetPath, 'assets/audio/soft_rain.mp3');
-    expect(find.textContaining(AppStrings.english.couldNotPlay), findsNothing);
+    expect(find.text(AppStrings.english.playing), findsOneWidget);
+    expect(find.text('15:00 left'), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.textContaining('left'), findsOneWidget);
   });
 
-  testWidgets('keeps the player ready to retry after playback failure',
+  testWidgets('allows pause while loop playback is pending', (tester) async {
+    final harness = SoundPlaybackHarness();
+    final startCompleter = Completer<void>();
+    harness.onStartRequested = () async {
+      await startCompleter.future;
+    };
+    harness.onPauseRequested = () async {};
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundDetailScreen(
+          strings: AppStrings.english,
+          sound: const SoundItem(
+            id: 'sound_failure_test',
+            title: 'Failure test',
+            category: 'Nature',
+            summary: 'A sound used for pause verification.',
+            assetPath: 'assets/audio/soft_rain.mp3',
+            unlockType: 'free',
+          ),
+          playbackHarness: harness,
+          loadSoundAsset: (player, assetPath) async {},
+        ),
+      ),
+    );
+
+    await tester
+        .tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pump();
+    await tester.tap(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('sound-player-session-options')),
+            matching: find.text('15'),
+          )
+          .first,
+    );
+    await tester.pump();
+
+    harness.markReadyPlaying(currentIndex: 0);
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.english.playing), findsOneWidget);
+    expect(find.byKey(const ValueKey('sound-player-primary-control')),
+        findsOneWidget);
+    expect(harness.pauseCalls, 0);
+
+    await tester
+        .tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pump();
+    harness.markReadyPaused(currentIndex: 0);
+    await tester.pumpAndSettle();
+    startCompleter.complete();
+
+    expect(find.text(AppStrings.english.paused), findsOneWidget);
+    expect(harness.pauseCalls, 1);
+  });
+
+  testWidgets(
+      'shows playback failure, allows retry, and succeeds on second try',
       (tester) async {
-    var playbackAttempts = 0;
+    final harness = SoundPlaybackHarness();
+    final secondAttemptReady = Completer<void>();
+    var startRequestCount = 0;
+    harness.onStartRequested = () async {
+      startRequestCount++;
+      if (startRequestCount > 1) {
+        await secondAttemptReady.future;
+      }
+    };
 
     await tester.pumpWidget(
       MaterialApp(
@@ -184,19 +281,44 @@ void main() {
             assetPath: 'assets/audio/soft_rain.mp3',
             unlockType: 'free',
           ),
+          playbackHarness: harness,
           loadSoundAsset: (player, assetPath) async {},
-          startPlayback: (_) async {
-            playbackAttempts++;
-            throw StateError('simulated playback failure');
-          },
         ),
       ),
     );
 
-    await tester.tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester
+        .tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pump();
+    await tester.tap(
+      find
+          .descendant(
+            of: find.byKey(const ValueKey('sound-player-session-options')),
+            matching: find.text('15'),
+          )
+          .first,
+    );
+    await tester.pump();
+
+    expect(harness.startAttempts, 1);
+    expect(find.text(AppStrings.english.loading), findsOneWidget);
+
+    harness.emitError(StateError('simulated playback failure'));
+    harness.markReadyPaused(currentIndex: 0);
     await tester.pumpAndSettle();
 
-    expect(playbackAttempts, 1);
+    await tester
+        .tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pump();
+
+    expect(harness.startAttempts, 2);
+    expect(find.text(AppStrings.english.loading), findsOneWidget);
+
+    harness.markReadyPlaying(currentIndex: 0);
+    secondAttemptReady.complete();
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppStrings.english.playing), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
   });

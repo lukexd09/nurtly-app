@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -222,6 +223,7 @@ class SoundDetailScreen extends StatefulWidget {
     super.key,
     this.loadSoundAsset = loadLoopingSoundAsset,
     this.startPlayback,
+    this.playbackHarness,
   });
 
   final SoundItem sound;
@@ -229,6 +231,7 @@ class SoundDetailScreen extends StatefulWidget {
   final Future<void> Function(AudioPlayer player, String assetPath)
       loadSoundAsset;
   final Future<void> Function(AudioPlayer player)? startPlayback;
+  final SoundPlaybackHarness? playbackHarness;
 
   @override
   State<SoundDetailScreen> createState() => _SoundDetailScreenState();
@@ -236,14 +239,21 @@ class SoundDetailScreen extends StatefulWidget {
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
   static const double _normalVolume = 1;
+  static const Duration _playbackStartTimeout = Duration(seconds: 5);
   late final AudioPlayer _player;
   late final StreamSubscription<PlayerState> _playerSubscription;
+  StreamSubscription<PlayerState>? _harnessPlayerSubscription;
+  StreamSubscription<PlayerState>? _playerStateSubscription;
+  StreamSubscription<PlaybackEvent>? _playerPlaybackEventSubscription;
   bool _isLoading = false;
   String? _errorMessage;
   double? _draggingProgress;
   Timer? _sessionTimer;
   Duration? _selectedSessionDuration;
   Duration? _remainingSessionDuration;
+  int _attemptGeneration = 0;
+  Completer<void>? _activeStartCompleter;
+  bool _playbackStartConfirmed = false;
 
   @override
   void initState() {
@@ -254,19 +264,32 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         setState(() {});
       }
     });
+    _harnessPlayerSubscription =
+        widget.playbackHarness?.playerStateStream.listen((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    widget.playbackHarness?.onErrorRequested = (error, stackTrace) async {
+      if (mounted) {
+        unawaited(_handlePlaybackError(error, stackTrace));
+      }
+    };
   }
 
   @override
   void dispose() {
     _cancelSessionTimer();
+    _cancelStartListeners();
     unawaited(_restoreVolume());
+    _harnessPlayerSubscription?.cancel();
     _playerSubscription.cancel();
     _player.dispose();
     super.dispose();
   }
 
   Future<void> _togglePlayPause() async {
-    if (_isLoading) {
+    if (_isLoading && !_isPlaying) {
       return;
     }
 
@@ -276,11 +299,20 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       });
     }
 
-    if (_player.playing) {
-      await _player.pause();
+    if (_isPlaying) {
+      _cancelStartListeners();
+      if (widget.playbackHarness != null) {
+        await widget.playbackHarness!.requestPause(
+          fallback: () => _player.pause(),
+        );
+      } else {
+        await _player.pause();
+      }
       _pauseSessionTimer();
       if (mounted) {
-        setState(() {});
+        setState(() {
+          _isLoading = false;
+        });
       }
       return;
     }
@@ -297,14 +329,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       if (!mounted) {
         return;
       }
-      await _startPlayback();
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      _startSessionTimerIfNeeded();
+      unawaited(_beginPlaybackAttempt());
     } catch (error, stackTrace) {
       await _handlePlaybackError(error, stackTrace);
     }
@@ -315,16 +340,34 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Future<void> _startPlayback() async {
+    final harness = widget.playbackHarness;
+    if (harness != null) {
+      await harness.requestStart(
+        fallback: widget.startPlayback == null
+            ? null
+            : () => widget.startPlayback!(_player),
+      );
+      return;
+    }
     final starter = widget.startPlayback ?? (player) => player.play();
     await starter(_player);
   }
 
   Future<void> _handlePlaybackError(Object error, StackTrace stackTrace) async {
+    _cancelStartListeners();
     _cancelSessionTimer();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        _draggingProgress = null;
+      });
+    }
     try {
       await _restoreVolume();
-      await _player.pause();
-      await _player.seek(Duration.zero);
+      if (widget.playbackHarness == null) {
+        await _player.pause();
+        await _player.seek(Duration.zero);
+      }
     } catch (cleanupError, cleanupStackTrace) {
       _logPlaybackError(cleanupError, cleanupStackTrace);
     }
@@ -334,12 +377,101 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     }
     setState(() {
       _errorMessage = widget.strings.couldNotPlay;
-      _isLoading = false;
-      _draggingProgress = null;
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(widget.strings.couldNotPlaySound)),
     );
+  }
+
+  Future<void> _beginPlaybackAttempt() async {
+    _attemptGeneration++;
+    final generation = _attemptGeneration;
+    _playbackStartConfirmed = false;
+    _activeStartCompleter = Completer<void>();
+    _playerStateSubscription?.cancel();
+    _playerPlaybackEventSubscription?.cancel();
+    _playerStateSubscription = _playerStateStream.listen((playerState) {
+      _handlePlayerStateUpdate(generation, playerState);
+    });
+    _playerPlaybackEventSubscription = _playbackEventStream.listen(
+      (_) => _handlePlaybackEvent(generation),
+      onError: (Object error, StackTrace stackTrace) {
+        if (!mounted || generation != _attemptGeneration) {
+          return;
+        }
+        unawaited(_handlePlaybackError(error, stackTrace));
+      },
+    );
+
+    unawaited(_startPlayback().catchError((error, stackTrace) {
+      if (!mounted || generation != _attemptGeneration) {
+        return;
+      }
+      if (!_playbackStartConfirmed) {
+        unawaited(_handlePlaybackError(error, stackTrace));
+      }
+    }));
+    _maybeMarkPlaybackStarted(generation);
+
+    try {
+      await _activeStartCompleter!.future.timeout(_playbackStartTimeout);
+    } on TimeoutException catch (error, stackTrace) {
+      if (!mounted || generation != _attemptGeneration) {
+        return;
+      }
+      await _handlePlaybackError(error, stackTrace);
+    }
+  }
+
+  void _handlePlayerStateUpdate(int generation, PlayerState state) {
+    if (!mounted || generation != _attemptGeneration) {
+      return;
+    }
+    _maybeMarkPlaybackStarted(generation, state);
+  }
+
+  void _handlePlaybackEvent(int generation) {
+    if (!mounted || generation != _attemptGeneration) {
+      return;
+    }
+    _maybeMarkPlaybackStarted(generation);
+  }
+
+  void _maybeMarkPlaybackStarted(int generation, [PlayerState? state]) {
+    if (generation != _attemptGeneration || !mounted) {
+      return;
+    }
+    final currentState = state ?? _currentPlayerState;
+    final started = currentState.playing &&
+        currentState.processingState == ProcessingState.ready;
+    if (!started) {
+      return;
+    }
+    if (_playbackStartConfirmed) {
+      return;
+    }
+    _playbackStartConfirmed = true;
+    _cancelStartListeners();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _startSessionTimerIfNeeded();
+    if (!(_activeStartCompleter?.isCompleted ?? true)) {
+      _activeStartCompleter?.complete();
+    }
+  }
+
+  void _cancelStartListeners() {
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = null;
+    _playerPlaybackEventSubscription?.cancel();
+    _playerPlaybackEventSubscription = null;
+    if (!(_activeStartCompleter?.isCompleted ?? true)) {
+      _activeStartCompleter?.complete();
+    }
+    _activeStartCompleter = null;
   }
 
   void _selectSessionDuration(Duration? duration) {
@@ -347,7 +479,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     _selectedSessionDuration = duration;
     _remainingSessionDuration = duration;
     unawaited(_restoreVolume());
-    if (_player.playing) {
+    if (_isPlaying) {
       _startSessionTimerIfNeeded();
     }
     if (mounted) {
@@ -424,22 +556,24 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   void _logPlaybackError(Object error, StackTrace stackTrace) {
-    if (!kDebugMode) {
+    final playerException = error is PlayerException ? error : null;
+    final releaseSafeMessage = [
+      '[sounds] playback error',
+      'type=${error.runtimeType}',
+      if (playerException != null) 'code=${playerException.code}',
+      if (playerException != null) 'message=${playerException.message}',
+      if (playerException != null) 'index=${playerException.index}',
+      'currentIndex=$_currentIndex',
+      'assetPath=${widget.sound.assetPath}',
+    ].join(' | ');
+    if (kDebugMode) {
+      developer.log(
+        '$releaseSafeMessage | stackTrace=$stackTrace | error=$error',
+        name: 'nurtly.sounds',
+      );
       return;
     }
-    final playerException = error is PlayerException ? error : null;
-    debugPrint(
-      [
-        '[sounds] playback error',
-        'type=${error.runtimeType}',
-        if (playerException != null) 'code=${playerException.code}',
-        if (playerException != null) 'message=${playerException.message}',
-        'index=${_player.currentIndex}',
-        'assetPath=${widget.sound.assetPath}',
-        'error=$error',
-        'stackTrace=$stackTrace',
-      ].join(' | '),
-    );
+    developer.log(releaseSafeMessage, name: 'nurtly.sounds');
   }
 
   Duration _fadeWindow(Duration duration) {
@@ -455,13 +589,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     if (_isLoading) {
       return widget.strings.loading;
     }
-    if (_player.playing) {
+    if (_isPlaying) {
       return widget.strings.playing;
     }
-    if (_player.position == Duration.zero) {
-      return widget.strings.ready;
-    }
-    if (_player.processingState == ProcessingState.ready) {
+    if (_currentPlayerState.processingState == ProcessingState.ready) {
       return widget.strings.paused;
     }
     return widget.strings.ready;
@@ -767,7 +898,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildControls() {
-    final isPlaying = _player.playing;
+    final isPlaying = _isPlaying;
     return Padding(
       key: const ValueKey('sound-player-controls'),
       padding: const EdgeInsets.only(top: AppSpacing.xs),
@@ -807,6 +938,127 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         ),
       ),
     );
+  }
+
+  bool get _isPlaying => widget.playbackHarness?.playing ?? _player.playing;
+
+  int? get _currentIndex =>
+      widget.playbackHarness?.currentIndex ?? _player.currentIndex;
+
+  PlayerState get _currentPlayerState =>
+      widget.playbackHarness?.playerState ?? _player.playerState;
+
+  Stream<PlayerState> get _playerStateStream =>
+      widget.playbackHarness?.playerStateStream ?? _player.playerStateStream;
+
+  Stream<PlaybackEvent> get _playbackEventStream =>
+      widget.playbackHarness?.playbackEventStream ??
+      _player.playbackEventStream;
+}
+
+class SoundPlaybackHarness {
+  SoundPlaybackHarness({
+    PlayerState? initialState,
+    this.currentIndex,
+  }) : _playerState = initialState ?? PlayerState(false, ProcessingState.idle);
+
+  final StreamController<PlayerState> _playerStateController =
+      StreamController<PlayerState>.broadcast();
+  final StreamController<PlaybackEvent> _playbackEventController =
+      StreamController<PlaybackEvent>.broadcast();
+  PlayerState _playerState;
+  Future<void> Function()? onStartRequested;
+  Future<void> Function()? onPauseRequested;
+  int startAttempts = 0;
+  int pauseCalls = 0;
+
+  int? currentIndex;
+
+  Stream<PlayerState> get playerStateStream => _playerStateController.stream;
+  Stream<PlaybackEvent> get playbackEventStream =>
+      _playbackEventController.stream;
+  PlayerState get playerState => _playerState;
+  bool get playing => _playerState.playing;
+
+  Future<void> requestStart({Future<void> Function()? fallback}) async {
+    startAttempts++;
+    if (onStartRequested != null) {
+      await onStartRequested!();
+      return;
+    }
+    if (fallback != null) {
+      await fallback();
+    }
+  }
+
+  Future<void> requestPause({Future<void> Function()? fallback}) async {
+    pauseCalls++;
+    if (onPauseRequested != null) {
+      await onPauseRequested!();
+      return;
+    }
+    if (fallback != null) {
+      await fallback();
+    }
+  }
+
+  void updateState({
+    bool? playing,
+    ProcessingState? processingState,
+    int? currentIndex,
+  }) {
+    _playerState = PlayerState(
+      playing ?? _playerState.playing,
+      processingState ?? _playerState.processingState,
+    );
+    this.currentIndex = currentIndex ?? this.currentIndex;
+    _playerStateController.add(_playerState);
+    _playbackEventController.add(
+      PlaybackEvent(
+        currentIndex: this.currentIndex,
+        updatePosition: Duration.zero,
+        bufferedPosition: Duration.zero,
+        duration: Duration.zero,
+      ),
+    );
+  }
+
+  void markReadyPlaying({int? currentIndex}) {
+    updateState(
+      playing: true,
+      processingState: ProcessingState.ready,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void markReadyPaused({int? currentIndex}) {
+    updateState(
+      playing: false,
+      processingState: ProcessingState.ready,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void markIdlePaused({int? currentIndex}) {
+    updateState(
+      playing: false,
+      processingState: ProcessingState.idle,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void emitError(Object error) {
+    if (onErrorRequested != null) {
+      onErrorRequested!(error, StackTrace.current);
+    }
+    _playbackEventController.addError(error);
+  }
+
+  Future<void> Function(Object error, StackTrace stackTrace)? onErrorRequested;
+
+  Future<void> dispose() async {
+    await _playerStateController.close();
+    await _playbackEventController.close();
   }
 }
 

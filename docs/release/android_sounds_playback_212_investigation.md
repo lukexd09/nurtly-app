@@ -49,11 +49,11 @@ Conclusion: the `.mp3` extensions are correct and the files are valid MP3 assets
 - The generated Flutter asset bundle contains the expected sound assets.
 - `AssetManifest` generation succeeded for the debug asset bundle.
 
-## Root cause
+## Working hypothesis
 
 The local investigation did not reproduce a bad audio format or missing asset bundle entry.
 
-The most likely fix is to remove the playlist workaround and load the bundled sound as a single asset with `LoopMode.one`, while improving error logging so the Android release failure can be distinguished from content issues in future reports.
+The playlist workaround is the best candidate remaining from the local evidence, so the current fix is to load the bundled sound as a single asset with `LoopMode.one` while improving error logging so the Android release failure can be distinguished from content issues in future reports.
 
 ## Fix applied
 
@@ -65,13 +65,14 @@ The most likely fix is to remove the playlist workaround and load the bundled so
 
 ## Automated tests
 
-- `flutter pub get --enforce-lockfile`
-- `flutter build bundle`
-- `dart format --output=none --set-exit-if-changed .` planned for validation
-- `flutter analyze` planned for validation
-- `flutter test --reporter expanded` planned for validation
-- `flutter test --coverage` planned for validation
-- `flutter build apk --debug` planned for validation
+- `flutter pub get --enforce-lockfile` - PASS
+- `flutter build bundle` - PASS
+- `dart format --output=none --set-exit-if-changed .` - final result after fixes
+- `flutter analyze` - final result after fixes
+- `flutter test --reporter expanded` - final result after fixes
+- `flutter test --coverage` - final result after fixes
+- `flutter build apk --debug` - final result after fixes
+- `flutter build apk --release` - NOT RUN / BLOCKED LOCALLY: missing `key.properties`
 
 ## Manual QA still required
 
@@ -79,4 +80,3 @@ The most likely fix is to remove the playlist workaround and load the bundled so
 - Verify playback, pause, resume, loop, timer, fade-out, and recovery after a failed play attempt.
 - Confirm that the Play-installed release build now plays `soft_rain.mp3` and the other bundled sounds.
 - Record the final Google Play evidence separately after the next upload.
-
