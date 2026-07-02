@@ -137,6 +137,70 @@ void main() {
     );
   });
 
+  testWidgets('passes the configured asset path to the sound loader',
+      (tester) async {
+    String? capturedAssetPath;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundDetailScreen(
+          strings: AppStrings.english,
+          sound: const SoundItem(
+            id: 'sound_asset_path_test',
+            title: 'Asset path test',
+            category: 'Nature',
+            summary: 'A sound used for loader verification.',
+            assetPath: 'assets/audio/soft_rain.mp3',
+            unlockType: 'free',
+          ),
+          loadSoundAsset: (player, assetPath) async {
+            capturedAssetPath = assetPath;
+          },
+          startPlayback: (_) async {},
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pumpAndSettle();
+
+    expect(capturedAssetPath, 'assets/audio/soft_rain.mp3');
+    expect(find.textContaining(AppStrings.english.couldNotPlay), findsNothing);
+  });
+
+  testWidgets('keeps the player ready to retry after playback failure',
+      (tester) async {
+    var playbackAttempts = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SoundDetailScreen(
+          strings: AppStrings.english,
+          sound: const SoundItem(
+            id: 'sound_failure_test',
+            title: 'Failure test',
+            category: 'Nature',
+            summary: 'A sound used for failure verification.',
+            assetPath: 'assets/audio/soft_rain.mp3',
+            unlockType: 'free',
+          ),
+          loadSoundAsset: (player, assetPath) async {},
+          startPlayback: (_) async {
+            playbackAttempts++;
+            throw StateError('simulated playback failure');
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('sound-player-primary-control')));
+    await tester.pumpAndSettle();
+
+    expect(playbackAttempts, 1);
+    expect(find.byKey(const ValueKey('sound-player-primary-control')),
+        findsOneWidget);
+  });
+
   testWidgets(
     'premium sound cards open paywall for free users and detail for premium users',
     (tester) async {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -219,10 +220,15 @@ class SoundDetailScreen extends StatefulWidget {
     required this.sound,
     required this.strings,
     super.key,
+    this.loadSoundAsset = loadLoopingSoundAsset,
+    this.startPlayback,
   });
 
   final SoundItem sound;
   final AppStrings strings;
+  final Future<void> Function(AudioPlayer player, String assetPath)
+      loadSoundAsset;
+  final Future<void> Function(AudioPlayer player)? startPlayback;
 
   @override
   State<SoundDetailScreen> createState() => _SoundDetailScreenState();
@@ -286,52 +292,54 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
     try {
       if (_player.audioSource == null) {
-        await _loadGaplessLoopPlaylist();
+        await _loadSoundAsset();
       }
+      if (!mounted) {
+        return;
+      }
+      await _startPlayback();
       if (!mounted) {
         return;
       }
       setState(() {
         _isLoading = false;
       });
-      unawaited(
-        _player.play().then((_) {}).catchError((Object _) async {
-          _cancelSessionTimer();
-          await _restoreVolume();
-          await _player.pause();
-          await _player.seek(Duration.zero);
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _errorMessage = widget.strings.couldNotPlay;
-            _isLoading = false;
-            _draggingProgress = null;
-          });
-        }),
-      );
       _startSessionTimerIfNeeded();
-    } catch (_) {
-      _cancelSessionTimer();
-      await _restoreVolume();
-      await _player.pause();
-      await _player.seek(Duration.zero);
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _errorMessage = widget.strings.couldNotPlay;
-        _isLoading = false;
-        _draggingProgress = null;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.strings.couldNotPlaySound)),
-      );
+    } catch (error, stackTrace) {
+      await _handlePlaybackError(error, stackTrace);
     }
   }
 
-  Future<void> _loadGaplessLoopPlaylist() async {
-    await loadLoopingSoundAsset(_player, widget.sound.assetPath);
+  Future<void> _loadSoundAsset() async {
+    await widget.loadSoundAsset(_player, widget.sound.assetPath);
+  }
+
+  Future<void> _startPlayback() async {
+    final starter = widget.startPlayback ?? (player) => player.play();
+    await starter(_player);
+  }
+
+  Future<void> _handlePlaybackError(Object error, StackTrace stackTrace) async {
+    _cancelSessionTimer();
+    try {
+      await _restoreVolume();
+      await _player.pause();
+      await _player.seek(Duration.zero);
+    } catch (cleanupError, cleanupStackTrace) {
+      _logPlaybackError(cleanupError, cleanupStackTrace);
+    }
+    _logPlaybackError(error, stackTrace);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _errorMessage = widget.strings.couldNotPlay;
+      _isLoading = false;
+      _draggingProgress = null;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(widget.strings.couldNotPlaySound)),
+    );
   }
 
   void _selectSessionDuration(Duration? duration) {
@@ -413,6 +421,25 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   Future<void> _restoreVolume() async {
     await _player.setVolume(_normalVolume);
+  }
+
+  void _logPlaybackError(Object error, StackTrace stackTrace) {
+    if (!kDebugMode) {
+      return;
+    }
+    final playerException = error is PlayerException ? error : null;
+    debugPrint(
+      [
+        '[sounds] playback error',
+        'type=${error.runtimeType}',
+        if (playerException != null) 'code=${playerException.code}',
+        if (playerException != null) 'message=${playerException.message}',
+        'index=${_player.currentIndex}',
+        'assetPath=${widget.sound.assetPath}',
+        'error=$error',
+        'stackTrace=$stackTrace',
+      ].join(' | '),
+    );
   }
 
   Duration _fadeWindow(Duration duration) {

@@ -15,6 +15,8 @@ It is not legal advice and does not describe future audio roadmap items beyond t
 - The primary control toggles play and pause.
 - The current detail screen does not expose a dedicated stop button.
 - The selected sound remains the only active sound in the player UI flow.
+- Bundled sounds are loaded as a single asset source and loop with `LoopMode.one`.
+- Development builds log playback errors with technical details for diagnosis.
 - Timer presets are available: 15, 30, 60, and continuous play.
 - When a timer is set, fade-out is applied near the end of the selected session.
 - Continuous play keeps playback looping without a session timer.
