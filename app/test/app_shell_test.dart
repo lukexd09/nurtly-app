@@ -310,7 +310,7 @@ void main() {
           loadEntitlement: PremiumEntitlement.free(
             checkedAt: DateTime.utc(2026, 5, 26, 12),
           ),
-          refreshEntitlement: PremiumEntitlement.yearlyActive(
+          refreshEntitlement: PremiumEntitlement.free(
             checkedAt: DateTime.utc(2026, 5, 26, 12),
           ),
         ),
@@ -321,6 +321,7 @@ void main() {
 
       await tester.tap(find.text('Play'));
       await tester.pumpAndSettle();
+      expect(find.text('Sponsored space'), findsNothing);
       await tester.scrollUntilVisible(
         find.text('Premium play idea'),
         80,
@@ -339,6 +340,7 @@ void main() {
 
       await tester.tap(find.text('Sounds'));
       await tester.pumpAndSettle();
+      expect(find.text('Sponsored space'), findsNothing);
       await tester.scrollUntilVisible(
         find.text('Premium sound'),
         80,
