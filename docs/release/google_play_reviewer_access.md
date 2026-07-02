@@ -5,7 +5,7 @@ Use this text in Google Play Console when submitting a build that contains restr
 ## Play Console instructions
 
 1. Open the app and go to `Settings`.
-2. In `About`, tap the section title five times to open the hidden `Reviewer access` dialog.
+2. In `About` (`Informacje` in the Polish UI), tap the section title five times to open the hidden `Reviewer access` dialog.
 3. Enter the reviewer code: `NURTLY-REVIEWER-162`.
 4. Tap `Activate reviewer access`.
 5. If the code is valid, the dialog closes and a confirmation SnackBar appears.

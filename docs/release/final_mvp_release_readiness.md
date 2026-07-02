@@ -16,7 +16,15 @@ Owner-side readiness status: `BLOCKED`
 
 Play Console readiness status: `BLOCKED`
 
-The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, Journal, Privacy & Data, ads policy, localization, and the monetization flows all have code, tests, and release documentation aligned with the current MVP contract. The release pack is still blocked because release-critical evidence is missing or incomplete for bundled sound licensing, release signing, store assets, privacy publication, and Play Console setup.
+Current status addendum:
+
+- The 2026-06-14 audit below is historical and partially superseded by later release evidence.
+- Signed AAB evidence and Internal Testing installation evidence are now recorded in `docs/release/internal_testing_0_1_0_1_evidence.md`.
+- Manual reviewer QA for the signed Internal Testing build is documented in the evidence pack and checklist updates.
+- `#212` and `#213` remain open and keep the release blocked.
+- `#104` and `#125` remain open.
+
+The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, Journal, Privacy & Data, ads policy, localization, and the monetization flows all have code, tests, and release documentation aligned with the current MVP contract. The release pack is still blocked because release-critical evidence is incomplete for store assets, privacy publication, Play Console setup, and the open issues tracked in `#212` and `#213`.
 
 ## Current Assessment
 
@@ -70,7 +78,7 @@ The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, J
 
 ## Sounds Readiness
 
-- Playback: `PASS WITH OWNER ACTION`
+- Playback: `FAIL`
 - Timer: `PASS WITH OWNER ACTION`
 - Loop: `PASS WITH OWNER ACTION`
 - Fade-out: `PASS WITH OWNER ACTION`
@@ -91,9 +99,9 @@ Release notes:
 
 - The implementation exists for the in-screen audio player, timer presets, looping, and fade-out.
 - `sounds_screen_test.dart` covers rendering, navigation, premium gating, and ad placement, but it does not exercise the real audio-player runtime, countdown behavior, fade-volume transition, or app lifecycle transitions on a device.
-- Real-device verification is still required for play, pause, resume, loop, timer countdown, timer completion, fade-out, navigation away from the player, screen lock or background transition, missing or corrupt asset handling, repeated rapid controls, and audio interruption by paywall or ads.
+- Real-device verification still failed in the Play-installed Android release build tracked by `#212`.
 - Background audio remains a post-MVP decision rather than a closed-testing requirement.
-- Missing or unclear sound provenance is a release blocker until confirmed by the owner.
+- Missing or unclear sound provenance remains recorded separately in the release register, but it is not the current blocker addressed by this addendum.
 
 ## Privacy and Data Readiness
 
@@ -237,6 +245,7 @@ Evidence:
 - Owner-machine signing-file check for release AAB generation.
 - Owner-machine Android SDK / build-environment setup and install-path evidence.
 - Real-device Sounds verification.
+- Sounds playback fix validation for `#212`.
 - Final Play Console entry, audience, rating, billing, and tester-group setup.
 - Privacy policy publication and live URL confirmation.
 - Closed-testing upload and real-device smoke evidence.
@@ -264,6 +273,8 @@ See the authoritative register in `docs/release/final_release_blockers.md`.
 - `#127`: close after owner confirmation for the live privacy URL and Play Console publication steps.
 - `#131`: close after owner confirmation for the final Play Console ad configuration and disclosures.
 - `#104 remains open`: do not close automatically.
+- `#212`: keep open until bundled Sounds playback succeeds in the Google Play Android release build.
+- `#213`: keep open until Home daily idea Premium gating is fixed and verified.
 
 ## Automated Verification
 

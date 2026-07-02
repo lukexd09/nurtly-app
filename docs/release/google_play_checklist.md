@@ -130,7 +130,10 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Required closed-testing track fields are complete.
 - [ ] Tester group and invite flow are ready.
 - [ ] Release-candidate evidence is recorded locally.
-- [ ] OWNER / MANUAL QA PENDING: reviewer access, restricted areas, reset flow, and restart persistence are verified on a signed release candidate.
+- [ ] Reviewer access QA completed for build `Internal Testing 0.1.0+1` on the signed release candidate.
+- [ ] Real purchased Premium precedence was not manually run.
+- [ ] Sounds playback remains tracked as a failure in `#212`.
+- [ ] Home daily idea Premium gating remains tracked as a failure in `#213`.
 
 ## 11. Public-release blockers
 

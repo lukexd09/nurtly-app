@@ -61,6 +61,21 @@ If you are preparing a release candidate, copy the final summary into [Closed-te
 - [ ] Test: Cancel a purchase. Expected result: Premium is not unlocked. Notes:
 - [ ] Test: Fail a purchase flow. Expected result: Premium is not unlocked and the app remains usable. Notes:
 
+## Reviewer access
+
+- [ ] Test: Open the hidden access entry point from Settings / About. Expected result: The reviewer dialog opens only after the documented hidden gesture. Notes:
+- [ ] Test: Enter a wrong reviewer code. Expected result: Reviewer access stays disabled and the dialog remains open with an error message. Notes:
+- [ ] Test: Enter the correct reviewer code. Expected result: Reviewer access activates and the confirmation message appears. Notes:
+- [ ] Test: Fully restart the app after activation. Expected result: Reviewer access persists after a cold restart. Notes:
+- [ ] Test: Open Premium Play. Expected result: Reviewer access opens the detail screen instead of the paywall. Notes:
+- [ ] Test: Open Premium Sounds at the access level. Expected result: Reviewer access opens the detail screen instead of the paywall. Notes:
+- [ ] Test: Verify ads are disabled while reviewer access is active. Expected result: Home, Play, and Sounds do not show passive ad placeholders. Notes:
+- [ ] Test: Reset reviewer access. Expected result: Reviewer access is removed. Notes:
+- [ ] Test: Re-open Premium Play and Premium Sounds after reset. Expected result: Locked content shows paywall or blocked behavior again and ads return. Notes:
+- [ ] Test: Re-activate reviewer access after reset. Expected result: Reviewer access becomes active again without side effects. Notes:
+- [ ] Test: Compare the hidden access flow with the Play Console instructions. Expected result: The on-device steps match the documented reviewer flow exactly. Notes:
+- [ ] Test: Reset reviewer access on a build with a real purchased Premium entitlement. Expected result: Real purchased Premium remains active. Notes: Requires a device/account with an actual purchased entitlement.
+
 ## Ads
 
 - [ ] Test: Open Home as a free user. Expected result: A passive banner appears only in the allowed browse area. Notes:
