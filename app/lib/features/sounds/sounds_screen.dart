@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -219,10 +221,19 @@ class SoundDetailScreen extends StatefulWidget {
     required this.sound,
     required this.strings,
     super.key,
+    this.loadSoundAsset = loadLoopingSoundAsset,
+    this.startPlayback,
+    this.playbackDriver,
+    this.sessionTicker,
   });
 
   final SoundItem sound;
   final AppStrings strings;
+  final Future<void> Function(AudioPlayer player, String assetPath)
+      loadSoundAsset;
+  final Future<void> Function(AudioPlayer player)? startPlayback;
+  final SoundPlaybackDriver? playbackDriver;
+  final SoundSessionTicker? sessionTicker;
 
   @override
   State<SoundDetailScreen> createState() => _SoundDetailScreenState();
@@ -230,20 +241,46 @@ class SoundDetailScreen extends StatefulWidget {
 
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
   static const double _normalVolume = 1;
+  static const Duration _playbackStartTimeout = Duration(seconds: 5);
   late final AudioPlayer _player;
-  late final StreamSubscription<PlayerState> _playerSubscription;
+  StreamSubscription<SoundPlaybackState>? _driverStateSubscription;
+  late final StreamSubscription<Object> _runtimeErrorSubscription;
+  StreamSubscription<SoundPlaybackState>? _playerStateSubscription;
   bool _isLoading = false;
   String? _errorMessage;
   double? _draggingProgress;
-  Timer? _sessionTimer;
   Duration? _selectedSessionDuration;
   Duration? _remainingSessionDuration;
+  int _attemptGeneration = 0;
+  Completer<void>? _activeStartCompleter;
+  Timer? _startTimeoutTimer;
+  bool _playbackStartConfirmed = false;
+  bool _attemptErrorHandled = false;
+  late final SoundPlaybackDriver _playbackDriver;
+  late final SoundSessionTicker _sessionTicker;
+  StreamSubscription<Duration>? _positionSubscription;
+  Duration _currentPosition = Duration.zero;
 
   @override
   void initState() {
     super.initState();
     _player = AudioPlayer();
-    _playerSubscription = _player.playerStateStream.listen((_) {
+    _playbackDriver =
+        widget.playbackDriver ?? JustAudioSoundPlaybackDriver(_player);
+    _sessionTicker = widget.sessionTicker ?? TimerSoundSessionTicker();
+    _driverStateSubscription = _playbackDriver.playerStateStream.listen((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    _runtimeErrorSubscription = _playbackDriver.errorStream.listen(
+      (_) {},
+      onError: (Object error, StackTrace stackTrace) {
+        unawaited(_handlePlaybackError(error, stackTrace));
+      },
+    );
+    _positionSubscription = _playbackDriver.positionStream.listen((position) {
+      _currentPosition = position;
       if (mounted) {
         setState(() {});
       }
@@ -253,14 +290,19 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   @override
   void dispose() {
     _cancelSessionTimer();
+    _cancelStartTimeout();
+    _invalidatePendingAttempt();
     unawaited(_restoreVolume());
-    _playerSubscription.cancel();
-    _player.dispose();
+    _driverStateSubscription?.cancel();
+    _runtimeErrorSubscription.cancel();
+    _positionSubscription?.cancel();
+    _sessionTicker.dispose();
+    _playbackDriver.dispose();
     super.dispose();
   }
 
   Future<void> _togglePlayPause() async {
-    if (_isLoading) {
+    if (_isLoading && !_isPlaying) {
       return;
     }
 
@@ -270,11 +312,14 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       });
     }
 
-    if (_player.playing) {
-      await _player.pause();
+    if (_isPlaying) {
+      _invalidatePendingAttempt();
+      await _playbackDriver.pause();
       _pauseSessionTimer();
       if (mounted) {
-        setState(() {});
+        setState(() {
+          _isLoading = false;
+        });
       }
       return;
     }
@@ -286,52 +331,155 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
     try {
       if (_player.audioSource == null) {
-        await _loadGaplessLoopPlaylist();
+        await _loadSoundAsset();
       }
       if (!mounted) {
         return;
       }
-      setState(() {
-        _isLoading = false;
-      });
-      unawaited(
-        _player.play().then((_) {}).catchError((Object _) async {
-          _cancelSessionTimer();
-          await _restoreVolume();
-          await _player.pause();
-          await _player.seek(Duration.zero);
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _errorMessage = widget.strings.couldNotPlay;
-            _isLoading = false;
-            _draggingProgress = null;
-          });
-        }),
-      );
-      _startSessionTimerIfNeeded();
-    } catch (_) {
-      _cancelSessionTimer();
-      await _restoreVolume();
-      await _player.pause();
-      await _player.seek(Duration.zero);
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _errorMessage = widget.strings.couldNotPlay;
-        _isLoading = false;
-        _draggingProgress = null;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.strings.couldNotPlaySound)),
-      );
+      unawaited(_beginPlaybackAttempt());
+    } catch (error, stackTrace) {
+      await _handlePlaybackError(error, stackTrace);
     }
   }
 
-  Future<void> _loadGaplessLoopPlaylist() async {
-    await loadLoopingSoundAsset(_player, widget.sound.assetPath);
+  Future<void> _loadSoundAsset() async {
+    await widget.loadSoundAsset(_player, widget.sound.assetPath);
+  }
+
+  Future<void> _startPlayback() async {
+    if (widget.startPlayback != null) {
+      await widget.startPlayback!(_player);
+      return;
+    }
+    await _playbackDriver.play();
+  }
+
+  Future<void> _handlePlaybackError(
+    Object error,
+    StackTrace stackTrace, {
+    int? generation,
+  }) async {
+    final activeGeneration = generation ?? _attemptGeneration;
+    if (activeGeneration != _attemptGeneration || _attemptErrorHandled) {
+      return;
+    }
+    _invalidatePendingAttempt();
+    _attemptErrorHandled = true;
+    _cancelSessionTimer();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        _draggingProgress = null;
+      });
+    }
+    try {
+      await _restoreVolume();
+      await _playbackDriver.pause();
+      await _playbackDriver.seek(Duration.zero);
+    } catch (cleanupError, cleanupStackTrace) {
+      _logPlaybackError(cleanupError, cleanupStackTrace);
+    }
+    _logPlaybackError(error, stackTrace);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _errorMessage = widget.strings.couldNotPlay;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(widget.strings.couldNotPlaySound)),
+    );
+  }
+
+  Future<void> _beginPlaybackAttempt() async {
+    final generation = ++_attemptGeneration;
+    _playbackStartConfirmed = false;
+    _attemptErrorHandled = false;
+    final startCompleter = Completer<void>();
+    _activeStartCompleter = startCompleter;
+    _cancelStartTimeout();
+    _startTimeoutTimer = Timer(_playbackStartTimeout, () {
+      if (!mounted || generation != _attemptGeneration) {
+        return;
+      }
+      unawaited(
+        _handlePlaybackError(
+          TimeoutException('Playback start timed out'),
+          StackTrace.current,
+          generation: generation,
+        ),
+      );
+    });
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = _playerStateStream.listen((playerState) {
+      _handlePlayerStateUpdate(generation, playerState);
+    });
+    unawaited(_startPlayback().catchError((error, stackTrace) {
+      if (!mounted ||
+          generation != _attemptGeneration ||
+          _attemptErrorHandled) {
+        return;
+      }
+      unawaited(
+          _handlePlaybackError(error, stackTrace, generation: generation));
+    }));
+    _maybeMarkPlaybackStarted(generation);
+  }
+
+  void _handlePlayerStateUpdate(int generation, SoundPlaybackState state) {
+    if (!mounted || generation != _attemptGeneration) {
+      return;
+    }
+    _maybeMarkPlaybackStarted(generation, state);
+  }
+
+  void _maybeMarkPlaybackStarted(int generation, [SoundPlaybackState? state]) {
+    if (generation != _attemptGeneration || !mounted) {
+      return;
+    }
+    final currentState = state ?? _currentPlayerState;
+    final started = currentState.playing && currentState.ready;
+    if (!started) {
+      return;
+    }
+    if (_playbackStartConfirmed) {
+      return;
+    }
+    _playbackStartConfirmed = true;
+    _cancelStartTimeout();
+    _cancelStartListeners();
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _startSessionTimerIfNeeded();
+    if (!(_activeStartCompleter?.isCompleted ?? true)) {
+      _activeStartCompleter?.complete();
+    }
+  }
+
+  void _cancelStartListeners() {
+    _playerStateSubscription?.cancel();
+    _playerStateSubscription = null;
+    _completeActiveStart();
+  }
+
+  void _invalidatePendingAttempt() {
+    _attemptGeneration++;
+    _cancelStartListeners();
+  }
+
+  void _completeActiveStart() {
+    if (!(_activeStartCompleter?.isCompleted ?? true)) {
+      _activeStartCompleter?.complete();
+    }
+    _activeStartCompleter = null;
+  }
+
+  void _cancelStartTimeout() {
+    _startTimeoutTimer?.cancel();
+    _startTimeoutTimer = null;
   }
 
   void _selectSessionDuration(Duration? duration) {
@@ -339,7 +487,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     _selectedSessionDuration = duration;
     _remainingSessionDuration = duration;
     unawaited(_restoreVolume());
-    if (_player.playing) {
+    if (_isPlaying) {
       _startSessionTimerIfNeeded();
     }
     if (mounted) {
@@ -349,38 +497,45 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
 
   void _startSessionTimerIfNeeded() {
     final selectedDuration = _selectedSessionDuration;
-    if (selectedDuration == null) {
+    if (selectedDuration == null || _sessionTicker.isRunning) {
       return;
     }
-    _cancelSessionTimer();
-    if (_remainingSessionDuration == null ||
-        _remainingSessionDuration! <= Duration.zero) {
-      _remainingSessionDuration = selectedDuration;
+    _remainingSessionDuration ??= selectedDuration;
+    unawaited(_updateFadeVolume());
+    _sessionTicker.start(_handleSessionTick);
+  }
+
+  void _handleSessionTick() {
+    final remaining = _remainingSessionDuration;
+    final selectedDuration = _selectedSessionDuration;
+    if (remaining == null || selectedDuration == null) {
+      _cancelSessionTimer();
+      return;
     }
-    _updateFadeVolume();
-    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (_) async {
-      final remaining = _remainingSessionDuration;
-      if (remaining == null) {
-        _cancelSessionTimer();
-        return;
-      }
-      final nextRemaining = remaining - const Duration(seconds: 1);
-      if (nextRemaining <= Duration.zero) {
-        _remainingSessionDuration = selectedDuration;
-        _cancelSessionTimer();
-        await _player.pause();
-        await _restoreVolume();
-        if (mounted) {
-          setState(() {});
-        }
-        return;
-      }
-      _remainingSessionDuration = nextRemaining;
-      await _updateFadeVolume();
+    final nextRemaining = remaining - const Duration(seconds: 1);
+    if (nextRemaining <= Duration.zero) {
+      _remainingSessionDuration = selectedDuration;
+      _cancelSessionTimer();
       if (mounted) {
         setState(() {});
       }
-    });
+      unawaited(_completeTimedSession());
+      return;
+    }
+    _remainingSessionDuration = nextRemaining;
+    if (mounted) {
+      setState(() {});
+    }
+    unawaited(_updateFadeVolume());
+  }
+
+  Future<void> _completeTimedSession() async {
+    try {
+      await _playbackDriver.pause();
+      await _restoreVolume();
+    } catch (error, stackTrace) {
+      _logPlaybackError(error, stackTrace);
+    }
   }
 
   void _pauseSessionTimer() {
@@ -389,11 +544,13 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   void _cancelSessionTimer() {
-    _sessionTimer?.cancel();
-    _sessionTimer = null;
+    _sessionTicker.stop();
   }
 
   Future<void> _updateFadeVolume() async {
+    if (_player.audioSource == null) {
+      return;
+    }
     final selectedDuration = _selectedSessionDuration;
     final remaining = _remainingSessionDuration;
     if (selectedDuration == null || remaining == null) {
@@ -412,7 +569,31 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Future<void> _restoreVolume() async {
+    if (_player.audioSource == null) {
+      return;
+    }
     await _player.setVolume(_normalVolume);
+  }
+
+  void _logPlaybackError(Object error, StackTrace stackTrace) {
+    final playerException = error is PlayerException ? error : null;
+    final releaseSafeMessage = [
+      '[sounds] playback error',
+      'type=${error.runtimeType}',
+      if (playerException != null) 'code=${playerException.code}',
+      if (playerException != null) 'message=${playerException.message}',
+      if (playerException != null) 'index=${playerException.index}',
+      'currentIndex=$_currentIndex',
+      'assetPath=${widget.sound.assetPath}',
+    ].join(' | ');
+    if (kDebugMode) {
+      developer.log(
+        '$releaseSafeMessage | stackTrace=$stackTrace | error=$error',
+        name: 'nurtly.sounds',
+      );
+      return;
+    }
+    developer.log(releaseSafeMessage, name: 'nurtly.sounds');
   }
 
   Duration _fadeWindow(Duration duration) {
@@ -428,13 +609,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     if (_isLoading) {
       return widget.strings.loading;
     }
-    if (_player.playing) {
+    if (_isPlaying) {
       return widget.strings.playing;
     }
-    if (_player.position == Duration.zero) {
-      return widget.strings.ready;
-    }
-    if (_player.processingState == ProcessingState.ready) {
+    if (_currentPlayerState.ready) {
       return widget.strings.paused;
     }
     return widget.strings.ready;
@@ -457,8 +635,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Duration _durationOrZero() {
-    final duration = _player.duration;
-    if (duration == null || duration.inMilliseconds <= 0) {
+    final duration = _playbackDriver.duration;
+    if (duration.inMilliseconds <= 0) {
       return Duration.zero;
     }
     return duration;
@@ -473,83 +651,6 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
       milliseconds: (duration.inMilliseconds * value).round(),
     );
     await _player.seek(target);
-  }
-
-  Widget _buildPlayerPanel() {
-    return DecoratedBox(
-      key: const ValueKey('sound-player-card'),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: AppRadii.panelRadius,
-        border: Border.all(color: AppColors.borderSoft),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Material(
-                color: AppColors.surface,
-                shape: const CircleBorder(
-                  side: BorderSide(color: AppColors.borderSoft),
-                ),
-                child: IconButton(
-                  key: const ValueKey('sound-detail-back-button'),
-                  tooltip: widget.strings.back,
-                  color: AppColors.primary,
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            _buildArtworkMoodPanel(),
-            const SizedBox(height: 4),
-            Text(
-              widget.sound.title,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.screenTitle,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              widget.sound.summary,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.body,
-            ),
-            const SizedBox(height: 2),
-            _SoundMetadata(
-              sound: widget.sound,
-              strings: widget.strings,
-              showUnlockType: false,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              _statusText(),
-              key: const ValueKey('sound-player-status'),
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 4),
-            _buildProgressControl(),
-            const SizedBox(height: 4),
-            _buildSessionOptions(),
-            const SizedBox(height: 2),
-            _buildAutoFadeIndicator(),
-            const SizedBox(height: 4),
-            _buildControls(),
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: _buildSafetyNote(),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildArtworkMoodPanel() {
@@ -667,80 +768,73 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Widget _buildProgressControl() {
-    return StreamBuilder<Duration>(
-      stream: _player.positionStream,
-      initialData: Duration.zero,
-      builder: (context, snapshot) {
-        final duration = _durationOrZero();
-        final position = _draggingProgress != null
-            ? Duration(
-                milliseconds:
-                    (duration.inMilliseconds * _draggingProgress!).round(),
-              )
-            : snapshot.data ?? Duration.zero;
-        final canSeek = duration != Duration.zero;
-        final value = canSeek
-            ? (position.inMilliseconds / duration.inMilliseconds)
-                .clamp(0.0, 1.0)
-            : 0.0;
-        final durationLabel = canSeek ? _formatDuration(duration) : '--:--';
+    final duration = _durationOrZero();
+    final position = _draggingProgress != null
+        ? Duration(
+            milliseconds:
+                (duration.inMilliseconds * _draggingProgress!).round(),
+          )
+        : _currentPosition;
+    final canSeek = duration != Duration.zero;
+    final value = canSeek
+        ? (position.inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0)
+        : 0.0;
+    final durationLabel = canSeek ? _formatDuration(duration) : '--:--';
 
-        return Column(
-          key: const ValueKey('sound-player-progress'),
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      key: const ValueKey('sound-player-progress'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            trackHeight: 8,
+            thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: 8,
+              disabledThumbRadius: 8,
+            ),
+            overlayShape: const RoundSliderOverlayShape(
+              overlayRadius: 18,
+            ),
+            activeTrackColor: AppColors.primary,
+            inactiveTrackColor: AppColors.borderSoft,
+            thumbColor: AppColors.primary,
+            disabledActiveTrackColor: AppColors.borderSoft,
+            disabledInactiveTrackColor: AppColors.borderSoft,
+          ),
+          child: Slider(
+            value: value,
+            onChanged: canSeek
+                ? (value) {
+                    setState(() {
+                      _draggingProgress = value;
+                    });
+                  }
+                : null,
+            onChangeEnd: canSeek
+                ? (value) async {
+                    await _seekToFraction(value);
+                    if (mounted) {
+                      setState(() {
+                        _draggingProgress = null;
+                      });
+                    }
+                  }
+                : null,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: 8,
-                thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: 8,
-                  disabledThumbRadius: 8,
-                ),
-                overlayShape: const RoundSliderOverlayShape(
-                  overlayRadius: 18,
-                ),
-                activeTrackColor: AppColors.primary,
-                inactiveTrackColor: AppColors.borderSoft,
-                thumbColor: AppColors.primary,
-                disabledActiveTrackColor: AppColors.borderSoft,
-                disabledInactiveTrackColor: AppColors.borderSoft,
-              ),
-              child: Slider(
-                value: value,
-                onChanged: canSeek
-                    ? (value) {
-                        setState(() {
-                          _draggingProgress = value;
-                        });
-                      }
-                    : null,
-                onChangeEnd: canSeek
-                    ? (value) async {
-                        await _seekToFraction(value);
-                        if (mounted) {
-                          setState(() {
-                            _draggingProgress = null;
-                          });
-                        }
-                      }
-                    : null,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(_formatDuration(position), style: AppTextStyles.caption),
-                Text(durationLabel, style: AppTextStyles.caption),
-              ],
-            ),
+            Text(_formatDuration(position), style: AppTextStyles.caption),
+            Text(durationLabel, style: AppTextStyles.caption),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
 
   Widget _buildControls() {
-    final isPlaying = _player.playing;
+    final isPlaying = _isPlaying;
     return Padding(
       key: const ValueKey('sound-player-controls'),
       padding: const EdgeInsets.only(top: AppSpacing.xs),
@@ -780,6 +874,229 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildPlayerPanel() {
+    return DecoratedBox(
+      key: const ValueKey('sound-player-card'),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: AppRadii.panelRadius,
+        border: Border.all(color: AppColors.borderSoft),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Material(
+                color: AppColors.surface,
+                shape: const CircleBorder(
+                  side: BorderSide(color: AppColors.borderSoft),
+                ),
+                child: IconButton(
+                  key: const ValueKey('sound-detail-back-button'),
+                  tooltip: widget.strings.back,
+                  color: AppColors.primary,
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            _buildArtworkMoodPanel(),
+            const SizedBox(height: 4),
+            Text(
+              widget.sound.title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.screenTitle,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              widget.sound.summary,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: 2),
+            _SoundMetadata(
+              sound: widget.sound,
+              strings: widget.strings,
+              showUnlockType: false,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _statusText(),
+              key: const ValueKey('sound-player-status'),
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            _buildProgressControl(),
+            const SizedBox(height: 4),
+            _buildSessionOptions(),
+            const SizedBox(height: 2),
+            _buildAutoFadeIndicator(),
+            const SizedBox(height: 4),
+            _buildControls(),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: _buildSafetyNote(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  bool get _isPlaying => _playbackDriver.playerState.playing;
+
+  int? get _currentIndex => _playbackDriver.currentIndex;
+
+  SoundPlaybackState get _currentPlayerState => _playbackDriver.playerState;
+
+  Stream<SoundPlaybackState> get _playerStateStream =>
+      _playbackDriver.playerStateStream;
+}
+
+abstract interface class SoundSessionTicker {
+  void start(void Function() onTick);
+  void stop();
+  bool get isRunning;
+  void dispose();
+}
+
+class TimerSoundSessionTicker implements SoundSessionTicker {
+  Timer? _timer;
+  void Function()? _onTick;
+
+  @override
+  void start(void Function() onTick) {
+    if (_timer != null) {
+      return;
+    }
+    _onTick = onTick;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _onTick?.call();
+    });
+  }
+
+  @override
+  void stop() {
+    _timer?.cancel();
+    _timer = null;
+    _onTick = null;
+  }
+
+  @override
+  bool get isRunning => _timer != null;
+
+  @override
+  void dispose() {
+    stop();
+  }
+}
+
+class SoundPlaybackState {
+  const SoundPlaybackState({
+    required this.playing,
+    required this.ready,
+    this.currentIndex,
+  });
+
+  final bool playing;
+  final bool ready;
+  final int? currentIndex;
+}
+
+abstract interface class SoundPlaybackDriver {
+  Stream<SoundPlaybackState> get playerStateStream;
+  Stream<Object> get errorStream;
+  Stream<Duration> get positionStream;
+  SoundPlaybackState get playerState;
+  int? get currentIndex;
+  Duration get duration;
+
+  Future<void> play();
+  Future<void> pause();
+  Future<void> seek(Duration position);
+  Future<void> setVolume(double volume);
+  Future<void> dispose();
+}
+
+class JustAudioSoundPlaybackDriver implements SoundPlaybackDriver {
+  JustAudioSoundPlaybackDriver(this.player) {
+    _init();
+  }
+
+  final AudioPlayer player;
+  final StreamController<SoundPlaybackState> _stateController =
+      StreamController<SoundPlaybackState>.broadcast();
+  final StreamController<Object> _errorController =
+      StreamController<Object>.broadcast();
+  late final StreamSubscription<PlayerState> _stateSubscription;
+  late final StreamSubscription<PlaybackEvent> _errorSubscription;
+  SoundPlaybackState _state =
+      const SoundPlaybackState(playing: false, ready: false);
+
+  void _init() {
+    _stateSubscription = player.playerStateStream.listen((state) {
+      _state = SoundPlaybackState(
+        playing: state.playing,
+        ready: state.processingState == ProcessingState.ready,
+        currentIndex: player.currentIndex,
+      );
+      _stateController.add(_state);
+    });
+    _errorSubscription = player.playbackEventStream.listen(
+      (_) {},
+      onError: (Object error, StackTrace stackTrace) {
+        _errorController.addError(error, stackTrace);
+      },
+    );
+  }
+
+  @override
+  Stream<SoundPlaybackState> get playerStateStream => _stateController.stream;
+
+  @override
+  Stream<Object> get errorStream => _errorController.stream;
+
+  @override
+  SoundPlaybackState get playerState => _state;
+
+  @override
+  int? get currentIndex => player.currentIndex;
+
+  @override
+  Stream<Duration> get positionStream => player.positionStream;
+
+  @override
+  Duration get duration => player.duration ?? Duration.zero;
+
+  @override
+  Future<void> play() => player.play();
+
+  @override
+  Future<void> pause() => player.pause();
+
+  @override
+  Future<void> seek(Duration position) => player.seek(position);
+
+  @override
+  Future<void> setVolume(double volume) => player.setVolume(volume);
+
+  @override
+  Future<void> dispose() async {
+    await _stateSubscription.cancel();
+    await _errorSubscription.cancel();
+    await _stateController.close();
+    await _errorController.close();
+    await player.dispose();
   }
 }
 
