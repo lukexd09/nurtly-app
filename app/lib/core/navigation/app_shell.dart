@@ -218,10 +218,20 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   Future<void> _openTodaysIdea() async {
     try {
       final package = await _contentLoaderForCurrentLanguage().load();
-      if (!mounted || package.playIdeas.isEmpty) {
+      if (!mounted) {
         return;
       }
-      final idea = selectDailyPlayIdea(package.playIdeas, DateTime.now());
+      final idea = selectAccessibleDailyPlayIdea(
+        package.playIdeas,
+        DateTime.now(),
+        canAccessPremiumContent: _premiumController.canAccessPremiumContent,
+      );
+      if (idea == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_strings.todaysIdeaUnavailable)),
+        );
+        return;
+      }
       final suggestedSound = resolveSuggestedSound(idea, package.sounds);
       await Navigator.of(context).push(
         MaterialPageRoute<void>(

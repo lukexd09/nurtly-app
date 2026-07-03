@@ -137,6 +137,243 @@ void main() {
     expect(find.text('Start with one small moment'), findsOneWidget);
   });
 
+  testWidgets('Home daily free idea opens detail without paywall',
+      (tester) async {
+    final loader = _TodayIdeaContentLoader(
+      ideas: _ideasOrderedForToday(
+        [
+          _shellPlayIdea('home_free_a', 'Home free A', unlockType: 'free'),
+          _shellPlayIdea(
+            'home_premium_b',
+            'Home premium B',
+            unlockType: 'premium',
+          ),
+        ],
+        selectedIndex: 0,
+      ),
+    );
+    await _pumpNurtlyApp(tester, contentLoader: loader);
+
+    await tester.scrollUntilVisible(find.text("Open today's idea"), 80);
+    await tester.tap(find.text("Open today's idea").first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Home free A'), findsWidgets);
+    expect(find.text('What to expect'), findsOneWidget);
+    expect(find.text('Nurtly Premium'), findsNothing);
+    expect(find.text('Unlock this with Premium.'), findsNothing);
+  });
+
+  testWidgets(
+    'Home premium daily idea falls back for free user without paywall',
+    (tester) async {
+      final loader = _TodayIdeaContentLoader(
+        ideas: _ideasOrderedForToday(
+          [
+            _shellPlayIdea(
+              'home_premium_a',
+              'Home premium A',
+              unlockType: 'premium',
+            ),
+            _shellPlayIdea(
+              'home_premium_b',
+              'Home premium B',
+              unlockType: 'premium',
+            ),
+            _shellPlayIdea('home_free_c', 'Home free C', unlockType: 'free'),
+            _shellPlayIdea('home_free_d', 'Home free D', unlockType: 'free'),
+          ],
+          selectedIndex: 1,
+        ),
+      );
+      await _pumpNurtlyApp(tester, contentLoader: loader);
+
+      final todaysIdea = find
+          .text(
+            "Open today's idea",
+            skipOffstage: false,
+          )
+          .last;
+      await tester.scrollUntilVisible(todaysIdea, 80);
+      await tester.tap(todaysIdea, warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Home premium B'), findsNothing);
+      expect(find.text('Home free C'), findsOneWidget);
+      expect(find.text('Home free D'), findsNothing);
+      expect(find.text('What to expect'), findsOneWidget);
+      expect(find.text('Nurtly Premium'), findsNothing);
+      expect(find.text('Unlock this with Premium.'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Home premium daily idea opens premium detail for active premium',
+    (tester) async {
+      final loader = _TodayIdeaContentLoader(
+        ideas: _ideasOrderedForToday(
+          [
+            _shellPlayIdea(
+              'home_free_a',
+              'Home free A',
+              unlockType: 'free',
+            ),
+            _shellPlayIdea(
+              'home_premium_b',
+              'Home premium B',
+              unlockType: 'premium',
+            ),
+            _shellPlayIdea('home_free_c', 'Home free C', unlockType: 'free'),
+          ],
+          selectedIndex: 1,
+        ),
+      );
+      await _pumpNurtlyApp(
+        tester,
+        contentLoader: loader,
+        premiumEntitlementProvider: FakePremiumEntitlementProvider(
+          loadEntitlement: PremiumEntitlement.yearlyActive(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+          refreshEntitlement: PremiumEntitlement.yearlyActive(
+            checkedAt: DateTime.utc(2026, 5, 26, 12),
+          ),
+        ),
+      );
+
+      final todaysIdea = find
+          .text(
+            "Open today's idea",
+            skipOffstage: false,
+          )
+          .last;
+      await tester.scrollUntilVisible(todaysIdea, 80);
+      final todaysIdeaOffset = tester.getCenter(todaysIdea);
+      await tester.tapAt(todaysIdeaOffset);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Home premium B'), findsWidgets);
+      expect(find.text('What to expect'), findsOneWidget);
+      expect(find.text('Home free C'), findsNothing);
+      expect(find.text('Nurtly Premium'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Home premium daily idea opens premium detail for reviewer access',
+    (tester) async {
+      final loader = _TodayIdeaContentLoader(
+        ideas: _ideasOrderedForToday(
+          [
+            _shellPlayIdea(
+              'home_free_a',
+              'Home free A',
+              unlockType: 'free',
+            ),
+            _shellPlayIdea(
+              'home_premium_b',
+              'Home premium B',
+              unlockType: 'premium',
+            ),
+            _shellPlayIdea('home_free_c', 'Home free C', unlockType: 'free'),
+          ],
+          selectedIndex: 1,
+        ),
+      );
+      await _pumpNurtlyApp(
+        tester,
+        contentLoader: loader,
+        reviewerAccessStore: FakeReviewerAccessStore(saved: true),
+      );
+
+      final todaysIdea = find
+          .text(
+            "Open today's idea",
+            skipOffstage: false,
+          )
+          .last;
+      await tester.scrollUntilVisible(todaysIdea, 80);
+      final todaysIdeaOffset = tester.getCenter(todaysIdea);
+      await tester.tapAt(todaysIdeaOffset);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Home premium B'), findsWidgets);
+      expect(find.text('What to expect'), findsOneWidget);
+      expect(find.text('Home free C'), findsNothing);
+      expect(find.text('Nurtly Premium'), findsNothing);
+    },
+  );
+
+  testWidgets('Home shows unavailable message when no free fallback exists',
+      (tester) async {
+    final loader = _TodayIdeaContentLoader(
+      ideas: _ideasOrderedForToday(
+        [
+          _shellPlayIdea(
+            'home_premium_a',
+            'Home premium A',
+            unlockType: 'premium',
+          ),
+          _shellPlayIdea(
+            'home_premium_b',
+            'Home premium B',
+            unlockType: 'premium',
+          ),
+        ],
+        selectedIndex: 0,
+      ),
+    );
+    await _pumpNurtlyApp(tester, contentLoader: loader);
+
+    await tester.scrollUntilVisible(find.text("Open today's idea"), 80);
+    await tester.tap(find.text("Open today's idea").first);
+    await tester.pump();
+
+    expect(find.text('Home premium A'), findsNothing);
+    expect(find.text('Home premium B'), findsNothing);
+    expect(find.text('Nurtly Premium'), findsNothing);
+    expect(find.text("Today's idea is not available yet."), findsOneWidget);
+  });
+
+  testWidgets('Home opens only one detail route for premium fallback', (
+    tester,
+  ) async {
+    final loader = _TodayIdeaContentLoader(
+      ideas: _ideasOrderedForToday(
+        [
+          _shellPlayIdea(
+            'home_premium_a',
+            'Home premium A',
+            unlockType: 'premium',
+          ),
+          _shellPlayIdea(
+            'home_premium_b',
+            'Home premium B',
+            unlockType: 'premium',
+          ),
+          _shellPlayIdea('home_free_c', 'Home free C', unlockType: 'free'),
+        ],
+        selectedIndex: 1,
+      ),
+    );
+    final observer = _TestNavigatorObserver();
+    await _pumpNurtlyApp(
+      tester,
+      contentLoader: loader,
+      navigatorObserver: observer,
+    );
+
+    await tester.scrollUntilVisible(find.text("Open today's idea"), 80);
+    final initialPushCount = observer.pushCount;
+    await tester.tap(find.text("Open today's idea").first);
+    await tester.pumpAndSettle();
+
+    expect(observer.pushCount - initialPushCount, 1);
+    expect(find.text('Home free C'), findsOneWidget);
+    expect(find.text('Home premium B'), findsNothing);
+    expect(find.text('Nurtly Premium'), findsNothing);
+  });
+
   testWidgets('Settings sheet shows language row and privacy entry',
       (tester) async {
     await _pumpNurtlyApp(tester, size: const Size(600, 4000));
@@ -861,6 +1098,7 @@ Future<void> _pumpNurtlyApp(
   FakeReviewerAccessStore? reviewerAccessStore,
   ConsentFlow? consentFlow,
   JournalController? journalController,
+  NavigatorObserver? navigatorObserver,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -875,6 +1113,9 @@ Future<void> _pumpNurtlyApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      navigatorObservers: [
+        if (navigatorObserver != null) navigatorObserver,
+      ],
       home: AppShell(
         contentLoader: contentLoader ?? const FakeContentLoader(),
         languagePreferenceStore:
@@ -955,6 +1196,27 @@ Future<void> _pumpRealNurtlyApp(
 
 bool _hasText(WidgetTester tester, String text) {
   return find.text(text).evaluate().isNotEmpty;
+}
+
+List<PlayIdea> _ideasOrderedForToday(
+  List<PlayIdea> ideas, {
+  required int selectedIndex,
+}) {
+  final todayIndex = _todayIndex(ideas.length);
+  final ordered = List<PlayIdea>.filled(ideas.length, ideas.first);
+  for (var index = 0; index < ideas.length; index++) {
+    ordered[(todayIndex + index) % ideas.length] =
+        ideas[(selectedIndex + index) % ideas.length];
+  }
+  return ordered;
+}
+
+int _todayIndex(int length) {
+  final today = DateTime.now();
+  final dayOfYear = DateTime(today.year, today.month, today.day)
+      .difference(DateTime(today.year, 1, 1))
+      .inDays;
+  return dayOfYear % length;
 }
 
 Future<void> _pumpTabChange(WidgetTester tester) async {
@@ -1100,3 +1362,75 @@ const _shellTaxonomy = ContentTaxonomy(
     TaxonomyTerm(id: 'sound_category_nature', label: 'Nature'),
   ],
 );
+
+PlayIdea _shellPlayIdea(
+  String id,
+  String title, {
+  required String unlockType,
+}) {
+  return PlayIdea(
+    id: id,
+    title: title,
+    summary: 'Summary for $title.',
+    ageGroup: '2-5 years',
+    ageRangeMonths: AgeRangeMonths(min: 24, max: 60),
+    place: 'place_home',
+    messLevel: 'mess_low',
+    childEngagement: 'child_engagement_low',
+    parentInvolvement: 'parent_involvement_low',
+    activityType: 'activity_quiet_time',
+    unlockType: unlockType,
+    contexts: ['context_home'],
+    neededItems: ['Item'],
+    steps: ['Step'],
+    whatToExpect: 'What to expect for $title.',
+    parentNote: 'Keep it calm.',
+    safetyNote: 'Use safe items.',
+    suggestedSoundId: 'sound_home',
+  );
+}
+
+class _TodayIdeaContentLoader extends ContentLoader {
+  const _TodayIdeaContentLoader({
+    required this.ideas,
+  });
+
+  final List<PlayIdea> ideas;
+
+  @override
+  Future<ContentPackage> load() async {
+    return ContentPackage(
+      metadata: const ContentMetadata(
+        packageId: 'today-idea-test',
+        schemaVersion: 1,
+        version: '1.0.0',
+        locale: 'en',
+        publishedAt: '2026-05-18',
+        minAppVersion: '0.1.0',
+      ),
+      taxonomy: _shellTaxonomy,
+      playFilters: const [],
+      playIdeas: ideas,
+      sounds: const [
+        SoundItem(
+          id: 'sound_home',
+          title: 'Home sound',
+          category: 'Nature',
+          summary: 'A calm sound for tests.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+      ],
+    );
+  }
+}
+
+class _TestNavigatorObserver extends NavigatorObserver {
+  int pushCount = 0;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    pushCount += 1;
+    super.didPush(route, previousRoute);
+  }
+}
