@@ -141,12 +141,11 @@ void main() {
 
   testWidgets('starts playback only after ready and starts timer then',
       (tester) async {
-    final harness = SoundPlaybackHarness();
+    final harness = TestSoundPlaybackDriver();
+    final ticker = FakeSoundSessionTicker();
     final playStarted = Completer<void>();
-    final startCompleter = Completer<void>();
-    harness.onStartRequested = () async {
+    harness.onPlayRequested = () {
       playStarted.complete();
-      await startCompleter.future;
     };
 
     await tester.pumpWidget(
@@ -161,7 +160,8 @@ void main() {
             assetPath: 'assets/audio/soft_rain.mp3',
             unlockType: 'free',
           ),
-          playbackHarness: harness,
+          playbackDriver: harness,
+          sessionTicker: ticker,
           loadSoundAsset: (player, assetPath) async {
             expect(assetPath, 'assets/audio/soft_rain.mp3');
           },
@@ -186,25 +186,32 @@ void main() {
     expect(find.text('15:00 left'), findsOneWidget);
     expect(harness.startAttempts, 1);
     expect(playStarted.isCompleted, isTrue);
+    expect(ticker.tickCount, 0);
 
     harness.markReadyPlaying(currentIndex: 0);
-    startCompleter.complete();
-    await tester.pumpAndSettle();
-
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
     expect(find.text(AppStrings.english.playing), findsOneWidget);
     expect(find.text('15:00 left'), findsOneWidget);
 
-    await tester.pump(const Duration(seconds: 1));
-    expect(find.textContaining('left'), findsOneWidget);
+    ticker.tick();
+    await tester.pump();
+    expect(find.text('14:59 left'), findsOneWidget);
+    expect(ticker.tickCount, 1);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+
+    await harness.dispose();
+    ticker.dispose();
   });
 
   testWidgets('allows pause while loop playback is pending', (tester) async {
-    final harness = SoundPlaybackHarness();
-    final startCompleter = Completer<void>();
-    harness.onStartRequested = () async {
-      await startCompleter.future;
-    };
-    harness.onPauseRequested = () async {};
+    final harness = TestSoundPlaybackDriver();
+    final ticker = FakeSoundSessionTicker();
+    harness.onPlayRequested = () {};
+    harness.onPauseRequested = () {};
 
     await tester.pumpWidget(
       MaterialApp(
@@ -218,7 +225,8 @@ void main() {
             assetPath: 'assets/audio/soft_rain.mp3',
             unlockType: 'free',
           ),
-          playbackHarness: harness,
+          playbackDriver: harness,
+          sessionTicker: ticker,
           loadSoundAsset: (player, assetPath) async {},
         ),
       ),
@@ -238,7 +246,7 @@ void main() {
     await tester.pump();
 
     harness.markReadyPlaying(currentIndex: 0);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
     expect(find.text(AppStrings.english.playing), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
@@ -249,25 +257,29 @@ void main() {
         .tap(find.byKey(const ValueKey('sound-player-primary-control')));
     await tester.pump();
     harness.markReadyPaused(currentIndex: 0);
-    await tester.pumpAndSettle();
-    startCompleter.complete();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.text(AppStrings.english.paused), findsOneWidget);
     expect(harness.pauseCalls, 1);
+    ticker.tick();
+    ticker.tick();
+    await tester.pump();
+    expect(find.text('15:00 left'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await harness.dispose();
+    ticker.dispose();
   });
 
   testWidgets(
       'shows playback failure, allows retry, and succeeds on second try',
       (tester) async {
-    final harness = SoundPlaybackHarness();
+    final harness = TestSoundPlaybackDriver();
+    final ticker = FakeSoundSessionTicker();
     final secondAttemptReady = Completer<void>();
-    var startRequestCount = 0;
-    harness.onStartRequested = () async {
-      startRequestCount++;
-      if (startRequestCount > 1) {
-        await secondAttemptReady.future;
-      }
-    };
 
     await tester.pumpWidget(
       MaterialApp(
@@ -281,7 +293,8 @@ void main() {
             assetPath: 'assets/audio/soft_rain.mp3',
             unlockType: 'free',
           ),
-          playbackHarness: harness,
+          playbackDriver: harness,
+          sessionTicker: ticker,
           loadSoundAsset: (player, assetPath) async {},
         ),
       ),
@@ -305,7 +318,13 @@ void main() {
 
     harness.emitError(StateError('simulated playback failure'));
     harness.markReadyPaused(currentIndex: 0);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.text(AppStrings.english.couldNotPlay), findsOneWidget);
+    expect(find.text(AppStrings.english.couldNotPlaySound), findsOneWidget);
+    expect(find.text('15:00 left'), findsOneWidget);
 
     await tester
         .tap(find.byKey(const ValueKey('sound-player-primary-control')));
@@ -315,12 +334,23 @@ void main() {
     expect(find.text(AppStrings.english.loading), findsOneWidget);
 
     harness.markReadyPlaying(currentIndex: 0);
+    await tester.pump();
     secondAttemptReady.complete();
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.text(AppStrings.english.playing), findsOneWidget);
     expect(find.byKey(const ValueKey('sound-player-primary-control')),
         findsOneWidget);
+    ticker.tick();
+    await tester.pump();
+    expect(find.text('14:59 left'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    await harness.dispose();
+    ticker.dispose();
   });
 
   testWidgets(
@@ -447,6 +477,152 @@ void main() {
 
     expect(find.text('Sponsored space'), findsNothing);
   });
+}
+
+class TestSoundPlaybackDriver implements SoundPlaybackDriver {
+  TestSoundPlaybackDriver({
+    SoundPlaybackState? initialState,
+    this.currentIndex,
+  }) : _state = initialState ??
+            const SoundPlaybackState(
+              playing: false,
+              ready: false,
+            );
+
+  final StreamController<SoundPlaybackState> _stateController =
+      StreamController<SoundPlaybackState>.broadcast();
+  final StreamController<Object> _errorController =
+      StreamController<Object>.broadcast();
+  SoundPlaybackState _state;
+  VoidCallback? onPlayRequested;
+  VoidCallback? onPauseRequested;
+  int startAttempts = 0;
+  int pauseCalls = 0;
+
+  @override
+  int? currentIndex;
+
+  @override
+  Stream<SoundPlaybackState> get playerStateStream => _stateController.stream;
+
+  @override
+  Stream<Object> get errorStream => _errorController.stream;
+
+  @override
+  Stream<Duration> get positionStream => const Stream<Duration>.empty();
+
+  @override
+  SoundPlaybackState get playerState => _state;
+
+  @override
+  Future<void> play() async {
+    startAttempts++;
+    if (onPlayRequested != null) {
+      onPlayRequested!();
+    }
+  }
+
+  @override
+  Future<void> pause() async {
+    pauseCalls++;
+    if (onPauseRequested != null) {
+      onPauseRequested!();
+    }
+  }
+
+  @override
+  Future<void> seek(Duration position) async {}
+
+  @override
+  Future<void> setVolume(double volume) async {}
+
+  @override
+  Duration get duration => Duration.zero;
+
+  void markReadyPlaying({int? currentIndex}) {
+    updateState(
+      playing: true,
+      ready: true,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void markReadyPaused({int? currentIndex}) {
+    updateState(
+      playing: false,
+      ready: true,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void markIdlePaused({int? currentIndex}) {
+    updateState(
+      playing: false,
+      ready: false,
+      currentIndex: currentIndex,
+    );
+  }
+
+  void emitError(Object error) {
+    _errorController.addError(error);
+  }
+
+  void updateState({
+    bool? playing,
+    bool? ready,
+    int? currentIndex,
+  }) {
+    _state = SoundPlaybackState(
+      playing: playing ?? _state.playing,
+      ready: ready ?? _state.ready,
+      currentIndex: currentIndex ?? this.currentIndex,
+    );
+    this.currentIndex = currentIndex ?? this.currentIndex;
+    _stateController.add(_state);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _stateController.close();
+    await _errorController.close();
+  }
+}
+
+class FakeSoundSessionTicker implements SoundSessionTicker {
+  void Function()? _onTick;
+  bool _running = false;
+  int tickCount = 0;
+
+  @override
+  void start(void Function() onTick) {
+    if (_running) {
+      return;
+    }
+    _running = true;
+    _onTick = onTick;
+  }
+
+  @override
+  void stop() {
+    _running = false;
+    _onTick = null;
+  }
+
+  @override
+  bool get isRunning => _running;
+
+  void tick() {
+    if (!_running) {
+      return;
+    }
+    tickCount++;
+    _onTick?.call();
+  }
+
+  @override
+  void dispose() {
+    stop();
+  }
 }
 
 class _SoundsArtworkFallbackLoader extends ContentLoader {

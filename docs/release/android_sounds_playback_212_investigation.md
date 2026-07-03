@@ -55,6 +55,12 @@ The local investigation did not reproduce a bad audio format or missing asset bu
 
 The playlist workaround is the best candidate remaining from the local evidence, so the current fix is to load the bundled sound as a single asset with `LoopMode.one` while improving error logging so the Android release failure can be distinguished from content issues in future reports.
 
+## Local root cause
+
+The hang in the Sounds widget tests came from the progress UI subtree reacting to playback position updates through a `StreamBuilder`-driven rebuild path. Moving the progress snapshot to an owned subscription on the screen state removed the rebuild loop and let the active playback tests complete reliably.
+
+This local fix does not prove the original Google Play release failure cause by itself, but it does remove the test-time deadlock that was blocking verification of the Sounds flow.
+
 ## Fix applied
 
 - Switched bundled sound loading from a 3-item identical playlist to a single asset source.
@@ -67,11 +73,11 @@ The playlist workaround is the best candidate remaining from the local evidence,
 
 - `flutter pub get --enforce-lockfile` - PASS
 - `flutter build bundle` - PASS
-- `dart format --output=none --set-exit-if-changed .` - final result after fixes
-- `flutter analyze` - final result after fixes
-- `flutter test --reporter expanded` - final result after fixes
-- `flutter test --coverage` - final result after fixes
-- `flutter build apk --debug` - final result after fixes
+- `dart format --output=none --set-exit-if-changed .` - PASS
+- `flutter analyze` - PASS
+- `flutter test --reporter expanded` - PASS
+- `flutter test --coverage` - PASS
+- `flutter build apk --debug` - PASS
 - `flutter build apk --release` - NOT RUN / BLOCKED LOCALLY: missing `key.properties`
 
 ## Manual QA still required
