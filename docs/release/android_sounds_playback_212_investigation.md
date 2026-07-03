@@ -65,7 +65,7 @@ This local fix does not prove the original Google Play release failure cause by 
 
 - Switched bundled sound loading from a 3-item identical playlist to a single asset source.
 - Kept looped playback behavior via `LoopMode.one`.
-- Added debug-only playback error logging with exception type, `PlayerException` code/message when available, player index, asset path, and stack trace.
+- Added full playback diagnostics in debug builds and a release-safe, single-line diagnostic path without stack traces or user data, including exception type, `PlayerException` code/message when available, current player index, and asset path.
 - Moved timer start to after playback starts successfully.
 - Added tests that cover asset-path forwarding and the failure retry path without invoking native audio in widget tests.
 
