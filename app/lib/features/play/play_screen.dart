@@ -30,6 +30,35 @@ PlayIdea selectDailyPlayIdea(List<PlayIdea> ideas, DateTime date) {
   return ideas[dayOfYear % ideas.length];
 }
 
+bool isPremiumUnlock(String unlockType) {
+  return unlockType.trim().toLowerCase() == 'premium';
+}
+
+PlayIdea? selectAccessibleDailyPlayIdea(
+  List<PlayIdea> ideas,
+  DateTime date, {
+  required bool canAccessPremiumContent,
+}) {
+  if (ideas.isEmpty) {
+    return null;
+  }
+
+  final selected = selectDailyPlayIdea(ideas, date);
+  if (!isPremiumUnlock(selected.unlockType) || canAccessPremiumContent) {
+    return selected;
+  }
+
+  final selectedIndex = ideas.indexOf(selected);
+  for (var offset = 1; offset < ideas.length; offset++) {
+    final candidate = ideas[(selectedIndex + offset) % ideas.length];
+    if (!isPremiumUnlock(candidate.unlockType)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
 class PlayScreen extends StatefulWidget {
   const PlayScreen({
     super.key,
@@ -244,7 +273,7 @@ class _PlayScreenState extends State<PlayScreen> {
           taxonomy: taxonomy,
           strings: strings,
           onTap: () {
-            if (_isPremiumUnlock(playIdeas[index].unlockType) &&
+            if (isPremiumUnlock(playIdeas[index].unlockType) &&
                 !_effectiveEntitlement.canAccessPremiumContent) {
               widget.onOpenPremiumPaywall?.call();
               return;
@@ -275,10 +304,6 @@ class _PlayScreenState extends State<PlayScreen> {
         ],
       ],
     ];
-  }
-
-  bool _isPremiumUnlock(String unlockType) {
-    return unlockType.trim().toLowerCase() == 'premium';
   }
 
   bool _matchesAccessFilters(

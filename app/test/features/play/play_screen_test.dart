@@ -59,6 +59,177 @@ void main() {
     expect(first.id, second.id);
   });
 
+  test('selectAccessibleDailyPlayIdea returns selected free idea for free user',
+      () {
+    final date = DateTime(2026, 1, 1);
+    final ideas = [
+      _testIdea('free_a', unlockType: 'free'),
+      _testIdea('premium_b', unlockType: 'premium'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: false,
+      )?.id,
+      'free_a',
+    );
+  });
+
+  test(
+      'selectAccessibleDailyPlayIdea returns selected free idea for premium user',
+      () {
+    final date = DateTime(2026, 1, 1);
+    final ideas = [
+      _testIdea('free_a', unlockType: 'free'),
+      _testIdea('premium_b', unlockType: 'premium'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: true,
+      )?.id,
+      'free_a',
+    );
+  });
+
+  test(
+      'selectAccessibleDailyPlayIdea returns selected premium idea for premium user',
+      () {
+    final date = DateTime(2026, 1, 2);
+    final ideas = [
+      _testIdea('premium_a', unlockType: 'premium'),
+      _testIdea('premium_b', unlockType: 'PREMIUM'),
+      _testIdea('free_c', unlockType: 'free'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: true,
+      )?.id,
+      'premium_b',
+    );
+  });
+
+  test(
+      'selectAccessibleDailyPlayIdea falls back to first free idea after premium selection',
+      () {
+    final date = DateTime(2026, 1, 1);
+    final ideas = [
+      _testIdea('premium_a', unlockType: 'premium'),
+      _testIdea('premium_b', unlockType: 'PREMIUM'),
+      _testIdea('free_c', unlockType: 'free'),
+      _testIdea('free_d', unlockType: 'free'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: false,
+      )?.id,
+      'free_c',
+    );
+  });
+
+  test('selectAccessibleDailyPlayIdea wraps fallback search', () {
+    final date = DateTime(2026, 1, 4);
+    final ideas = [
+      _testIdea('free_a', unlockType: 'free'),
+      _testIdea('premium_b', unlockType: 'premium'),
+      _testIdea('premium_c', unlockType: 'premium'),
+      _testIdea('premium_d', unlockType: 'premium'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: false,
+      )?.id,
+      'free_a',
+    );
+  });
+
+  test('selectAccessibleDailyPlayIdea skips premium items during fallback', () {
+    final date = DateTime(2026, 1, 1);
+    final ideas = [
+      _testIdea('premium_a', unlockType: 'premium'),
+      _testIdea('premium_b', unlockType: 'premium'),
+      _testIdea('free_c', unlockType: 'free'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: false,
+      )?.id,
+      'free_c',
+    );
+  });
+
+  test(
+      'selectAccessibleDailyPlayIdea returns null when all ideas are premium and user is free',
+      () {
+    final date = DateTime(2026, 1, 1);
+    final ideas = [
+      _testIdea('premium_a', unlockType: 'premium'),
+      _testIdea('premium_b', unlockType: 'PREMIUM'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: false,
+      ),
+      isNull,
+    );
+  });
+
+  test(
+      'selectAccessibleDailyPlayIdea returns selected premium idea when all ideas are premium',
+      () {
+    final date = DateTime(2026, 1, 2);
+    final ideas = [
+      _testIdea('premium_a', unlockType: 'premium'),
+      _testIdea('premium_b', unlockType: 'PREMIUM'),
+    ];
+
+    expect(
+      selectAccessibleDailyPlayIdea(
+        ideas,
+        date,
+        canAccessPremiumContent: true,
+      )?.id,
+      'premium_b',
+    );
+  });
+
+  test('selectAccessibleDailyPlayIdea returns null for an empty list', () {
+    expect(
+      selectAccessibleDailyPlayIdea(
+        const [],
+        DateTime(2026, 1, 1),
+        canAccessPremiumContent: false,
+      ),
+      isNull,
+    );
+  });
+
+  test('isPremiumUnlock normalizes premium values', () {
+    expect(isPremiumUnlock('premium'), isTrue);
+    expect(isPremiumUnlock('PREMIUM'), isTrue);
+    expect(isPremiumUnlock(' PrEmIuM '), isTrue);
+    expect(isPremiumUnlock('free'), isFalse);
+  });
+
   testWidgets('filters are collapsed by default', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -1019,6 +1190,31 @@ void main() {
 
     expect(find.text('Sponsored space'), findsNothing);
   });
+}
+
+PlayIdea _testIdea(
+  String id, {
+  required String unlockType,
+}) {
+  return PlayIdea(
+    id: id,
+    title: id,
+    summary: id,
+    ageGroup: '0-5 years',
+    ageRangeMonths: AgeRangeMonths(min: 0, max: 60),
+    place: 'place_home',
+    messLevel: 'mess_low',
+    childEngagement: 'child_engagement_low',
+    parentInvolvement: 'parent_involvement_low',
+    activityType: 'activity_quiet_time',
+    unlockType: unlockType,
+    contexts: ['context_home'],
+    neededItems: ['Item'],
+    steps: ['Step'],
+    whatToExpect: id,
+    parentNote: id,
+    safetyNote: id,
+  );
 }
 
 class _PremiumPlayContentLoader extends ContentLoader {
