@@ -5,6 +5,6 @@ Future<void> loadLoopingSoundAsset(
   AudioPlayer player,
   String assetPath,
 ) async {
-  await player.setAsset(assetPath);
+  await player.setAsset(assetPath, preload: false);
   await player.setLoopMode(LoopMode.one);
 }
