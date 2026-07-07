@@ -81,10 +81,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   late final PremiumAccessController _premiumController;
   var _isReady = false;
   var _aboutTapCount = 0;
+  late final Future<PackageMetadata> _packageMetadataFuture;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
-  String? _appVersionText;
-  String? _appVersionError;
+  PackageMetadata? _packageMetadata;
+  String? _packageMetadataError;
 
   AppStrings get _strings => AppStrings.forLanguage(_selectedLanguage);
 
@@ -107,28 +108,27 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       preference: AppLanguagePreference.system,
       systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
     );
-    unawaited(_loadAppInfo());
+    _packageMetadataFuture = PackageMetadata.fromPlatform();
+    unawaited(_loadPackageMetadata());
     unawaited(_bootstrapAppState());
   }
 
-  Future<void> _loadAppInfo() async {
+  Future<void> _loadPackageMetadata() async {
     try {
-      final info = await PackageMetadata.load();
+      final metadata = await _packageMetadataFuture;
       if (!mounted) {
         return;
       }
-      final buildNumber = info.buildNumber.trim();
       setState(() {
-        _appVersionText =
-            buildNumber.isEmpty ? info.version : '${info.version}+$buildNumber';
-        _appVersionError = null;
+        _packageMetadata = metadata;
+        _packageMetadataError = null;
       });
     } catch (_) {
       if (!mounted) {
         return;
       }
       setState(() {
-        _appVersionError = 'Unavailable';
+        _packageMetadataError = 'Unavailable';
       });
     }
   }
@@ -616,8 +616,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                   _SettingsRow(
                     key: const ValueKey('settings-app-version'),
                     title: 'App version',
-                    value: _appVersionLabel(),
-                    onTap: () {},
+                    value: _packageMetadataLabel(),
+                    onTap: null,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
@@ -878,15 +878,19 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     return '${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}';
   }
 
-  String _appVersionLabel() {
-    if (_appVersionError != null) {
-      return _appVersionError!;
+  String _packageMetadataLabel() {
+    if (_packageMetadataError != null) {
+      return _packageMetadataError!;
     }
-    final versionText = _appVersionText;
-    if (versionText == null) {
+    final packageMetadata = _packageMetadata;
+    if (packageMetadata == null) {
       return 'Loading...';
     }
-    return versionText;
+    final buildNumber = packageMetadata.buildNumber.trim();
+    if (buildNumber.isEmpty) {
+      return packageMetadata.version;
+    }
+    return '${packageMetadata.version}+$buildNumber';
   }
 }
 
@@ -959,12 +963,12 @@ class _SettingsRow extends StatelessWidget {
     super.key,
     required this.title,
     this.value,
-    required this.onTap,
+    this.onTap,
   });
 
   final String title;
   final String? value;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -992,7 +996,7 @@ class _SettingsRow extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
             ],
-            const Icon(Icons.chevron_right),
+            if (onTap != null) const Icon(Icons.chevron_right),
           ],
         ),
         onTap: onTap,

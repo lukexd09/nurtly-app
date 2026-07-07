@@ -27,6 +27,27 @@ import 'test_fakes/fake_language_preference_store.dart';
 import 'test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const packageMetadataChannel = MethodChannel('nurtly/package_metadata');
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+    packageMetadataChannel,
+    (call) async {
+      if (call.method != 'getPackageMetadata') {
+        return null;
+      }
+      return <String, Object?>{
+        'versionName': '0.1.0',
+        'versionCode': '3',
+      };
+    },
+  );
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(packageMetadataChannel, null);
+  });
+
   testWidgets('AppShell bootstrap notifies parent about saved language',
       (tester) async {
     AppLanguage? capturedLanguage;
@@ -103,24 +124,6 @@ void main() {
   });
 
   testWidgets('shows installed app version in settings', (tester) async {
-    const channel = MethodChannel('dev.fluttercommunity.plus/package_info');
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, (call) async {
-      if (call.method != 'getAll') {
-        return null;
-      }
-      return <String, Object?>{
-        'appName': 'Nurtly',
-        'packageName': 'com.example.nurtly',
-        'version': '0.1.0',
-        'buildNumber': '3',
-        'buildSignature': 'mock',
-      };
-    });
-    addTearDown(() {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(channel, null);
-    });
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light,

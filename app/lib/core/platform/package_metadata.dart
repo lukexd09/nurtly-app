@@ -2,33 +2,28 @@ import 'package:flutter/services.dart';
 
 class PackageMetadata {
   const PackageMetadata({
-    required this.appName,
-    required this.packageName,
     required this.version,
     required this.buildNumber,
-    required this.buildSignature,
   });
 
-  final String appName;
-  final String packageName;
+  static const MethodChannel _channel =
+      MethodChannel('nurtly/package_metadata');
+
   final String version;
   final String buildNumber;
-  final String buildSignature;
 
-  static const MethodChannel _channel =
-      MethodChannel('dev.fluttercommunity.plus/package_info');
-
-  static Future<PackageMetadata> load() async {
-    final values = await _channel.invokeMapMethod<String, dynamic>('getAll');
-    if (values == null) {
-      throw StateError('Package metadata is unavailable.');
-    }
-    return PackageMetadata(
-      appName: values['appName'] as String? ?? '',
-      packageName: values['packageName'] as String? ?? '',
-      version: values['version'] as String? ?? '',
-      buildNumber: values['buildNumber'] as String? ?? '',
-      buildSignature: values['buildSignature'] as String? ?? '',
+  static Future<PackageMetadata> fromPlatform() async {
+    final result = await _channel.invokeMapMethod<String, dynamic>(
+      'getPackageMetadata',
     );
+    if (result == null) {
+      throw StateError('Package metadata unavailable');
+    }
+    final version = (result['versionName'] ?? '').toString();
+    final buildNumber = (result['versionCode'] ?? '').toString();
+    if (version.isEmpty) {
+      throw StateError('Package metadata version unavailable');
+    }
+    return PackageMetadata(version: version, buildNumber: buildNumber);
   }
 }
