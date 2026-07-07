@@ -25,6 +25,7 @@ import '../../features/sounds/sounds_screen.dart';
 import '../content/suggested_sound_resolver.dart';
 import '../localization/app_strings.dart';
 import '../localization/language_preference_store.dart';
+import '../platform/package_metadata.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -82,6 +83,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   var _aboutTapCount = 0;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
+  String? _appVersionText;
+  String? _appVersionError;
 
   AppStrings get _strings => AppStrings.forLanguage(_selectedLanguage);
 
@@ -104,7 +107,30 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       preference: AppLanguagePreference.system,
       systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
     );
+    unawaited(_loadAppInfo());
     unawaited(_bootstrapAppState());
+  }
+
+  Future<void> _loadAppInfo() async {
+    try {
+      final info = await PackageMetadata.load();
+      if (!mounted) {
+        return;
+      }
+      final buildNumber = info.buildNumber.trim();
+      setState(() {
+        _appVersionText =
+            buildNumber.isEmpty ? info.version : '${info.version}+$buildNumber';
+        _appVersionError = null;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _appVersionError = 'Unavailable';
+      });
+    }
   }
 
   @override
@@ -586,6 +612,13 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       setSheetState(() {});
                     },
                   ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-app-version'),
+                    title: 'App version',
+                    value: _appVersionLabel(),
+                    onTap: () {},
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     strings.privacy,
@@ -625,14 +658,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       );
                     },
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  _SettingsRow(
-                    key: const ValueKey('settings-app-version'),
-                    title: 'App version',
-                    value: appVersionLabel,
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
                   GestureDetector(
                     key: const ValueKey('settings-about-title'),
                     behavior: HitTestBehavior.opaque,
@@ -851,6 +876,17 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   String _formatPremiumDate(DateTime dateTime) {
     final localDate = dateTime.toLocal();
     return '${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}';
+  }
+
+  String _appVersionLabel() {
+    if (_appVersionError != null) {
+      return _appVersionError!;
+    }
+    final versionText = _appVersionText;
+    if (versionText == null) {
+      return 'Loading...';
+    }
+    return versionText;
   }
 }
 

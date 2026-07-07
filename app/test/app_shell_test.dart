@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/consent_flow_controller.dart';
 import 'package:nurtly/core/localization/app_language.dart';
@@ -102,6 +103,24 @@ void main() {
   });
 
   testWidgets('shows installed app version in settings', (tester) async {
+    const channel = MethodChannel('dev.fluttercommunity.plus/package_info');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async {
+      if (call.method != 'getAll') {
+        return null;
+      }
+      return <String, Object?>{
+        'appName': 'Nurtly',
+        'packageName': 'com.example.nurtly',
+        'version': '0.1.0',
+        'buildNumber': '3',
+        'buildSignature': 'mock',
+      };
+    });
+    addTearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, null);
+    });
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.light,
@@ -118,13 +137,6 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Settings'));
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('settings-app-version')),
-      120,
-      scrollable: find.byType(Scrollable).last,
-    );
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('settings-app-version')), findsOneWidget);
