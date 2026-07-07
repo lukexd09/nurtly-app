@@ -612,13 +612,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       setSheetState(() {});
                     },
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  _SettingsRow(
-                    key: const ValueKey('settings-app-version'),
-                    title: 'App version',
-                    value: _packageMetadataLabel(),
-                    onTap: null,
-                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     strings.privacy,
@@ -658,6 +651,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       );
                     },
                   ),
+                  const SizedBox(height: AppSpacing.sm),
                   GestureDetector(
                     key: const ValueKey('settings-about-title'),
                     behavior: HitTestBehavior.opaque,
@@ -669,6 +663,12 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-app-version'),
+                    title: strings.appVersionLabel,
+                    value: _packageMetadataLabel(),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                 ],

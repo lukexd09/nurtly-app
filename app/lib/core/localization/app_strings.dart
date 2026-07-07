@@ -7,6 +7,7 @@ class AppStrings {
     required this.settings,
     required this.general,
     required this.languageLabel,
+    required this.appVersionLabel,
     required this.privacy,
     required this.privacyData,
     required this.about,
@@ -224,6 +225,7 @@ class AppStrings {
   final String settings;
   final String general;
   final String languageLabel;
+  final String appVersionLabel;
   final String privacy;
   final String privacyData;
   final String about;
@@ -441,6 +443,7 @@ class AppStrings {
     settings: 'Settings',
     general: 'General',
     languageLabel: 'Language',
+    appVersionLabel: 'App version',
     privacy: 'Privacy',
     privacyData: 'Privacy & Data',
     about: 'About',
@@ -678,6 +681,7 @@ class AppStrings {
     settings: 'Ustawienia',
     general: 'Ogólne',
     languageLabel: 'Język',
+    appVersionLabel: 'Wersja aplikacji',
     privacy: 'Prywatność',
     privacyData: 'Prywatność i dane',
     about: 'Informacje',
