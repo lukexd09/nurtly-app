@@ -38,6 +38,7 @@ $generatedNoisePatterns = @(
 $allowedPlatformFiles = @(
     "^app/android/app/src/main/AndroidManifest\\.xml$",
     "^app/android/app/build\\.gradle$",
+    "^app/android/settings\\.gradle$",
     "^app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity\\.kt$"
 )
 
@@ -288,6 +289,7 @@ function Test-IsAllowedPlatformFile {
     return $normalized -in @(
         "app/android/app/src/main/AndroidManifest.xml",
         "app/android/app/build.gradle",
+        "app/android/settings.gradle",
         "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt"
     )
 }
