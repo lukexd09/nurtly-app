@@ -101,6 +101,37 @@ void main() {
     expect(soundsAction, findsOneWidget);
   });
 
+  testWidgets('shows installed app version in settings', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AppShell(
+          contentLoader: const FakeContentLoader(),
+          languagePreferenceStore: FakeLanguagePreferenceStore(
+            saved: AppLanguage.english,
+          ),
+          reviewerAccessStore: FakeReviewerAccessStore(),
+          premiumEntitlementProvider: FakePremiumEntitlementProvider(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('settings-app-version')),
+      120,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('settings-app-version')), findsOneWidget);
+    expect(find.text('App version'), findsOneWidget);
+    expect(find.text('0.1.0+3'), findsOneWidget);
+  });
+
   testWidgets('Home quick link navigates to Play', (tester) async {
     await _pumpNurtlyApp(tester);
 
@@ -1056,8 +1087,10 @@ Future<void> _openReviewerAccessDialog(WidgetTester tester) async {
 }
 
 Future<void> _tapAboutFiveTimes(WidgetTester tester) async {
-  await tester.ensureVisible(
+  await tester.scrollUntilVisible(
     find.byKey(const ValueKey('settings-about-title')),
+    120,
+    scrollable: find.byType(Scrollable).last,
   );
   await tester.pumpAndSettle();
   final about = find.byKey(const ValueKey('settings-about-title'));

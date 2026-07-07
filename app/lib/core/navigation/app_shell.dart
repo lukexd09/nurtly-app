@@ -625,6 +625,13 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       );
                     },
                   ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-app-version'),
+                    title: 'App version',
+                    value: appVersionLabel,
+                    onTap: () {},
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   GestureDetector(
                     key: const ValueKey('settings-about-title'),
