@@ -142,9 +142,53 @@ void main() {
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('settings-app-version')),
+      80,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+
     expect(find.byKey(const ValueKey('settings-app-version')), findsOneWidget);
     expect(find.text('App version'), findsOneWidget);
     expect(find.text('0.1.0+3'), findsOneWidget);
+
+    final about = tester.getTopLeft(find.byKey(const ValueKey(
+      'settings-about-title',
+    )));
+    final versionRow = tester.getTopLeft(
+      find.byKey(const ValueKey('settings-app-version')),
+    );
+    expect(versionRow.dy, greaterThan(about.dy));
+  });
+
+  testWidgets('shows Polish app version label in settings', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AppShell(
+          contentLoader: const FakeContentLoader(),
+          languagePreferenceStore: FakeLanguagePreferenceStore(
+            saved: AppLanguage.polish,
+          ),
+          reviewerAccessStore: FakeReviewerAccessStore(),
+          premiumEntitlementProvider: FakePremiumEntitlementProvider(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Ustawienia'));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('settings-app-version')),
+      80,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Wersja aplikacji'), findsOneWidget);
   });
 
   testWidgets('Home quick link navigates to Play', (tester) async {
