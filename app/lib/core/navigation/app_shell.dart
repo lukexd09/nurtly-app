@@ -25,6 +25,7 @@ import '../../features/sounds/sounds_screen.dart';
 import '../content/suggested_sound_resolver.dart';
 import '../localization/app_strings.dart';
 import '../localization/language_preference_store.dart';
+import '../platform/package_metadata.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -80,8 +81,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   late final PremiumAccessController _premiumController;
   var _isReady = false;
   var _aboutTapCount = 0;
+  late final Future<PackageMetadata> _packageMetadataFuture;
   ContentLoader? _localizedContentLoader;
   AppLanguage? _localizedContentLoaderLanguage;
+  PackageMetadata? _packageMetadata;
+  String? _packageMetadataError;
 
   AppStrings get _strings => AppStrings.forLanguage(_selectedLanguage);
 
@@ -104,7 +108,29 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       preference: AppLanguagePreference.system,
       systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
     );
+    _packageMetadataFuture = PackageMetadata.fromPlatform();
+    unawaited(_loadPackageMetadata());
     unawaited(_bootstrapAppState());
+  }
+
+  Future<void> _loadPackageMetadata() async {
+    try {
+      final metadata = await _packageMetadataFuture;
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _packageMetadata = metadata;
+        _packageMetadataError = null;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _packageMetadataError = 'Unavailable';
+      });
+    }
   }
 
   @override
@@ -586,6 +612,13 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       setSheetState(() {});
                     },
                   ),
+                  const SizedBox(height: AppSpacing.xs),
+                  _SettingsRow(
+                    key: const ValueKey('settings-app-version'),
+                    title: 'App version',
+                    value: _packageMetadataLabel(),
+                    onTap: null,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     strings.privacy,
@@ -625,7 +658,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       );
                     },
                   ),
-                  const SizedBox(height: AppSpacing.sm),
                   GestureDetector(
                     key: const ValueKey('settings-about-title'),
                     behavior: HitTestBehavior.opaque,
@@ -845,6 +877,21 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     final localDate = dateTime.toLocal();
     return '${localDate.year}-${localDate.month.toString().padLeft(2, '0')}-${localDate.day.toString().padLeft(2, '0')}';
   }
+
+  String _packageMetadataLabel() {
+    if (_packageMetadataError != null) {
+      return _packageMetadataError!;
+    }
+    final packageMetadata = _packageMetadata;
+    if (packageMetadata == null) {
+      return 'Loading...';
+    }
+    final buildNumber = packageMetadata.buildNumber.trim();
+    if (buildNumber.isEmpty) {
+      return packageMetadata.version;
+    }
+    return '${packageMetadata.version}+$buildNumber';
+  }
 }
 
 class _ShellTopBar extends StatelessWidget {
@@ -916,12 +963,12 @@ class _SettingsRow extends StatelessWidget {
     super.key,
     required this.title,
     this.value,
-    required this.onTap,
+    this.onTap,
   });
 
   final String title;
   final String? value;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -949,7 +996,7 @@ class _SettingsRow extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.xs),
             ],
-            const Icon(Icons.chevron_right),
+            if (onTap != null) const Icon(Icons.chevron_right),
           ],
         ),
         onTap: onTap,

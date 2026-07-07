@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/consent_flow_controller.dart';
 import 'package:nurtly/core/localization/app_language.dart';
@@ -26,6 +27,27 @@ import 'test_fakes/fake_language_preference_store.dart';
 import 'test_fakes/fake_reviewer_access_store.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const packageMetadataChannel = MethodChannel('nurtly/package_metadata');
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+    packageMetadataChannel,
+    (call) async {
+      if (call.method != 'getPackageMetadata') {
+        return null;
+      }
+      return <String, Object?>{
+        'versionName': '0.1.0',
+        'versionCode': '3',
+      };
+    },
+  );
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(packageMetadataChannel, null);
+  });
+
   testWidgets('AppShell bootstrap notifies parent about saved language',
       (tester) async {
     AppLanguage? capturedLanguage;
@@ -99,6 +121,30 @@ void main() {
     final soundsAction = find.text('Start a calming sound');
     await tester.scrollUntilVisible(soundsAction, 80);
     expect(soundsAction, findsOneWidget);
+  });
+
+  testWidgets('shows installed app version in settings', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: AppShell(
+          contentLoader: const FakeContentLoader(),
+          languagePreferenceStore: FakeLanguagePreferenceStore(
+            saved: AppLanguage.english,
+          ),
+          reviewerAccessStore: FakeReviewerAccessStore(),
+          premiumEntitlementProvider: FakePremiumEntitlementProvider(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('settings-app-version')), findsOneWidget);
+    expect(find.text('App version'), findsOneWidget);
+    expect(find.text('0.1.0+3'), findsOneWidget);
   });
 
   testWidgets('Home quick link navigates to Play', (tester) async {
@@ -1056,8 +1102,10 @@ Future<void> _openReviewerAccessDialog(WidgetTester tester) async {
 }
 
 Future<void> _tapAboutFiveTimes(WidgetTester tester) async {
-  await tester.ensureVisible(
+  await tester.scrollUntilVisible(
     find.byKey(const ValueKey('settings-about-title')),
+    120,
+    scrollable: find.byType(Scrollable).last,
   );
   await tester.pumpAndSettle();
   final about = find.byKey(const ValueKey('settings-about-title'));
