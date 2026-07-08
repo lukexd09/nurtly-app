@@ -1995,7 +1995,7 @@
       "title": "Miękki deszcz",
       "category": "Natura",
       "summary": "Delikatny deszcz dla spokojniejszego tła.",
-      "assetPath": "assets/audio/soft_rain.mp3",
+      "assetPath": "assets/audio/soft_rain_loop.ogg",
       "artworkAssetPath": "assets/images/sounds/soft_rain.webp",
       "unlockType": "free"
     },

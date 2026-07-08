@@ -719,7 +719,7 @@ void main() {
     expect(values.toSet(), hasLength(values.length));
   });
 
-  test('sounds have local mp3 assets and non-placeholder copy', () async {
+  test('sounds have local audio assets and non-placeholder copy', () async {
     final package = await const ContentLoader().load();
     const expectedArtworkPathsById = {
       'sound_soft_rain': 'assets/images/sounds/soft_rain.webp',
@@ -741,7 +741,11 @@ void main() {
       expect(_isNotBlank(sound.unlockType), isTrue,
           reason: '${sound.id} unlockType');
       expect(sound.assetPath, startsWith('assets/audio/'));
-      expect(sound.assetPath, endsWith('.mp3'));
+      if (sound.id == 'sound_soft_rain') {
+        expect(sound.assetPath, endsWith('.ogg'));
+      } else {
+        expect(sound.assetPath, endsWith('.mp3'));
+      }
       expect(sound.artworkAssetPath, isNotNull,
           reason: '${sound.id} artworkAssetPath');
       expect(sound.artworkAssetPath, startsWith('assets/images/sounds/'));
