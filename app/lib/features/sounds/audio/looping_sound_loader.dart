@@ -10,18 +10,19 @@ Future<void> loadLoopingSoundAsset(
   final cache = BundledSoundFileCache();
   final localPath = await cache.materialize(assetPath);
   final sources = buildGaplessLoopSources(Uri.file(localPath));
-  await player.setAudioSources(
-    sources,
-    preload: true,
-    initialIndex: 0,
-    initialPosition: Duration.zero,
+  await player.setAudioSource(
+    // ignore: deprecated_member_use
+    ConcatenatingAudioSource(
+      children: sources,
+      useLazyPreparation: false,
+    ),
   );
   await player.setLoopMode(LoopMode.all);
 }
 
 List<AudioSource> buildGaplessLoopSources(Uri uri) {
   return List<AudioSource>.generate(
-    2,
+    4,
     (_) => AudioSource.uri(uri),
   );
 }
