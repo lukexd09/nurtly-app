@@ -15,6 +15,8 @@ import 'core/navigation/app_shell.dart';
 import 'core/localization/app_language.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final isAndroidRuntime =
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
   GooglePlayBillingEntitlementProvider? billing;
