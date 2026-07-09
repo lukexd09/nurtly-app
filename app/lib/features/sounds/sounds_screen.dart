@@ -4,6 +4,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:flutter_soloud/flutter_soloud.dart' as soloud;
 
 import '../../core/ads/ad_widget_factory.dart';
 import '../../core/content/content_loader.dart';
@@ -22,7 +23,10 @@ import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
 import 'widgets/sound_artwork.dart';
+import 'audio/bundled_sound_file_cache.dart';
 import 'audio/looping_sound_loader.dart';
+
+const bool _useSoloudSounds = bool.fromEnvironment('NURTLY_USE_SOLOUD_SOUNDS');
 
 class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
@@ -221,17 +225,12 @@ class SoundDetailScreen extends StatefulWidget {
     required this.sound,
     required this.strings,
     super.key,
-    this.loadSoundAsset = loadLoopingSoundAsset,
-    this.startPlayback,
     this.playbackDriver,
     this.sessionTicker,
   });
 
   final SoundItem sound;
   final AppStrings strings;
-  final Future<void> Function(AudioPlayer player, String assetPath)
-      loadSoundAsset;
-  final Future<void> Function(AudioPlayer player)? startPlayback;
   final SoundPlaybackDriver? playbackDriver;
   final SoundSessionTicker? sessionTicker;
 
@@ -242,7 +241,6 @@ class SoundDetailScreen extends StatefulWidget {
 class _SoundDetailScreenState extends State<SoundDetailScreen> {
   static const double _normalVolume = 1;
   static const Duration _playbackStartTimeout = Duration(seconds: 5);
-  late final AudioPlayer _player;
   StreamSubscription<SoundPlaybackState>? _driverStateSubscription;
   late final StreamSubscription<Object> _runtimeErrorSubscription;
   StreamSubscription<SoundPlaybackState>? _playerStateSubscription;
@@ -264,9 +262,10 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _player = AudioPlayer();
-    _playbackDriver =
-        widget.playbackDriver ?? JustAudioSoundPlaybackDriver(_player);
+    _playbackDriver = widget.playbackDriver ??
+        (_useSoloudSounds && defaultTargetPlatform == TargetPlatform.android
+            ? SoLoudSoundPlaybackDriver()
+            : JustAudioSoundPlaybackDriver(AudioPlayer()));
     _sessionTicker = widget.sessionTicker ?? TimerSoundSessionTicker();
     _driverStateSubscription = _playbackDriver.playerStateStream.listen((_) {
       if (mounted) {
@@ -330,8 +329,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     });
 
     try {
-      if (_player.audioSource == null) {
-        await _loadSoundAsset();
+      if (!_playbackDriver.isLoaded) {
+        await _playbackDriver.load(widget.sound.assetPath);
       }
       if (!mounted) {
         return;
@@ -342,15 +341,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     }
   }
 
-  Future<void> _loadSoundAsset() async {
-    await widget.loadSoundAsset(_player, widget.sound.assetPath);
-  }
-
   Future<void> _startPlayback() async {
-    if (widget.startPlayback != null) {
-      await widget.startPlayback!(_player);
-      return;
-    }
     await _playbackDriver.play();
   }
 
@@ -548,7 +539,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   }
 
   Future<void> _updateFadeVolume() async {
-    if (_player.audioSource == null) {
+    if (!_playbackDriver.isLoaded) {
       return;
     }
     final selectedDuration = _selectedSessionDuration;
@@ -565,14 +556,14 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     final volume = (remaining.inMilliseconds /
             Duration(seconds: fadeSeconds).inMilliseconds)
         .clamp(0.0, _normalVolume);
-    await _player.setVolume(volume);
+    await _playbackDriver.setVolume(volume);
   }
 
   Future<void> _restoreVolume() async {
-    if (_player.audioSource == null) {
+    if (!_playbackDriver.isLoaded) {
       return;
     }
-    await _player.setVolume(_normalVolume);
+    await _playbackDriver.setVolume(_normalVolume);
   }
 
   void _logPlaybackError(Object error, StackTrace stackTrace) {
@@ -650,7 +641,7 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
     final target = Duration(
       milliseconds: (duration.inMilliseconds * value).round(),
     );
-    await _player.seek(target);
+    await _playbackDriver.seek(target);
   }
 
   Widget _buildArtworkMoodPanel() {
@@ -1020,7 +1011,9 @@ abstract interface class SoundPlaybackDriver {
   SoundPlaybackState get playerState;
   int? get currentIndex;
   Duration get duration;
+  bool get isLoaded;
 
+  Future<void> load(String assetPath);
   Future<void> play();
   Future<void> pause();
   Future<void> seek(Duration position);
@@ -1079,6 +1072,14 @@ class JustAudioSoundPlaybackDriver implements SoundPlaybackDriver {
   Duration get duration => player.duration ?? Duration.zero;
 
   @override
+  bool get isLoaded => player.audioSource != null;
+
+  @override
+  Future<void> load(String assetPath) async {
+    await loadLoopingSoundAsset(player, assetPath);
+  }
+
+  @override
   Future<void> play() => player.play();
 
   @override
@@ -1097,6 +1098,159 @@ class JustAudioSoundPlaybackDriver implements SoundPlaybackDriver {
     await _stateController.close();
     await _errorController.close();
     await player.dispose();
+  }
+}
+
+class SoLoudSoundPlaybackDriver implements SoundPlaybackDriver {
+  SoLoudSoundPlaybackDriver({
+    soloud.SoLoud? soloudInstance,
+    BundledSoundFileCache? soundFileCache,
+  })  : _soloud = soloudInstance ?? soloud.SoLoud.instance,
+        _soundFileCache = soundFileCache ?? const BundledSoundFileCache() {
+    _positionTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      _pollPosition();
+    });
+  }
+
+  final soloud.SoLoud _soloud;
+  final BundledSoundFileCache _soundFileCache;
+  final StreamController<SoundPlaybackState> _stateController =
+      StreamController<SoundPlaybackState>.broadcast();
+  final StreamController<Object> _errorController =
+      StreamController<Object>.broadcast();
+  final StreamController<Duration> _positionController =
+      StreamController<Duration>.broadcast();
+  Timer? _positionTimer;
+  soloud.AudioSource? _source;
+  soloud.SoundHandle? _handle;
+  SoundPlaybackState _state =
+      const SoundPlaybackState(playing: false, ready: false);
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+
+  void _emitState({bool? playing, bool? ready}) {
+    _state = SoundPlaybackState(
+      playing: playing ?? _state.playing,
+      ready: ready ?? _state.ready,
+      currentIndex: 0,
+    );
+    _stateController.add(_state);
+  }
+
+  void _pollPosition() {
+    final handle = _handle;
+    final source = _source;
+    if (handle == null || source == null) {
+      return;
+    }
+    try {
+      _position = _soloud.getPosition(handle);
+      _positionController.add(_position);
+      _duration = _soloud.getLength(source);
+      _emitState(
+        playing: !_soloud.getPause(handle),
+        ready: true,
+      );
+    } catch (error, stackTrace) {
+      _errorController.addError(error, stackTrace);
+    }
+  }
+
+  @override
+  Stream<SoundPlaybackState> get playerStateStream => _stateController.stream;
+
+  @override
+  Stream<Object> get errorStream => _errorController.stream;
+
+  @override
+  Stream<Duration> get positionStream => _positionController.stream;
+
+  @override
+  SoundPlaybackState get playerState => _state;
+
+  @override
+  int? get currentIndex => _handle != null ? 0 : null;
+
+  @override
+  Duration get duration => _duration;
+
+  @override
+  bool get isLoaded => _source != null;
+
+  @override
+  Future<void> load(String assetPath) async {
+    if (!_soloud.isInitialized) {
+      await _soloud.init();
+    }
+    final localPath = await _soundFileCache.materialize(assetPath);
+    _source = await _soloud.loadFile(localPath, mode: soloud.LoadMode.disk);
+    _duration = _soloud.getLength(_source!);
+    _handle = _soloud.play(
+      _source!,
+      paused: true,
+      looping: true,
+    );
+    _position = Duration.zero;
+    _positionController.add(_position);
+    _emitState(playing: false, ready: true);
+  }
+
+  @override
+  Future<void> play() async {
+    final handle = _handle;
+    if (handle == null) {
+      return;
+    }
+    _soloud.setPause(handle, false);
+    _emitState(playing: true, ready: true);
+  }
+
+  @override
+  Future<void> pause() async {
+    final handle = _handle;
+    if (handle == null) {
+      return;
+    }
+    _soloud.setPause(handle, true);
+    _emitState(playing: false, ready: true);
+  }
+
+  @override
+  Future<void> seek(Duration position) async {
+    final handle = _handle;
+    if (handle == null) {
+      return;
+    }
+    _soloud.seek(handle, position);
+    _position = position;
+    _positionController.add(position);
+  }
+
+  @override
+  Future<void> setVolume(double volume) async {
+    final handle = _handle;
+    if (handle == null) {
+      return;
+    }
+    _soloud.setVolume(handle, volume);
+  }
+
+  @override
+  Future<void> dispose() async {
+    _positionTimer?.cancel();
+    final handle = _handle;
+    final source = _source;
+    if (handle != null) {
+      await _soloud.stop(handle);
+    }
+    if (source != null) {
+      await _soloud.disposeSource(source);
+    }
+    await _stateController.close();
+    await _errorController.close();
+    await _positionController.close();
+    _handle = null;
+    _source = null;
   }
 }
 

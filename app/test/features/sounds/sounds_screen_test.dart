@@ -162,9 +162,6 @@ void main() {
           ),
           playbackDriver: harness,
           sessionTicker: ticker,
-          loadSoundAsset: (player, assetPath) async {
-            expect(assetPath, 'assets/audio/soft_rain.mp3');
-          },
         ),
       ),
     );
@@ -227,7 +224,6 @@ void main() {
           ),
           playbackDriver: harness,
           sessionTicker: ticker,
-          loadSoundAsset: (player, assetPath) async {},
         ),
       ),
     );
@@ -295,7 +291,6 @@ void main() {
           ),
           playbackDriver: harness,
           sessionTicker: ticker,
-          loadSoundAsset: (player, assetPath) async {},
         ),
       ),
     );
@@ -498,6 +493,7 @@ class TestSoundPlaybackDriver implements SoundPlaybackDriver {
   VoidCallback? onPauseRequested;
   int startAttempts = 0;
   int pauseCalls = 0;
+  bool _loaded = false;
 
   @override
   int? currentIndex;
@@ -538,6 +534,14 @@ class TestSoundPlaybackDriver implements SoundPlaybackDriver {
 
   @override
   Duration get duration => Duration.zero;
+
+  @override
+  bool get isLoaded => _loaded;
+
+  @override
+  Future<void> load(String assetPath) async {
+    _loaded = true;
+  }
 
   void markReadyPlaying({int? currentIndex}) {
     updateState(
