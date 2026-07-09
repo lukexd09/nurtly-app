@@ -23,10 +23,19 @@ import '../../core/widgets/nurtly_chip.dart';
 import '../../core/widgets/section_header.dart';
 import '../../core/widgets/tappable_nurtly_card.dart';
 import 'widgets/sound_artwork.dart';
-import 'audio/bundled_sound_file_cache.dart';
 import 'audio/looping_sound_loader.dart';
 
 const bool _useSoloudSounds = bool.fromEnvironment('NURTLY_USE_SOLOUD_SOUNDS');
+
+bool shouldUseSoloudSoundProof(SoundItem sound) {
+  final normalizedId = sound.id.trim().toLowerCase();
+  if (normalizedId == 'sound_soft_rain') {
+    return true;
+  }
+  final normalizedAssetPath = sound.assetPath.trim().toLowerCase();
+  return normalizedAssetPath.endsWith('/soft_rain.ogg') ||
+      normalizedAssetPath.endsWith('/soft_rain.mp3');
+}
 
 class SoundsScreen extends StatefulWidget {
   const SoundsScreen({
@@ -262,10 +271,8 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _playbackDriver = widget.playbackDriver ??
-        (_useSoloudSounds && defaultTargetPlatform == TargetPlatform.android
-            ? SoLoudSoundPlaybackDriver()
-            : JustAudioSoundPlaybackDriver(AudioPlayer()));
+    _playbackDriver =
+        widget.playbackDriver ?? _createPlaybackDriver(widget.sound);
     _sessionTicker = widget.sessionTicker ?? TimerSoundSessionTicker();
     _driverStateSubscription = _playbackDriver.playerStateStream.listen((_) {
       if (mounted) {
@@ -284,6 +291,15 @@ class _SoundDetailScreenState extends State<SoundDetailScreen> {
         setState(() {});
       }
     });
+  }
+
+  SoundPlaybackDriver _createPlaybackDriver(SoundItem sound) {
+    if (_useSoloudSounds &&
+        defaultTargetPlatform == TargetPlatform.android &&
+        shouldUseSoloudSoundProof(sound)) {
+      return SoLoudSoundPlaybackDriver();
+    }
+    return JustAudioSoundPlaybackDriver(AudioPlayer());
   }
 
   @override
@@ -1102,18 +1118,14 @@ class JustAudioSoundPlaybackDriver implements SoundPlaybackDriver {
 }
 
 class SoLoudSoundPlaybackDriver implements SoundPlaybackDriver {
-  SoLoudSoundPlaybackDriver({
-    soloud.SoLoud? soloudInstance,
-    BundledSoundFileCache? soundFileCache,
-  })  : _soloud = soloudInstance ?? soloud.SoLoud.instance,
-        _soundFileCache = soundFileCache ?? const BundledSoundFileCache() {
+  SoLoudSoundPlaybackDriver({soloud.SoLoud? soloudInstance})
+      : _soloud = soloudInstance ?? soloud.SoLoud.instance {
     _positionTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
       _pollPosition();
     });
   }
 
   final soloud.SoLoud _soloud;
-  final BundledSoundFileCache _soundFileCache;
   final StreamController<SoundPlaybackState> _stateController =
       StreamController<SoundPlaybackState>.broadcast();
   final StreamController<Object> _errorController =
@@ -1182,8 +1194,7 @@ class SoLoudSoundPlaybackDriver implements SoundPlaybackDriver {
     if (!_soloud.isInitialized) {
       await _soloud.init();
     }
-    final localPath = await _soundFileCache.materialize(assetPath);
-    _source = await _soloud.loadFile(localPath, mode: soloud.LoadMode.disk);
+    _source = await _soloud.loadAsset(assetPath, mode: soloud.LoadMode.memory);
     _duration = _soloud.getLength(_source!);
     _handle = _soloud.play(
       _source!,

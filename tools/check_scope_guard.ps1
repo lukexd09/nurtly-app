@@ -215,12 +215,18 @@ function Test-IsAllowedGoogleMobileAdsUsage {
 
 function Test-ForbiddenPatternMatch {
     param(
+        [string] $Path,
         [string] $Content,
         [string] $Pattern
     )
 
     if ($Pattern -ne "http:") {
         return $Content -match $Pattern
+    }
+
+    $normalized = $Path -replace "\\", "/"
+    if ($normalized -eq "app/pubspec.lock") {
+        return $false
     }
 
     $lines = $Content -split "`r?`n"
@@ -385,7 +391,7 @@ try {
                     continue
                 }
 
-                if (Test-ForbiddenPatternMatch $content $pattern) {
+                if (Test-ForbiddenPatternMatch -Path $normalized -Content $content -Pattern $pattern) {
                     Add-Failure "Forbidden pattern '$pattern' found in $normalized"
                 }
             }

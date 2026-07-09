@@ -348,6 +348,36 @@ void main() {
     ticker.dispose();
   });
 
+  test('Soft rain proof selector only matches the soft rain sound', () {
+    expect(
+      shouldUseSoloudSoundProof(
+        const SoundItem(
+          id: 'sound_soft_rain',
+          title: 'Soft rain',
+          category: 'Nature',
+          summary: 'Gentle rain for a calmer background.',
+          assetPath: 'assets/audio/soft_rain.mp3',
+          unlockType: 'free',
+        ),
+      ),
+      isTrue,
+    );
+
+    expect(
+      shouldUseSoloudSoundProof(
+        const SoundItem(
+          id: 'sound_room_fan',
+          title: 'Room fan',
+          category: 'Home',
+          summary: 'A soft fan sound for steady background calm.',
+          assetPath: 'assets/audio/room_fan.mp3',
+          unlockType: 'premium',
+        ),
+      ),
+      isFalse,
+    );
+  });
+
   testWidgets(
     'premium sound cards open paywall for free users and detail for premium users',
     (tester) async {
