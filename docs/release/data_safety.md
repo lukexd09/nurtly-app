@@ -23,6 +23,9 @@ For the public privacy policy publication flow, see [Privacy policy publication 
 - Billing is present for subscriptions.
 - Ads are planned and partially wired through the app.
 - MVP ad placement is currently planned to stay banner-only in passive browse areas, with no ads in Journal edit/create, active audio playback, Privacy / Settings, or startup flows. This is pending owner confirmation before it is treated as the final production behavior.
+- Android startup requests UMP consent info before banner loading, and banner requests remain blocked until the consent flow allows them.
+- The app surfaces privacy choices in Privacy & Data only when the consent state requires it.
+- The release build keeps the UMP consent flow separate from Nurtly-owned local data deletion.
 - Analytics is not currently enabled in the app.
 - The recommended MVP provider decision is no product analytics provider or SDK.
 - If analytics is approved later, the proposed MVP scope is limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes.
@@ -37,6 +40,14 @@ For the public privacy policy publication flow, see [Privacy policy publication 
 - Diagnostics or crash logs
 - User-provided content, including Journal data
 - Child profile fields, if any are added later
+
+## Android merged-manifest notes
+
+- `android.permission.INTERNET` is present in the merged Android manifest.
+- `com.google.android.gms.permission.AD_ID` is present in the merged Android manifest.
+- The manifest-merger blame report traces `AD_ID` to `com.google.android.gms:play-services-ads-lite:23.6.0`.
+- `ACCESS_ADSERVICES_AD_ID`, `ACCESS_ADSERVICES_ATTRIBUTION`, and `ACCESS_ADSERVICES_TOPICS` are also introduced by the same ads dependency path.
+- This finding should be reflected in the Data Safety draft and owner-confirmation notes before any public release decision.
 
 ## Questions to answer before submission
 

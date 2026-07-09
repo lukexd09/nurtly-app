@@ -280,4 +280,45 @@ void main() {
     expect(controller.activeSleep, isNull);
     expect(controller.entries.single.endAt, DateTime(2026, 5, 19, 10, 0));
   });
+
+  test('controller deleteAllEntries clears stored entries and resets day',
+      () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(
+        entries: [
+          JournalEntry.note(
+            id: 'note-1',
+            eventAt: DateTime(2026, 5, 18, 12, 0),
+            note: 'Stored note',
+          ),
+        ],
+      ),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    controller.goToPreviousDay();
+    expect(controller.entries, hasLength(1));
+
+    await controller.deleteAllEntries();
+
+    expect(controller.entries, isEmpty);
+    expect(controller.activeSleep, isNull);
+    expect(controller.selectedDay, DateTime(2026, 5, 19));
+  });
+
+  test('controller deleteAllEntries is safe when storage is already empty',
+      () async {
+    final controller = JournalController(
+      store: InMemoryJournalStore(),
+      now: () => DateTime(2026, 5, 19, 9, 30),
+    );
+    await controller.load();
+
+    await controller.deleteAllEntries();
+    await controller.deleteAllEntries();
+
+    expect(controller.entries, isEmpty);
+    expect(controller.selectedDay, DateTime(2026, 5, 19));
+  });
 }

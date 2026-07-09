@@ -101,7 +101,9 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     if (widget.consentFlow is Listenable) {
       (widget.consentFlow as Listenable).addListener(_handleConsentChanged);
     }
-    widget.consentFlow.initialize();
+    unawaited(
+      Future<void>.sync(widget.consentFlow.initialize).catchError((_) {}),
+    );
     widget.journalController.addListener(_handleJournalChanged);
     _premiumController.addListener(_handlePremiumChanged);
     _selectedLanguage = const AppLocaleResolver().resolve(
@@ -291,6 +293,38 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
         },
       ),
     );
+  }
+
+  Future<void> _openPrivacyChoices() async {
+    try {
+      await widget.consentFlow.showPrivacyOptions();
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_strings.privacyChoicesFailed)),
+      );
+    }
+  }
+
+  Future<void> _deleteAllLocalData() async {
+    await widget.journalController.deleteAllEntries();
+    await widget.languagePreferenceStore.delete();
+    await widget.reviewerAccessStore.delete();
+    if (!mounted) {
+      return;
+    }
+    final resolvedLanguage = const AppLocaleResolver().resolve(
+      preference: AppLanguagePreference.system,
+      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+    );
+    setState(() {
+      _selectedLanguage = resolvedLanguage;
+      _localizedContentLoader = null;
+      _localizedContentLoaderLanguage = null;
+    });
+    widget.onLanguageChanged?.call(resolvedLanguage);
   }
 
   Future<void> _restorePremiumAccess() async {
@@ -634,18 +668,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                                 ? widget.consentFlow as Listenable
                                 : null,
                             consentFlow: widget.consentFlow,
-                            onOpenPrivacyChoices: widget
-                                    .consentFlow.privacyOptionsRequired
-                                ? () {
-                                    unawaited(
-                                      widget.consentFlow.showPrivacyOptions(),
-                                    );
-                                  }
-                                : null,
-                            onDeleteAllLocalData: () async {
-                              await widget.journalController.deleteAllEntries();
-                              await widget.languagePreferenceStore.delete();
-                            },
+                            onOpenPrivacyChoices:
+                                widget.consentFlow.privacyOptionsRequired
+                                    ? () => unawaited(_openPrivacyChoices())
+                                    : null,
+                            onDeleteAllLocalData: _deleteAllLocalData,
                           ),
                         ),
                       );

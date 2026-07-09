@@ -159,6 +159,7 @@ class AppStrings {
     required this.privacyTitle,
     required this.privacySubtitle,
     required this.privacyChoices,
+    required this.privacyChoicesFailed,
     required this.deleteAllLocalData,
     required this.deleteAllLocalDataTitle,
     required this.deleteAllLocalDataBody,
@@ -377,6 +378,7 @@ class AppStrings {
   final String privacyTitle;
   final String privacySubtitle;
   final String privacyChoices;
+  final String privacyChoicesFailed;
   final String deleteAllLocalData;
   final String deleteAllLocalDataTitle;
   final String deleteAllLocalDataBody;
@@ -602,6 +604,7 @@ class AppStrings {
     privacyTitle: 'Privacy & Data',
     privacySubtitle: 'What Nurtly does with data in this MVP.',
     privacyChoices: 'Privacy choices',
+    privacyChoicesFailed: 'Could not open privacy choices. Please try again.',
     deleteAllLocalData: 'Delete all local data',
     deleteAllLocalDataTitle: 'Delete all local data?',
     deleteAllLocalDataBody:
@@ -843,6 +846,8 @@ class AppStrings {
     privacyTitle: 'Prywatność i dane',
     privacySubtitle: 'Jak Nurtly używa danych w tym MVP.',
     privacyChoices: 'Ustawienia prywatności reklam',
+    privacyChoicesFailed:
+        'Nie udało się otworzyć ustawień prywatności reklam. Spróbuj ponownie.',
     deleteAllLocalData: 'Usuń wszystkie dane lokalne',
     deleteAllLocalDataTitle: 'Usunąć wszystkie dane lokalne?',
     deleteAllLocalDataBody:

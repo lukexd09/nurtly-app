@@ -70,10 +70,12 @@ class PrivacyDataScreen extends StatelessWidget {
           content: Text(strings.deleteAllLocalDataBody),
           actions: [
             TextButton(
+              key: const ValueKey('delete-all-local-data-cancel'),
               onPressed: () => Navigator.of(dialogContext).pop(false),
               child: Text(strings.back),
             ),
             FilledButton(
+              key: const ValueKey('delete-all-local-data-confirm'),
               onPressed: () => Navigator.of(dialogContext).pop(true),
               child: Text(strings.deleteAllLocalData),
             ),

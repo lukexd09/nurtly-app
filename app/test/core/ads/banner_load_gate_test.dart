@@ -6,6 +6,7 @@ void main() {
       () {
     final gate = BannerLoadGate();
 
+    expect(gate.canAttemptLoad, isFalse);
     gate.markConsentGranted();
     expect(gate.canAttemptLoad, isTrue);
     expect(gate.beginLoadAttempt(), isTrue);

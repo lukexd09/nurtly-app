@@ -874,10 +874,12 @@ void main() {
     final languageStore = FakeLanguagePreferenceStore(
       saved: AppLanguage.polish,
     );
+    final reviewerAccessStore = FakeReviewerAccessStore(saved: true);
     await _pumpNurtlyApp(
       tester,
       journalController: journalController,
       languagePreferenceStore: languageStore,
+      reviewerAccessStore: reviewerAccessStore,
     );
 
     expect(find.text('Brak wpisu'), findsNothing);
@@ -888,18 +890,66 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Usuń wszystkie dane lokalne').first);
+    await tester.tap(find.text('Usuń wszystkie dane lokalne'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Usuń wszystkie dane lokalne').last);
+    await tester
+        .tap(find.byKey(const ValueKey('delete-all-local-data-confirm')));
     await tester.pumpAndSettle();
 
     expect(journalStore.entries, isEmpty);
     expect(languageStore.saved, isNull);
+    expect(reviewerAccessStore.saved, isFalse);
     await _tapBack(tester);
     await tester.pumpAndSettle();
     await _tapJournalTab(tester);
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('journal-empty-state')), findsOneWidget);
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    expect(find.text('English'), findsOneWidget);
+  });
+
+  testWidgets('Delete all local data cancel keeps local data intact',
+      (tester) async {
+    final journalStore = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'entry-1',
+          createdAt: DateTime(2026, 6, 25, 10),
+          eventAt: DateTime(2026, 6, 25, 10),
+          note: 'Test note',
+        ),
+      ],
+    );
+    final journalController = JournalController(store: journalStore);
+    await journalController.load();
+    final languageStore = FakeLanguagePreferenceStore(
+      saved: AppLanguage.polish,
+    );
+    final reviewerAccessStore = FakeReviewerAccessStore(saved: true);
+    await _pumpNurtlyApp(
+      tester,
+      journalController: journalController,
+      languagePreferenceStore: languageStore,
+      reviewerAccessStore: reviewerAccessStore,
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Usuń wszystkie dane lokalne'));
+    await tester.pumpAndSettle();
+    await tester
+        .tap(find.byKey(const ValueKey('delete-all-local-data-cancel')));
+    await tester.pumpAndSettle();
+
+    expect(journalStore.entries, isNotEmpty);
+    expect(languageStore.saved, AppLanguage.polish);
+    expect(reviewerAccessStore.saved, isTrue);
   });
 
   testWidgets('Delete all local data surfaces preference delete failures',
@@ -921,9 +971,10 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Delete all local data').first);
+    await tester.tap(find.text('Delete all local data'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Delete all local data').last);
+    await tester
+        .tap(find.byKey(const ValueKey('delete-all-local-data-confirm')));
     await tester.pumpAndSettle();
 
     expect(find.text('Could not delete local data.'), findsOneWidget);
@@ -974,6 +1025,44 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Privacy choices'), findsNothing);
+  });
+
+  testWidgets('Privacy choices failure shows feedback and does not crash',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(
+      privacyRequired: true,
+      throwOnShowPrivacyOptions: true,
+    );
+    await _pumpNurtlyApp(
+      tester,
+      consentFlow: consentFlow,
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Privacy choices'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Could not open privacy choices. Please try again.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('UMP initialize failure does not block the app', (tester) async {
+    await _pumpNurtlyApp(
+      tester,
+      consentFlow: _FakeConsentFlow(throwOnInitialize: true),
+    );
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
   });
 
   testWidgets('saved Polish language overrides system locale on startup',
@@ -1356,10 +1445,14 @@ class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
   _FakeConsentFlow({
     this.canRequestAdsValue = false,
     this.privacyRequired = false,
+    this.throwOnInitialize = false,
+    this.throwOnShowPrivacyOptions = false,
   });
 
   bool canRequestAdsValue;
   bool privacyRequired;
+  bool throwOnInitialize;
+  bool throwOnShowPrivacyOptions;
   int initializeCalls = 0;
   int showPrivacyOptionsCalls = 0;
 
@@ -1372,11 +1465,17 @@ class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
   @override
   Future<void> initialize() async {
     initializeCalls++;
+    if (throwOnInitialize) {
+      throw StateError('initialize failed');
+    }
   }
 
   @override
   Future<void> showPrivacyOptions() async {
     showPrivacyOptionsCalls++;
+    if (throwOnShowPrivacyOptions) {
+      throw StateError('show privacy options failed');
+    }
   }
 }
 

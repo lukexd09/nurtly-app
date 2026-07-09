@@ -25,6 +25,10 @@ void main() {
       strings.reviewerAccessActionFailed,
       'Reviewer access could not be updated. Please try again.',
     );
+    expect(
+      strings.privacyChoicesFailed,
+      'Could not open privacy choices. Please try again.',
+    );
     expect(strings.premiumSectionTitle, 'Premium');
     expect(strings.premiumStatusLabel, 'Status');
     expect(strings.premiumStatusFree, 'Free plan');

@@ -28,8 +28,10 @@ This note summarizes the current release-readiness state for monetization and ad
 - Android startup requests UMP consent info before banner loading.
 - Banner ads are only initialized after `canRequestAds()` becomes true.
 - If privacy options are required, the app surfaces a privacy choices action in Privacy & Data.
+- Opening privacy choices uses the consent abstraction and fails gracefully if UMP is unavailable.
 - Debug EEA testing is enabled only in debug builds.
 - Local debug test device IDs can be supplied with `--dart-define=UMP_TEST_DEVICE_IDS=ID1,ID2`.
+- Do not commit a real test device identifier; keep any local test IDs in an uncommitted developer shell profile or local command line history.
 
 ## 2. Required Google Play Console setup
 
@@ -60,7 +62,8 @@ This note summarizes the current release-readiness state for monetization and ad
 
 - Privacy & Data includes a delete-all-local-data action.
 - The action clears local journal entries and safe resettable preferences.
-- It does not delete Google Play purchase history.
+- The action also resets reviewer access and the in-memory language selection back to the system locale.
+- It does not delete or alter Google Play purchase history, UMP-managed consent state, or any provider-owned data.
 - The UI should land back on an empty journal state after success.
 
 ## 6. Release checklist
