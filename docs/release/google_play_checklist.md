@@ -131,8 +131,8 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Tester group and invite flow are ready.
 - [x] PASS - reviewer access QA completed for build `Internal Testing 0.1.0+1` on the signed release candidate.
 - [x] NOT RUN - purchased Premium precedence.
-- [x] FAIL / OPEN - Sounds playback remains tracked in `#212`.
-- [x] FAIL / OPEN - Home daily idea Premium gating remains tracked in `#213`.
+- [x] RESOLVED - Sounds playback was tracked in `#212` and is now treated as a closed historical blocker.
+- [x] RESOLVED - Home daily idea Premium gating was tracked in `#213` and is now treated as a closed historical blocker.
 
 ## 11. Public-release blockers
 
