@@ -120,4 +120,4 @@ This document is the operational release gate for inviting closed-test users to 
 
 - This document is a gate, not a product feature spec.
 - Confirm no private release configuration was committed.
-- Confirm #104 was not closed.
+- Confirm #104 is already closed and should not be treated as an open blocker.

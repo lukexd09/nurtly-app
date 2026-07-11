@@ -22,17 +22,18 @@ Current status addendum:
 - Signed AAB evidence and Internal Testing installation evidence are now recorded in `docs/release/internal_testing_0_1_0_1_evidence.md`.
 - Manual reviewer QA for the signed Internal Testing build is documented in the evidence pack and checklist updates.
 - Android signing and Android build/install evidence are resolved in the release evidence pack.
-- `#212` and `#213` remain open and keep the release blocked.
-- `#104` and `#125` remain open.
+- `#212` and `#213` are resolved historical blockers.
+- `#104` is already closed in the repository history; do not treat it as an open blocker here.
+- `#125` remains open.
 
-The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, Journal, Privacy & Data, ads policy, localization, and the monetization flows all have code, tests, and release documentation aligned with the current MVP contract. The release pack is still blocked because release-critical evidence is incomplete for audio licensing BLK-002, store assets, privacy publication, Play Console setup, and the open issues tracked in `#212` and `#213`.
+The repository-side MVP release shape is broadly coherent: Home, Play, Sounds, Journal, Privacy & Data, ads policy, localization, and the monetization flows all have code, tests, and release documentation aligned with the current MVP contract. The release pack is still blocked because release-critical evidence is incomplete for audio licensing BLK-002, store assets, privacy publication, Play Console setup, and the remaining owner-side items in the blocker register.
 
 ## Current Assessment
 
 - App behavior is mostly in line with the release contract already documented in `docs/release/`.
 - At the time of the 2026-06-14 audit, the repo did not contain a final release blocker register, so one was added in `docs/release/final_release_blockers.md`.
 - At the time of the 2026-06-14 audit, the repo did not contain a final readiness summary, so this document became the single repo-side source of truth for closed-testing go/no-go.
-- Background audio is explicitly deferred post-MVP.
+- Background audio and lock-screen controls are explicitly deferred post-MVP.
 - Interstitial ads, rewarded ads, cloud sync, accounts, backend validation, analytics SDKs, and production IDs remain out of scope.
 
 ## Scope
@@ -99,8 +100,9 @@ Release notes:
 
 - The implementation exists for the in-screen audio player, timer presets, looping, and fade-out.
 - `sounds_screen_test.dart` covers rendering, navigation, premium gating, and ad placement, but it does not exercise the real audio-player runtime, countdown behavior, fade-volume transition, or app lifecycle transitions on a device.
-- Real-device verification still failed in the Play-installed Android release build tracked by `#212`.
-- Background audio remains a post-MVP decision rather than a closed-testing requirement.
+- Real-device verification for the historical `#212` blocker is now resolved in the release evidence trail.
+- The audible loop-boundary gap is an accepted MVP limitation, not an active blocker.
+- Background audio and lock-screen controls remain post-MVP decisions rather than closed-testing requirements.
 - Missing or unclear sound provenance remains recorded separately in the release register, but it is not the current blocker addressed by this addendum.
 
 ## Privacy and Data Readiness
@@ -267,9 +269,9 @@ See the authoritative register in `docs/release/final_release_blockers.md`.
 - `#125`: keep open until bundled audio provenance is documented or the bundled assets are replaced.
 - `#127`: close after owner confirmation for the live privacy URL and Play Console publication steps.
 - `#131`: close after owner confirmation for the final Play Console ad configuration and disclosures.
-- `#104 remains open`: do not close automatically.
-- `#212`: keep open until bundled Sounds playback succeeds in the Google Play Android release build.
-- `#213`: keep open until Home daily idea Premium gating is fixed and verified.
+- `#104`: already closed; do not treat it as an open blocker here.
+- `#212`: resolved historical blocker; do not reopen gapless-loop work.
+- `#213`: resolved historical blocker.
 
 ## Automated Verification
 
