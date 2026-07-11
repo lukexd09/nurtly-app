@@ -19,6 +19,9 @@ For the public privacy policy publication flow, see [Privacy policy publication 
 - Journal is local-only.
 - Journal data is not synced to a backend or cloud service.
 - Journal note content is not sent to a backend in the current implementation.
+- Local data deletion is separate from UMP-managed consent.
+- Local data deletion currently covers journal entries, the saved language preference, and reviewer-access state.
+- Google Play purchase history is not affected by local data deletion.
 - The MVP does not require a child name or exact child birthdate.
 - Billing is present for subscriptions.
 - Ads are planned and partially wired through the app.

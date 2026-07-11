@@ -17,6 +17,9 @@ This note summarizes the current release-readiness state for monetization and ad
 ### Ads
 
 - Ads are wired through the app.
+- The merged Android manifest contains `INTERNET`.
+- The merged Android manifest contains `AD_ID`.
+- `AD_ID` is introduced by the Google Mobile Ads dependency through `play-services-ads-lite`.
 - Current Android manifest uses the Google test ads app id for development.
 - Banner ads are the current ad format.
 - The committed banner ad unit IDs use Google test values for development and closed-test validation.
@@ -28,6 +31,7 @@ This note summarizes the current release-readiness state for monetization and ad
 - Android startup requests UMP consent info before banner loading.
 - Banner ads are only initialized after `canRequestAds()` becomes true.
 - If privacy options are required, the app surfaces a privacy choices action in Privacy & Data.
+- Privacy choices appears only when required.
 - Debug EEA testing is enabled only in debug builds.
 - Local debug test device IDs can be supplied with `--dart-define=UMP_TEST_DEVICE_IDS=ID1,ID2`.
 
@@ -59,7 +63,8 @@ This note summarizes the current release-readiness state for monetization and ad
 ## 5. Local data deletion
 
 - Privacy & Data includes a delete-all-local-data action.
-- The action clears local journal entries and safe resettable preferences.
+- The action clears local journal entries, the saved language preference, and reviewer-access state.
+- The action is separate from UMP consent and does not delete UMP-managed consent.
 - It does not delete Google Play purchase history.
 - The UI should land back on an empty journal state after success.
 
