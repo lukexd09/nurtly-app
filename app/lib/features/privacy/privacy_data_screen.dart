@@ -70,10 +70,12 @@ class PrivacyDataScreen extends StatelessWidget {
           content: Text(strings.deleteAllLocalDataBody),
           actions: [
             TextButton(
+              key: const ValueKey('delete-all-local-data-cancel'),
               onPressed: () => Navigator.of(dialogContext).pop(false),
               child: Text(strings.back),
             ),
             FilledButton(
+              key: const ValueKey('delete-all-local-data-confirm'),
               onPressed: () => Navigator.of(dialogContext).pop(true),
               child: Text(strings.deleteAllLocalData),
             ),
@@ -147,10 +149,12 @@ class _PrivacyBody extends StatelessWidget {
             _PrivacyLine(strings.birthdateNotRequired),
             if (privacyChoicesVisible && onOpenPrivacyChoices != null)
               _PrivacyAction(
+                key: const ValueKey('privacy-choices-action'),
                 label: strings.privacyChoices,
                 onTap: onOpenPrivacyChoices!,
               ),
             _PrivacyAction(
+              key: const ValueKey('delete-all-local-data-action'),
               label: strings.deleteAllLocalData,
               onTap: () => onConfirmDelete(context),
             ),
@@ -193,6 +197,7 @@ class _PrivacyLine extends StatelessWidget {
 
 class _PrivacyAction extends StatelessWidget {
   const _PrivacyAction({
+    super.key,
     required this.label,
     required this.onTap,
   });

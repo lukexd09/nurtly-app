@@ -10,6 +10,7 @@ class AppStrings {
     required this.appVersionLabel,
     required this.privacy,
     required this.privacyData,
+    required this.privacyChoicesFailed,
     required this.about,
     required this.reviewerAccess,
     required this.reviewerAccessTitle,
@@ -228,6 +229,7 @@ class AppStrings {
   final String appVersionLabel;
   final String privacy;
   final String privacyData;
+  final String privacyChoicesFailed;
   final String about;
   final String reviewerAccess;
   final String reviewerAccessTitle;
@@ -446,6 +448,7 @@ class AppStrings {
     appVersionLabel: 'App version',
     privacy: 'Privacy',
     privacyData: 'Privacy & Data',
+    privacyChoicesFailed: 'Could not open privacy choices. Please try again.',
     about: 'About',
     reviewerAccess: 'Reviewer access',
     reviewerAccessTitle: 'Reviewer access',
@@ -684,6 +687,8 @@ class AppStrings {
     appVersionLabel: 'Wersja aplikacji',
     privacy: 'Prywatność',
     privacyData: 'Prywatność i dane',
+    privacyChoicesFailed:
+        'Nie udało się otworzyć ustawień prywatności reklam. Spróbuj ponownie.',
     about: 'Informacje',
     reviewerAccess: 'Dostęp recenzencki',
     reviewerAccessTitle: 'Dostęp recenzencki',

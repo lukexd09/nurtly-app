@@ -11,6 +11,10 @@ void main() {
     expect(strings.general, 'General');
     expect(strings.languageLabel, 'Language');
     expect(strings.privacyData, 'Privacy & Data');
+    expect(
+      strings.privacyChoicesFailed,
+      'Could not open privacy choices. Please try again.',
+    );
     expect(strings.about, 'About');
     expect(strings.reviewerAccessTitle, 'Reviewer access');
     expect(strings.reviewerAccessSubtitle, 'Local only');
@@ -114,6 +118,10 @@ void main() {
     expect(strings.general, 'Ogólne');
     expect(strings.languageLabel, 'Język');
     expect(strings.privacyData, 'Prywatność i dane');
+    expect(
+      strings.privacyChoicesFailed,
+      'Nie udało się otworzyć ustawień prywatności reklam. Spróbuj ponownie.',
+    );
     expect(strings.about, 'Informacje');
     expect(strings.reviewerAccessTitle, 'Dostęp recenzencki');
     expect(
