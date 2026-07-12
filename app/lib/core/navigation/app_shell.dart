@@ -194,7 +194,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   Future<void> _deleteAllLocalData() async {
     await widget.journalController.deleteAllEntries();
     await widget.languagePreferenceStore.delete();
-    await widget.reviewerAccessStore.delete();
+    await _premiumController.disableReviewerAccess();
 
     final resolver = const AppLocaleResolver();
     final resolvedLanguage = resolver.resolve(

@@ -921,6 +921,7 @@ void main() {
         saved: AppLanguage.polish,
       );
       final reviewerStore = FakeReviewerAccessStore(saved: true);
+      final premiumProvider = FakePremiumEntitlementProvider();
 
       await _pumpNurtlyApp(
         tester,
@@ -928,6 +929,7 @@ void main() {
         journalController: journalController,
         languagePreferenceStore: languageStore,
         reviewerAccessStore: reviewerStore,
+        premiumEntitlementProvider: premiumProvider,
       );
 
       expect(find.text('Dziennik'), findsOneWidget);
@@ -952,13 +954,37 @@ void main() {
       expect(journalStore.entries, isEmpty);
       expect(languageStore.saved, isNull);
       expect(reviewerStore.saved, isFalse);
+
       await _tapBack(tester);
       await tester.pumpAndSettle();
-      await _tapJournalTab(tester);
+      await _tapSettings(tester);
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('journal-empty-state')), findsOneWidget);
-      expect(find.byTooltip('Settings'), findsOneWidget);
-      expect(find.byTooltip('Ustawienia'), findsNothing);
+      await _tapAboutFiveTimes(tester);
+
+      expect(
+        tester
+            .widget<TextField>(
+              find.byKey(const ValueKey('reviewer-access-code-field')),
+            )
+            .enabled,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.byKey(const ValueKey('reviewer-access-activate')),
+            )
+            .onPressed,
+        isNotNull,
+      );
+      expect(
+        tester
+            .widget<TextButton>(
+              find.byKey(const ValueKey('reviewer-access-reset')),
+            )
+            .onPressed,
+        isNull,
+      );
     },
   );
 
