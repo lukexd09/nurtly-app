@@ -24,6 +24,11 @@ class SharedPreferencesReviewerAccessStore implements ReviewerAccessStore {
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.setBool(key, enabled);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('reviewer access write failed');
+      }
       throw StateError('reviewer access write failed');
     }
   }
@@ -33,6 +38,11 @@ class SharedPreferencesReviewerAccessStore implements ReviewerAccessStore {
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.remove(key);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('reviewer access delete failed');
+      }
       throw StateError('reviewer access delete failed');
     }
   }

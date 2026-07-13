@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'journal_entry.dart';
 
 abstract interface class JournalStore {
@@ -41,6 +40,11 @@ class SharedPreferencesJournalStore implements JournalStore {
           jsonEncode(activeEntries.map((entry) => entry.toJson()).toList());
       final success = await prefs.setString(key, payload);
       if (!success) {
+        try {
+          await prefs.reload();
+        } catch (_) {
+          throw StateError('journal write failed');
+        }
         throw StateError('journal write failed');
       }
     }
@@ -53,6 +57,11 @@ class SharedPreferencesJournalStore implements JournalStore {
     final payload = jsonEncode(entries.map((entry) => entry.toJson()).toList());
     final success = await prefs.setString(key, payload);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('journal write failed');
+      }
       throw StateError('journal write failed');
     }
   }
@@ -62,6 +71,11 @@ class SharedPreferencesJournalStore implements JournalStore {
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.remove(key);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('journal delete failed');
+      }
       throw StateError('journal delete failed');
     }
   }

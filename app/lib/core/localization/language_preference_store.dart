@@ -32,6 +32,11 @@ class SharedPreferencesLanguagePreferenceStore
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.setString(key, language.languageCode);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('language preference write failed');
+      }
       throw StateError('language preference write failed');
     }
   }
@@ -41,6 +46,11 @@ class SharedPreferencesLanguagePreferenceStore
     final prefs = await SharedPreferences.getInstance();
     final success = await prefs.remove(key);
     if (!success) {
+      try {
+        await prefs.reload();
+      } catch (_) {
+        throw StateError('language preference delete failed');
+      }
       throw StateError('language preference delete failed');
     }
   }

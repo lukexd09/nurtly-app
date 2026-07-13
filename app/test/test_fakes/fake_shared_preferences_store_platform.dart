@@ -3,15 +3,18 @@ import 'package:shared_preferences_platform_interface/types.dart';
 
 class FakeSharedPreferencesStorePlatform
     extends SharedPreferencesStorePlatform {
-  static const String _legacyPrefix = 'flutter.';
-
   FakeSharedPreferencesStorePlatform({
     Map<String, Object>? initialValues,
     Set<String>? falseOnSetKeys,
     Set<String>? falseOnRemoveKeys,
-  })  : _values = Map<String, Object>.from(initialValues ?? const {}),
-        _falseOnSetKeys = falseOnSetKeys ?? const <String>{},
-        _falseOnRemoveKeys = falseOnRemoveKeys ?? const <String>{};
+  })  : _values = <String, Object>{
+          for (final entry
+              in (initialValues ?? const <String, Object>{}).entries)
+            _storageKey(entry.key): entry.value,
+        },
+        _falseOnSetKeys = Set<String>.from(falseOnSetKeys ?? const <String>{}),
+        _falseOnRemoveKeys =
+            Set<String>.from(falseOnRemoveKeys ?? const <String>{});
 
   @override
   bool get isMock => true;
@@ -20,6 +23,19 @@ class FakeSharedPreferencesStorePlatform
   final Set<String> _falseOnSetKeys;
   final Set<String> _falseOnRemoveKeys;
 
+  void disableSetFailure(String key) {
+    _falseOnSetKeys.remove(_logicalKey(key));
+  }
+
+  void disableRemoveFailure(String key) {
+    _falseOnRemoveKeys.remove(_logicalKey(key));
+  }
+
+  bool containsPersistedKey(String key) =>
+      _values.containsKey(_storageKey(key));
+
+  Object? persistedValue(String key) => _values[_storageKey(key)];
+
   @override
   Future<Map<String, Object>> getAll() async {
     return Map<String, Object>.from(_values);
@@ -27,7 +43,7 @@ class FakeSharedPreferencesStorePlatform
 
   @override
   Future<bool> setValue(String valueType, String key, Object value) async {
-    if (_shouldFailKey(key, _falseOnSetKeys)) {
+    if (_falseOnSetKeys.contains(_logicalKey(key))) {
       return false;
     }
     _values[key] = value;
@@ -36,7 +52,7 @@ class FakeSharedPreferencesStorePlatform
 
   @override
   Future<bool> remove(String key) async {
-    if (_shouldFailKey(key, _falseOnRemoveKeys)) {
+    if (_falseOnRemoveKeys.contains(_logicalKey(key))) {
       return false;
     }
     _values.remove(key);
@@ -62,10 +78,15 @@ class FakeSharedPreferencesStorePlatform
     return Map<String, Object>.from(_values);
   }
 
-  bool _shouldFailKey(String key, Set<String> failingKeys) {
-    return failingKeys.contains(key) ||
-        failingKeys.contains(key.startsWith(_legacyPrefix)
-            ? key.substring(_legacyPrefix.length)
-            : '$_legacyPrefix$key');
+  static String _storageKey(String key) {
+    return key.startsWith(_legacyPrefix) ? key : '$_legacyPrefix$key';
   }
+
+  static String _logicalKey(String key) {
+    return key.startsWith(_legacyPrefix)
+        ? key.substring(_legacyPrefix.length)
+        : key;
+  }
+
+  static const String _legacyPrefix = 'flutter.';
 }
