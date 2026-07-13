@@ -3,6 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurtly/core/localization/app_language.dart';
 import 'package:nurtly/core/localization/language_preference_store.dart';
 
+import '../../test_fakes/fake_shared_preferences_store_platform.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -39,5 +42,17 @@ void main() {
     final store = SharedPreferencesLanguagePreferenceStore();
 
     expect(await store.load(), isNull);
+  });
+
+  test('delete failures remain retryable', () async {
+    final previous = SharedPreferencesStorePlatform.instance;
+    final platform = FakeSharedPreferencesStorePlatform(
+      falseOnRemoveKeys: {SharedPreferencesLanguagePreferenceStore.key},
+    );
+    SharedPreferencesStorePlatform.instance = platform;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = previous);
+    final store = SharedPreferencesLanguagePreferenceStore();
+
+    await expectLater(store.delete(), throwsStateError);
   });
 }

@@ -1,7 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nurtly/core/localization/language_preference_store.dart';
+import 'package:nurtly/core/monetization/reviewer_access_store.dart';
 import 'package:nurtly/core/privacy/local_data_deletion.dart';
+import 'package:nurtly/features/journal/journal_store.dart';
+
+import '../../test_fakes/fake_shared_preferences_store_platform.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('classifies complete deletion', () async {
     final result = await const LocalDataDeletionCoordinator().deleteAll(
       deleteJournal: () async {},
@@ -65,5 +73,38 @@ void main() {
 
     expect(first.status, LocalDataDeletionStatus.complete);
     expect(second.status, LocalDataDeletionStatus.complete);
+  });
+
+  test('false journal persistence prevents a complete deletion result',
+      () async {
+    final previous = SharedPreferencesStorePlatform.instance;
+    final platform = FakeSharedPreferencesStorePlatform(
+      falseOnRemoveKeys: {
+        SharedPreferencesJournalStore.key,
+        SharedPreferencesLanguagePreferenceStore.key,
+        SharedPreferencesReviewerAccessStore.key,
+      },
+    );
+    SharedPreferencesStorePlatform.instance = platform;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = previous);
+    final coordinator = const LocalDataDeletionCoordinator();
+
+    final result = await coordinator.deleteAll(
+      deleteJournal: () async {
+        final store = SharedPreferencesJournalStore();
+        await store.deleteAllEntries();
+      },
+      deleteLanguage: () async {
+        final store = SharedPreferencesLanguagePreferenceStore();
+        await store.delete();
+      },
+      deleteReviewerAccess: () async {
+        final store = SharedPreferencesReviewerAccessStore();
+        await store.delete();
+      },
+    );
+
+    expect(result.status, isNot(LocalDataDeletionStatus.complete));
+    expect(result.failed, contains(LocalDataComponent.journal));
   });
 }

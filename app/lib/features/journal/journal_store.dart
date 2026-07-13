@@ -30,23 +30,40 @@ class SharedPreferencesJournalStore implements JournalStore {
       return const <JournalEntry>[];
     }
 
-    return decoded
+    final entries = decoded
         .whereType<Map>()
         .map((item) => JournalEntry.fromJson(Map<String, dynamic>.from(item)))
         .toList(growable: false);
+    final activeEntries =
+        entries.where((entry) => !entry.isDeleted).toList(growable: false);
+    if (activeEntries.length != entries.length) {
+      final payload =
+          jsonEncode(activeEntries.map((entry) => entry.toJson()).toList());
+      final success = await prefs.setString(key, payload);
+      if (!success) {
+        throw StateError('journal write failed');
+      }
+    }
+    return activeEntries;
   }
 
   @override
   Future<void> saveEntries(List<JournalEntry> entries) async {
     final prefs = await SharedPreferences.getInstance();
     final payload = jsonEncode(entries.map((entry) => entry.toJson()).toList());
-    await prefs.setString(key, payload);
+    final success = await prefs.setString(key, payload);
+    if (!success) {
+      throw StateError('journal write failed');
+    }
   }
 
   @override
   Future<void> deleteAllEntries() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
+    final success = await prefs.remove(key);
+    if (!success) {
+      throw StateError('journal delete failed');
+    }
   }
 }
 

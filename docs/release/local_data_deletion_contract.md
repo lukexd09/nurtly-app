@@ -1,31 +1,34 @@
-# Local data deletion contract
+# Local Data Deletion Contract
 
-This document records the local-data behavior implemented for task #180.
+The MVP delete-all flow is local-only and must be truthful about what is removed from persistence.
 
-## Delete all local data
+## Current contract
 
-The action covers the three Nurtly-owned local stores:
+- Journal entries are deleted from local persistence.
+- Saved language preference is deleted from local persistence.
+- Reviewer access is deleted from local persistence.
+- Google Play purchase history is not touched.
+- Premium entitlement is not reset.
+- UMP consent state is not deleted by local data removal.
 
-| Component | Store/state removed on success | Google-managed state touched |
-| --- | --- | --- |
-| Journal | All persisted Journal entries and active in-memory Journal state | None |
-| Language | Saved language preference; the active language returns to the current system language | None |
-| Reviewer access | Persisted reviewer-access flag and active-session reviewer access | None |
+## Legacy journal migration
 
-Real Google Play Premium entitlement, Google Play purchase history and UMP consent
-are intentionally preserved. The action is safe to repeat when stores are already
-empty.
+Older persisted Journal payloads may contain entries with `isDeleted == true`.
 
-Each store operation runs independently. The result is `complete` when all three
-operations succeed, `partial` when at least one succeeds and another fails, and
-`failed` when all three fail. The UI reports these states without exposing store
-keys or internal errors. A retry runs the same idempotent operations and can finish
-components that failed previously.
+When those entries are encountered during load:
 
-## Individual Journal deletion
+- they are excluded from loaded Journal state;
+- the stored JSON is rewritten without them;
+- the deleted entry IDs and note/body content are removed from persistence.
 
-Deleting a Journal entry removes it from the controller list and writes the
-remaining list to persistence. The entry body, note and other fields are not kept
-as a soft-deleted record. Unknown and repeated IDs are safe. The legacy
-`isDeleted` field remains decodable for historical payload compatibility, but new
-deletions do not create records with `isDeleted: true`.
+The migration preserves active entries and remains safe on repeated loads.
+
+## Persistence truthfulness
+
+Deletion flows must not report success when the underlying persistence operation returns `false`.
+
+For the Journal store, language preference store, and reviewer-access store:
+
+- a failed write or remove result must surface as a failure;
+- delete-all must not be reported as complete if any component fails;
+- retrying a failed component should remain possible on a later attempt.

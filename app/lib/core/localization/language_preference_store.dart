@@ -30,12 +30,18 @@ class SharedPreferencesLanguagePreferenceStore
   @override
   Future<void> save(AppLanguage language) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, language.languageCode);
+    final success = await prefs.setString(key, language.languageCode);
+    if (!success) {
+      throw StateError('language preference write failed');
+    }
   }
 
   @override
   Future<void> delete() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
+    final success = await prefs.remove(key);
+    if (!success) {
+      throw StateError('language preference delete failed');
+    }
   }
 }

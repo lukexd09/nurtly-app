@@ -22,12 +22,18 @@ class SharedPreferencesReviewerAccessStore implements ReviewerAccessStore {
   @override
   Future<void> save(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(key, enabled);
+    final success = await prefs.setBool(key, enabled);
+    if (!success) {
+      throw StateError('reviewer access write failed');
+    }
   }
 
   @override
   Future<void> delete() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
+    final success = await prefs.remove(key);
+    if (!success) {
+      throw StateError('reviewer access delete failed');
+    }
   }
 }
