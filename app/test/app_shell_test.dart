@@ -1058,9 +1058,71 @@ void main() {
     await tester.tap(find.text('Delete all local data').last);
     await tester.pumpAndSettle();
 
-    expect(find.text('Could not delete local data.'), findsOneWidget);
+    expect(
+      find.text('Some local data was deleted. Please try again to finish.'),
+      findsOneWidget,
+    );
     expect(journalStore.entries, isEmpty);
   });
+
+  testWidgets(
+    'Delete all local data reports reviewer failure after earlier success',
+    (tester) async {
+      final journalStore = InMemoryJournalStore(
+        entries: [
+          JournalEntry.note(
+            id: 'entry-1',
+            createdAt: DateTime(2026, 6, 25, 10),
+            eventAt: DateTime(2026, 6, 25, 10),
+            note: 'Test note',
+          ),
+        ],
+      );
+      final journalController = JournalController(store: journalStore);
+      await journalController.load();
+      final languageStore = FakeLanguagePreferenceStore(
+        saved: AppLanguage.polish,
+      );
+      final reviewerStore = FakeReviewerAccessStore(
+        saved: true,
+        failOnDelete: true,
+      );
+      await _pumpNurtlyApp(
+        tester,
+        systemLocale: const Locale('en'),
+        journalController: journalController,
+        languagePreferenceStore: languageStore,
+        reviewerAccessStore: reviewerStore,
+      );
+
+      await _tapSettings(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('settings-privacy-data')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('delete-all-local-data-action')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('delete-all-local-data-confirm')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'Usunięto część danych lokalnych. Spróbuj ponownie, aby dokończyć.',
+        ),
+        findsOneWidget,
+      );
+      expect(journalStore.entries, isEmpty);
+      expect(languageStore.saved, isNull);
+      expect(reviewerStore.saved, isTrue);
+    },
+  );
 
   testWidgets('Delete all local data stays safe when repeated', (tester) async {
     final languageStore = FakeLanguagePreferenceStore();

@@ -34,6 +34,34 @@ void main() {
     expect(loaded, isEmpty);
   });
 
+  test(
+    'shared preferences payload no longer contains a deleted note',
+    () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      final store = SharedPreferencesJournalStore();
+      final controller = JournalController(
+        store: store,
+        now: () => DateTime(2026, 5, 19, 14),
+      );
+      await controller.load();
+      await controller.addEntry(
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'Private note to remove',
+        ),
+      );
+
+      await controller.deleteEntry('note-1');
+
+      final prefs = await SharedPreferences.getInstance();
+      final payload = prefs.getString(SharedPreferencesJournalStore.key);
+      expect(payload, '[]');
+      expect(payload, isNot(contains('Private note to remove')));
+      expect((await store.loadEntries()), isEmpty);
+    },
+  );
+
   test('in-memory store keeps active sleep state in saved entries', () async {
     final store = InMemoryJournalStore();
     final controller = JournalController(

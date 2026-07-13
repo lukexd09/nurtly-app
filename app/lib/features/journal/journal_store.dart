@@ -53,9 +53,13 @@ class SharedPreferencesJournalStore implements JournalStore {
 class InMemoryJournalStore implements JournalStore {
   InMemoryJournalStore({
     List<JournalEntry>? entries,
+    this.failOnSave = false,
+    this.failOnDelete = false,
   }) : _entries = List<JournalEntry>.from(entries ?? const <JournalEntry>[]);
 
   List<JournalEntry> _entries;
+  final bool failOnSave;
+  final bool failOnDelete;
   int loadCalls = 0;
   int saveCalls = 0;
 
@@ -68,12 +72,18 @@ class InMemoryJournalStore implements JournalStore {
   @override
   Future<void> saveEntries(List<JournalEntry> entries) async {
     saveCalls++;
+    if (failOnSave) {
+      throw StateError('save failed');
+    }
     _entries = List<JournalEntry>.from(entries);
   }
 
   @override
   Future<void> deleteAllEntries() async {
     saveCalls++;
+    if (failOnDelete) {
+      throw StateError('delete failed');
+    }
     _entries = <JournalEntry>[];
   }
 
