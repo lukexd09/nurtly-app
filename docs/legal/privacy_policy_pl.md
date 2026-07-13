@@ -1,114 +1,33 @@
-# Polityka prywatności Nurtly - wersja robocza
+# Polityka prywatności Nurtly — mirror w języku polskim
 
-**Data wejścia w życie:** [DATE_TBD]
+Ten plik odzwierciedla żywy publiczny SSOT pod adresem [https://nurtly.graylion.pl/privacy/pl](https://nurtly.graylion.pl/privacy/pl).
 
-**Adres polityki prywatności:** [PRIVACY_POLICY_URL_TBD]
+Zaakceptowany publiczny punkt wejścia do polityki prywatności: [https://nurtly.graylion.pl/privacy](https://nurtly.graylion.pl/privacy).
 
-**Kontakt:** [CONTACT_EMAIL_TBD]
+**Wersja:** 1.0
+**Data wejścia w życie:** 25 czerwca 2026 r.
+**Operator:** GRAY LION ŁUKASZ CHMIEL, Polska, NIP 6272618384, REGON 243494838
+**Kontakt:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
-Niniejszy dokument jest wersją roboczą przeznaczoną do przygotowania publikacji polityki prywatności aplikacji Nurtly. Przed opublikowaniem treść musi zostać sprawdzona pod kątem zgodności prawnej i zgodności z rzeczywistą konfiguracją produkcyjną aplikacji.
+## Podsumowanie zgodne z żywym publicznym SSOT
 
-## 1. Kim jesteśmy
+- Nurtly jest przeznaczone dla dorosłych rodziców i opiekunów, a nie dla dzieci.
+- Aplikacja nie wymaga konta dziecka, imienia dziecka ani dokładnej daty urodzenia.
+- Dane Dziennika są przechowywane lokalnie na urządzeniu i w obecnym MVP nie są wysyłane do backendu ani chmury.
+- Aplikacja nie ma konta użytkownika, logowania, rejestracji ani backendu.
+- Darmowi użytkownicy mogą widzieć pasywne banery Google Mobile Ads; użytkownicy Premium nie widzą reklam.
+- Google UMP jest używane tam, gdzie jest to wymagane, do obsługi ustawień prywatności reklam.
+- Scalony manifest Android zawiera `com.google.android.gms.permission.AD_ID`.
+- Zakupy i subskrypcje obsługuje Google Play Billing.
+- Nurtly nie używa SDK analityki ani SDK raportowania awarii w obecnym MVP.
+- Google i jego dostawcy usług mogą przetwarzać dane na potrzeby reklam, ustawień prywatności i płatności zgodnie z własnymi usługami i zasadami.
+- Dane lokalne pozostają na urządzeniu do czasu ich usunięcia przez użytkownika lub odinstalowania aplikacji, z uwzględnieniem mechanizmów kopii zapasowej i przywracania Androida poza kontrolą Nurtly.
+- Aplikacja zawiera opcję Usuń wszystkie dane lokalne, która usuwa wpisy Dziennika i bezpieczne lokalne preferencje.
+- Polityka nie stanowi porady medycznej i nie obiecuje diagnozy, leczenia ani gwarantowanych efektów rozwojowych.
+- Kontakt w sprawach prywatności: [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-Nurtly to aplikacja dla rodziców i opiekunów, nie dla dzieci. Pomaga w spokojnym korzystaniu z:
+## Do czego służy ten mirror
 
-- pomysłów na zabawy i aktywności,
-- kojących dźwięków,
-- lokalnego dziennika codziennej opieki.
-
-## 2. Jakie dane przetwarzamy
-
-W zależności od używanych funkcji aplikacja może przetwarzać:
-
-- dane wpisywane przez użytkownika w dzienniku, w tym notatki i zdarzenia opieki,
-- dane dotyczące subskrypcji i statusu Premium,
-- dane techniczne i informacje o urządzeniu, jeśli są potrzebne do reklam, płatności, analityki lub diagnostyki w finalnej konfiguracji produkcyjnej.
-
-Rekomendowane wydanie MVP nie korzysta z dostawcy analityki ani SDK analitycznego.
-
-Jeśli analityka zostanie włączona później, planowany zakres MVP powinien pozostać ograniczony do języka aplikacji, ustawienia regionalnego urządzenia, przybliżonego kraju/regionu, wersji aplikacji, użycia modułów, retencji, zdarzeń reklamowych oraz błędów/awarii. Nie powinien obejmować treści notatek dziennika, imienia dziecka, dokładnej daty urodzenia, danych zdrowotnych ani profilowania dziecka.
-
-W MVP nie jest wymagane imię dziecka ani dokładna data urodzenia dziecka.
-
-## 3. Dziennik
-
-Dziennik w obecnej implementacji jest lokalny.
-
-- wpisy dziennika są zapisywane na urządzeniu,
-- notatki dziennika nie są wysyłane do backendu ani chmury w obecnej implementacji,
-- dane dziennika służą do odczytu historii opieki na tym urządzeniu,
-- treść notatek dziennika nie jest przeznaczona do reklam ani profilowania dziecka.
-
-Użytkownik może usunąć aplikację, aby usunąć lokalne dane, z zastrzeżeniem, że kopie zapasowe systemu lub usług platformy mogą nadal zawierać dane zgodnie z ustawieniami urządzenia i konta.
-
-## 4. Płatności i subskrypcje
-
-Aplikacja może używać Google Play Billing do obsługi subskrypcji Premium.
-
-Możemy przetwarzać dane o zakupie, aktywacji, odnowieniu, anulowaniu, wygaśnięciu lub przywróceniu subskrypcji, aby utrzymać poprawny stan uprawnień Premium.
-
-## 5. Reklamy
-
-Aplikacja może wyświetlać reklamy użytkownikom darmowym.
-
-Premium nie powinien widzieć reklam.
-
-W aktualnym planie wydania MVP reklamy mają pozostać pasywne i banerowe wyłącznie w obszarach przeglądania oraz nie mogą przerywać tworzenia lub edycji wpisów w dzienniku, aktywnego odtwarzania dźwięku, ekranów Prywatność lub Ustawienia ani momentów uruchamiania aplikacji. To pozostaje do potwierdzenia przez właściciela przed uznaniem tego za finalne zachowanie produkcyjne.
-
-W finalnej konfiguracji produkcyjnej mogą być przetwarzane dane urządzenia lub aplikacji potrzebne do działania reklam, zgodnie z konfiguracją Google i ustawieniami urządzenia.
-
-## 6. Cel przetwarzania
-
-Dane wykorzystujemy, aby:
-
-- zapewnić działanie aplikacji,
-- przechowywać lokalny dziennik opieki,
-- obsługiwać subskrypcje Premium,
-- wyświetlać reklamy użytkownikom darmowym,
-- utrzymywać podstawową diagnostykę i niezawodność aplikacji, jeśli taka funkcja jest włączona w finalnej wersji,
-- mierzyć jakość aplikacji, użycie modułów, retencję, reklamy i błędy, jeśli analityka zostanie włączona w finalnej wersji,
-- utrzymać przyszłą analitykę w ścisłym zakresie MVP opisanym powyżej.
-
-## 7. Czego nie robimy
-
-W obecnej implementacji aplikacja nie jest przeznaczona do:
-
-- udzielania porad medycznych,
-- diagnozowania,
-- coachingu snu,
-- oceniania rozwoju dziecka,
-- wysyłania dziennika do chmury,
-- analizowania treści dziennika do reklam lub profilowania dziecka.
-
-## 8. Odbiorcy danych
-
-W zależności od finalnej konfiguracji produkcyjnej dane mogą być przetwarzane przez:
-
-- Google Play Billing,
-- usługi reklamowe,
-- usługi techniczne potrzebne do działania aplikacji.
-
-Nie planuje się dostawcy analityki w wydaniu MVP.
-
-Jeśli później zostanie dodany dostawca analityki, jego użycie musi zostać zweryfikowane przed publikacją i oznaczone jako `Needs owner confirmation`, dopóki decyzje o SDK, zgodzie i retencji nie będą finalne.
-
-Dokładny zakres musi odpowiadać rzeczywistemu zachowaniu opublikowanej wersji aplikacji i ustawieniom Google Play Console.
-
-## 9. Bezpieczeństwo
-
-Stosujemy zabezpieczenia techniczne i organizacyjne odpowiednie do skali aplikacji MVP. Szczegóły finalnej konfiguracji bezpieczeństwa muszą odpowiadać wdrożeniu produkcyjnemu.
-
-## 10. Zmiany w polityce
-
-Możemy aktualizować tę politykę wraz z rozwojem aplikacji, zmianami funkcji lub wymaganiami prawnymi.
-
-## 11. Kontakt
-
-W sprawach dotyczących prywatności skontaktuj się z nami pod adresem: [CONTACT_EMAIL_TBD]
-
-## 12. Ważne uwagi
-
-- Ten dokument jest szkicem i nie stanowi porady prawnej.
-- Finalna treść musi zostać zweryfikowana przed publikacją.
-- Odpowiedzi Data Safety muszą być zgodne z finalnym zachowaniem produkcyjnym aplikacji.
-- Finalne zachowanie reklam i subskrypcji musi być potwierdzone przed publikacją.
+- Utrzymywać repozytoryjne dokumenty prywatności i publikacji w zgodzie z żywym publicznym SSOT.
+- Nie przywracać rekomendacji `/legal/privacy` ani pól zastępczych.
+- Utrzymywać spójność z listą sklepową, Data Safety i ekranem Prywatność i dane.

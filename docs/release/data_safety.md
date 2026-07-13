@@ -57,7 +57,7 @@ For the public privacy policy publication flow, see [Privacy policy publication 
 - [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
 - [ ] Final analytics provider, SDK, and consent decisions. Needs owner confirmation if a provider is ever approved.
 - [ ] Final analytics taxonomy and retention window. Needs owner confirmation if analytics is ever approved.
-- [ ] Final privacy policy URL and public hosting plan. Needs owner confirmation.
+- [ ] Approved public privacy URL: https://nurtly.graylion.pl/privacy.
 - [ ] Final Billing data disclosure.
 
 ## Notes

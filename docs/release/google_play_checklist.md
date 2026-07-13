@@ -11,7 +11,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] [Closed-testing release candidate runbook](closed_testing_release_candidate_runbook.md) has been reviewed.
 - [ ] [Closed-testing release candidate evidence](closed_testing_release_candidate_evidence.md) is ready for local completion.
 - [ ] [Google Play submission content pack](google_play_submission_content_pack.md) has been reviewed.
-- [ ] [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md) has been reviewed.
+- [ ] [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md) has been reviewed and the approved public privacy URL is https://nurtly.graylion.pl/privacy.
 - [ ] App package name is `com.graylion.nurtly`.
 - [ ] App label is `Nurtly`.
 - [ ] Current release version is confirmed in the release gate.
@@ -105,7 +105,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 
 ## 9. Privacy and compliance
 
-- [ ] Privacy policy publication handoff is reviewed and the owner knows the live URL plan.
+- [ ] Privacy policy publication handoff is reviewed and the owner knows the approved live URL.
 - [ ] Data Safety is completed.
 - [ ] Privacy & Data screen in the app matches the published policy.
 - [ ] Analytics provider decision is documented and points to no product analytics provider for MVP.
@@ -116,7 +116,7 @@ Use this checklist to prepare the first MVP release in Google Play Console.
 - [ ] Ads disclosure is checked.
 - [ ] In-app purchases disclosure is checked.
 - [ ] Owner decision pack is used to confirm Advertising ID, ad personalization, and Data Safety wording.
-- [ ] Privacy policy publication handoff is aligned with the final Play Console URL.
+- [ ] Privacy policy publication handoff is aligned with the approved final Play Console URL.
 - [ ] Reviewer access does not change privacy, UMP, or local-data deletion behavior.
 
 ## 10. Upload-ready blockers

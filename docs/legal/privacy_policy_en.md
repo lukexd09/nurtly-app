@@ -1,114 +1,33 @@
-# Nurtly Privacy Policy - Draft
+# Nurtly Privacy Policy — English mirror
 
-**Effective date:** [DATE_TBD]
+This repository mirror follows the live public SSOT at [https://nurtly.graylion.pl/privacy/en](https://nurtly.graylion.pl/privacy/en).
 
-**Privacy policy URL:** [PRIVACY_POLICY_URL_TBD]
+Approved public privacy gateway: [https://nurtly.graylion.pl/privacy](https://nurtly.graylion.pl/privacy).
 
-**Contact:** [CONTACT_EMAIL_TBD]
+**Version:** 1.0
+**Effective date:** 25 June 2026
+**Operator:** GRAY LION ŁUKASZ CHMIEL, Poland, NIP 6272618384, REGON 243494838
+**Contact:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
-This document is a draft intended to prepare the privacy policy publication for the Nurtly app. It must be reviewed for legal compliance and for consistency with the final production behavior before publication.
+## Summary aligned to the live public SSOT
 
-## 1. Who we are
+- Nurtly is intended for adult parents and caregivers, not for children.
+- The app does not require a child account, a child name, or an exact date of birth.
+- Journal data is stored locally on the device and is not sent to a backend or cloud in the current MVP.
+- The app has no user account, no sign-in, no registration, and no backend.
+- Free users may see passive Google Mobile Ads banners; Premium users do not see ads.
+- Google UMP is used where required to manage privacy choices.
+- The merged Android manifest includes `com.google.android.gms.permission.AD_ID`.
+- Google Play Billing handles purchases and subscriptions.
+- Nurtly does not use an analytics SDK or a crash-reporting SDK in the current MVP.
+- Google and its service providers may process data for ads, privacy choices, and billing according to their own services and policies.
+- Local data remains on the device until the user deletes it or uninstalls the app, subject to Android backup and restore behavior outside Nurtly's control.
+- The app includes Delete all local data, which removes journal entries and safe local preferences.
+- The policy is not medical advice and does not promise diagnosis, treatment, or guaranteed developmental outcomes.
+- Contact for privacy questions: [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-Nurtly is an app for parents and caregivers, not for children. It helps with:
+## What this mirror is for
 
-- calm play and activity ideas,
-- soothing sounds,
-- a local daily care journal.
-
-## 2. What data we process
-
-Depending on the features used, the app may process:
-
-- data entered by the user in the journal, including notes and care events,
-- subscription and Premium entitlement data,
-- technical and device information if needed for ads, billing, analytics, or diagnostics in the final production setup.
-
-The recommended MVP release does not use a product analytics provider or SDK.
-
-If analytics is enabled later, the planned MVP scope should stay limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes. It should not include journal note content, child name, exact birthdate, health data, or child profiling.
-
-The MVP does not require a child name or an exact child birthdate to use the app.
-
-## 3. Journal
-
-The Journal is local-only in the current implementation.
-
-- journal entries are stored on the device,
-- journal notes are not sent to a backend or cloud in the current implementation,
-- journal data is used to show care history on that device,
-- journal note content is not intended to be used for ads or child profiling.
-
-The user can uninstall the app to remove local data, subject to any device or account backup behavior provided by the operating system or platform services.
-
-## 4. Payments and subscriptions
-
-The app may use Google Play Billing for Premium subscriptions.
-
-We may process purchase, activation, renewal, cancellation, expiry, or restore state to keep Premium entitlement accurate.
-
-## 5. Ads
-
-The app may show ads to free users.
-
-Premium users should not see ads.
-
-In the current MVP release planning, ads are intended to stay passive and banner-style in browse areas only, and not interrupt Journal entry creation or editing, active audio playback, Privacy or Settings flows, or startup moments. This remains subject to owner confirmation before it is treated as the final production behavior.
-
-In the final production configuration, device or app information needed for ads may be processed according to Google configuration and device settings.
-
-## 6. Why we process data
-
-We use data to:
-
-- provide the app,
-- store the local care journal,
-- manage Premium subscriptions,
-- show ads to free users,
-- support basic diagnostics and reliability if enabled in the final release,
-- measure app quality, module usage, retention, ads, and errors if analytics is enabled in the final release,
-- keep any future analytics within the strict MVP boundary described above.
-
-## 7. What we do not do
-
-In the current implementation, the app is not intended to:
-
-- provide medical advice,
-- diagnose conditions,
-- coach sleep,
-- score child development,
-- send the journal to the cloud,
-- analyze journal content for advertising or child profiling.
-
-## 8. Data recipients
-
-Depending on the final production setup, data may be processed by:
-
-- Google Play Billing,
-- ad services,
-- technical services needed to run the app.
-
-No analytics provider is planned for the MVP release.
-
-If an analytics provider is added later, its use must be reviewed before publication and marked `Needs owner confirmation` until the SDK, consent, and retention decisions are final.
-
-The exact scope must match the behavior of the published app and the Google Play Console configuration.
-
-## 9. Security
-
-We use technical and organizational safeguards appropriate for an MVP-scale app. The final security setup must match the production deployment.
-
-## 10. Changes to this policy
-
-We may update this policy as the app evolves, features change, or legal requirements change.
-
-## 11. Contact
-
-For privacy questions, contact us at: [CONTACT_EMAIL_TBD]
-
-## 12. Important notes
-
-- This document is a draft and is not legal advice.
-- The final text must be reviewed before publication.
-- Data Safety answers must match the final production behavior of the app.
-- Final ad and billing behavior must be verified before publication.
+- Keep repo-side privacy/publication docs aligned with the live public SSOT.
+- Avoid reintroducing `/legal/privacy` recommendations or placeholder fields.
+- Keep the store listing, Data Safety notes, and Privacy & Data wording synchronized with the live public pages.

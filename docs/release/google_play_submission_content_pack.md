@@ -161,6 +161,12 @@ Draft policies live here:
 - [Polish privacy policy draft](../legal/privacy_policy_pl.md)
 - [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md)
 
+Approved public privacy URL:
+
+- [https://nurtly.graylion.pl/privacy](https://nurtly.graylion.pl/privacy)
+- English page: [https://nurtly.graylion.pl/privacy/en](https://nurtly.graylion.pl/privacy/en)
+- Polish page: [https://nurtly.graylion.pl/privacy/pl](https://nurtly.graylion.pl/privacy/pl)
+
 The final policy URL and production wording must match the published app behavior and Play Console answers.
 
 ## Owner decisions needed

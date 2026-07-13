@@ -29,7 +29,7 @@ It is a decision pack for release readiness only. It does not change app behavio
 - Child posture: not directed to children; do not opt into Families Program unless owner-approved later.
 - Content rating posture: answer conservatively and truthfully; keep the app non-medical and not child-directed.
 - Privacy policy: publish only when the final text and URL match the shipped build.
-- Privacy policy publication: use the handoff in `docs/legal/privacy_policy_publication_handoff.md` and publish the live URL only after owner review.
+- Privacy policy publication: use the handoff in `docs/legal/privacy_policy_publication_handoff.md` and keep Play Console aligned with the approved live URL.
 - Data Safety: keep the MVP disclosure limited to local-only Journal, billing, passive ads, and no product analytics provider.
 - Advertising ID: treat as owner-confirmed and do not assume it is required.
 - Ad personalization: default to no personalization for MVP.
@@ -40,7 +40,7 @@ It is a decision pack for release readiness only. It does not change app behavio
 
 ## Notes
 
-- Production ad IDs, billing products, and privacy policy URL remain outside the repository.
-- The recommended public privacy URL structure is described in the privacy publication handoff.
+- Production ad IDs and billing products remain outside the repository.
+- The approved public privacy URL is live at https://nurtly.graylion.pl/privacy; keep Play Console aligned with the live SSOT and use the privacy publication handoff as the mirror of record.
 - If any of the above defaults change, update the Data Safety, privacy, store listing, and QA docs together.
 - For a concise go/no-go view, see [Closed-testing go/no-go](closed_testing_go_no_go.md).

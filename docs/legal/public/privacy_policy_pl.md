@@ -1,89 +1,52 @@
 # Polityka prywatności Nurtly
 
-**Data wejścia w życie:** [DATE_TBD]
+**Wersja:** 1.0
+**Data wejścia w życie:** 25 czerwca 2026 r.
+**Operator:** GRAY LION ŁUKASZ CHMIEL, Polska, NIP 6272618384, REGON 243494838
+**Kontakt:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
-**Kontakt:** [CONTACT_EMAIL_TBD]
+## Zakres i odbiorcy
 
-## 1. Kim jesteśmy
+Nurtly jest przeznaczone dla dorosłych rodziców i opiekunów, a nie dla dzieci.
 
-Nurtly to aplikacja dla rodziców i opiekunów, nie dla dzieci. Pomaga w spokojnym korzystaniu z:
+Aplikacja nie wymaga konta dziecka, imienia dziecka ani dokładnej daty urodzenia.
 
-- pomysłów na zabawy i aktywności,
-- kojących dźwięków,
-- lokalnego dziennika codziennej opieki.
+## Dziennik lokalny
 
-## 2. Jakie dane przetwarzamy
+Dane Dziennika są przechowywane lokalnie na urządzeniu i w obecnym MVP nie są wysyłane do backendu ani chmury.
 
-- dane wpisywane przez użytkownika w dzienniku, w tym notatki i zdarzenia opieki,
-- dane dotyczące subskrypcji i statusu Premium,
-- dane techniczne i informacje o urządzeniu używane do reklam, płatności lub podstawowej diagnostyki,
-- darmowi użytkownicy mogą widzieć pasywne reklamy banerowe w dozwolonych obszarach,
-- użytkownicy Premium nie widzą reklam,
-- aplikacja nie korzysta z dostawcy analityki w MVP.
+Aplikacja nie ma konta użytkownika, logowania, rejestracji ani backendu.
 
-## 3. Dziennik
+## Reklamy, ustawienia prywatności i płatności
 
-Dziennik jest lokalny na urządzeniu.
+Darmowi użytkownicy mogą widzieć pasywne banery Google Mobile Ads; użytkownicy Premium nie widzą reklam.
 
-- wpisy dziennika są zapisywane na urządzeniu,
-- notatki dziennika nie są wysyłane do backendu Nurtly ani chmury,
-- dane dziennika służą do odczytu historii opieki na tym urządzeniu,
-- treść notatek dziennika nie jest przeznaczona do reklam ani profilowania dziecka.
+Google UMP jest używane tam, gdzie jest to wymagane, do obsługi ustawień prywatności reklam.
 
-Użytkownik może usunąć aplikację, aby usunąć lokalne dane, z zastrzeżeniem, że kopie zapasowe systemu lub usług platformy mogą nadal zawierać dane zgodnie z ustawieniami urządzenia i konta.
+Scalony manifest Android zawiera `com.google.android.gms.permission.AD_ID`.
 
-## 4. Płatności i subskrypcje
+Zakupy i subskrypcje obsługuje Google Play Billing.
 
-Aplikacja może używać Google Play Billing do obsługi subskrypcji Premium.
+## Analityka i przetwarzanie przez podmioty trzecie
 
-Możemy przetwarzać dane o zakupie, aktywacji, odnowieniu, anulowaniu, wygaśnięciu lub przywróceniu subskrypcji, aby utrzymać poprawny stan uprawnień Premium.
+Nurtly nie używa SDK analityki ani SDK raportowania awarii w obecnym MVP.
 
-## 5. Reklamy
+Google i jego dostawcy usług mogą przetwarzać dane na potrzeby reklam, ustawień prywatności i płatności zgodnie z własnymi usługami i zasadami.
 
-Aplikacja może wyświetlać pasywne reklamy banerowe użytkownikom darmowym w dozwolonych obszarach.
+## Retencja i usuwanie
 
-Użytkownicy Premium nie widzą reklam.
+Dane lokalne pozostają na urządzeniu do czasu ich usunięcia przez użytkownika lub odinstalowania aplikacji, z uwzględnieniem mechanizmów kopii zapasowej i przywracania Androida poza kontrolą Nurtly.
 
-## 6. Cel przetwarzania
+Aplikacja zawiera opcję Usuń wszystkie dane lokalne, która usuwa wpisy Dziennika i bezpieczne lokalne preferencje.
 
-Dane wykorzystujemy, aby:
+## Prawa i kontakt
 
-- zapewnić działanie aplikacji,
-- przechowywać lokalny dziennik opieki,
-- obsługiwać subskrypcje Premium,
-- wyświetlać reklamy użytkownikom darmowym,
-- utrzymywać podstawową diagnostykę i niezawodność aplikacji,
-- zachować spokojny, użyteczny i przyjazny prywatności charakter aplikacji.
+W sprawach prywatności napisz na [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-## 7. Czego nie robimy
+W zależności od prawa użytkownik może mieć prawo do dostępu, sprostowania, usunięcia, ograniczenia lub sprzeciwu wobec przetwarzania oraz do wycofania zgody tam, gdzie zgoda stanowi podstawę.
 
-Aplikacja nie jest przeznaczona do:
+## Dzieci
 
-- udzielania porad medycznych,
-- diagnozowania,
-- coachingu snu,
-- oceniania rozwoju dziecka,
-- wysyłania dziennika do chmury,
-- analizowania treści dziennika do reklam lub profilowania dziecka.
+Polityka nie stanowi porady medycznej i nie obiecuje diagnozy, leczenia ani gwarantowanych efektów rozwojowych.
 
-## 8. Odbiorcy danych
-
-W zależności od tego, jak korzystasz z aplikacji, dane mogą być przetwarzane przez:
-
-- Google Play Billing,
-- usługi reklamowe,
-- usługi techniczne potrzebne do działania aplikacji.
-
-W MVP nie korzystamy z dostawcy analityki.
-
-## 9. Bezpieczeństwo
-
-Stosujemy zabezpieczenia techniczne i organizacyjne odpowiednie do skali aplikacji MVP.
-
-## 10. Zmiany w polityce
-
-Możemy aktualizować tę politykę wraz z rozwojem aplikacji, zmianami funkcji lub wymaganiami prawnymi.
-
-## 11. Kontakt
-
-W sprawach dotyczących prywatności skontaktuj się z nami pod adresem: [CONTACT_EMAIL_TBD]
+Nurtly nie jest przeznaczone do samodzielnego używania przez dzieci.

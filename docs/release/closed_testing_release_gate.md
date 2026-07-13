@@ -33,7 +33,7 @@ This document is the operational release gate for inviting closed-test users to 
 2. Confirm the release signing setup is ready for the AAB upload flow.
 3. Confirm the tester group and invite link are prepared.
 4. Upload the signed release build and attach release notes.
-5. Complete or verify the store listing, privacy policy URL, content rating, target audience, and Data Safety answers.
+5. Complete or verify the store listing, approved privacy policy URL, content rating, target audience, and Data Safety answers.
 6. Confirm Premium purchase products and restore flow are ready in Play Console if they are being exercised in closed testing.
 
 ## Store listing readiness
@@ -54,7 +54,7 @@ This document is the operational release gate for inviting closed-test users to 
 
 - Draft privacy policies exist in English and Polish.
 - The privacy policy publication handoff documents the recommended public URL structure and owner-side publication steps.
-- The final privacy policy URL is still an owner decision before publication.
+- The final privacy policy URL is the approved live SSOT at https://nurtly.graylion.pl/privacy and must stay aligned with Play Console.
 - The policy text must continue to match the current MVP behavior: local-only Journal, banner-only passive ads, Premium ad-free, and no product analytics provider for MVP.
 
 ## Ads / Premium readiness
