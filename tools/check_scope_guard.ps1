@@ -288,6 +288,8 @@ function Test-IsAllowedPlatformFile {
     $normalized = $Path -replace "\\", "/"
     return $normalized -in @(
         "app/android/app/src/main/AndroidManifest.xml",
+        "app/android/app/src/main/res/xml/backup_rules.xml",
+        "app/android/app/src/main/res/xml/data_extraction_rules.xml",
         "app/android/app/build.gradle",
         "app/android/settings.gradle",
         "app/android/app/src/main/kotlin/com/graylion/nurtly/MainActivity.kt"
