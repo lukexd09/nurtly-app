@@ -4,6 +4,9 @@ import 'package:nurtly/features/journal/journal_entry.dart';
 import 'package:nurtly/features/journal/journal_entry_type.dart';
 import 'package:nurtly/features/journal/journal_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
+
+import '../../test_fakes/fake_shared_preferences_store_platform.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,166 @@ void main() {
     final loaded = await store.loadEntries();
 
     expect(loaded, isEmpty);
+  });
+
+  test(
+    'shared preferences migration removes legacy deleted entries',
+    () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        SharedPreferencesJournalStore.key: '''
+[
+  {
+    "id": "active-1",
+    "type": "note",
+    "createdAt": "2026-05-19T08:00:00.000",
+    "updatedAt": "2026-05-19T08:00:00.000",
+    "eventAt": "2026-05-19T08:00:00.000",
+    "note": "Keep this note",
+    "isDeleted": false
+  },
+  {
+    "id": "deleted-1",
+    "type": "note",
+    "createdAt": "2026-05-19T09:00:00.000",
+    "updatedAt": "2026-05-19T09:00:00.000",
+    "eventAt": "2026-05-19T09:00:00.000",
+    "note": "Private note to remove",
+    "isDeleted": true
+  }
+]
+''',
+      });
+      final store = SharedPreferencesJournalStore();
+
+      final loaded = await store.loadEntries();
+      expect(loaded, hasLength(1));
+      expect(loaded.single.id, 'active-1');
+      expect(loaded.single.note, 'Keep this note');
+      expect(loaded.single.isDeleted, isFalse);
+
+      final controller = JournalController(
+        store: store,
+        now: () => DateTime(2026, 5, 19, 14),
+      );
+      await controller.load();
+      expect(controller.entries, hasLength(1));
+      expect(controller.entries.single.id, 'active-1');
+
+      final prefs = await SharedPreferences.getInstance();
+      final payload = prefs.getString(SharedPreferencesJournalStore.key);
+      expect(payload, isNotNull);
+      expect(payload!, isNot(contains('deleted-1')));
+      expect(payload, isNot(contains('Private note to remove')));
+      expect(payload, contains('active-1'));
+      expect(await store.loadEntries(), hasLength(1));
+    },
+  );
+
+  test('shared preferences write failures surface as errors', () async {
+    final previous = SharedPreferencesStorePlatform.instance;
+    final platform = FakeSharedPreferencesStorePlatform(
+      falseOnSetKeys: {SharedPreferencesJournalStore.key},
+    );
+    SharedPreferencesStorePlatform.instance = platform;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = previous);
+    SharedPreferences.resetStatic();
+    final store = SharedPreferencesJournalStore();
+
+    await expectLater(
+      store.saveEntries(
+        [
+          JournalEntry.note(
+            id: 'note-1',
+            eventAt: DateTime(2026, 5, 19, 8, 0),
+            note: 'Breakfast note',
+          ),
+        ],
+      ),
+      throwsStateError,
+    );
+  });
+
+  test('shared preferences delete failures surface as errors', () async {
+    final previous = SharedPreferencesStorePlatform.instance;
+    final platform = FakeSharedPreferencesStorePlatform(
+      initialValues: {
+        SharedPreferencesJournalStore.key: '["existing"]',
+      },
+      falseOnRemoveKeys: {SharedPreferencesJournalStore.key},
+    );
+    SharedPreferencesStorePlatform.instance = platform;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = previous);
+    SharedPreferences.resetStatic();
+    final store = SharedPreferencesJournalStore();
+
+    await expectLater(store.deleteAllEntries(), throwsStateError);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(SharedPreferencesJournalStore.key), '["existing"]');
+
+    platform.disableRemoveFailure(SharedPreferencesJournalStore.key);
+    await store.deleteAllEntries();
+
+    final refreshed = await SharedPreferences.getInstance();
+    expect(refreshed.getString(SharedPreferencesJournalStore.key), isNull);
+    expect(platform.containsPersistedKey(SharedPreferencesJournalStore.key),
+        isFalse);
+  });
+
+  test('migration retries after a failed cleanup write', () async {
+    final previous = SharedPreferencesStorePlatform.instance;
+    const originalPayload = '''
+[
+  {
+    "id": "active-1",
+    "type": "note",
+    "createdAt": "2026-05-19T08:00:00.000",
+    "updatedAt": "2026-05-19T08:00:00.000",
+    "eventAt": "2026-05-19T08:00:00.000",
+    "note": "Keep this note",
+    "isDeleted": false
+  },
+  {
+    "id": "deleted-1",
+    "type": "note",
+    "createdAt": "2026-05-19T09:00:00.000",
+    "updatedAt": "2026-05-19T09:00:00.000",
+    "eventAt": "2026-05-19T09:00:00.000",
+    "note": "Private note to remove",
+    "isDeleted": true
+  }
+]
+''';
+    final platform = FakeSharedPreferencesStorePlatform(
+      initialValues: {
+        SharedPreferencesJournalStore.key: originalPayload,
+      },
+      falseOnSetKeys: {SharedPreferencesJournalStore.key},
+    );
+    SharedPreferencesStorePlatform.instance = platform;
+    addTearDown(() => SharedPreferencesStorePlatform.instance = previous);
+    SharedPreferences.resetStatic();
+    final store = SharedPreferencesJournalStore();
+
+    await expectLater(store.loadEntries(), throwsStateError);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(SharedPreferencesJournalStore.key), originalPayload);
+
+    platform.disableSetFailure(SharedPreferencesJournalStore.key);
+    final loaded = await store.loadEntries();
+
+    expect(loaded, hasLength(1));
+    expect(loaded.single.id, 'active-1');
+    expect(loaded.single.isDeleted, isFalse);
+
+    final refreshed = await SharedPreferences.getInstance();
+    final payload = refreshed.getString(SharedPreferencesJournalStore.key);
+    expect(payload, isNotNull);
+    expect(payload!, isNot(contains('deleted-1')));
+    expect(payload, isNot(contains('Private note to remove')));
+    expect(payload, contains('active-1'));
+    expect(platform.persistedValue(SharedPreferencesJournalStore.key), payload);
   });
 
   test('in-memory store keeps active sleep state in saved entries', () async {

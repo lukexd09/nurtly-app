@@ -191,7 +191,9 @@ function Test-IsAllowedSharedPreferencesUsage {
         "app/test/core/monetization/reviewer_access_store_test.dart",
         "app/test/core/localization/language_preference_store_test.dart",
         "app/lib/features/journal/journal_store.dart",
-        "app/test/features/journal/journal_store_test.dart"
+        "app/test/features/journal/journal_store_test.dart",
+        "app/test/core/privacy/local_data_deletion_test.dart",
+        "app/test/test_fakes/fake_shared_preferences_store_platform.dart"
     )
 }
 

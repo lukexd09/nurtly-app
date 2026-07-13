@@ -25,6 +25,7 @@ import '../../features/sounds/sounds_screen.dart';
 import '../content/suggested_sound_resolver.dart';
 import '../localization/app_strings.dart';
 import '../localization/language_preference_store.dart';
+import '../privacy/local_data_deletion.dart';
 import '../platform/package_metadata.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
@@ -191,26 +192,29 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _deleteAllLocalData() async {
-    await widget.journalController.deleteAllEntries();
-    await widget.languagePreferenceStore.delete();
-    await _premiumController.disableReviewerAccess();
-
-    final resolver = const AppLocaleResolver();
-    final resolvedLanguage = resolver.resolve(
-      preference: AppLanguagePreference.system,
-      systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+  Future<LocalDataDeletionResult> _deleteAllLocalData() async {
+    final result = await const LocalDataDeletionCoordinator().deleteAll(
+      deleteJournal: widget.journalController.deleteAllEntries,
+      deleteLanguage: widget.languagePreferenceStore.delete,
+      deleteReviewerAccess: _premiumController.disableReviewerAccess,
     );
-    if (!mounted) {
-      return;
+
+    if (result.succeeded.contains(LocalDataComponent.language)) {
+      final resolvedLanguage = const AppLocaleResolver().resolve(
+        preference: AppLanguagePreference.system,
+        systemLocale: WidgetsBinding.instance.platformDispatcher.locale,
+      );
+      if (mounted) {
+        setState(() {
+          _selectedLanguage = resolvedLanguage;
+          _localizedContentLoader = null;
+          _localizedContentLoaderLanguage = null;
+        });
+        widget.onLanguageChanged?.call(resolvedLanguage);
+      }
     }
 
-    setState(() {
-      _selectedLanguage = resolvedLanguage;
-      _localizedContentLoader = null;
-      _localizedContentLoaderLanguage = null;
-    });
-    widget.onLanguageChanged?.call(resolvedLanguage);
+    return result;
   }
 
   Future<void> _bootstrapAppState() async {

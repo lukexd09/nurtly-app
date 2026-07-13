@@ -84,11 +84,14 @@ class JournalController extends ChangeNotifier {
     if (index == -1) {
       return;
     }
-    _entries[index] = _entries[index].copyWith(
-      isDeleted: true,
-      updatedAt: _now(),
-    );
-    await _persist();
+    final removed = _entries.removeAt(index);
+    notifyListeners();
+    try {
+      await _store.saveEntries(_entries);
+    } catch (_) {
+      _entries.insert(index, removed);
+      notifyListeners();
+    }
   }
 
   Future<bool> startSleep({

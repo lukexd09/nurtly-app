@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/ads/consent_flow_controller.dart';
 import '../../core/localization/app_strings.dart';
+import '../../core/privacy/local_data_deletion.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -21,7 +22,7 @@ class PrivacyDataScreen extends StatelessWidget {
 
   final AppStrings strings;
   final VoidCallback? onOpenPrivacyChoices;
-  final Future<void> Function()? onDeleteAllLocalData;
+  final Future<LocalDataDeletionResult> Function()? onDeleteAllLocalData;
   final Listenable? refreshListenable;
   final ConsentFlow? consentFlow;
 
@@ -86,8 +87,9 @@ class PrivacyDataScreen extends StatelessWidget {
     if (confirmed != true) {
       return;
     }
+    late final LocalDataDeletionResult result;
     try {
-      await action();
+      result = await action();
     } catch (_) {
       if (!context.mounted) {
         return;
@@ -100,8 +102,13 @@ class PrivacyDataScreen extends StatelessWidget {
     if (!context.mounted) {
       return;
     }
+    final message = switch (result.status) {
+      LocalDataDeletionStatus.complete => strings.deleteAllLocalDataSuccess,
+      LocalDataDeletionStatus.partial => strings.deleteAllLocalDataPartial,
+      LocalDataDeletionStatus.failed => strings.deleteAllLocalDataFailed,
+    };
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(strings.deleteAllLocalDataSuccess)),
+      SnackBar(content: Text(message)),
     );
   }
 }
@@ -118,7 +125,7 @@ class _PrivacyBody extends StatelessWidget {
   final AppStrings strings;
   final bool privacyChoicesVisible;
   final VoidCallback? onOpenPrivacyChoices;
-  final Future<void> Function()? onDeleteAllLocalData;
+  final Future<LocalDataDeletionResult> Function()? onDeleteAllLocalData;
   final Future<void> Function(BuildContext context) onConfirmDelete;
 
   @override

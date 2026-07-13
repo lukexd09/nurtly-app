@@ -164,6 +164,7 @@ class AppStrings {
     required this.deleteAllLocalDataTitle,
     required this.deleteAllLocalDataBody,
     required this.deleteAllLocalDataSuccess,
+    required this.deleteAllLocalDataPartial,
     required this.deleteAllLocalDataFailed,
     required this.currentMvpBehavior,
     required this.parentFirstAudience,
@@ -383,6 +384,7 @@ class AppStrings {
   final String deleteAllLocalDataTitle;
   final String deleteAllLocalDataBody;
   final String deleteAllLocalDataSuccess;
+  final String deleteAllLocalDataPartial;
   final String deleteAllLocalDataFailed;
   final String currentMvpBehavior;
   final String parentFirstAudience;
@@ -610,6 +612,8 @@ class AppStrings {
     deleteAllLocalDataBody:
         'This removes local journal entries and resettable app preferences from this device.',
     deleteAllLocalDataSuccess: 'Local data deleted.',
+    deleteAllLocalDataPartial:
+        'Some local data was deleted. Please try again to finish.',
     deleteAllLocalDataFailed: 'Could not delete local data.',
     currentMvpBehavior: 'Current MVP behavior',
     parentFirstAudience:
@@ -853,6 +857,8 @@ class AppStrings {
     deleteAllLocalDataBody:
         'To usunie lokalne wpisy dziennika i możliwe do resetu preferencje aplikacji z tego urządzenia.',
     deleteAllLocalDataSuccess: 'Dane lokalne usunięte.',
+    deleteAllLocalDataPartial:
+        'Usunięto część danych lokalnych. Spróbuj ponownie, aby dokończyć.',
     deleteAllLocalDataFailed: 'Nie udało się usunąć danych lokalnych.',
     currentMvpBehavior: 'Obecne działanie MVP',
     parentFirstAudience:

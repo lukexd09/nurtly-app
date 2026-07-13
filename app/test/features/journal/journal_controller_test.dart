@@ -263,6 +263,110 @@ void main() {
     expect(controller.entries, isEmpty);
   });
 
+  test('individual deletion physically removes the entry and its note',
+      () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12, 0),
+          note: 'Remove this private note',
+        ),
+        JournalEntry.note(
+          id: 'note-2',
+          eventAt: DateTime(2026, 5, 19, 13, 0),
+          note: 'Keep this note',
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+
+    await controller.deleteEntry('note-1');
+
+    expect(controller.entries.map((entry) => entry.id), ['note-2']);
+    expect(store.entries.map((entry) => entry.id), ['note-2']);
+    expect(
+      store.entries.any((entry) => entry.note == 'Remove this private note'),
+      isFalse,
+    );
+    expect(store.entries.any((entry) => entry.isDeleted), isFalse);
+  });
+
+  test('unknown and repeated individual deletion are safe', () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'A note',
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+
+    await controller.deleteEntry('unknown');
+    await controller.deleteEntry('note-1');
+    await controller.deleteEntry('note-1');
+
+    expect(controller.entries, isEmpty);
+    expect(store.entries, isEmpty);
+  });
+
+  test('deleting an active sleep removes active sleep state', () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.sleep(
+          id: 'sleep-1',
+          startAt: DateTime(2026, 5, 19, 12),
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+    expect(controller.activeSleep, isNotNull);
+
+    await controller.deleteEntry('sleep-1');
+
+    expect(controller.activeSleep, isNull);
+    expect(controller.summary.totalSleep, Duration.zero);
+    expect(store.entries, isEmpty);
+  });
+
+  test('individual deletion restores active state when persistence fails',
+      () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'Keep after failed delete',
+        ),
+      ],
+      failOnSave: true,
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+
+    await controller.deleteEntry('note-1');
+
+    expect(controller.entries.single.note, 'Keep after failed delete');
+    expect(store.entries.single.note, 'Keep after failed delete');
+  });
+
   test('controller prevents duplicate active sleep and supports stop flow',
       () async {
     var currentTime = DateTime(2026, 5, 19, 9, 30);
