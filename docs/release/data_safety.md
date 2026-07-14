@@ -12,22 +12,24 @@ Use this page to collect the information needed for the Google Play Data Safety 
 
 For the current closed-testing pack, see [Google Play submission content pack](google_play_submission_content_pack.md).
 For the owner-confirmation defaults around Advertising ID, ad personalization, and final release wording, see [Play Console owner decisions](play_console_owner_decisions.md).
-For the public privacy policy publication flow, see [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md).
+For the live public privacy SSOT, see [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md).
 
 ## Current known behavior from the repository
 
 - Journal is local-only.
+- Journal entries, the saved language, and the local app access setting live only on the device.
 - Journal data is not synced to a backend or cloud service.
 - Journal note content is not sent to a backend in the current implementation.
 - Local data deletion is separate from UMP-managed consent.
-- Local data deletion currently covers journal entries, the saved language preference, and reviewer-access state.
-- Google Play purchase history is not affected by local data deletion.
+- Local data deletion removes Journal entries, the saved language, and the local app access setting.
+- Local data deletion does not affect Google Play purchase history, Google Play subscriptions, real Premium entitlement managed through Google Play, Google UMP consent state, Google-managed advertising records, or Google-managed billing records.
 - The MVP does not require a child name or exact child birthdate.
 - Billing is present for subscriptions.
-- Ads are planned and partially wired through the app.
-- MVP ad placement is currently planned to stay banner-only in passive browse areas, with no ads in Journal edit/create, active audio playback, Privacy / Settings, or startup flows. This is pending owner confirmation before it is treated as the final production behavior.
+- Ads are banner-only in passive browse areas once UMP confirms ads may be requested.
+- Ads do not belong in Journal edit/create, active audio playback, Privacy / Settings, or startup flows.
 - Analytics is not currently enabled in the app.
 - The recommended MVP provider decision is no product analytics provider or SDK.
+- There is no crash-reporting SDK and no Journal telemetry in the MVP.
 - If analytics is approved later, the proposed MVP scope is limited to app language, device locale, approximate country/region, app version, module usage, retention, ad events, and errors/crashes.
 - Journal note content, child name, exact birthdate, health data, child profiling, precise location, and stable identifiers are out of scope.
 
@@ -57,7 +59,6 @@ For the public privacy policy publication flow, see [Privacy policy publication 
 - [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
 - [ ] Final analytics provider, SDK, and consent decisions. Needs owner confirmation if a provider is ever approved.
 - [ ] Final analytics taxonomy and retention window. Needs owner confirmation if analytics is ever approved.
-- [ ] Final privacy policy URL and public hosting plan. Needs owner confirmation.
 - [ ] Final Billing data disclosure.
 
 ## Notes

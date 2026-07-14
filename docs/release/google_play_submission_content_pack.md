@@ -11,7 +11,7 @@ It is a draft handoff pack for Google Play Console work only. No submission has 
 - Audience: parents and caregivers 18+
 - Positioning: calm, parent-facing support app
 - Product scope: play ideas, soothing sounds, local-only Journal, optional Premium
-- Current MVP contract: free users may see passive banner ads in allowed browse areas, Premium removes ads
+- Current MVP contract: free users may see passive banner ads in allowed browse areas after UMP confirms ads may be requested, Premium removes ads
 
 ## Store listing copy
 
@@ -127,10 +127,12 @@ Do not use misleading claims, price promos, or child-facing language.
 Draft the Play Console answers around the current MVP behavior:
 
 - Journal data is local-only on the device.
+- Journal entries, the saved language, and the local app access setting stay on-device.
 - Journal content is not intended for cloud sync or backend upload in the MVP.
 - No product analytics provider or SDK is planned for the MVP release.
+- No crash-reporting SDK and no Journal telemetry are included in the MVP wording.
 - Billing is used for Premium subscriptions.
-- Ads are allowed only as passive banner ads in browse areas under the current MVP contract.
+- Ads are allowed only as passive banner ads in browse areas after UMP confirms ads may be requested.
 - Advertising ID and ad personalization remain owner-confirmation items until the final ad setup is decided.
 
 Likely review areas:
@@ -161,7 +163,13 @@ Draft policies live here:
 - [Polish privacy policy draft](../legal/privacy_policy_pl.md)
 - [Privacy policy publication handoff](../legal/privacy_policy_publication_handoff.md)
 
-The final policy URL and production wording must match the published app behavior and Play Console answers.
+Approved public privacy URL:
+
+- [https://nurtly.graylion.pl/privacy](https://nurtly.graylion.pl/privacy)
+- English page: [https://nurtly.graylion.pl/privacy/en](https://nurtly.graylion.pl/privacy/en)
+- Polish page: [https://nurtly.graylion.pl/privacy/pl](https://nurtly.graylion.pl/privacy/pl)
+
+The final policy URL and production wording must match the published app behavior, live route evidence, and Play Console answers.
 
 ## Owner decisions needed
 
