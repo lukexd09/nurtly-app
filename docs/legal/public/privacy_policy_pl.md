@@ -5,132 +5,106 @@
 **Operator:** GRAY LION ŁUKASZ CHMIEL, Polska, NIP 6272618384, REGON 243494838
 **Kontakt:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
-## 1. Kim jesteśmy i dla kogo jest ta polityka
+## 1. Tytuł, wersja i data wejścia w życie
 
-Nurtly to spokojna aplikacja wsparcia dla osób dorosłych 18+, przede wszystkim rodziców i opiekunów.
+Wersja 1.1. Data wejścia w życie: 14 lipca 2026 r.
 
-Aplikacja nie jest kierowana do dzieci i nie jest przeznaczona do samodzielnego używania przez dzieci.
+## 2. Informacje o operatorze
 
-Aplikacja nie jest produktem dla dzieci, nie stanowi porady medycznej i nie obiecuje diagnozy, leczenia ani efektów rozwojowych.
+Operatorem Nurtly jest GRAY LION ŁUKASZ CHMIEL, Polska, NIP 6272618384, REGON 243494838. Kontakt: [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-## 2. Dane związane z dziećmi i ograniczenia produktu
+## 3. Zakres polityki
 
-Aplikacja nie wymaga konta dziecka, imienia dziecka ani dokładnej daty urodzenia dziecka.
+Niniejsza polityka dotyczy aplikacji mobilnej Nurtly oraz opisanego tutaj przetwarzania danych. Nie obejmuje usług poza aplikacją ani warunków kontrolowanych przez podmioty trzecie.
 
-Aplikacja nie jest przeznaczona do używania przez dzieci, profilowania dzieci ani optymalizacji dziecka.
+## 4. Odbiorcy aplikacji
 
-## 3. Lokalny wykaz danych
+Nurtly jest przeznaczone dla osób dorosłych w wieku 18 lat lub starszych, zwłaszcza rodziców i opiekunów. Nie jest kierowane do dzieci i nie jest przeznaczone do samodzielnego używania przez dzieci.
 
-Aplikacja przechowuje wpisy Dziennika, zapisany język oraz lokalne ustawienie dostępu do aplikacji na urządzeniu.
+## 5. Dane związane z dzieckiem i ograniczenia
 
-Aplikacja nie tworzy konta użytkownika i nie używa backendu ani synchronizacji w chmurze dla danych Dziennika.
+Nurtly nie wymaga konta dziecka, imienia dziecka ani dokładnej daty urodzenia. Zakresy wiekowe w treści aktywności są metadanymi treści, a nie profilem dziecka. Aplikacja nie jest produktem medycznym i nie zapewnia diagnozy, leczenia ani gwarantowanych efektów rozwojowych.
 
-## 4. Zachowanie Dziennika
+## 6. Dane przechowywane lokalnie
 
-Wpisy Dziennika są tworzone, przeglądane i usuwane lokalnie na urządzeniu.
+Nurtly nie ma konta użytkownika, logowania, rejestracji ani backendu. Dane Dziennika są przechowywane lokalnie na urządzeniu. Dane Dziennika mogą obejmować notatki, czas rozpoczęcia i zakończenia snu, typ karmienia, opcjonalną ilość karmienia, typ pieluchy, datę i godzinę zdarzenia oraz opcjonalny wewnętrzny identyfikator dziecka. Język aplikacji jest także przechowywany lokalnie.
 
-Dane Dziennika służą wyłącznie do pokazywania historii opieki na tym urządzeniu.
+## 7. Dziennik i typy wpisów
 
-Treść notatek Dziennika nie jest wysyłana do backendu Nurtly ani do usługi chmurowej.
+Wpisy Dziennika są tworzone i odczytywane na urządzeniu w celu działania aplikacji. Nie są przesyłane do Gray Lion.
 
-## 5. Brak konta i brak synchronizacji w chmurze
+## 8. Brak konta i synchronizacji chmurowej
 
-Aplikacja nie ma konta, logowania, rejestracji ani synchronizowanego w chmurze profilu użytkownika.
+Nurtly nie oferuje synchronizacji chmurowej ani systemu kont online Nurtly.
 
-Dziennik w MVP działa wyłącznie lokalnie.
+## 9. Reklamy Google Mobile Ads
 
-## 6. Google Mobile Ads
+Darmowa wersja może wyświetlać pasywne banery Google Mobile Ads. Premium nie pokazuje reklam. Oficjalne informacje: [Google Mobile Ads](https://developers.google.com/admob).
 
-Darmowi użytkownicy mogą widzieć pasywne reklamy banerowe w dozwolonych obszarach przeglądania.
+## 10. Google UMP i ustawienia prywatności reklam
 
-Użytkownicy Premium nie widzą reklam.
+Google UMP służy do obsługi ustawień prywatności reklam tam, gdzie jest to wymagane. Reklamy nie są inicjalizowane ani ładowane przed potwierdzeniem przez mechanizm zgody, że mogą być żądane. Jeżeli opcja jest dostępna w Prywatność i dane, użytkownik może ponownie otworzyć ustawienia prywatności reklam. Oficjalne informacje: [Google UMP](https://developers.google.com/admob/ump).
 
-## 7. UMP i ustawienia prywatności
+## 11. Advertising ID
 
-Google UMP jest używane tam, gdzie jest to wymagane, do obsługi ustawień prywatności przed wyświetleniem reklam.
+Google Mobile Ads może przetwarzać identyfikatory reklamowe lub identyfikatory urządzenia zgodnie z finalną kompilacją Android, ustawieniami urządzenia, stanem zgody i zasadami Google.
 
-Reklamy są proszone dopiero po tym, gdy stan zgody na to pozwala.
+## 12. Reklamy i dane reklamowe
 
-## 8. Identyfikatory reklamowe
+MVP używa wyłącznie banerów reklamowych. Nurtly nie używa treści Dziennika do reklam. Aplikacja żąda reklam dopiero po tym, jak przepływ UMP potwierdzi możliwość ich pobrania.
 
-Identyfikatory reklamowe mogą być używane przez usługi reklamowe zgodnie z finalną wersją Androida, stanem zgody i warunkami usług Google.
+## 13. Zakupy i subskrypcje
 
-## 9. Reklamy i dane reklamowe
+Google Play Billing obsługuje zakupy i subskrypcje. Google przetwarza dane transakcji. Gray Lion nie otrzymuje pełnych danych karty płatniczej. Oficjalne informacje: [Google Play Billing](https://developer.android.com/google/play/billing) i [Google Play](https://play.google.com/about/).
 
-Treść Dziennika nie jest używana do reklam ani profilowania dzieci.
+## 14. Analityka i raportowanie awarii
 
-Google i jego dostawcy usług mogą przetwarzać dane na potrzeby reklam zgodnie ze swoimi usługami i zasadami.
+Nurtly nie używa SDK analityki ani SDK raportowania awarii. Dziennik nie służy do analityki, a Nurtly nie zbiera telemetryki produktowej w obecnym MVP.
 
-## 10. Zakupy i subskrypcje
+## 15. Usługi zewnętrzne
 
-Zakupy i subskrypcje obsługuje Google Play Billing.
+Nurtly korzysta obecnie z Google Privacy Policy, Google Mobile Ads, Google UMP, Google Play i Google Play Billing. Oficjalna polityka prywatności Google: [Google Privacy Policy](https://policies.google.com/privacy?hl=en).
 
-Możemy przetwarzać dane o zakupie, aktywacji, odnowieniu, anulowaniu, wygaśnięciu lub przywróceniu, aby utrzymać poprawny stan uprawnień Premium.
+## 16. Cele i podstawy przetwarzania
 
-## 11. Analityka i raportowanie awarii
+Lokalne przetwarzanie Dziennika odbywa się na urządzeniu na żądanie użytkownika, aby aplikacja mogła działać. Gray Lion nie otrzymuje treści Dziennika. Obsługa płatności służy realizacji żądanych zakupów lub subskrypcji oraz obowiązków prawnych. Banery reklamowe są żądane dopiero po tym, jak przepływ UMP potwierdzi możliwość ich pobrania. Google może przetwarzać identyfikatory reklamowe lub urządzenia zależnie od stanu zgody, ustawień urządzenia, finalnej kompilacji Android i zasad Google. Reklamy ograniczone lub niepersonalizowane oraz przetwarzanie antyfraudowe i bezpieczeństwa mogą opierać się na innych podstawach stosowanych przez dostawcę, gdy ma to zastosowanie. Treść Dziennika nie jest używana do reklam.
 
-Nurtly nie używa w MVP SDK analityki produktowej, SDK raportowania awarii ani telemetrii Dziennika.
+## 17. Odbiorcy danych
 
-## 12. Usługi zewnętrzne
+Odbiorcami mogą być Google i jego dostawcy usług dla reklam, ustawień prywatności reklam i obsługi płatności. Gray Lion jest operatorem, ale nie otrzymuje treści Dziennika z aplikacji.
 
-W zależności od sposobu korzystania z aplikacji dane mogą być przetwarzane przez Google Play Billing, usługi reklamowe oraz usługi techniczne potrzebne do działania aplikacji.
+## 18. Okres przechowywania
 
-## 13. Cele i podstawy
+Dane Dziennika i zapisane lokalne preferencje pozostają na urządzeniu, dopóki użytkownik ich nie usunie albo nie odinstaluje aplikacji. Nurtly nie zapewnia kopii zapasowej w chmurze ani synchronizacji chmurowej.
 
-Dane wykorzystujemy, aby zapewnić działanie aplikacji, przechowywać lokalny Dziennik opieki, obsługiwać subskrypcje Premium, wyświetlać reklamy użytkownikom darmowym i wspierać podstawową niezawodność aplikacji.
+## 19. Usuwanie danych
 
-## 14. Odbiorcy
+Aplikacja zawiera opcję Usuń wszystkie dane lokalne, która usuwa wpisy Dziennika, zapisany język i lokalne ustawienie dostępu w aplikacji. Nie usuwa ani nie zmienia historii zakupów Google Play, subskrypcji Google Play, prawdziwego uprawnienia Premium zarządzanego przez Google Play, stanu zgody Google UMP ani danych reklamowych i rozliczeniowych zarządzanych przez Google. Jeśli część elementów zostanie usunięta pomyślnie, a inna operacja się nie powiedzie, aplikacja zgłasza częściowe zakończenie i można bezpiecznie ponowić próbę.
 
-Dane mogą być przetwarzane przez Google Play Billing, usługi reklamowe i inne usługi techniczne potrzebne do działania aplikacji.
+## 20. Bezpieczeństwo lokalnego przechowywania
 
-W MVP nie korzystamy z dostawcy analityki.
+Nurtly w obecnym MVP korzysta wyłącznie z lokalnego przechowywania. Ponieważ dane pozostają na urządzeniu, użytkownik powinien chronić urządzenie przy użyciu zabezpieczeń Androida.
 
-## 15. Retencja
+## 21. Kopia zapasowa i przywracanie Android
 
-Dane Dziennika pozostają na urządzeniu do czasu ich usunięcia przez użytkownika lub odinstalowania aplikacji.
+Nurtly jest skonfigurowane tak, aby wykluczać lokalne dane należące do Nurtly z kopii zapasowej Android w chmurze oraz z transferu między urządzeniami. Nurtly nie polega na kopii zapasowej ani przywracaniu Android, aby zachować treść Dziennika między urządzeniami.
 
-Opcja Usuń wszystkie dane lokalne usuwa wpisy Dziennika, zapisany język i lokalne ustawienie dostępu do aplikacji.
+## 22. Przetwarzanie międzynarodowe przez dostawców zewnętrznych
 
-## 16. Usuwanie
+Google i inni dostawcy mogą przetwarzać dane międzynarodowo zgodnie z własną infrastrukturą i zasadami prywatności.
 
-Użytkownicy mogą usuwać lokalne dane Dziennika w aplikacji.
+## 23. Prawa użytkownika
 
-Usuniętej treści Dziennika nie można odzyskać przez support.
+W zależności od prawa użytkownik może mieć prawo do dostępu, sprostowania, usunięcia, ograniczenia lub sprzeciwu wobec przetwarzania oraz do wycofania zgody tam, gdzie zgoda stanowi podstawę. Prośby dotyczące Nurtly należy kierować na [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-Jeśli usunięcie nie zakończy się za pierwszym razem, można bezpiecznie spróbować ponownie.
+## 24. Prywatność dzieci
 
-## 17. Bezpieczeństwo lokalnego przechowywania
+Nurtly jest przeznaczone dla dorosłych rodziców i opiekunów. Nie jest przeznaczone do samodzielnego używania przez dzieci. Aplikacja nie prosi dziecka o założenie konta i nie wymaga imienia dziecka ani dokładnej daty urodzenia.
 
-Stosujemy zabezpieczenia techniczne i organizacyjne odpowiednie do skali aplikacji MVP.
+## 25. Zmiany polityki
 
-## 18. Kopia zapasowa Androida i transfer między urządzeniami
+Możemy aktualizować tę politykę, gdy zmienia się aplikacja lub konfiguracja usług. Wersja i data wejścia w życie wskazują bieżące wydanie.
 
-Lokalne dane należące do Nurtly są wyłączone z kopii zapasowej Androida w chmurze oraz z transferu między urządzeniami.
-
-Opcja Usuń wszystkie dane lokalne nie usuwa ani nie zmienia historii zakupów Google Play, subskrypcji Google Play, rzeczywistego uprawnienia Premium obsługiwanego przez Google Play, stanu zgody Google UMP, rekordów reklam zarządzanych przez Google ani rekordów rozliczeń zarządzanych przez Google.
-
-## 19. Przetwarzanie międzynarodowe
-
-Niektórzy dostawcy usług mogą przetwarzać dane w innych krajach zgodnie ze swoim sposobem działania.
-
-## 20. Prawa użytkownika
-
-W zależności od prawa użytkownik może mieć prawo do dostępu, sprostowania, usunięcia, ograniczenia lub sprzeciwu wobec przetwarzania oraz do wycofania zgody tam, gdzie zgoda stanowi podstawę.
-
-## 21. Prywatność dzieci
-
-Aplikacja nie jest przeznaczona do samodzielnego używania przez dzieci.
-
-Polityka nie deklaruje przetwarzania kierowanego do dzieci, profilowania dzieci ani optymalizacji dziecka.
-
-## 22. Zmiany polityki
-
-Możemy aktualizować tę politykę wraz z rozwojem aplikacji, zmianami funkcji lub wymaganiami prawnymi.
-
-## 23. Kontakt
+## 26. Kontakt
 
 W sprawach prywatności napisz na [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
-
-## 24. Podsumowanie zakresu
-
-Polityka obejmuje dorosłych rodziców i opiekunów, lokalne dane Dziennika, płatności Premium, reklamy, ustawienia prywatności UMP, ograniczenia analityki, usuwanie, retencję i zachowanie kopii zapasowej w MVP.

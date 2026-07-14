@@ -15,8 +15,8 @@ It is a publication handoff only. It is not legal advice.
 
 ## Source documents in this repository
 
-- [English privacy policy mirror](privacy_policy_en.md)
-- [Polish privacy policy mirror](privacy_policy_pl.md)
+- [English privacy policy pointer](privacy_policy_en.md)
+- [Polish privacy policy pointer](privacy_policy_pl.md)
 - [Owner decisions](../release/play_console_owner_decisions.md)
 - [Data Safety preparation](../release/data_safety.md)
 - [Google Play submission content pack](../release/google_play_submission_content_pack.md)
@@ -72,7 +72,7 @@ Captured on 14 July 2026 with anonymous requests from the Codex workspace.
 
 ## Notes
 
-- The repository copies in `docs/legal/` are mirrors only; the live public SSOT remains authoritative.
+- The `docs/legal/public/` files are the repo mirror pair; the top-level `docs/legal/privacy_policy_en.md` and `docs/legal/privacy_policy_pl.md` files are internal pointers only.
 - Do not claim device visual QA here. This evidence is based on anonymous HTTP and HTML inspection only.
 - Keep BLK-004 resolved specifically for public publication, anonymous reachability, canonical public URL, and EN/PL route availability.
 - Do not imply that every privacy, Data Safety, Play Console, or release-readiness task is complete.

@@ -5,132 +5,106 @@
 **Operator:** GRAY LION ŁUKASZ CHMIEL, Poland, NIP 6272618384, REGON 243494838
 **Contact:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
-## 1. Who we are and who this is for
+## 1. Title, version, and effective date
 
-Nurtly is a calm support app for adults 18+, especially parents and caregivers.
+Version 1.1. Effective date: 14 July 2026.
 
-It is not directed to children and is not intended for independent use by children.
+## 2. About the operator
 
-The app is not a child product, does not provide medical advice, and does not promise diagnosis, treatment, or developmental outcomes.
+The operator of Nurtly is GRAY LION ŁUKASZ CHMIEL, Poland, NIP 6272618384, REGON 243494838. Contact: [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-## 2. Child-related data and product limits
+## 3. Scope
 
-The app does not require a child account, a child name, or an exact child date of birth.
+This policy applies to the Nurtly mobile app and to the data handling described here. It does not cover services outside the app or terms controlled by third parties.
 
-The app is not intended for child-directed use, child profiling, or child optimization.
+## 4. Intended audience
 
-## 3. Local data inventory
+Nurtly is intended for adults 18 or older, especially parents and caregivers. It is not child-directed and is not intended for independent use by children.
 
-The app stores Journal entries, the saved language, and the local app access setting on the device.
+## 5. Child-related data and limits
 
-The app does not create a user account and does not use a backend or cloud sync for Journal data.
+Nurtly does not require a child account, a child name, or an exact date of birth. Age ranges shown in activity content are content metadata, not a child profile. The app is not a medical product and does not provide diagnosis, treatment, or guaranteed developmental outcomes.
 
-## 4. Journal behavior
+## 6. Data stored locally
 
-Journal entries are created, viewed, and deleted locally on the device.
+Nurtly has no user account, no sign-in, no registration, and no backend. Journal data is stored locally on the device. Journal data may include notes, sleep start and end times, feeding type, optional feeding quantity, diaper type, event timestamp, and an optional internal child identifier. The app language is also stored locally.
 
-Journal data is used only to show care history on that device.
+## 7. Journal and entry types
 
-Journal note content is not sent to a Nurtly backend or cloud service.
+Journal entries are created and read on the device to operate the app. They are not sent to Gray Lion.
 
-## 5. No account and no cloud sync
+## 8. No account and no cloud sync
 
-The app has no account, no sign-in, no registration, and no cloud-synced user profile.
+Nurtly does not offer cloud sync and does not maintain an online Nurtly account system.
 
-The Journal remains local-only in the MVP.
+## 9. Google Mobile Ads
 
-## 6. Google Mobile Ads
+The free version may show passive Google Mobile Ads banners. Premium does not show ads. Official information: [Google Mobile Ads](https://developers.google.com/admob).
 
-Free users may see passive banner ads in allowed browse areas.
+## 10. Google UMP and privacy choices
 
-Premium users do not see ads.
+Google UMP is used where required to manage privacy choices. Ads are not initialized or loaded before the consent flow confirms that ads may be requested. If the app exposes it in Privacy & Data, users can reopen privacy choices. Official information: [Google UMP](https://developers.google.com/admob/ump).
 
-## 7. UMP and privacy choices
+## 11. Advertising ID
 
-Google UMP is used where required to manage privacy choices before ads are requested.
+Google Mobile Ads may process advertising or device identifiers according to the final Android build, device settings, consent state, and Google&apos;s terms.
 
-Ads are requested only after the consent state allows them.
+## 12. Ads and ad data
 
-## 8. Advertising identifiers
+The MVP uses banner ads only. Nurtly does not use Journal content for advertising. The app requests ads only after the UMP flow confirms that ads may be requested.
 
-Advertising identifiers may be used by ad services according to the final Android build, consent state, and Google's service terms.
+## 13. Purchases and subscriptions
 
-## 9. Ads and advertising data
+Google Play Billing handles purchases and subscriptions. Google processes transaction data. Gray Lion does not receive full payment card details. Official information: [Google Play Billing](https://developer.android.com/google/play/billing) and [Google Play](https://play.google.com/about/).
 
-Journal content is not used for advertising or child profiling.
+## 14. Analytics and crash reporting
 
-Google and its service providers may process data for ads according to their own services and policies.
+Nurtly does not use an analytics SDK or a crash-reporting SDK. The journal is not used for analytics, and Nurtly does not collect product telemetry in the current MVP.
 
-## 10. Purchases and subscriptions
+## 15. External services
 
-Google Play Billing handles purchases and subscriptions.
+Nurtly currently relies on Google Privacy Policy, Google Mobile Ads, Google UMP, Google Play, and Google Play Billing. Official Google Privacy Policy: [Google Privacy Policy](https://policies.google.com/privacy?hl=en).
 
-We may process purchase, activation, renewal, cancellation, expiry, or restore state to keep Premium entitlement accurate.
+## 16. Purposes and bases
 
-## 11. Analytics and crash reporting
+Local journal processing happens on the device at the user&apos;s request so the app can function. Gray Lion does not receive journal content. Billing is used to complete requested purchases or subscriptions and to meet legal obligations. Banner requests are consent-gated through UMP. Google may process advertising or device identifiers depending on consent state, device settings, the final Android build, and Google&apos;s terms. Limited or non-personalized advertising and fraud or security processing may use provider-defined legal bases where applicable. Journal content is not used for advertising.
 
-Nurtly does not use a product analytics SDK, a crash-reporting SDK, or Journal telemetry in the MVP.
+## 17. Data recipients
 
-## 12. External services
+Recipients may include Google and its service providers for ads, privacy choices, and billing. Gray Lion is the operator, but it does not receive journal content from the app.
 
-Depending on how you use the app, data may be processed by Google Play Billing, ad services, and technical services needed to run the app.
+## 18. Retention
 
-## 13. Purposes and bases
+Journal data and saved local preferences remain on the device until the user deletes them or uninstalls the app. Nurtly does not provide cloud backup or cloud sync.
 
-We use data to provide the app, store the local care journal, manage Premium subscriptions, show ads to free users, and support basic app reliability.
+## 19. Deleting data
 
-## 14. Recipients
+The app includes Delete all local data, which removes journal entries, saved language, and the local app access setting. It does not remove or alter Google Play purchase history, Google Play subscriptions, the real Premium entitlement managed through Google Play, Google UMP consent state, Google-managed advertising records, or Google-managed billing records. If some components are deleted successfully while another fails, the app reports partial completion and the operation can be retried safely.
 
-Data may be processed by Google Play Billing, ad services, and other technical services required to operate the app.
+## 20. Security of local storage
 
-No analytics provider is used in the MVP.
+Nurtly uses local storage only for the current MVP. Because data stays on the device, users should protect their device with Android security features.
 
-## 15. Retention
+## 21. Android backup and restore
 
-Journal data stays on the device until the user deletes it or uninstalls the app.
+Nurtly is configured to exclude Nurtly-owned local app data from Android cloud backup and device-to-device transfer. Nurtly does not rely on Android backup or restore to preserve Journal content between devices.
 
-Delete all local data removes the Journal entries, the saved language, and the local app access setting.
+## 22. International processing by third parties
 
-## 16. Deletion
+Google and other providers may process data internationally according to their own infrastructure and privacy terms.
 
-Users can delete their local Journal data in the app.
+## 23. User rights
 
-Deleted Journal content cannot be recovered by support.
+Depending on applicable law, users may have rights to access, correct, delete, restrict, or object to processing, and to withdraw consent where consent is the basis. Requests about Nurtly should be sent to [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
 
-If deletion does not complete on the first attempt, the user can safely try again.
+## 24. Children&apos;s privacy
 
-## 17. Local-storage security
+Nurtly is intended for adult parents and caregivers. It is not intended for independent use by children. The app does not ask a child to create an account and does not require the child&apos;s name or exact date of birth.
 
-We use technical and organizational safeguards appropriate for an MVP-scale app.
+## 25. Changes to this policy
 
-## 18. Android backup and device transfer
+We may update this policy when the app or service setup changes. The version and effective date above show the current release.
 
-Nurtly-owned local data is excluded from Android cloud backup and device-to-device transfer.
-
-Delete all local data does not remove or alter Google Play purchase history, Google Play subscriptions, real Premium entitlement managed through Google Play, Google UMP consent state, Google-managed advertising records, or Google-managed billing records.
-
-## 19. International processing
-
-Some service providers may process data in other countries according to their own service operations.
-
-## 20. User rights
-
-Depending on applicable law, users may have rights to access, correct, delete, restrict, or object to processing, and to withdraw consent where consent is the basis.
-
-## 21. Children’s privacy
-
-The app is not intended for independent use by children.
-
-The policy does not claim child-directed processing, child profiling, or child optimization.
-
-## 22. Policy changes
-
-We may update this policy as the app evolves, features change, or legal requirements change.
-
-## 23. Contact
+## 26. Contact
 
 For privacy questions, contact [nurtly@graylion.pl](mailto:nurtly@graylion.pl).
-
-## 24. Scope recap
-
-This policy covers the adult parent/caregiver audience, local Journal data, Premium billing, ads, UMP privacy choices, analytics limits, deletion, retention, and backup behavior for the MVP.
