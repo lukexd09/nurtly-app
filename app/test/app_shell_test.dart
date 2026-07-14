@@ -14,6 +14,7 @@ import 'package:nurtly/core/content/sound_item.dart';
 import 'package:nurtly/core/navigation/app_shell.dart';
 import 'package:nurtly/core/localization/language_preference_store.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
+import 'package:nurtly/core/platform/external_url_launcher.dart';
 import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/features/play/play_screen.dart';
 import 'package:nurtly/features/journal/journal_controller.dart';
@@ -855,6 +856,37 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Current MVP behavior'), findsOneWidget);
+    expect(find.byKey(const ValueKey('privacy-policy-action')), findsOneWidget);
+  });
+
+  testWidgets('Privacy policy route follows selected Polish app language',
+      (tester) async {
+    Uri? openedUri;
+    await _pumpNurtlyApp(
+      tester,
+      languagePreferenceStore: FakeLanguagePreferenceStore(
+        saved: AppLanguage.polish,
+      ),
+      externalUrlLauncher: (uri) async {
+        openedUri = uri;
+        return true;
+      },
+    );
+
+    await _tapSettings(tester);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('settings-privacy-data')),
+    );
+    await tester.tap(find.byKey(const ValueKey('settings-privacy-data')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('privacy-policy-action')));
+    await tester.pump();
+
+    expect(openedUri.toString(), 'https://nurtly.graylion.pl/privacy/pl');
+    expect(find.text('Otwórz Politykę prywatności'), findsOneWidget);
+    expect(find.byKey(const ValueKey('delete-all-local-data-action')),
+        findsOneWidget);
   });
 
   testWidgets('Delete all local data clears journal and preferences',
@@ -1461,6 +1493,7 @@ Future<void> _pumpNurtlyApp(
   Locale? systemLocale,
   LanguagePreferenceStore? languagePreferenceStore,
   ContentLoader? contentLoader,
+  ExternalUrlLauncher? externalUrlLauncher,
   FakePremiumEntitlementProvider? premiumEntitlementProvider,
   FakeReviewerAccessStore? reviewerAccessStore,
   ConsentFlow? consentFlow,
@@ -1492,6 +1525,7 @@ Future<void> _pumpNurtlyApp(
         reviewerAccessStore: reviewerAccessStore ?? FakeReviewerAccessStore(),
         consentFlow: consentFlow,
         journalController: journalController,
+        externalUrlLauncher: externalUrlLauncher,
       ),
     ),
   );

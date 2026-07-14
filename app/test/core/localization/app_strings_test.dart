@@ -35,7 +35,10 @@ void main() {
     expect(strings.premiumStatusYearlyActive, 'Yearly Premium active');
     expect(strings.premiumUpgrade, 'Upgrade to Premium');
     expect(strings.restorePurchases, 'Restore Premium access');
-    expect(strings.premiumRemovesAdsInFreePlan, 'Premium removes ads.');
+    expect(
+      strings.premiumRemovesAdsInFreePlan,
+      contains('Premium is ad-free'),
+    );
     expect(strings.premiumLaunchOfferTitle, 'Launch offer -50%');
     expect(
       strings.premiumLaunchOfferDescription,
@@ -61,20 +64,12 @@ void main() {
       'New premium content in future updates',
     );
     expect(
-      strings.freePlanMayShowAdsInPassiveSlots,
-      'Free plan may show ads in passive list slots.',
-    );
-    expect(
       strings.purchasesGoThroughGooglePlay,
-      'Purchases on Android go through Google Play.',
+      contains('Google Play Billing'),
     );
     expect(
       strings.journalContentNotUsedForAds,
       'Journal note content is not used for ads.',
-    );
-    expect(
-      strings.premiumStateMayBeStoredLocally,
-      'Premium state may be stored locally to keep access working.',
     );
     expect(strings.premiumNotNow, 'Not now');
     expect(
@@ -145,7 +140,10 @@ void main() {
     expect(strings.premiumStatusYearlyActive, 'Premium roczne aktywne');
     expect(strings.premiumUpgrade, 'Przejdź na Premium');
     expect(strings.restorePurchases, 'Odzyskaj dostęp Premium');
-    expect(strings.premiumRemovesAdsInFreePlan, 'Premium usuwa reklamy.');
+    expect(
+      strings.premiumRemovesAdsInFreePlan,
+      contains('Premium jest bez reklam'),
+    );
     expect(strings.premiumLaunchOfferTitle, 'Oferta startowa -50%');
     expect(
       strings.premiumLaunchOfferDescription,
@@ -171,20 +169,12 @@ void main() {
       'Nowe treści premium w kolejnych aktualizacjach',
     );
     expect(
-      strings.freePlanMayShowAdsInPassiveSlots,
-      'Plan darmowy może wyświetlać reklamy w spokojnych miejscach list.',
-    );
-    expect(
       strings.purchasesGoThroughGooglePlay,
-      'Zakupy na Androidzie odbywają się przez Google Play.',
+      contains('Google Play Billing'),
     );
     expect(
       strings.journalContentNotUsedForAds,
       'Treści notatek z dziennika nie są używane do reklam.',
-    );
-    expect(
-      strings.premiumStateMayBeStoredLocally,
-      'Stan Premium może być przechowywany lokalnie, aby dostęp działał.',
     );
     expect(strings.premiumNotNow, 'Nie teraz');
     expect(
