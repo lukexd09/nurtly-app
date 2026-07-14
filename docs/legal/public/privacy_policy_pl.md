@@ -39,11 +39,11 @@ Nurtly nie oferuje synchronizacji chmurowej ani systemu kont online Nurtly.
 
 ## 9. Reklamy Google Mobile Ads
 
-Darmowa wersja może wyświetlać pasywne banery Google Mobile Ads. Premium nie pokazuje reklam. Oficjalne informacje: [Google Mobile Ads](https://developers.google.com/admob).
+Darmowa wersja może wyświetlać pasywne banery Google Mobile Ads. Premium nie pokazuje reklam.
 
 ## 10. Google UMP i ustawienia prywatności reklam
 
-Google UMP służy do obsługi ustawień prywatności reklam tam, gdzie jest to wymagane. Reklamy nie są inicjalizowane ani ładowane przed potwierdzeniem przez mechanizm zgody, że mogą być żądane. Jeżeli opcja jest dostępna w Prywatność i dane, użytkownik może ponownie otworzyć ustawienia prywatności reklam. Oficjalne informacje: [Google UMP](https://developers.google.com/admob/ump).
+Google UMP służy do obsługi ustawień prywatności reklam tam, gdzie jest to wymagane. Reklamy nie są inicjalizowane ani ładowane przed potwierdzeniem przez mechanizm zgody, że mogą być żądane. Jeżeli opcja jest dostępna w Prywatność i dane, użytkownik może ponownie otworzyć ustawienia prywatności reklam.
 
 ## 11. Advertising ID
 

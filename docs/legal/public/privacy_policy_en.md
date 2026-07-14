@@ -39,11 +39,11 @@ Nurtly does not offer cloud sync and does not maintain an online Nurtly account 
 
 ## 9. Google Mobile Ads
 
-The free version may show passive Google Mobile Ads banners. Premium does not show ads. Official information: [Google Mobile Ads](https://developers.google.com/admob).
+The free version may show passive Google Mobile Ads banners. Premium does not show ads.
 
 ## 10. Google UMP and privacy choices
 
-Google UMP is used where required to manage privacy choices. Ads are not initialized or loaded before the consent flow confirms that ads may be requested. If the app exposes it in Privacy & Data, users can reopen privacy choices. Official information: [Google UMP](https://developers.google.com/admob/ump).
+Google UMP is used where required to manage privacy choices. Ads are not initialized or loaded before the consent flow confirms that ads may be requested. If the app exposes it in Privacy & Data, users can reopen privacy choices.
 
 ## 11. Advertising ID
 
