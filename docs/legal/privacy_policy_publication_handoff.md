@@ -27,7 +27,7 @@ Captured on 14 July 2026 with anonymous requests from the Codex workspace.
 
 | Route | HTTP result | Language / behavior | Canonical | Evidence notes |
 | --- | --- | --- | --- | --- |
-| `/privacy` | 200 OK | EN/PL browser-language gateway with manual links | `https://nurtly.graylion.pl/privacy` | Language gateway only; links to the EN and PL policy pages; `lang="en"`, `lang="pl"`, and `hreflang` alternates are present. |
+| `/privacy` | 200 OK | EN/PL browser-language gateway with manual links and redirect behavior | `https://nurtly.graylion.pl/privacy` | Single gateway document with `<html lang="en">`, EN/PL `hreflang` alternates, and manual links to the language-specific policy pages; browser language can route the user to the matching localized page. |
 | `/privacy/en` | 200 OK | `lang=en`, version 1.1, effective 14 July 2026 | `https://nurtly.graylion.pl/privacy/en` | Shows operator `GRAY LION ŁUKASZ CHMIEL`, contact `nurtly@graylion.pl`, and EN/PL/x-default `hreflang` alternates. |
 | `/privacy/pl` | 200 OK | `lang=pl`, version 1.1, effective 14 lipca 2026 r. | `https://nurtly.graylion.pl/privacy/pl` | Shows operator `GRAY LION ŁUKASZ CHMIEL`, contact `nurtly@graylion.pl`, and EN/PL/x-default `hreflang` alternates. |
 | `/support/en` | 200 OK | `lang=en`, version 1.1, effective 14 July 2026 | `https://nurtly.graylion.pl/support/en` | Support page is anonymous, exposes the language switcher, and repeats the live operator/contact metadata. |
