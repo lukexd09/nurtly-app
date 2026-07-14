@@ -1,43 +1,61 @@
 # Polityka prywatności Nurtly
 
-**Wersja:** 1.0
-**Data wejścia w życie:** 25 czerwca 2026 r.
+**Wersja:** 1.1
+**Data wejścia w życie:** 14 lipca 2026 r.
 **Operator:** GRAY LION ŁUKASZ CHMIEL, Polska, NIP 6272618384, REGON 243494838
 **Kontakt:** [nurtly@graylion.pl](mailto:nurtly@graylion.pl)
 
 ## Zakres i odbiorcy
 
-Nurtly jest przeznaczone dla dorosłych rodziców i opiekunów, a nie dla dzieci.
+Nurtly jest przeznaczone dla osób dorosłych 18+, przede wszystkim rodziców i opiekunów.
 
-Aplikacja nie wymaga konta dziecka, imienia dziecka ani dokładnej daty urodzenia.
+Aplikacja nie jest kierowana do dzieci i nie jest przeznaczona do samodzielnego używania przez dzieci.
 
-## Dziennik lokalny
+## Dane lokalne
 
-Dane Dziennika są przechowywane lokalnie na urządzeniu i w obecnym MVP nie są wysyłane do backendu ani chmury.
+Wpisy Dziennika, zapisany język oraz lokalne ustawienie dostępu do aplikacji są przechowywane na urządzeniu.
 
-Aplikacja nie ma konta użytkownika, logowania, rejestracji ani backendu.
+Dziennik działa lokalnie i nie jest wysyłany do backendu ani do chmury.
 
-## Reklamy, ustawienia prywatności i płatności
+Aplikacja nie ma konta, logowania, rejestracji ani backendu.
 
-Darmowi użytkownicy mogą widzieć pasywne banery Google Mobile Ads; użytkownicy Premium nie widzą reklam.
+## Usuwanie
 
-Google UMP jest używane tam, gdzie jest to wymagane, do obsługi ustawień prywatności reklam.
+Opcja Usuń wszystkie dane lokalne usuwa wpisy Dziennika, zapisany język i lokalne ustawienie dostępu do aplikacji.
 
-Scalony manifest Android zawiera `com.google.android.gms.permission.AD_ID`.
+Jeśli usunięcie nie zakończy się za pierwszym razem, można bezpiecznie spróbować ponownie.
+
+Usuniętej treści Dziennika nie można odzyskać przez support.
+
+## Kopia zapasowa i transfer
+
+Lokalne dane należące do Nurtly są wyłączone z kopii zapasowej Androida w chmurze oraz z transferu między urządzeniami.
+
+Opcja Usuń wszystkie dane lokalne nie usuwa ani nie zmienia historii zakupów Google Play, subskrypcji Google Play, rzeczywistego uprawnienia Premium obsługiwanego przez Google Play, stanu zgody Google UMP, rekordów reklam zarządzanych przez Google ani rekordów rozliczeń zarządzanych przez Google.
+
+## Reklamy i ustawienia prywatności
+
+Darmowi użytkownicy mogą widzieć pasywne reklamy banerowe dopiero po tym, jak Google UMP potwierdzi, że reklamy mogą zostać wyświetlone.
+
+Użytkownicy Premium nie widzą reklam.
+
+Treść Dziennika nie jest używana do reklam.
+
+## Płatności
 
 Zakupy i subskrypcje obsługuje Google Play Billing.
 
+## Advertising ID
+
+Publiczne brzmienie nie składa bezwarunkowej deklaracji o użyciu Advertising ID w tym materiale evidence dla release-candidate.
+
+Ostateczne evidence uprawnień z manifestu pozostaje w toku pod issue `#185`.
+
 ## Analityka i przetwarzanie przez podmioty trzecie
 
-Nurtly nie używa SDK analityki ani SDK raportowania awarii w obecnym MVP.
+Nurtly nie używa w MVP SDK analityki produktowej, SDK raportowania awarii ani telemetrii Dziennika.
 
-Google i jego dostawcy usług mogą przetwarzać dane na potrzeby reklam, ustawień prywatności i płatności zgodnie z własnymi usługami i zasadami.
-
-## Retencja i usuwanie
-
-Dane lokalne pozostają na urządzeniu do czasu ich usunięcia przez użytkownika lub odinstalowania aplikacji, z uwzględnieniem mechanizmów kopii zapasowej i przywracania Androida poza kontrolą Nurtly.
-
-Aplikacja zawiera opcję Usuń wszystkie dane lokalne, która usuwa wpisy Dziennika i bezpieczne lokalne preferencje.
+Google i jego dostawcy usług mogą przetwarzać dane na potrzeby reklam, ustawień prywatności i płatności zgodnie ze swoimi usługami i zasadami.
 
 ## Prawa i kontakt
 

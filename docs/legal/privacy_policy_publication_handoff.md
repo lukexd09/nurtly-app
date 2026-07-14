@@ -10,6 +10,8 @@ It is a publication handoff only. It is not legal advice.
 - English policy page: [https://nurtly.graylion.pl/privacy/en](https://nurtly.graylion.pl/privacy/en)
 - Polish policy page: [https://nurtly.graylion.pl/privacy/pl](https://nurtly.graylion.pl/privacy/pl)
 - Support pages used for adjacent owner contact evidence: [https://nurtly.graylion.pl/support/en](https://nurtly.graylion.pl/support/en) and [https://nurtly.graylion.pl/support/pl](https://nurtly.graylion.pl/support/pl)
+- Canonical host: `nurtly.graylion.pl`
+- The public deployment URL is not the canonical public address and must not be used in Play Console or repo SSOT docs.
 
 ## Source documents in this repository
 
@@ -21,15 +23,15 @@ It is a publication handoff only. It is not legal advice.
 
 ## Live verification evidence
 
-Captured on July 13, 2026 with anonymous requests from the Codex workspace.
+Captured on 14 July 2026 with anonymous requests from the Codex workspace.
 
-| Route | HTTP result | Redirects observed | Anonymous access | Canonical | Language metadata | Evidence notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| `/privacy` | 200 OK | None observed with `curl -L` | Yes | `https://nurtly.graylion.pl/privacy` | `lang="en"`; `hreflang` for EN, PL, and x-default | Language gateway only; links to the EN and PL policy pages; no version/effective-date/contact block on the gateway page. |
-| `/privacy/en` | 200 OK | None observed with `curl -L` | Yes | `https://nurtly.graylion.pl/privacy/en` | `lang="en"`; `hreflang` for EN, PL, and x-default | Shows version 1.0, effective date 25 June 2026, operator GRAY LION ŁUKASZ CHMIEL, and contact `nurtly@graylion.pl`; no placeholder fields remain. |
-| `/privacy/pl` | 200 OK | None observed with `curl -L` | Yes | `https://nurtly.graylion.pl/privacy/pl` | `lang="pl"`; `hreflang` for EN, PL, and x-default | Shows version 1.0, effective date 25 czerwca 2026 r., operator GRAY LION ŁUKASZ CHMIEL, and contact `nurtly@graylion.pl`; no placeholder fields remain. |
-| `/support/en` | 200 OK | None observed with `curl -L` | Yes | `https://nurtly.graylion.pl/support/en` | `lang="en"`; `hreflang` for EN and PL | Support page is anonymous, references privacy choices and local-data deletion, and repeats version 1.0 with effective date 25 June 2026. |
-| `/support/pl` | 200 OK | None observed with `curl -L` | Yes | `https://nurtly.graylion.pl/support/pl` | `lang="pl"`; `hreflang` for EN and PL | Support page is anonymous, references privacy choices and local-data deletion, and repeats version 1.0 with effective date 25 czerwca 2026 r. |
+| Route | HTTP result | Language / behavior | Canonical | Evidence notes |
+| --- | --- | --- | --- | --- |
+| `/privacy` | 200 OK | EN/PL browser-language gateway with manual links | `https://nurtly.graylion.pl/privacy` | Language gateway only; links to the EN and PL policy pages; `lang="en"`, `lang="pl"`, and `hreflang` alternates are present. |
+| `/privacy/en` | 200 OK | `lang=en`, version 1.1, effective 14 July 2026 | `https://nurtly.graylion.pl/privacy/en` | Shows operator `GRAY LION ŁUKASZ CHMIEL`, contact `nurtly@graylion.pl`, and EN/PL/x-default `hreflang` alternates. |
+| `/privacy/pl` | 200 OK | `lang=pl`, version 1.1, effective 14 lipca 2026 r. | `https://nurtly.graylion.pl/privacy/pl` | Shows operator `GRAY LION ŁUKASZ CHMIEL`, contact `nurtly@graylion.pl`, and EN/PL/x-default `hreflang` alternates. |
+| `/support/en` | 200 OK | `lang=en`, version 1.1, effective 14 July 2026 | `https://nurtly.graylion.pl/support/en` | Support page is anonymous, exposes the language switcher, and repeats the live operator/contact metadata. |
+| `/support/pl` | 200 OK | `lang=pl`, version 1.1, effective 14 lipca 2026 r. | `https://nurtly.graylion.pl/support/pl` | Support page is anonymous, exposes the language switcher, and repeats the live operator/contact metadata. |
 
 ## Live alignment notes
 
@@ -37,7 +39,9 @@ Captured on July 13, 2026 with anonymous requests from the Codex workspace.
 - The public privacy pages are anonymous and do not require sign-in.
 - The live pages do not contain `[DATE_TBD]`, `[CONTACT_EMAIL_TBD]`, `[PRIVACY_POLICY_URL_TBD]`, or other unpublished placeholders.
 - The approved public privacy URL for Play Console and release docs is [https://nurtly.graylion.pl/privacy](https://nurtly.graylion.pl/privacy).
-- The approved public policy lives at the root privacy gateway, not under `/legal/privacy`.
+- The public policy lives at the root privacy gateway, not under `/legal/privacy`.
+- The public privacy publication and reachability work is complete.
+- Play Console and release-compliance work remains open in BLK-005.
 
 ## Basic accessibility evidence
 
@@ -53,7 +57,7 @@ Captured on July 13, 2026 with anonymous requests from the Codex workspace.
 - local-only Journal behavior
 - no account and no cloud sync
 - billing and Premium behavior
-- passive banner-only ads for free users in the approved public wording
+- banner-only passive ads in the approved public wording
 - Google UMP and Advertising ID wording
 - no analytics SDK or crash-reporting SDK in the MVP wording
 - operator/contact/effective-date/version metadata
@@ -70,3 +74,5 @@ Captured on July 13, 2026 with anonymous requests from the Codex workspace.
 
 - The repository copies in `docs/legal/` are mirrors only; the live public SSOT remains authoritative.
 - Do not claim device visual QA here. This evidence is based on anonymous HTTP and HTML inspection only.
+- Keep BLK-004 resolved specifically for public publication, anonymous reachability, canonical public URL, and EN/PL route availability.
+- Do not imply that every privacy, Data Safety, Play Console, or release-readiness task is complete.

@@ -56,7 +56,7 @@ flutter build appbundle --release
 - tester group and invite link are prepared
 - signing and upload flow are ready
 - store listing fields are complete enough for closed testing
-- privacy policy URL is approved and live, or intentionally blocked by an owner decision
+- privacy policy URL is approved and live, and the live SSOT is kept aligned
 - privacy policy publication handoff is reviewed and the approved live URL is known
 - Data Safety answers match the actual app behavior
 - content rating and target audience are ready
@@ -64,8 +64,8 @@ flutter build appbundle --release
 
 ## Owner decisions still required
 
-- approved public privacy URL: https://nurtly.graylion.pl/privacy
-- final privacy policy publication handoff and approved live URL
+- public privacy URL remains https://nurtly.graylion.pl/privacy and must stay aligned with the live SSOT
+- final privacy policy publication handoff remains aligned with the approved live URL
 - final store listing copy and assets
 - final Data Safety answers
 - final content rating and target audience settings
@@ -84,7 +84,7 @@ flutter build appbundle --release
 
 ## What blocks public release
 
-- unapproved privacy policy URL
+- unapproved privacy policy URL or drift from the live SSOT
 - privacy policy publication handoff not reviewed
 - incomplete store assets or listing copy
 - incomplete Data Safety answers

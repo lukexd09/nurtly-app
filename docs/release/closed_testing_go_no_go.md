@@ -23,7 +23,7 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 
 ## Blocked for closed testing
 
-- [ ] Privacy policy URL is not approved or is still a placeholder.
+- [ ] Privacy policy publication is not approved or the live mirror no longer matches the public SSOT.
 - [ ] Privacy policy publication handoff has not been reviewed or the approved live URL has not been confirmed.
 - [ ] Data Safety answers contradict the current app behavior.
 - [ ] The app is being positioned as child-directed or Families-Program-first without explicit owner approval.
@@ -57,6 +57,12 @@ Use it alongside [Play Console owner decisions](play_console_owner_decisions.md)
 - Go for closed testing when all items in the "Ready for closed testing" section are checked and no blockers remain.
 - No-go for closed testing when any item in the "Blocked for closed testing" section is unresolved.
 - Public-release items can remain open if they are listed in "Allowed to defer until public release".
+
+## Publication status
+
+- Public privacy publication and anonymous reachability are complete at `https://nurtly.graylion.pl/privacy`.
+- EN/PL privacy pages and support pages are live and verified.
+- BLK-005 remains open for Play Console and release compliance work.
 
 ## Notes
 

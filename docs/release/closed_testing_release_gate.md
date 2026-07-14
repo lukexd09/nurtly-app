@@ -12,6 +12,7 @@ This document is the operational release gate for inviting closed-test users to 
 - Android release signing expects a local `app/android/key.properties` file and keeps private release credentials out of git.
 - The MVP is parent-facing, privacy-first, and local-only for Journal data.
 - The current MVP release path is banner-only in passive browse areas, Premium users are ad-free, Sounds behavior is documented, and no product analytics provider is selected for MVP.
+- Public privacy publication and anonymous reachability are complete at `https://nurtly.graylion.pl/privacy`.
 - The remaining owner-confirmation items and recommended defaults are documented in [Play Console owner decisions](play_console_owner_decisions.md) and [Closed-testing go/no-go](closed_testing_go_no_go.md).
 
 ## Location
@@ -56,6 +57,8 @@ This document is the operational release gate for inviting closed-test users to 
 - The privacy policy publication handoff documents the recommended public URL structure and owner-side publication steps.
 - The final privacy policy URL is the approved live SSOT at https://nurtly.graylion.pl/privacy and must stay aligned with Play Console.
 - The policy text must continue to match the current MVP behavior: local-only Journal, banner-only passive ads, Premium ad-free, and no product analytics provider for MVP.
+- The live EN/PL privacy pages and support pages are already reachable and verified.
+- Public privacy publication is resolved, but it does not close Play Console or release-compliance work.
 
 ## Ads / Premium readiness
 
@@ -96,8 +99,6 @@ This document is the operational release gate for inviting closed-test users to 
 
 ## Launch blockers found
 
-- Privacy policy URL is still a placeholder.
-- Privacy policy publication and live hosting still need owner confirmation.
 - Store assets and listing copy still need final Play Console publication values.
 - Data Safety answers still need final confirmation.
 - Content rating and target audience setup still need Play Console confirmation.
