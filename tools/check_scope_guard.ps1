@@ -64,6 +64,16 @@ $approvedSecretTerminologyPhrases = @(
     'secret values'
 )
 
+$approvedInventoryTerminologyPath =
+    "docs/release/third_party_sdk_inventory.md"
+
+$approvedInventoryTerminologyPatterns = @(
+    "AdMob",
+    "google_mobile_ads",
+    "just_audio",
+    "shared_preferences"
+)
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -150,6 +160,18 @@ function Test-ShouldScanForbiddenPatterns {
     $normalized = $Path -replace "\\", "/"
     return $normalized -ne "AGENTS.md" -and
         $normalized -ne "tools/check_scope_guard.ps1"
+}
+
+function Test-IsApprovedInventoryTerminologyUsage {
+    param(
+        [string] $Path,
+        [string] $Pattern
+    )
+
+    $normalized = $Path -replace "\\", "/"
+
+    return $normalized -eq $approvedInventoryTerminologyPath -and
+        $Pattern -in $approvedInventoryTerminologyPatterns
 }
 
 function Test-IsAllowedJustAudioUsage {
@@ -351,6 +373,49 @@ try {
     $changedFiles = @(Get-ChangedFiles)
     $script:failures = New-Object 'System.Collections.Generic.List[string]'
 
+    foreach ($pattern in $approvedInventoryTerminologyPatterns) {
+        if (-not (Test-IsApprovedInventoryTerminologyUsage `
+                -Path $approvedInventoryTerminologyPath `
+                -Pattern $pattern)) {
+            Add-Failure "Scope guard regression: canonical inventory must allow approved pattern '$pattern'."
+        }
+        if (-not (Test-IsApprovedInventoryTerminologyUsage `
+                -Path "docs\release\third_party_sdk_inventory.md" `
+                -Pattern $pattern)) {
+            Add-Failure "Scope guard regression: Windows path normalization failed for approved pattern '$pattern'."
+        }
+    }
+
+    $nonApprovedInventoryPaths = @(
+        "docs/release/README.md",
+        "docs/release/third_party_sdk_inventory.md.bak",
+        "docs/release/third_party_sdk_inventory_copy.md"
+    )
+    foreach ($path in $nonApprovedInventoryPaths) {
+        foreach ($pattern in $approvedInventoryTerminologyPatterns) {
+            if (Test-IsApprovedInventoryTerminologyUsage -Path $path -Pattern $pattern) {
+                Add-Failure "Scope guard regression: path '$path' must not receive the inventory exemption."
+            }
+        }
+    }
+
+    foreach ($pattern in @("Firebase", "Supabase", "SECRET")) {
+        if (Test-IsApprovedInventoryTerminologyUsage `
+                -Path $approvedInventoryTerminologyPath `
+                -Pattern $pattern) {
+            Add-Failure "Scope guard regression: forbidden pattern '$pattern' must remain governed in the canonical inventory."
+        }
+    }
+    if ($approvedInventoryTerminologyPatterns -contains "SECRET") {
+        Add-Failure "Scope guard regression: SECRET must remain governed by the existing secret logic."
+    }
+
+    if (Test-IsApprovedInventoryTerminologyUsage `
+            -Path "docs/release/other.md" `
+            -Pattern "google_mobile_ads") {
+        Add-Failure "Scope guard regression: unrelated files must not receive the inventory exemption."
+    }
+
     foreach ($file in $changedFiles) {
         $normalized = $file -replace "\\", "/"
         $isDedicatedSecretFile =
@@ -375,6 +440,11 @@ try {
         if ((Test-ShouldScanForbiddenPatterns $normalized) -and (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $sourceRootPath $normalized)
             foreach ($pattern in $forbiddenPatterns) {
+                if (Test-IsApprovedInventoryTerminologyUsage `
+                        -Path $normalized `
+                        -Pattern $pattern) {
+                    continue
+                }
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) { continue }

@@ -1,5 +1,7 @@
 # Data Safety preparation
 
+The canonical evidence draft is [Third-party SDK inventory and Data Safety evidence draft](third_party_sdk_inventory.md). This worksheet is retained as a short release pointer; do not treat it as a submitted or approved Play Console response.
+
 For the current authoritative release status and blocker list, see [Final MVP release readiness](final_mvp_release_readiness.md) and [Final release blockers](final_release_blockers.md).
 
 This worksheet helps prepare the Google Play Data Safety answers for the first MVP release.
@@ -53,13 +55,13 @@ For the live public privacy SSOT, see [Privacy policy publication handoff](../le
 - [ ] Are ads personalized?
 - [ ] Is the Advertising ID used?
 
-## TODO placeholders to finalize later
+## Open owner/release decisions
 
-- [ ] Final ad behavior from the ads setup. Needs owner confirmation.
-- [ ] Final ad personalization / Advertising ID decision. Needs owner confirmation.
-- [ ] Final analytics provider, SDK, and consent decisions. Needs owner confirmation if a provider is ever approved.
-- [ ] Final analytics taxonomy and retention window. Needs owner confirmation if analytics is ever approved.
-- [ ] Final Billing data disclosure.
+- Final ad personalization and Advertising ID declaration: #182 and #185.
+- Final provider-specific rows and release-build evidence: #182, #185, and #186.
+- Final Billing wording for purchase status/token handling: #182 and #186.
+
+The canonical inventory records the evidence, confidence, source register, and deletion boundaries for these decisions.
 
 ## Notes
 
