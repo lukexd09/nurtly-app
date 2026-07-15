@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../app_config.dart';
 import '../../core/ads/consent_flow_controller.dart';
 import '../../core/localization/app_strings.dart';
+import '../../core/platform/external_url_launcher.dart';
 import '../../core/privacy/local_data_deletion.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/detail_note.dart';
 import '../../core/widgets/detail_section.dart';
 import '../../core/widgets/section_header.dart';
 
@@ -16,6 +17,7 @@ class PrivacyDataScreen extends StatelessWidget {
     this.strings = AppStrings.english,
     this.onOpenPrivacyChoices,
     this.onDeleteAllLocalData,
+    this.externalUrlLauncher = launchExternalUrl,
     this.refreshListenable,
     this.consentFlow,
   });
@@ -23,6 +25,7 @@ class PrivacyDataScreen extends StatelessWidget {
   final AppStrings strings;
   final VoidCallback? onOpenPrivacyChoices;
   final Future<LocalDataDeletionResult> Function()? onDeleteAllLocalData;
+  final ExternalUrlLauncher externalUrlLauncher;
   final Listenable? refreshListenable;
   final ConsentFlow? consentFlow;
 
@@ -34,6 +37,7 @@ class PrivacyDataScreen extends StatelessWidget {
             privacyChoicesVisible: _privacyChoicesVisible,
             onOpenPrivacyChoices: onOpenPrivacyChoices,
             onDeleteAllLocalData: onDeleteAllLocalData,
+            externalUrlLauncher: externalUrlLauncher,
             onConfirmDelete: _confirmDelete,
           )
         : AnimatedBuilder(
@@ -44,6 +48,7 @@ class PrivacyDataScreen extends StatelessWidget {
                 privacyChoicesVisible: _privacyChoicesVisible,
                 onOpenPrivacyChoices: onOpenPrivacyChoices,
                 onDeleteAllLocalData: onDeleteAllLocalData,
+                externalUrlLauncher: externalUrlLauncher,
                 onConfirmDelete: _confirmDelete,
               );
             },
@@ -120,6 +125,7 @@ class _PrivacyBody extends StatelessWidget {
     required this.onOpenPrivacyChoices,
     required this.onDeleteAllLocalData,
     required this.onConfirmDelete,
+    required this.externalUrlLauncher,
   });
 
   final AppStrings strings;
@@ -127,6 +133,24 @@ class _PrivacyBody extends StatelessWidget {
   final VoidCallback? onOpenPrivacyChoices;
   final Future<LocalDataDeletionResult> Function()? onDeleteAllLocalData;
   final Future<void> Function(BuildContext context) onConfirmDelete;
+  final ExternalUrlLauncher externalUrlLauncher;
+
+  Future<void> _openPrivacyPolicy(BuildContext context) async {
+    var opened = false;
+    try {
+      opened = await externalUrlLauncher(
+        PrivacyPolicyRoutes.forLanguage(strings.language),
+      );
+    } catch (_) {
+      opened = false;
+    }
+    if (!context.mounted || opened) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(strings.privacyPolicyOpenFailed)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +176,15 @@ class _PrivacyBody extends StatelessWidget {
           title: strings.currentMvpBehavior,
           children: [
             _PrivacyLine(strings.parentFirstAudience),
-            _PrivacyLine(strings.childNameNotRequired),
-            _PrivacyLine(strings.birthdateNotRequired),
+            _PrivacyLine(strings.noChildAccount),
+            _PrivacyAction(
+              key: const ValueKey('privacy-policy-action'),
+              label: strings.openPrivacyPolicy,
+              icon: Icons.open_in_new,
+              semanticsKey: const ValueKey('privacy-policy-link-semantics'),
+              isLink: true,
+              onTap: () => _openPrivacyPolicy(context),
+            ),
             if (privacyChoicesVisible && onOpenPrivacyChoices != null)
               _PrivacyAction(
                 key: const ValueKey('privacy-choices-action'),
@@ -173,18 +204,9 @@ class _PrivacyBody extends StatelessWidget {
             _PrivacyLine(strings.premiumRemovesAdsInFreePlan),
             _PrivacyLine(strings.noCloudSync),
             _PrivacyLine(strings.noAnalytics),
-            _PrivacyLine(strings.analyticsScopeMayInclude),
-            _PrivacyLine(strings.freePlanMayShowAdsInPassiveSlots),
             _PrivacyLine(strings.purchasesGoThroughGooglePlay),
             _PrivacyLine(strings.journalContentNotUsedForAds),
-            _PrivacyLine(strings.premiumStateMayBeStoredLocally),
-            _PrivacyLine(strings.bundledSampleContent),
           ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        DetailNote(
-          title: strings.futureChangesTitle,
-          text: strings.futureChanges,
         ),
       ],
     );
@@ -207,18 +229,30 @@ class _PrivacyAction extends StatelessWidget {
     super.key,
     required this.label,
     required this.onTap,
+    this.icon,
+    this.semanticsKey,
+    this.isLink = false,
   });
 
   final String label;
   final VoidCallback onTap;
+  final IconData? icon;
+  final Key? semanticsKey;
+  final bool isLink;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: TextButton(
-        onPressed: onTap,
-        child: Text(label),
+      child: Semantics(
+        key: semanticsKey,
+        container: true,
+        link: isLink,
+        child: TextButton.icon(
+          onPressed: onTap,
+          icon: Icon(icon ?? Icons.chevron_right),
+          label: Text(label),
+        ),
       ),
     );
   }

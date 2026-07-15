@@ -1,4 +1,4 @@
-﻿name: nurtly
+name: nurtly
 description: Simple support for calm, connected parenting.
 publish_to: 'none'
 version: 0.1.0+8
@@ -15,6 +15,7 @@ dependencies:
   google_mobile_ads: ^5.1.0
   in_app_purchase: ^3.2.0
   shared_preferences: ^2.3.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

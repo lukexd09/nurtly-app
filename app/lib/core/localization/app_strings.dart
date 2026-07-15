@@ -160,6 +160,8 @@ class AppStrings {
     required this.privacyTitle,
     required this.privacySubtitle,
     required this.privacyChoices,
+    required this.openPrivacyPolicy,
+    required this.privacyPolicyOpenFailed,
     required this.deleteAllLocalData,
     required this.deleteAllLocalDataTitle,
     required this.deleteAllLocalDataBody,
@@ -168,22 +170,14 @@ class AppStrings {
     required this.deleteAllLocalDataFailed,
     required this.currentMvpBehavior,
     required this.parentFirstAudience,
-    required this.childNameNotRequired,
-    required this.birthdateNotRequired,
+    required this.noChildAccount,
     required this.noAccount,
     required this.noJournalCloudSync,
     required this.noCloudSync,
     required this.noAnalytics,
-    required this.analyticsScopeMayInclude,
-    required this.noAds,
     required this.premiumRemovesAdsInFreePlan,
-    required this.freePlanMayShowAdsInPassiveSlots,
     required this.purchasesGoThroughGooglePlay,
     required this.journalContentNotUsedForAds,
-    required this.premiumStateMayBeStoredLocally,
-    required this.bundledSampleContent,
-    required this.futureChangesTitle,
-    required this.futureChanges,
     required this.back,
     required this.settingsTooltip,
     required this.premiumSectionTitle,
@@ -380,6 +374,8 @@ class AppStrings {
   final String privacyTitle;
   final String privacySubtitle;
   final String privacyChoices;
+  final String openPrivacyPolicy;
+  final String privacyPolicyOpenFailed;
   final String deleteAllLocalData;
   final String deleteAllLocalDataTitle;
   final String deleteAllLocalDataBody;
@@ -388,22 +384,14 @@ class AppStrings {
   final String deleteAllLocalDataFailed;
   final String currentMvpBehavior;
   final String parentFirstAudience;
-  final String childNameNotRequired;
-  final String birthdateNotRequired;
+  final String noChildAccount;
   final String noAccount;
   final String noJournalCloudSync;
   final String noCloudSync;
   final String noAnalytics;
-  final String analyticsScopeMayInclude;
-  final String noAds;
   final String premiumRemovesAdsInFreePlan;
-  final String freePlanMayShowAdsInPassiveSlots;
   final String purchasesGoThroughGooglePlay;
   final String journalContentNotUsedForAds;
-  final String premiumStateMayBeStoredLocally;
-  final String bundledSampleContent;
-  final String futureChangesTitle;
-  final String futureChanges;
   final String back;
   final String settingsTooltip;
   final String premiumSectionTitle;
@@ -607,39 +595,34 @@ class AppStrings {
     privacyTitle: 'Privacy & Data',
     privacySubtitle: 'What Nurtly does with data in this MVP.',
     privacyChoices: 'Privacy choices',
+    openPrivacyPolicy: 'Open Privacy Policy',
+    privacyPolicyOpenFailed:
+        'Could not open the Privacy Policy. Please try again.',
     deleteAllLocalData: 'Delete all local data',
     deleteAllLocalDataTitle: 'Delete all local data?',
     deleteAllLocalDataBody:
-        'This removes local journal entries and resettable app preferences from this device.',
+        'This removes Journal entries, saved language, and the local app access setting. It does not change Google Play purchases, subscriptions, Premium access, UMP choices, or Google-managed advertising and billing records.',
     deleteAllLocalDataSuccess: 'Local data deleted.',
     deleteAllLocalDataPartial:
         'Some local data was deleted. Please try again to finish.',
     deleteAllLocalDataFailed: 'Could not delete local data.',
     currentMvpBehavior: 'Current MVP behavior',
     parentFirstAudience:
-        'Nurtly is for parents and caregivers, not for children.',
-    childNameNotRequired: 'A child name is not required to use the MVP.',
-    birthdateNotRequired:
-        'An exact child birthdate is not required in the MVP.',
+        'Nurtly is intended for adults aged 18 or older, especially parents and caregivers. It is not intended for independent use by children.',
+    noChildAccount:
+        'No child account, child name, or exact date of birth is required.',
     noAccount: 'No account is used.',
-    noJournalCloudSync: 'Journal notes stay on this device only.',
-    noCloudSync: 'No cloud sync is currently enabled.',
-    noAnalytics: 'No analytics are currently enabled.',
-    analyticsScopeMayInclude:
-        'If analytics is added later, it should stay limited to app quality, module usage, retention, ads, and errors.',
-    noAds: 'No ads are currently enabled.',
-    premiumRemovesAdsInFreePlan: 'Premium removes ads.',
-    freePlanMayShowAdsInPassiveSlots:
-        'Free plan may show ads in passive list slots.',
+    noJournalCloudSync:
+        'Journal entries stay on this device. Saved language and the local app access setting are local Nurtly preferences. Nurtly has no user account, backend, or cloud sync.',
+    noCloudSync:
+        'Nurtly-owned local data is excluded from Android cloud backup and device-to-device transfer. Nurtly does not rely on Android backup or restore to preserve Journal data between devices.',
+    noAnalytics:
+        'The MVP has no product analytics SDK, crash-reporting SDK, or Journal telemetry.',
+    premiumRemovesAdsInFreePlan:
+        'The MVP uses passive banner ads only. Premium is ad-free. Ads are requested only after Google UMP confirms they may be requested; privacy choices can be reopened where required.',
     purchasesGoThroughGooglePlay:
-        'Purchases on Android go through Google Play.',
+        'Purchases and subscriptions are handled through Google Play Billing. Local-data deletion does not erase Google Play purchase records or Premium access.',
     journalContentNotUsedForAds: 'Journal note content is not used for ads.',
-    premiumStateMayBeStoredLocally:
-        'Premium state may be stored locally to keep access working.',
-    bundledSampleContent: 'Bundled sample content is included in the app.',
-    futureChangesTitle: 'Future changes',
-    futureChanges:
-        'Future data-related changes should be introduced clearly before they are enabled.',
     back: 'Back',
     settingsTooltip: 'Settings',
     premiumSectionTitle: 'Premium',
@@ -852,43 +835,35 @@ class AppStrings {
     privacyTitle: 'Prywatność i dane',
     privacySubtitle: 'Jak Nurtly używa danych w tym MVP.',
     privacyChoices: 'Ustawienia prywatności reklam',
+    openPrivacyPolicy: 'Otwórz Politykę prywatności',
+    privacyPolicyOpenFailed:
+        'Nie udało się otworzyć Polityki prywatności. Spróbuj ponownie.',
     deleteAllLocalData: 'Usuń wszystkie dane lokalne',
     deleteAllLocalDataTitle: 'Usunąć wszystkie dane lokalne?',
     deleteAllLocalDataBody:
-        'To usunie lokalne wpisy dziennika i możliwe do resetu preferencje aplikacji z tego urządzenia.',
+        'To usunie wpisy dziennika, zapisany język i lokalne ustawienie dostępu do aplikacji. Nie zmieni zakupów, subskrypcji ani uprawnień Premium w Google Play, ustawień UMP ani danych reklamowych i rozliczeniowych zarządzanych przez Google.',
     deleteAllLocalDataSuccess: 'Dane lokalne usunięte.',
     deleteAllLocalDataPartial:
         'Usunięto część danych lokalnych. Spróbuj ponownie, aby dokończyć.',
     deleteAllLocalDataFailed: 'Nie udało się usunąć danych lokalnych.',
     currentMvpBehavior: 'Obecne działanie MVP',
     parentFirstAudience:
-        'Nurtly jest dla rodziców i opiekunów, nie dla dzieci.',
-    childNameNotRequired:
-        'Imię dziecka nie jest wymagane do korzystania z MVP.',
-    birthdateNotRequired:
-        'Dokładna data urodzenia dziecka nie jest wymagana w MVP.',
+        'Nurtly jest przeznaczone dla osób dorosłych w wieku co najmniej 18 lat, zwłaszcza rodziców i opiekunów. Nie jest przeznaczone do samodzielnego używania przez dzieci.',
+    noChildAccount:
+        'Konto dziecka, jego imię ani dokładna data urodzenia nie są wymagane.',
     noAccount: 'Nie używamy konta.',
     noJournalCloudSync:
-        'Notatki z dziennika pozostają tylko na tym urządzeniu.',
-    noCloudSync: 'Obecnie nie ma synchronizacji z chmurą.',
-    noAnalytics: 'Obecnie nie ma analityki.',
-    analyticsScopeMayInclude:
-        'Jeśli analityka zostanie dodana później, powinna ograniczać się do jakości aplikacji, użycia modułów, retencji, reklam i błędów.',
-    noAds: 'Obecnie nie ma reklam.',
-    premiumRemovesAdsInFreePlan: 'Premium usuwa reklamy.',
-    freePlanMayShowAdsInPassiveSlots:
-        'Plan darmowy może wyświetlać reklamy w spokojnych miejscach list.',
+        'Wpisy dziennika pozostają na tym urządzeniu. Zapisany język i lokalne ustawienie dostępu do aplikacji to lokalne preferencje Nurtly. Nurtly nie ma kont użytkowników, backendu ani synchronizacji z chmurą.',
+    noCloudSync:
+        'Dane Nurtly są wyłączone z kopii zapasowej Androida i transferu między urządzeniami. Nurtly nie polega na kopii ani przywracaniu Androida, aby zachować dane dziennika między urządzeniami.',
+    noAnalytics:
+        'MVP nie ma SDK analityki produktu, SDK raportowania awarii ani telemetrii dziennika.',
+    premiumRemovesAdsInFreePlan:
+        'MVP używa tylko pasywnych reklam banerowych. Premium jest bez reklam. Reklamy są żądane dopiero po potwierdzeniu przez Google UMP, że można je żądać; ustawienia prywatności można ponownie otworzyć, gdy jest to wymagane.',
     purchasesGoThroughGooglePlay:
-        'Zakupy na Androidzie odbywają się przez Google Play.',
+        'Zakupy i subskrypcje są obsługiwane przez Google Play Billing. Usunięcie danych lokalnych nie usuwa historii zakupów ani uprawnień Premium w Google Play.',
     journalContentNotUsedForAds:
         'Treści notatek z dziennika nie są używane do reklam.',
-    premiumStateMayBeStoredLocally:
-        'Stan Premium może być przechowywany lokalnie, aby dostęp działał.',
-    bundledSampleContent:
-        'W aplikacji znajdują się przykładowe treści wbudowane.',
-    futureChangesTitle: 'Przyszłe zmiany',
-    futureChanges:
-        'Przyszłe zmiany związane z danymi powinny być jasno opisane przed włączeniem.',
     back: 'Wstecz',
     settingsTooltip: 'Ustawienia',
     premiumSectionTitle: 'Premium',

@@ -27,6 +27,7 @@ import '../localization/app_strings.dart';
 import '../localization/language_preference_store.dart';
 import '../privacy/local_data_deletion.dart';
 import '../platform/package_metadata.dart';
+import '../platform/external_url_launcher.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
@@ -44,6 +45,7 @@ class AppShell extends StatefulWidget {
     ConsentFlow? consentFlow,
     JournalController? journalController,
     this.onLanguageChanged,
+    this.externalUrlLauncher,
     super.key,
   })  : languagePreferenceStore = languagePreferenceStore ??
             const SharedPreferencesLanguagePreferenceStore(),
@@ -71,6 +73,7 @@ class AppShell extends StatefulWidget {
   final JournalController journalController;
   final AdWidgetFactory adWidgetFactory;
   final ValueChanged<AppLanguage>? onLanguageChanged;
+  final ExternalUrlLauncher? externalUrlLauncher;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -680,6 +683,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                                     ? () => unawaited(_showPrivacyChoices())
                                     : null,
                             onDeleteAllLocalData: _deleteAllLocalData,
+                            externalUrlLauncher:
+                                widget.externalUrlLauncher ?? launchExternalUrl,
                           ),
                         ),
                       );
