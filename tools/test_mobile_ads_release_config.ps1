@@ -31,7 +31,7 @@ Expect-Fail @('-Mode','release','-Profile','production-banner','-ApplicationId',
 Expect-Fail @('-Mode','release','-Profile','production-banner','-ApplicationId',$validApp,'-BannerId',$sampleBanner)
 Expect-Pass @('-Mode','release','-Profile','production-banner','-ApplicationId',$validApp,'-BannerId',$validBanner)
 Expect-Fail @('-Mode','release','-Profile','unknown','-ApplicationId',$validApp,'-BannerId',$validBanner)
-$workflow = Join-Path $env:TEMP 'nurtly-182-invalid-android-release.yml'
+$workflow = Join-Path ([System.IO.Path]::GetTempPath()) 'nurtly-182-invalid-android-release.yml'
 $realWorkflow = Join-Path $PSScriptRoot '../.github/workflows/android-release.yml'
 $invalidWorkflow = (Get-Content -Raw -LiteralPath $realWorkflow) -replace '(?ms)(- name: Validate Mobile Ads release configuration\s+)shell: pwsh', '$1shell: bash'
 [System.IO.File]::WriteAllText($workflow, $invalidWorkflow)
