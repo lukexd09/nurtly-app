@@ -51,6 +51,54 @@ void main() {
     expect(allowed.initializeMobileAdsCalls, 1);
   });
 
+  test('Mobile Ads initialization failure fails closed', () async {
+    final gateway = FakeConsentPlatformGateway(
+      canRequestAdsValue: true,
+      initializeMobileAdsErrors: [StateError('initialization failed')],
+    );
+    final flow = GoogleConsentFlow(isDebugMode: false, gateway: gateway);
+    final observedValues = <bool>[];
+    flow.addListener(() => observedValues.add(flow.canRequestAds));
+
+    await flow.initialize();
+
+    expect(flow.canRequestAds, isFalse);
+    expect(observedValues, [false]);
+    expect(gateway.initializeMobileAdsCalls, 1);
+  });
+
+  test('failed initialization remains retryable and later succeeds once',
+      () async {
+    final gateway = FakeConsentPlatformGateway(
+      canRequestAdsValue: true,
+      initializeMobileAdsErrors: [StateError('initialization failed')],
+    );
+    final flow = GoogleConsentFlow(isDebugMode: false, gateway: gateway);
+
+    await flow.initialize();
+    expect(flow.canRequestAds, isFalse);
+
+    await flow.showPrivacyOptions();
+
+    expect(flow.canRequestAds, isTrue);
+    expect(gateway.initializeMobileAdsCalls, 2);
+  });
+
+  test('previous valid session stays blocked when initialization fails',
+      () async {
+    final gateway = FakeConsentPlatformGateway(
+      canRequestAdsValue: true,
+      updateError: StateError('update failed'),
+      initializeMobileAdsErrors: [StateError('initialization failed')],
+    );
+    final flow = GoogleConsentFlow(isDebugMode: false, gateway: gateway);
+
+    await flow.initialize();
+
+    expect(flow.canRequestAds, isFalse);
+    expect(gateway.initializeMobileAdsCalls, 1);
+  });
+
   test('update failure preserves a requestable previous session', () async {
     final gateway = FakeConsentPlatformGateway(
       canRequestAdsValue: true,
@@ -145,7 +193,12 @@ class FakeConsentPlatformGateway implements ConsentPlatformGateway {
     this.canRequestAdsError,
     this.privacyFormAvailabilityError,
     this.privacyOptionsError,
-  });
+    List<Object?>? initializeMobileAdsErrors,
+  }) {
+    this
+        .initializeMobileAdsErrors
+        .addAll(initializeMobileAdsErrors ?? const []);
+  }
 
   final bool canRequestAdsValue;
   final bool privacyOptionsRequiredValue;
@@ -154,6 +207,7 @@ class FakeConsentPlatformGateway implements ConsentPlatformGateway {
   final Object? canRequestAdsError;
   final Object? privacyFormAvailabilityError;
   final Object? privacyOptionsError;
+  final List<Object?> initializeMobileAdsErrors = [];
   final calls = <String>[];
   ConsentRequestParameters? parameters;
   var initializeMobileAdsCalls = 0;
@@ -178,6 +232,10 @@ class FakeConsentPlatformGateway implements ConsentPlatformGateway {
   Future<void> initializeMobileAds() async {
     calls.add('ads');
     initializeMobileAdsCalls++;
+    if (initializeMobileAdsErrors.isNotEmpty) {
+      final error = initializeMobileAdsErrors.removeAt(0);
+      if (error != null) throw error;
+    }
   }
 
   @override

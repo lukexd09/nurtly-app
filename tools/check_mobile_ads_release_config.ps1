@@ -4,6 +4,7 @@ param(
     [string] $Profile = '',
     [string] $ApplicationId = '',
     [string] $BannerId = '',
+    [string] $RepositoryRoot = '',
     [string] $WorkflowPath = '',
     [switch] $ValidateRepository
 )
@@ -31,11 +32,57 @@ function Assert-BannerId([string] $value, [bool] $required) {
 }
 
 if ($ValidateRepository) {
-    $manifest = Get-Content -Raw (Join-Path $PSScriptRoot '../app/android/app/src/main/AndroidManifest.xml')
+    $repositoryRootPath = if ($RepositoryRoot) {
+        (Resolve-Path -LiteralPath $RepositoryRoot).Path
+    }
+    else {
+        (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+    }
+    $manifestPath = Join-Path $repositoryRootPath 'app/android/app/src/main/AndroidManifest.xml'
+    $gradlePath = Join-Path $repositoryRootPath 'app/android/app/build.gradle'
+    $mainPath = Join-Path $repositoryRootPath 'app/lib/main.dart'
+    $runtimeConfigPath = Join-Path $repositoryRootPath 'app/lib/core/ads/mobile_ads_runtime_configuration.dart'
+    foreach ($sourcePath in @($manifestPath, $gradlePath, $mainPath, $runtimeConfigPath)) {
+        if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
+            Fail "selected source file is missing: $sourcePath"
+        }
+    }
+    $manifest = Get-Content -Raw -LiteralPath $manifestPath
+    if ($manifest -match [regex]::Escape($sampleApplicationId)) {
+        Fail 'selected source manifest contains the Google sample application ID.'
+    }
     if ($manifest -notmatch '\$\{nurtlyMobileAdsAndroidAppId\}') { Fail 'manifest placeholder is missing.' }
-    $gradle = Get-Content -Raw (Join-Path $PSScriptRoot '../app/android/app/build.gradle')
-    if ($gradle -notmatch 'NURTLY_MOBILE_ADS_ANDROID_APP_ID') { Fail 'Gradle release application-ID input is missing.' }
-    $workflowFile = if ($WorkflowPath) { $WorkflowPath } else { Join-Path $PSScriptRoot '../.github/workflows/android-release.yml' }
+    $gradle = Get-Content -Raw -LiteralPath $gradlePath
+    if ($gradle -notmatch 'NURTLY_MOBILE_ADS_ANDROID_APP_ID') { Fail 'selected source Gradle does not read the external application ID.' }
+    if ($gradle -notmatch 'releaseBuildRequested' -or
+        $gradle -notmatch 'sampleMobileAdsApplicationId' -or
+        $gradle -notmatch 'invalid format') {
+        Fail 'selected source Gradle release application-ID validation is incomplete.'
+    }
+    $main = Get-Content -Raw -LiteralPath $mainPath
+    if ($main -notmatch 'NURTLY_MOBILE_ADS_PROFILE' -or
+        $main -notmatch 'NURTLY_MOBILE_ADS_ANDROID_BANNER_ID') {
+        Fail 'selected source Dart entry point does not read release configuration.'
+    }
+    $runtimeConfig = Get-Content -Raw -LiteralPath $runtimeConfigPath
+    if ($runtimeConfig -notmatch 'MobileAdsProfile\.parse' -or
+        $runtimeConfig -notmatch 'parsed == null' -or
+        $runtimeConfig -notmatch 'bannerId: null') {
+        Fail 'selected source runtime resolver does not fail closed for invalid profiles.'
+    }
+    foreach ($sourcePath in @($manifestPath, $gradlePath, $mainPath, $runtimeConfigPath)) {
+        $sourceContent = Get-Content -Raw -LiteralPath $sourcePath
+        foreach ($identifier in [regex]::Matches($sourceContent, 'ca-app-pub-[0-9]{16}[~/][0-9]{10}')) {
+            if ($identifier.Value -ne $sampleApplicationId -and
+                $identifier.Value -notin $sampleBannerIds) {
+                Fail 'selected source contains a committed non-sample advertising identifier.'
+            }
+        }
+    }
+    $workflowFile = if ($WorkflowPath) { $WorkflowPath } else { Join-Path $repositoryRootPath '.github/workflows/android-release.yml' }
+    if (-not [System.IO.Path]::IsPathRooted($workflowFile)) {
+        $workflowFile = Join-Path ((Resolve-Path (Join-Path $PSScriptRoot '..')).Path) $workflowFile
+    }
     if (-not (Test-Path -LiteralPath $workflowFile -PathType Leaf)) { Fail 'Android release workflow is missing.' }
     $workflow = Get-Content -Raw -LiteralPath $workflowFile
     function Assert-Workflow([bool] $condition, [string] $message) {
@@ -43,6 +90,7 @@ if ($ValidateRepository) {
     }
     Assert-Workflow ($workflow -match '(?ms)ads_profile:.*?type:\s*choice.*?closed-test-sample-banner.*?production-banner') 'must define both supported ads profiles.'
     Assert-Workflow ($workflow -match '(?ms)- name: Validate Mobile Ads release configuration\s+shell:\s*pwsh') 'validation step must use pwsh.'
+    Assert-Workflow ($workflow -match '(?ms)- name: Validate selected source Mobile Ads configuration\s+shell:\s*pwsh') 'selected-source validation step must exist.'
     Assert-Workflow ($workflow -match '(?ms)- name: Build app bundle\s+shell:\s*pwsh') 'build step must use pwsh.'
     Assert-Workflow ($workflow -match 'vars\.NURTLY_MOBILE_ADS_ANDROID_APP_ID') 'must source the application ID from the repository variable.'
     Assert-Workflow ($workflow -match '--dart-define=NURTLY_MOBILE_ADS_PROFILE=') 'must pass the profile through dart-define.'
@@ -63,7 +111,8 @@ if ($Mode -eq 'debug') {
 
 Assert-AppId $ApplicationId
 if ($Profile -eq 'closed-test-sample-banner') {
-    if ($BannerId -and $BannerId -notin $sampleBannerIds) { Fail 'closed-test-sample-banner requires a sample banner or no banner.' }
+    # Closed testing always uses the sample banner; any configured production
+    # value is intentionally ignored by the workflow and resolver.
 } elseif ($Profile -eq 'production-banner') {
     Assert-BannerId $BannerId $true
 } else {

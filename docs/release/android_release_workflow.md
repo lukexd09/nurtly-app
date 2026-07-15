@@ -47,6 +47,7 @@ gh workflow run android-release.yml `
 Validation runs before signing:
 
 - Mobile Ads release configuration validation using repository variables `NURTLY_MOBILE_ADS_ANDROID_APP_ID` and `NURTLY_MOBILE_ADS_ANDROID_BANNER_ID`.
+- Selected-source validation against the checked-out `source_ref` revision, before signing or building.
 
 - `flutter pub get --enforce-lockfile`
 - lockfile drift check
@@ -59,7 +60,7 @@ Validation runs before signing:
 
 ## Advertising configuration
 
-Debug builds use Google’s official sample identifiers. Release builds require the external application ID and the selected profile. `closed-test-sample-banner` uses the sample banner for closed-test association checks; `production-banner` requires a structurally valid non-sample banner ID. Full identifiers are not printed in workflow logs.
+Debug builds use Google’s official sample identifiers. Release builds require the external application ID and the selected profile. `closed-test-sample-banner` always uses the sample banner and ignores any configured production banner variable; `production-banner` requires a structurally valid non-sample banner ID. Full identifiers are not printed in workflow logs.
 
 ## Signing model
 

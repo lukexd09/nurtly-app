@@ -15,13 +15,16 @@ Status: repository implementation complete; owner and device checks remain block
 Debug uses Google sample application and banner IDs, with UMP debug settings only in debug mode. Release Gradle builds require `NURTLY_MOBILE_ADS_ANDROID_APP_ID` and reject missing, sample, or malformed application IDs. The workflow requires `ads_profile`:
 
 - `closed-test-sample-banner`: external Nurtly application ID plus the official sample banner.
+- `closed-test-sample-banner` always ignores the configured production banner variable and uses the official sample banner.
 - `production-banner`: external Nurtly application and banner IDs; sample banner IDs are rejected.
 
-The workflow passes `NURTLY_MOBILE_ADS_PROFILE` and `NURTLY_MOBILE_ADS_ANDROID_BANNER_ID` through `--dart-define`. No production identifier is committed.
+The workflow derives the runtime banner value from the selected profile, passes `NURTLY_MOBILE_ADS_PROFILE` and the derived banner through `--dart-define`, and validates the selected `source_ref` checkout before signing. No production identifier is committed or logged.
 
 ## UMP and ads gates
 
 `requestConsentInfoUpdate()` precedes consent-state reads. A consent-update error rechecks provider state so a valid previous session can remain requestable; ads still require UMP `canRequestAds() == true`. Mobile Ads initialization and banner loading are gated by that value. Release builds contain no debug geography or test-device IDs. Privacy choices errors are propagated to the existing localized UI failure path.
+
+Mobile Ads requestability is committed only after SDK initialization succeeds. Initialization failures leave the flow blocked and allow a later retry path; local state never enables ads without provider confirmation and successful SDK initialization.
 
 Automated code-path checks: Flutter tests cover consent/banner UI behavior and `BannerLoadGate`; configuration resolution is covered by Dart tests and the PowerShell regression script. Real-device UMP form, Privacy choices, ad-request, and banner checks are `NOT RUN` here.
 

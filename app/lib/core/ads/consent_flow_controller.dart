@@ -134,14 +134,15 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
       );
       await _gateway.requestConsentInfoUpdate(params);
       await _gateway.loadAndShowConsentFormIfRequired();
+    } catch (_) {
+      // Continue to provider-state refresh so a previous valid session may
+      // still be used after an update or form error.
+    }
+    try {
       await _refreshConsentState();
     } catch (_) {
-      try {
-        await _refreshConsentState();
-      } catch (_) {
-        _canRequestAds = false;
-        _privacyOptionsRequired = false;
-      }
+      _canRequestAds = false;
+      _privacyOptionsRequired = false;
     }
     notifyListeners();
   }
@@ -157,13 +158,15 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
   }
 
   Future<void> _refreshConsentState() async {
-    _canRequestAds = await _gateway.canRequestAds();
-    _privacyOptionsRequired =
+    final canRequestAds = await _gateway.canRequestAds();
+    final privacyOptionsRequired =
         await _gateway.getPrivacyOptionsRequirementStatus() ==
             PrivacyOptionsRequirementStatus.required;
-    if (_canRequestAds && !_adsInitialized) {
-      _adsInitialized = true;
+    if (canRequestAds && !_adsInitialized) {
       await _gateway.initializeMobileAds();
+      _adsInitialized = true;
     }
+    _canRequestAds = canRequestAds;
+    _privacyOptionsRequired = privacyOptionsRequired;
   }
 }
