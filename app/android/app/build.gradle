@@ -11,6 +11,17 @@ def keystorePropertiesFile = rootProject.file("key.properties")
 def releaseBuildRequested = gradle.startParameter.taskNames.any { taskName ->
     taskName.toLowerCase().contains("release")
 }
+def sampleMobileAdsApplicationId = "ca-app-pub-3940256099942544~3347511713"
+def configuredMobileAdsApplicationId = (System.getenv("NURTLY_MOBILE_ADS_ANDROID_APP_ID") ?: "").trim()
+def mobileAdsApplicationId = releaseBuildRequested ? configuredMobileAdsApplicationId : sampleMobileAdsApplicationId
+if (releaseBuildRequested) {
+    if (!mobileAdsApplicationId || mobileAdsApplicationId == sampleMobileAdsApplicationId) {
+        throw new GradleException("Release Mobile Ads application ID must be configured externally and must not be the Google sample ID.")
+    }
+    if (!(mobileAdsApplicationId ==~ /ca-app-pub-[0-9]{16}~[0-9]{10}/)) {
+        throw new GradleException("Release Mobile Ads application ID has an invalid format.")
+    }
+}
 if (releaseBuildRequested && !keystorePropertiesFile.exists()) {
     throw new GradleException(
             "Missing app/android/key.properties. Create it before running release builds.")
@@ -47,6 +58,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders.nurtlyMobileAdsAndroidAppId = mobileAdsApplicationId
     }
 
     signingConfigs {

@@ -65,24 +65,29 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
       await _loadAndShowConsentFormIfRequired();
       await _refreshConsentState();
     } catch (_) {
-      _canRequestAds = false;
-      _privacyOptionsRequired = false;
+      // UMP permits a previous valid session to remain requestable after an
+      // update error. Read that provider state before deciding whether ads are
+      // allowed; never request ads based on a local fallback.
+      try {
+        await _refreshConsentState();
+      } catch (_) {
+        _canRequestAds = false;
+        _privacyOptionsRequired = false;
+      }
     }
     notifyListeners();
   }
 
   @override
   Future<void> showPrivacyOptions() async {
-    try {
-      final formAvailable =
-          await ConsentInformation.instance.isConsentFormAvailable();
-      if (!formAvailable) {
-        return;
-      }
-      await ConsentForm.showPrivacyOptionsForm((_) {});
-      await _refreshConsentState();
-      notifyListeners();
-    } catch (_) {}
+    final formAvailable =
+        await ConsentInformation.instance.isConsentFormAvailable();
+    if (!formAvailable) {
+      throw StateError('Privacy options form is unavailable.');
+    }
+    await _showPrivacyOptionsForm();
+    await _refreshConsentState();
+    notifyListeners();
   }
 
   Future<void> _refreshConsentState() async {
@@ -110,6 +115,15 @@ class GoogleConsentFlow extends ChangeNotifier implements ConsentFlow {
     final completer = Completer<void>();
     ConsentForm.loadAndShowConsentFormIfRequired(
       (_) => completer.complete(),
+    );
+    return completer.future;
+  }
+
+  Future<void> _showPrivacyOptionsForm() {
+    final completer = Completer<void>();
+    ConsentForm.showPrivacyOptionsForm(
+      (error) =>
+          error == null ? completer.complete() : completer.completeError(error),
     );
     return completer.future;
   }
