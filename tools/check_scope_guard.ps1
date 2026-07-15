@@ -64,6 +64,8 @@ $approvedSecretTerminologyPhrases = @(
     'secret values'
 )
 
+$approvedInventoryTerminologyPath = "docs/release/third_party_sdk_inventory.md"
+
 $forbiddenPatterns = @(
     "Firebase",
     "Supabase",
@@ -150,6 +152,11 @@ function Test-ShouldScanForbiddenPatterns {
     $normalized = $Path -replace "\\", "/"
     return $normalized -ne "AGENTS.md" -and
         $normalized -ne "tools/check_scope_guard.ps1"
+}
+
+function Test-IsApprovedInventoryTerminologyPath {
+    param([string] $Path)
+    return ($Path -replace "\\", "/") -eq $approvedInventoryTerminologyPath
 }
 
 function Test-IsAllowedJustAudioUsage {
@@ -375,6 +382,10 @@ try {
         if ((Test-ShouldScanForbiddenPatterns $normalized) -and (Test-IsTextFile $normalized)) {
             $content = Get-Content -Raw -LiteralPath (Join-Path $sourceRootPath $normalized)
             foreach ($pattern in $forbiddenPatterns) {
+                if ((Test-IsApprovedInventoryTerminologyPath $normalized) -and
+                    $pattern -in @("AdMob", "google_mobile_ads", "just_audio", "shared_preferences")) {
+                    continue
+                }
                 if (Test-IsAllowedJustAudioUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedSharedPreferencesUsage $normalized $pattern) { continue }
                 if (Test-IsAllowedGoogleMobileAdsUsage $normalized $pattern) { continue }
