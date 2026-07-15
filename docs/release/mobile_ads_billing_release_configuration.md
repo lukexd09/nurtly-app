@@ -7,7 +7,8 @@ Status: repository implementation complete; owner and device checks remain block
 - Tested source commit: `50ab206b250ae922117e8b442b98f13cdef31583`.
 - App version: `0.1.0+8`.
 - Android package ID: `com.graylion.nurtly`.
-- Resolved Flutter package versions are recorded in `app/pubspec.lock`; this checkout uses `google_mobile_ads` 5.1.0 and Android Billing 7.1.1.
+- Declared Mobile Ads Flutter constraint: `^5.1.0`; resolved lockfile version: `5.3.1`.
+- Native Android Mobile Ads SDK: `23.6.0`; UMP Android SDK: `3.1.0`; Google Play Billing Library: `7.1.1`.
 
 ## Release configuration
 
@@ -39,14 +40,14 @@ The repository preserves `nurtly_premium_monthly` and `nurtly_premium_yearly`. P
 
 ## Advertising ID and personalization boundary
 
-No direct Nurtly Advertising ID API call was found. Google Mobile Ads is present and may contribute native behavior. The source manifest does not directly declare `AD_ID`; merged release-manifest origin remains follow-up #185. No-personalized-ads posture is recommended but is not technically confirmed by this repository; AdMob and UMP console confirmation is required. This document is not legal advice and does not submit console declarations.
+No direct Nurtly Advertising ID API call was found. Google Mobile Ads is present and may contribute native behavior. The source manifest does not directly declare `AD_ID`; merged release-manifest origin remains follow-up #185. No-personalized-ads posture is recommended but is not technically confirmed by this repository; Google Mobile Ads and UMP console confirmation is required. This document is not legal advice and does not submit console declarations.
 
 ## Manual and owner status
 
 | Check | Status |
 | --- | --- |
 | Repository variables configured | BLOCKED |
-| AdMob application configured | BLOCKED |
+| Google Mobile Ads application configured | BLOCKED |
 | UMP European-regulation message configured | BLOCKED |
 | Personalization posture confirmed | BLOCKED |
 | Advertising ID declaration approved | BLOCKED |
@@ -60,4 +61,4 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\tools\test_mobile_
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\tools\check_mobile_ads_release_config.ps1 -ValidateRepository
 ```
 
-Official sources, accessed 15 July 2026: [AdMob Flutter quick start](https://developers.google.com/admob/flutter/quick-start), [banner ads](https://developers.google.com/admob/flutter/banner), [test ads](https://developers.google.com/admob/flutter/test-ads), [privacy](https://developers.google.com/admob/flutter/privacy), [GDPR](https://developers.google.com/admob/flutter/privacy/gdpr), [ad serving modes](https://developers.google.com/admob/flutter/privacy/ad-serving-modes), [Google Play Billing integration](https://developer.android.com/google/play/billing/integrate), and [Advertising ID policy](https://support.google.com/googleplay/android-developer/answer/10787469).
+The official source register is maintained in [`docs/release/third_party_sdk_inventory.md`](third_party_sdk_inventory.md), accessed 15 July 2026.

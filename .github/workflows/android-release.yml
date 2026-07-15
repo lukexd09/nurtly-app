@@ -202,6 +202,7 @@ jobs:
         run: flutter pub get --enforce-lockfile
 
       - name: Validate Mobile Ads release configuration
+        shell: pwsh
         working-directory: control
         env:
           ADS_PROFILE: ${{ inputs.ads_profile }}
@@ -317,6 +318,7 @@ jobs:
             -TempDirectory $env:RUNNER_TEMP
 
       - name: Build app bundle
+        shell: pwsh
         env:
           NURTLY_MOBILE_ADS_ANDROID_APP_ID: ${{ vars.NURTLY_MOBILE_ADS_ANDROID_APP_ID }}
           NURTLY_MOBILE_ADS_PROFILE: ${{ inputs.ads_profile }}

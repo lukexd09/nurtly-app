@@ -28,7 +28,7 @@ void main() {
       .toList();
   final consentFlow = isAndroidRuntime
       ? GoogleConsentFlow(
-          debugGeographyEnabled: kDebugMode,
+          isDebugMode: kDebugMode,
           debugTestDeviceIds:
               kDebugMode ? debugTestDeviceIds : const <String>[],
         )

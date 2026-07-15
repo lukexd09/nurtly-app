@@ -4,6 +4,7 @@ param(
     [string] $Profile = '',
     [string] $ApplicationId = '',
     [string] $BannerId = '',
+    [string] $WorkflowPath = '',
     [switch] $ValidateRepository
 )
 
@@ -34,6 +35,21 @@ if ($ValidateRepository) {
     if ($manifest -notmatch '\$\{nurtlyMobileAdsAndroidAppId\}') { Fail 'manifest placeholder is missing.' }
     $gradle = Get-Content -Raw (Join-Path $PSScriptRoot '../app/android/app/build.gradle')
     if ($gradle -notmatch 'NURTLY_MOBILE_ADS_ANDROID_APP_ID') { Fail 'Gradle release application-ID input is missing.' }
+    $workflowFile = if ($WorkflowPath) { $WorkflowPath } else { Join-Path $PSScriptRoot '../.github/workflows/android-release.yml' }
+    if (-not (Test-Path -LiteralPath $workflowFile -PathType Leaf)) { Fail 'Android release workflow is missing.' }
+    $workflow = Get-Content -Raw -LiteralPath $workflowFile
+    function Assert-Workflow([bool] $condition, [string] $message) {
+        if (-not $condition) { Fail "release workflow $message" }
+    }
+    Assert-Workflow ($workflow -match '(?ms)ads_profile:.*?type:\s*choice.*?closed-test-sample-banner.*?production-banner') 'must define both supported ads profiles.'
+    Assert-Workflow ($workflow -match '(?ms)- name: Validate Mobile Ads release configuration\s+shell:\s*pwsh') 'validation step must use pwsh.'
+    Assert-Workflow ($workflow -match '(?ms)- name: Build app bundle\s+shell:\s*pwsh') 'build step must use pwsh.'
+    Assert-Workflow ($workflow -match 'vars\.NURTLY_MOBILE_ADS_ANDROID_APP_ID') 'must source the application ID from the repository variable.'
+    Assert-Workflow ($workflow -match '--dart-define=NURTLY_MOBILE_ADS_PROFILE=') 'must pass the profile through dart-define.'
+    Assert-Workflow ($workflow -match '--dart-define=NURTLY_MOBILE_ADS_ANDROID_BANNER_ID=') 'must pass the banner ID through dart-define.'
+    Assert-Workflow ($workflow -notmatch 'ca-app-pub-3940256099942544') 'must not contain a Google sample identifier.'
+    Assert-Workflow ($workflow -notmatch 'ca-app-pub-[0-9]{16}[~/][0-9]{10}') 'must not contain a literal advertising identifier.'
+    Assert-Workflow ($workflow -notmatch '(?i)(Write-Host|echo|Out-File).*NURTLY_MOBILE_ADS_ANDROID_(APP|BANNER)_ID') 'must not print full identifier variables.'
     Write-Host 'Repository Mobile Ads release configuration is valid.'
     exit 0
 }

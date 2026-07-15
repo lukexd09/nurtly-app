@@ -94,9 +94,9 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
   Future<void> _loadAd() async {
     if (defaultTargetPlatform != TargetPlatform.android ||
-        !_loadGate.beginLoadAttempt() ||
         !widget.consentFlow.canRequestAds ||
-        widget.bannerId == null) {
+        !_loadGate.beginLoadAttempt(
+            hasConfiguration: widget.bannerId != null)) {
       return;
     }
 
@@ -172,8 +172,8 @@ class BannerLoadGate {
 
   bool get canAttemptLoad => _consentAllowed && !_loadAttempted;
 
-  bool beginLoadAttempt() {
-    if (!canAttemptLoad) {
+  bool beginLoadAttempt({bool hasConfiguration = true}) {
+    if (!hasConfiguration || !canAttemptLoad) {
       return false;
     }
     _loadAttempted = true;
