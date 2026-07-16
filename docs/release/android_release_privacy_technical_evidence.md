@@ -50,50 +50,50 @@ Permission-protected components: `4`.
 
 ### Activities
 
-| Name | Origin | Blame evidence | Exported | Permission | Intent filters | Runtime purpose | Privacy relevance |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `com.graylion.nurtly.MainActivity` | `app/android/app/src/main/AndroidManifest.xml` | lines 81-99 | `true` | none | `MAIN`; `LAUNCHER` | App entrypoint and Flutter host | User-facing launch surface; no direct data capture by itself |
-| `io.flutter.plugins.urllauncher.WebViewActivity` | `url_launcher_android` | lines 105-108 | `false` | none | none | In-app web view for launched links | External-content surface; not externally callable |
-| `com.google.android.gms.ads.AdActivity` | Google Mobile Ads SDK `23.6.0` | lines 120-124 | `false` | none | none | Ad display and fullscreen ad host | Ad SDK runtime surface |
-| `com.google.android.gms.ads.OutOfContextTestingActivity` | Google Mobile Ads SDK `23.6.0` | lines 137-140 | `false` | none | none | Ad testing surface | Provider test surface only |
-| `com.google.android.gms.ads.NotificationHandlerActivity` | Google Mobile Ads SDK `23.6.0` | lines 141-147 | `false` | none | none | Ad notification handling | Ad SDK runtime surface |
-| `com.android.billingclient.api.ProxyBillingActivity` | Play Billing `7.1.1` | lines 157-161 | `false` | none | none | Billing flow host | Purchase-flow surface |
-| `com.android.billingclient.api.ProxyBillingActivityV2` | Play Billing `7.1.1` | lines 162-166 | `false` | none | none | Billing flow host | Purchase-flow surface |
-| `com.google.android.gms.common.api.GoogleApiActivity` | Play services base `18.5.0` | lines 167-170 | `false` | none | none | Google Play services resolution flow | Provider resolution surface |
+| Component | Type | Final AAB presence | Origin | Origin evidence | Exported | Protecting permission | Intent filters | Runtime purpose | Privacy relevance | Expected | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `com.graylion.nurtly.MainActivity` | Activity | CONFIRMED | `app/android/app/src/main/AndroidManifest.xml` | lines 81-99 | `true` | none | `MAIN`; `LAUNCHER` | App entrypoint and Flutter host | User-facing launch surface; no direct data capture by itself | YES | CONFIRMED |
+| `io.flutter.plugins.urllauncher.WebViewActivity` | Activity | CONFIRMED | `url_launcher_android` | lines 105-108 | `false` | none | none | In-app web view for launched links | External-content surface; not externally callable | YES | CONFIRMED |
+| `com.google.android.gms.ads.AdActivity` | Activity | CONFIRMED | Google Mobile Ads SDK `23.6.0` | lines 120-124 | `false` | none | none | Ad display and fullscreen ad host | Ad SDK runtime surface | YES | CONFIRMED |
+| `com.google.android.gms.ads.OutOfContextTestingActivity` | Activity | CONFIRMED | Google Mobile Ads SDK `23.6.0` | lines 137-140 | `false` | none | none | Ad testing surface | Provider test surface only | REVIEW REQUIRED | CONFIRMED |
+| `com.google.android.gms.ads.NotificationHandlerActivity` | Activity | CONFIRMED | Google Mobile Ads SDK `23.6.0` | lines 141-147 | `false` | none | none | Ad notification handling | Ad SDK runtime surface | YES | CONFIRMED |
+| `com.android.billingclient.api.ProxyBillingActivity` | Activity | CONFIRMED | Play Billing `7.1.1` | lines 157-161 | `false` | none | none | Billing flow host | Purchase-flow surface | YES | CONFIRMED |
+| `com.android.billingclient.api.ProxyBillingActivityV2` | Activity | CONFIRMED | Play Billing `7.1.1` | lines 162-166 | `false` | none | none | Billing flow host | Purchase-flow surface | YES | CONFIRMED |
+| `com.google.android.gms.common.api.GoogleApiActivity` | Activity | CONFIRMED | Play services base `18.5.0` | lines 167-170 | `false` | none | none | Google Play services resolution flow | Provider resolution surface | YES | CONFIRMED |
 
 ### Providers
 
-| Name | Origin | Blame evidence | Exported | Permission | Intent filters | Runtime purpose | Privacy relevance |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `com.google.android.gms.ads.MobileAdsInitProvider` | Google Mobile Ads SDK `23.6.0` | lines 126-130 | `false` | none | none | Mobile Ads startup initialization | Ad SDK initialization path |
-| `androidx.startup.InitializationProvider` | AndroidX Work runtime `2.7.0` | lines 180-193 | `false` | none | none | Startup wiring for WorkManager, ProcessLifecycle, and ProfileInstaller | Background-startup coordination surface |
+| Component | Type | Final AAB presence | Origin | Origin evidence | Exported | Protecting permission | Intent filters | Runtime purpose | Privacy relevance | Expected | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `com.google.android.gms.ads.MobileAdsInitProvider` | Provider | CONFIRMED | Google Mobile Ads SDK `23.6.0` | lines 126-130 | `false` | none | none | Mobile Ads startup initialization | Ad SDK initialization path | YES | CONFIRMED |
+| `androidx.startup.InitializationProvider` | Provider | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 180-193 | `false` | none | none | Startup wiring for WorkManager, ProcessLifecycle, and ProfileInstaller | Background-startup coordination surface | YES | CONFIRMED |
 
 ### Services
 
-| Name | Origin | Blame evidence | Exported | Permission | Intent filters | Runtime purpose | Privacy relevance |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `com.google.android.gms.ads.AdService` | Google Mobile Ads SDK `23.6.0` | lines 132-135 | `false` | none | none | Ad SDK service | Ad SDK runtime surface |
-| `androidx.work.impl.background.systemalarm.SystemAlarmService` | AndroidX Work runtime `2.7.0` | lines 195-199 | `false` | none | none | WorkManager system-alarm scheduler | Local background-work coordination |
-| `androidx.work.impl.background.systemjob.SystemJobService` | AndroidX Work runtime `2.7.0` | lines 200-205 | `true` | `android.permission.BIND_JOB_SERVICE` | none | WorkManager job scheduler | System-bound background-work endpoint |
-| `androidx.work.impl.foreground.SystemForegroundService` | AndroidX Work runtime `2.7.0` | lines 206-210 | `false` | none | none | WorkManager foreground-work support | Foreground-work capability only |
-| `com.google.android.datatransport.runtime.backends.TransportBackendDiscovery` | Transport backend CCT `3.1.8` | lines 306-312 | `false` | none | none | Backend discovery for transport runtime | Transport/provider backend wiring |
-| `com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService` | Transport runtime `3.1.8` | lines 313-317 | `false` | `android.permission.BIND_JOB_SERVICE` | none | Job scheduler for transport runtime | Background transport scheduling |
-| `androidx.room.MultiInstanceInvalidationService` | Room runtime `2.2.5` | lines 323-326 | `false` | none | none | Room multi-instance invalidation | Local database coordination only |
+| Component | Type | Final AAB presence | Origin | Origin evidence | Exported | Protecting permission | Intent filters | Runtime purpose | Privacy relevance | Expected | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `com.google.android.gms.ads.AdService` | Service | CONFIRMED | Google Mobile Ads SDK `23.6.0` | lines 132-135 | `false` | none | none | Ad SDK service | Ad SDK runtime surface | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.SystemAlarmService` | Service | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 195-199 | `false` | none | none | WorkManager system-alarm scheduler | Local background-work coordination | YES | CONFIRMED |
+| `androidx.work.impl.background.systemjob.SystemJobService` | Service | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 200-205 | `true` | `android.permission.BIND_JOB_SERVICE` | none | WorkManager job scheduler | System-bound background-work endpoint | YES | CONFIRMED |
+| `androidx.work.impl.foreground.SystemForegroundService` | Service | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 206-210 | `false` | none | none | WorkManager foreground-work support | Foreground-work capability only | YES | CONFIRMED |
+| `com.google.android.datatransport.runtime.backends.TransportBackendDiscovery` | Service | CONFIRMED | Transport backend CCT `3.1.8` | lines 306-312 | `false` | none | none | Backend discovery for transport runtime | Transport/provider backend wiring | YES | CONFIRMED |
+| `com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService` | Service | CONFIRMED | Transport runtime `3.1.8` | lines 313-317 | `false` | `android.permission.BIND_JOB_SERVICE` | none | Job scheduler for transport runtime | Background transport scheduling | YES | CONFIRMED |
+| `androidx.room.MultiInstanceInvalidationService` | Service | CONFIRMED | Room runtime `2.2.5` | lines 323-326 | `false` | none | none | Room multi-instance invalidation | Local database coordination only | YES | CONFIRMED |
 
 ### Receivers
 
-| Name | Origin | Blame evidence | Exported | Permission | Intent filters | Runtime purpose | Privacy relevance |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver` | AndroidX Work runtime `2.7.0` | lines 212-216 | `false` | none | none | WorkManager force-stop recovery | Background-work recovery only |
-| `androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy` | AndroidX Work runtime `2.7.0` | lines 217-226 | `false` | none | `ACTION_POWER_CONNECTED`; `ACTION_POWER_DISCONNECTED` | Battery-charging constraint proxy | Background-work constraint handling |
-| `androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy` | AndroidX Work runtime `2.7.0` | lines 227-236 | `false` | none | `BATTERY_OKAY`; `BATTERY_LOW` | Battery-level constraint proxy | Background-work constraint handling |
-| `androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy` | AndroidX Work runtime `2.7.0` | lines 237-246 | `false` | none | `DEVICE_STORAGE_LOW`; `DEVICE_STORAGE_OK` | Storage-availability constraint proxy | Background-work constraint handling |
-| `androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy` | AndroidX Work runtime `2.7.0` | lines 247-255 | `false` | none | `CONNECTIVITY_CHANGE` | Network-state constraint proxy | Background-work constraint handling |
-| `androidx.work.impl.background.systemalarm.RescheduleReceiver` | AndroidX Work runtime `2.7.0` | lines 256-266 | `false` | none | `BOOT_COMPLETED`; `TIME_SET`; `TIMEZONE_CHANGED` | Job rescheduling after reboot/time changes | Background-work recovery only |
-| `androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver` | AndroidX Work runtime `2.7.0` | lines 267-275 | `false` | none | `UpdateProxies` | Constraint-proxy update hook | Background-work coordination only |
-| `androidx.work.impl.diagnostics.DiagnosticsReceiver` | AndroidX Work runtime `2.7.0` | lines 276-285 | `true` | `android.permission.DUMP` | `REQUEST_DIAGNOSTICS` | Work diagnostics endpoint | Debug/diagnostic exposure only |
-| `androidx.profileinstaller.ProfileInstallReceiver` | ProfileInstaller `1.3.1` | lines 286-304 | `true` | `android.permission.DUMP` | `INSTALL_PROFILE`; `SKIP_FILE`; `SAVE_PROFILE`; `BENCHMARK_OPERATION` | Profile installation and benchmark actions | Performance-maintenance surface only |
-| `com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver` | Transport runtime `3.1.8` | lines 319-321 | `false` | none | none | Alarm-based transport scheduling | Background transport scheduling |
+| Component | Type | Final AAB presence | Origin | Origin evidence | Exported | Protecting permission | Intent filters | Runtime purpose | Privacy relevance | Expected | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 212-216 | `false` | none | none | WorkManager force-stop recovery | Background-work recovery only | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 217-226 | `false` | none | `ACTION_POWER_CONNECTED`; `ACTION_POWER_DISCONNECTED` | Battery-charging constraint proxy | Background-work constraint handling | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 227-236 | `false` | none | `BATTERY_OKAY`; `BATTERY_LOW` | Battery-level constraint proxy | Background-work constraint handling | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 237-246 | `false` | none | `DEVICE_STORAGE_LOW`; `DEVICE_STORAGE_OK` | Storage-availability constraint proxy | Background-work constraint handling | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 247-255 | `false` | none | `CONNECTIVITY_CHANGE` | Network-state constraint proxy | Background-work constraint handling | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.RescheduleReceiver` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 256-266 | `false` | none | `BOOT_COMPLETED`; `TIME_SET`; `TIMEZONE_CHANGED` | Job rescheduling after reboot/time changes | Background-work recovery only | YES | CONFIRMED |
+| `androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 267-275 | `false` | none | `UpdateProxies` | Constraint-proxy update hook | Background-work coordination only | YES | CONFIRMED |
+| `androidx.work.impl.diagnostics.DiagnosticsReceiver` | Receiver | CONFIRMED | AndroidX Work runtime `2.7.0` | lines 276-285 | `true` | `android.permission.DUMP` | `REQUEST_DIAGNOSTICS` | Work diagnostics endpoint | Debug/diagnostic exposure only | OWNER DECISION | CONFIRMED |
+| `androidx.profileinstaller.ProfileInstallReceiver` | Receiver | CONFIRMED | ProfileInstaller `1.3.1` | lines 286-304 | `true` | `android.permission.DUMP` | `INSTALL_PROFILE`; `SKIP_FILE`; `SAVE_PROFILE`; `BENCHMARK_OPERATION` | Profile installation and benchmark actions | Performance-maintenance surface only | REVIEW REQUIRED | CONFIRMED |
+| `com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver` | Receiver | CONFIRMED | Transport runtime `3.1.8` | lines 319-321 | `false` | none | none | Alarm-based transport scheduling | Background transport scheduling | YES | CONFIRMED |
 
 ## Backup and device-transfer evidence
 
