@@ -30,4 +30,12 @@ void main() {
     expect(gate.canAttemptLoad, isTrue);
     expect(gate.beginLoadAttempt(), isTrue);
   });
+
+  test('banner load gate does not attempt without configuration', () {
+    final gate = BannerLoadGate();
+
+    gate.markConsentGranted();
+    expect(gate.beginLoadAttempt(hasConfiguration: false), isFalse);
+    expect(gate.canAttemptLoad, isTrue);
+  });
 }

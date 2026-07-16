@@ -7,7 +7,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'consent_flow_controller.dart';
 import '../localization/app_strings.dart';
 import '../monetization/ad_placeholder.dart';
-import 'ad_unit_ids.dart';
 
 abstract interface class AdWidgetFactory {
   Widget buildPassiveSlot({required AppStrings strings});
@@ -23,23 +22,25 @@ class FakeAdWidgetFactory implements AdWidgetFactory {
 }
 
 class RealAdWidgetFactory implements AdWidgetFactory {
-  const RealAdWidgetFactory({required this.consentFlow});
+  const RealAdWidgetFactory({required this.consentFlow, this.bannerId});
 
   final ConsentFlow consentFlow;
+  final String? bannerId;
 
   @override
   Widget buildPassiveSlot({required AppStrings strings}) {
     if (defaultTargetPlatform != TargetPlatform.android) {
       return const SizedBox.shrink();
     }
-    return _RealBannerAdSlot(consentFlow: consentFlow);
+    return _RealBannerAdSlot(consentFlow: consentFlow, bannerId: bannerId);
   }
 }
 
 class _RealBannerAdSlot extends StatefulWidget {
-  const _RealBannerAdSlot({required this.consentFlow});
+  const _RealBannerAdSlot({required this.consentFlow, required this.bannerId});
 
   final ConsentFlow consentFlow;
+  final String? bannerId;
 
   @override
   State<_RealBannerAdSlot> createState() => _RealBannerAdSlotState();
@@ -93,14 +94,15 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
   Future<void> _loadAd() async {
     if (defaultTargetPlatform != TargetPlatform.android ||
-        !_loadGate.beginLoadAttempt() ||
-        !widget.consentFlow.canRequestAds) {
+        !widget.consentFlow.canRequestAds ||
+        !_loadGate.beginLoadAttempt(
+            hasConfiguration: widget.bannerId != null)) {
       return;
     }
 
     final ad = BannerAd(
       size: AdSize.banner,
-      adUnitId: AdUnitIds.bannerAndroid,
+      adUnitId: widget.bannerId!,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
@@ -170,8 +172,8 @@ class BannerLoadGate {
 
   bool get canAttemptLoad => _consentAllowed && !_loadAttempted;
 
-  bool beginLoadAttempt() {
-    if (!canAttemptLoad) {
+  bool beginLoadAttempt({bool hasConfiguration = true}) {
+    if (!hasConfiguration || !canAttemptLoad) {
       return false;
     }
     _loadAttempted = true;

@@ -72,6 +72,10 @@ jobs:
       - name: Run scope guard
         run: pwsh -NoLogo -NoProfile -File ../tools/check_scope_guard.ps1
 
+      - name: Run Mobile Ads configuration regression tests
+        working-directory: .
+        run: pwsh -NoLogo -NoProfile -File tools/test_mobile_ads_release_config.ps1
+
       - name: Build debug Android APK
         run: flutter build apk --debug --no-pub
 

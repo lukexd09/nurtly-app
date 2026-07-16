@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app_config.dart';
 import 'core/ads/consent_flow_controller.dart';
 import 'core/ads/ad_widget_factory.dart';
+import 'core/ads/mobile_ads_runtime_configuration.dart';
 import 'core/monetization/google_play_billing_entitlement_provider.dart';
 import 'core/monetization/premium_entitlement_provider.dart';
 import 'core/monetization/premium_purchase_provider.dart';
@@ -20,20 +21,25 @@ void main() {
   final isAndroidRuntime =
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
   GooglePlayBillingEntitlementProvider? billing;
-  final debugTestDeviceIds = const String.fromEnvironment(
-    'UMP_TEST_DEVICE_IDS',
-  )
+  final debugTestDeviceIds = const String.fromEnvironment('UMP_TEST_DEVICE_IDS')
       .split(',')
       .map((value) => value.trim())
       .where((value) => value.isNotEmpty)
       .toList();
   final consentFlow = isAndroidRuntime
       ? GoogleConsentFlow(
-          debugGeographyEnabled: kDebugMode,
+          isDebugMode: kDebugMode,
           debugTestDeviceIds:
               kDebugMode ? debugTestDeviceIds : const <String>[],
         )
       : const NoopConsentFlow();
+  final adsConfiguration = MobileAdsRuntimeConfiguration.resolve(
+    isReleaseMode: kReleaseMode,
+    profile: const String.fromEnvironment('NURTLY_MOBILE_ADS_PROFILE'),
+    configuredProductionBannerId: const String.fromEnvironment(
+      'NURTLY_MOBILE_ADS_ANDROID_BANNER_ID',
+    ),
+  );
   if (isAndroidRuntime) {
     billing = GooglePlayBillingEntitlementProvider();
   }
@@ -47,7 +53,10 @@ void main() {
       purchaseProvider: purchaseProvider,
       consentFlow: consentFlow,
       adWidgetFactory: isAndroidRuntime
-          ? RealAdWidgetFactory(consentFlow: consentFlow)
+          ? RealAdWidgetFactory(
+              consentFlow: consentFlow,
+              bannerId: adsConfiguration.bannerId,
+            )
           : const FakeAdWidgetFactory(),
     ),
   );

@@ -11,6 +11,13 @@ on:
         description: Optional lower boundary for release notes
         required: false
         type: string
+      ads_profile:
+        description: Release advertising configuration profile
+        required: true
+        type: choice
+        options:
+          - closed-test-sample-banner
+          - production-banner
 
 permissions:
   contents: read
@@ -48,6 +55,7 @@ jobs:
       release_notes_from: ${{ steps.notes.outputs.release_notes_from }}
       release_notes_range: ${{ steps.notes.outputs.release_notes_range }}
       metadata_basename: ${{ steps.metadata.outputs.metadata_basename }}
+      ads_profile: ${{ inputs.ads_profile }}
     steps:
       - name: Checkout control source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -193,6 +201,36 @@ jobs:
         working-directory: source/app
         run: flutter pub get --enforce-lockfile
 
+      - name: Validate selected source Mobile Ads configuration
+        shell: pwsh
+        working-directory: control
+        run: |
+          & ./tools/check_mobile_ads_release_config.ps1 `
+            -ValidateRepository `
+            -RepositoryRoot ../source `
+            -WorkflowPath ./.github/workflows/android-release.yml
+
+      - name: Validate Mobile Ads release configuration
+        shell: pwsh
+        working-directory: control
+        env:
+          ADS_PROFILE: ${{ inputs.ads_profile }}
+          NURTLY_MOBILE_ADS_ANDROID_APP_ID: ${{ vars.NURTLY_MOBILE_ADS_ANDROID_APP_ID }}
+          CONFIGURED_MOBILE_ADS_ANDROID_BANNER_ID: ${{ vars.NURTLY_MOBILE_ADS_ANDROID_BANNER_ID }}
+        run: |
+          $runtimeBannerId = if ($env:ADS_PROFILE -eq 'production-banner') {
+            $env:CONFIGURED_MOBILE_ADS_ANDROID_BANNER_ID
+          }
+          else {
+            ''
+          }
+          & ./tools/check_mobile_ads_release_config.ps1 `
+            -Mode release `
+            -Profile $env:ADS_PROFILE `
+            -ApplicationId $env:NURTLY_MOBILE_ADS_ANDROID_APP_ID `
+            -BannerId $runtimeBannerId
+          "Ads profile: $env:ADS_PROFILE" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
       - name: Verify lockfile unchanged
         working-directory: source/app
         run: git diff --exit-code -- pubspec.lock
@@ -295,7 +333,21 @@ jobs:
             -TempDirectory $env:RUNNER_TEMP
 
       - name: Build app bundle
-        run: flutter build appbundle --release --no-pub
+        shell: pwsh
+        env:
+          NURTLY_MOBILE_ADS_ANDROID_APP_ID: ${{ vars.NURTLY_MOBILE_ADS_ANDROID_APP_ID }}
+          NURTLY_MOBILE_ADS_PROFILE: ${{ inputs.ads_profile }}
+          CONFIGURED_MOBILE_ADS_ANDROID_BANNER_ID: ${{ vars.NURTLY_MOBILE_ADS_ANDROID_BANNER_ID }}
+        run: |
+          $runtimeBannerId = if ($env:NURTLY_MOBILE_ADS_PROFILE -eq 'production-banner') {
+            $env:CONFIGURED_MOBILE_ADS_ANDROID_BANNER_ID
+          }
+          else {
+            ''
+          }
+          flutter build appbundle --release --no-pub `
+            --dart-define=NURTLY_MOBILE_ADS_PROFILE=$env:NURTLY_MOBILE_ADS_PROFILE `
+            --dart-define=NURTLY_MOBILE_ADS_ANDROID_BANNER_ID=$runtimeBannerId
 
       - name: Generate release metadata
         id: metadata

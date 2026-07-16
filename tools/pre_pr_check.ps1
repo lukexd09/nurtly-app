@@ -21,6 +21,7 @@ try {
         & (Join-Path $scriptDir "check_scope_guard.ps1")
     }
     & (Join-Path $scriptDir "check_flutter_quality.ps1")
+    & (Join-Path $scriptDir "test_mobile_ads_release_config.ps1")
 
     $status = git status --short
     if ($status) {

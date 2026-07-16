@@ -27,6 +27,7 @@ gh workflow run android-release.yml `
 
 - `source_ref`: required commit SHA or tag to build.
 - `release_notes_from`: optional lower boundary for release notes.
+- `ads_profile`: required choice of `closed-test-sample-banner` or `production-banner`.
 
 `source_ref` is resolved to an immutable commit SHA and must belong to `main` history.
 
@@ -45,6 +46,9 @@ gh workflow run android-release.yml `
 
 Validation runs before signing:
 
+- Mobile Ads release configuration validation using repository variables `NURTLY_MOBILE_ADS_ANDROID_APP_ID` and `NURTLY_MOBILE_ADS_ANDROID_BANNER_ID`.
+- Selected-source validation against the checked-out `source_ref` revision, before signing or building.
+
 - `flutter pub get --enforce-lockfile`
 - lockfile drift check
 - non-mutating Dart formatting
@@ -53,6 +57,10 @@ Validation runs before signing:
 - cleanup of generated local Flutter files
 - scope guard
 - tracked-file integrity check
+
+## Advertising configuration
+
+Debug builds use Google’s official sample identifiers. Release builds require the external application ID and the selected profile. `closed-test-sample-banner` always uses the sample banner and ignores any configured production banner variable; `production-banner` requires a structurally valid non-sample banner ID. Full identifiers are not printed in workflow logs.
 
 ## Signing model
 
