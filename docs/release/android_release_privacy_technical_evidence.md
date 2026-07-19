@@ -35,14 +35,14 @@ Bundletool `1.18.3` validated the candidate AAB and dumped the base-module manif
 
 The release merged manifest, manifest-merger blame report, and merger report were generated from the exact source SHA using `processReleaseMainManifest`. A temporary non-production signing shim was used only for manifest processing and was removed afterward. Candidate AAB signing source: GitHub Android Release workflow.
 
-After comparing the AAB manifest and Gradle merged manifest, they matched for package, version, version code, permissions, privacy-relevant components, exported attributes, backup attributes, service declarations, provider declarations, metadata names, Billing declarations, and media/audio declarations.
+After redacting only the externally configured Google Mobile Ads App ID value, the AAB manifest and Gradle merged manifest matched for package, version, version code, permissions, privacy-relevant components, exported attributes, backup attributes, service declarations, provider declarations, metadata names, Billing declarations, and media/audio declarations.
 
 | Raw evidence file | SHA-256 |
 | --- | --- |
-| `aab-base-manifest.xml` | `E6611C85CF0881B88BEE6A22D1AE241CFAB4DEC41575CB0FEC6D7B4E1E2F2D1C` |
-| `gradle-merged-manifest.xml` | `E920EDF9BFFA9A14D839EB3764CC1F3E44E6F7106C86BC86F01C4773D7CD6287` |
-| `gradle-manifest-blame.txt` | `F3E75F4BADF02AEF64EEA1FD4DEF397E570289951ED355B87AF42CA84B07A953` |
-| `gradle-manifest-report.txt` | `9FA99246CC12683DB80051448A49D8CEF50592D261079314419CC75948620DE3` |
+| `aab-base-manifest.xml` | `E88ADF9CFA67D14CD062DE5DB3283B558A610236264829912D7A2556BA56A4AB` |
+| `gradle-merged-manifest.xml` | `F8406676CA8301E4BE14FD36B474E5A930246F9A23D719C1557D61269F6B3759` |
+| `gradle-manifest-blame.txt` | `9BD26982DE06CA261F4EA48C84ADFE5826D932CB961C3EDB1FB7A2E79F4925F9` |
+| `gradle-manifest-report.txt` | `B436C66F02C4D5DB38B936F43C1BE36227AF5BDCE05A33B284FFA0E53661597D` |
 
 ## Privacy-relevant component inventory
 
