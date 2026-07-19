@@ -6,39 +6,42 @@
 | --- | --- |
 | Candidate or provisional status | Candidate evidence: CONFIRMED |
 | Repository | `lukexd09/nurtly-app` |
-| Source SHA | `4950324cd7a89dd2f08f9c301fc703634e2dd858` |
-| Workflow SHA | `4950324cd7a89dd2f08f9c301fc703634e2dd858` |
-| Workflow run ID and attempt | `29484064055`, attempt 1 |
-| Artifact name | `nurtly-android-0.1.0-8-4950324` |
-| Artifact SHA-256 | `51aecd30815d51c146d183a31cb02f6d6ecbeb0eae13f27f23ab6971eedfba3c` |
+| Source SHA | `9a66925075e61a785af721191047f42c28875307` |
+| Workflow SHA | `9a66925075e61a785af721191047f42c28875307` |
+| Workflow run ID and attempt | `29698235374`, attempt 1 |
+| Artifact name | `nurtly-android-0.1.0-9-9a66925` |
+| Artifact ID | `8445767570` |
+| Artifact SHA-256 | `d7adbad9e1f082a444036cec9adb2638f3fb21ad1d18de23c430d749d7e0f14d` |
 | AAB signature verification | PASS; JDK `jarsigner` exit 0. Local certificate-chain trust was unavailable. |
 | Version name | `0.1.0` |
-| Version code | `8` |
+| Version code | `9` |
 | Package ID | `com.graylion.nurtly` |
 | Build type | Release |
 | Ads profile | `closed-test-sample-banner` |
 | Manual QA status | NOT RUN |
 | Store delivery status | NOT RUN |
-| Evidence capture date | 2026-07-16 |
+| Evidence capture date | 2026-07-19 |
 | Bundletool version and SHA-256 | `1.18.3`; `A099CFA1543F55593BC2ED16A70A7C67FE54B1747BB7301F37FDFD6D91028E29` |
-| Raw evidence retention boundary | `C:\Projekty\Nurtly-evidence\185\4950324cd7a89dd2f08f9c301fc703634e2dd858\29484064055` |
+| Raw evidence retention boundary | `C:\Projekty\Nurtly-evidence\247\9a66925075e61a785af721191047f42c28875307\29698235374` |
 
 The artifact metadata, filename, source SHA, workflow run and attempt, version, build number, repository identity, AAB checksum, automated validation result, manual QA status, and store-delivery status all matched. The workflow reported automated validation `PASS`. The AAB was signed by the GitHub Android Release workflow; it was not processed by Google Play App Signing.
 
+`0.1.0+8` remained valid technical evidence but was superseded for Play delivery because version code `8` already existed in Google Play Console.
+
 ## Manifest evidence
 
-Bundletool `1.18.3` validated the candidate AAB and dumped the base-module manifest. The raw manifest is retained only outside the repository. It contains an externally configured non-sample application ID: CONFIRMED. The value is intentionally not repeated here.
+Bundletool `1.18.3` validated the candidate AAB and dumped the base-module manifest. The raw manifest is retained only outside the repository. It contains the application ID `com.graylion.nurtly`, version name `0.1.0`, and version code `9`.
 
 The release merged manifest, manifest-merger blame report, and merger report were generated from the exact source SHA using `processReleaseMainManifest`. A temporary non-production signing shim was used only for manifest processing and was removed afterward. Candidate AAB signing source: GitHub Android Release workflow.
 
-After redacting only the external application-ID value, the AAB manifest and Gradle merged manifest matched for package, version, version code, permissions, privacy-relevant components, exported attributes, backup attributes, service declarations, provider declarations, metadata names, Billing declarations, and media/audio declarations.
+After comparing the AAB manifest and Gradle merged manifest, they matched for package, version, version code, permissions, privacy-relevant components, exported attributes, backup attributes, service declarations, provider declarations, metadata names, Billing declarations, and media/audio declarations.
 
 | Raw evidence file | SHA-256 |
 | --- | --- |
-| `aab-base-manifest.xml` | `E6611C85CF0881B88BEE6A22D1AE241CFAB4DEC41575CB0FEC6D7B4E1E2F2D1C` |
-| `gradle-merged-manifest.xml` | `E920EDF9BFFA9A14D839EB3764CC1F3E44E6F7106C86BC86F01C4773D7CD6287` |
-| `gradle-manifest-blame.txt` | `F3E75F4BADF02AEF64EEA1FD4DEF397E570289951ED355B87AF42CA84B07A953` |
-| `gradle-manifest-report.txt` | `9FA99246CC12683DB80051448A49D8CEF50592D261079314419CC75948620DE3` |
+| `aab-base-manifest.xml` | retained outside repo; reviewed via bundletool dump |
+| `gradle-merged-manifest.xml` | retained outside repo |
+| `gradle-manifest-blame.txt` | retained outside repo |
+| `gradle-manifest-report.txt` | retained outside repo |
 
 ## Privacy-relevant component inventory
 
