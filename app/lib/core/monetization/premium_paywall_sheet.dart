@@ -95,15 +95,16 @@ class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
             _BenefitLine(text: widget.strings.premiumUnlockPlayIdeas),
             _BenefitLine(text: widget.strings.premiumUnlockSounds),
             _BenefitLine(text: widget.strings.premiumFuturePremiumContent),
-            if (_statusMessage != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                _statusMessage!,
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            const SizedBox(height: AppSpacing.sm),
+            AnimatedBuilder(
+              animation: widget.controller,
+              builder: (context, _) => _PurchaseFeedback(
+                message: _statusMessage ?? _controllerFeedbackMessage(),
+                canRetry: widget.controller.purchaseFeedback?.canRetry ?? false,
+                retryLabel: widget.strings.premiumRetry,
+                onRetry: _retryPurchase,
               ),
-            ],
+            ),
             const SizedBox(height: AppSpacing.md),
             TextButton(
               key: const ValueKey('premium-paywall-restore-link'),
@@ -137,6 +138,15 @@ class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
     });
   }
 
+  Future<void> _retryPurchase() async {
+    setState(() => _statusMessage = null);
+    final result = await widget.controller.retryPurchaseAction();
+    if (!mounted || result == null) {
+      return;
+    }
+    setState(() => _statusMessage = _messageForPurchaseResult(result));
+  }
+
   Future<void> _buyYearly() async {
     setState(() {
       _isBuyingYearly = true;
@@ -163,6 +173,55 @@ class _PremiumPaywallScreenState extends State<PremiumPaywallScreen> {
       PurchaseActionStatus.noPurchaseFound =>
         null,
     };
+  }
+
+  String? _controllerFeedbackMessage() {
+    final result = widget.controller.purchaseFeedback?.result;
+    return result == null ? null : _messageForPurchaseResult(result);
+  }
+}
+
+class _PurchaseFeedback extends StatelessWidget {
+  const _PurchaseFeedback({
+    required this.message,
+    required this.canRetry,
+    required this.retryLabel,
+    required this.onRetry,
+  });
+
+  final String? message;
+  final bool canRetry;
+  final String retryLabel;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    if (message == null) {
+      return const SizedBox(height: 44);
+    }
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 44),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message!,
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          if (canRetry)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                key: const ValueKey('premium-paywall-retry'),
+                onPressed: onRetry,
+                child: Text(retryLabel),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
 
@@ -241,10 +300,12 @@ class _PlanCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xxs,
               children: [
-                Expanded(
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 0),
                   child: Text(
                     key: titleKey,
                     title,
@@ -254,7 +315,6 @@ class _PlanCard extends StatelessWidget {
                   ),
                 ),
                 if (badge != null) ...[
-                  const SizedBox(width: AppSpacing.sm),
                   _Badge(label: badge!),
                 ],
               ],
@@ -264,9 +324,12 @@ class _PlanCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxs),
             Text(note, key: noteKey, style: AppTextStyles.caption),
             const SizedBox(height: AppSpacing.sm),
-            FilledButton(
-              onPressed: isLoading ? null : onPressed,
-              child: Text(actionLabel),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: isLoading ? null : onPressed,
+                child: Text(actionLabel),
+              ),
             ),
           ],
         ),

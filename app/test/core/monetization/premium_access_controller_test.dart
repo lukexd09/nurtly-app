@@ -95,6 +95,53 @@ void main() {
     expect(purchaseProvider.buyYearlyCalls, 1);
   });
 
+  test('unavailable purchase feedback survives entitlement refresh and retries',
+      () async {
+    final purchaseProvider = FakePremiumPurchaseProvider(
+      buyMonthlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      ),
+      purchaseProvider: purchaseProvider,
+    );
+
+    await controller.load();
+    await controller.buyMonthly();
+    await controller.refresh();
+
+    expect(controller.purchaseFeedback?.action, PremiumPurchaseAction.monthly);
+    expect(controller.purchaseFeedback?.canRetry, isTrue);
+    await controller.retryPurchaseAction();
+    expect(purchaseProvider.buyMonthlyCalls, 2);
+  });
+
+  test('purchase success clears prior unavailable feedback', () async {
+    final purchaseProvider = FakePremiumPurchaseProvider(
+      buyMonthlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+      buyYearlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.success,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(checkedAt: now),
+      ),
+      purchaseProvider: purchaseProvider,
+    );
+
+    await controller.load();
+    await controller.buyMonthly();
+    await controller.buyYearly();
+
+    expect(controller.purchaseFeedback, isNull);
+  });
+
   test('initial load error falls back to free', () async {
     final controller = PremiumAccessController(
       provider: FakePremiumEntitlementProvider(failOnLoad: true),

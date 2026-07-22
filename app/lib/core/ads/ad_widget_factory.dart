@@ -12,6 +12,21 @@ abstract interface class AdWidgetFactory {
   Widget buildPassiveSlot({required AppStrings strings});
 }
 
+typedef BannerSlotCreator = BannerSlotHandle Function({
+  required String bannerId,
+});
+
+abstract interface class BannerSlotHandle {
+  Future<void> load({
+    required void Function(BannerSlotHandle handle) onLoaded,
+    required void Function() onFailedToLoad,
+  });
+
+  Widget buildWidget();
+
+  void dispose();
+}
+
 class FakeAdWidgetFactory implements AdWidgetFactory {
   const FakeAdWidgetFactory();
 
@@ -22,34 +37,50 @@ class FakeAdWidgetFactory implements AdWidgetFactory {
 }
 
 class RealAdWidgetFactory implements AdWidgetFactory {
-  const RealAdWidgetFactory({required this.consentFlow, this.bannerId});
+  const RealAdWidgetFactory({
+    required this.consentFlow,
+    this.bannerId,
+    this.bannerCreator = _createBannerHandle,
+  });
 
   final ConsentFlow consentFlow;
   final String? bannerId;
+  final BannerSlotCreator bannerCreator;
 
   @override
   Widget buildPassiveSlot({required AppStrings strings}) {
     if (defaultTargetPlatform != TargetPlatform.android) {
       return const SizedBox.shrink();
     }
-    return _RealBannerAdSlot(consentFlow: consentFlow, bannerId: bannerId);
+    return _RealBannerAdSlot(
+      consentFlow: consentFlow,
+      bannerId: bannerId,
+      bannerCreator: bannerCreator,
+    );
   }
 }
 
 class _RealBannerAdSlot extends StatefulWidget {
-  const _RealBannerAdSlot({required this.consentFlow, required this.bannerId});
+  const _RealBannerAdSlot({
+    required this.consentFlow,
+    required this.bannerId,
+    required this.bannerCreator,
+  });
 
   final ConsentFlow consentFlow;
   final String? bannerId;
+  final BannerSlotCreator bannerCreator;
 
   @override
   State<_RealBannerAdSlot> createState() => _RealBannerAdSlotState();
 }
 
 class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
-  BannerAd? _bannerAd;
   final BannerLoadGate _loadGate = BannerLoadGate();
+  BannerSlotHandle? _bannerHandle;
   var _isLoaded = false;
+  var _loadGeneration = 0;
+  var _retryUsedForGeneration = false;
 
   @override
   void initState() {
@@ -72,6 +103,11 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       }
       _syncConsentState();
     }
+    if (oldWidget.bannerId != widget.bannerId) {
+      _disposeAds();
+      _loadGate.markConsentRevoked();
+      _syncConsentState();
+    }
   }
 
   void _syncConsentState() {
@@ -79,9 +115,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       return;
     }
     if (!widget.consentFlow.canRequestAds) {
-      _bannerAd?.dispose();
-      _bannerAd = null;
-      _isLoaded = false;
+      _disposeAds();
       _loadGate.markConsentRevoked();
     } else {
       _loadGate.markConsentGranted();
@@ -92,6 +126,14 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     setState(() {});
   }
 
+  void _disposeAds() {
+    _loadGeneration++;
+    _retryUsedForGeneration = false;
+    _bannerHandle?.dispose();
+    _bannerHandle = null;
+    _isLoaded = false;
+  }
+
   Future<void> _loadAd() async {
     if (defaultTargetPlatform != TargetPlatform.android ||
         !widget.consentFlow.canRequestAds ||
@@ -100,46 +142,61 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       return;
     }
 
-    final ad = BannerAd(
-      size: AdSize.banner,
-      adUnitId: widget.bannerId!,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          if (!mounted) {
-            ad.dispose();
+    final generation = _loadGeneration;
+    await _loadBannerForGeneration(generation);
+  }
+
+  Future<void> _loadBannerForGeneration(int generation) async {
+    final handle = widget.bannerCreator(bannerId: widget.bannerId!);
+    _bannerHandle = handle;
+
+    Future<void> onFailure() async {
+      if (generation != _loadGeneration || _bannerHandle != handle) {
+        return;
+      }
+      handle.dispose();
+      if (_retryUsedForGeneration) {
+        _bannerHandle = null;
+        _loadGate.markLoadFailed();
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _isLoaded = false;
+        });
+        return;
+      }
+      _retryUsedForGeneration = true;
+      _bannerHandle = null;
+      _loadGate.markLoadFailed();
+      if (!mounted ||
+          generation != _loadGeneration ||
+          !widget.consentFlow.canRequestAds) {
+        return;
+      }
+      await _loadBannerForGeneration(generation);
+    }
+
+    try {
+      await handle.load(
+        onLoaded: (loadedHandle) {
+          if (!mounted ||
+              generation != _loadGeneration ||
+              _bannerHandle != loadedHandle ||
+              !widget.consentFlow.canRequestAds) {
+            loadedHandle.dispose();
             return;
           }
           setState(() {
-            _bannerAd = ad as BannerAd;
             _isLoaded = true;
           });
         },
-        onAdFailedToLoad: (ad, _) {
-          ad.dispose();
-          _loadGate.markLoadFailed();
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _bannerAd = null;
-            _isLoaded = false;
-          });
+        onFailedToLoad: () {
+          unawaited(onFailure());
         },
-      ),
-    );
-
-    try {
-      await ad.load();
+      );
     } catch (_) {
-      ad.dispose();
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _bannerAd = null;
-        _isLoaded = false;
-      });
+      await onFailure();
     }
   }
 
@@ -148,20 +205,21 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     if (widget.consentFlow is Listenable) {
       (widget.consentFlow as Listenable).removeListener(_syncConsentState);
     }
-    _bannerAd?.dispose();
+    _disposeAds();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.consentFlow.canRequestAds || !_isLoaded || _bannerAd == null) {
+    if (!widget.consentFlow.canRequestAds || widget.bannerId == null) {
       return const SizedBox.shrink();
     }
 
     return SizedBox(
-      width: _bannerAd!.size.width.toDouble(),
-      height: _bannerAd!.size.height.toDouble(),
-      child: AdWidget(ad: _bannerAd!),
+      height: AdSize.banner.height.toDouble(),
+      child: _isLoaded && _bannerHandle != null
+          ? Center(child: _bannerHandle!.buildWidget())
+          : const SizedBox.shrink(),
     );
   }
 }
@@ -202,5 +260,60 @@ class AdSlotFactory {
       return const FakeAdWidgetFactory();
     }
     return RealAdWidgetFactory(consentFlow: consentFlow);
+  }
+}
+
+BannerSlotHandle _createBannerHandle({
+  required String bannerId,
+}) {
+  return _BannerAdHandle(bannerId);
+}
+
+class _BannerAdHandle implements BannerSlotHandle {
+  _BannerAdHandle(this._bannerId);
+
+  final String _bannerId;
+  BannerAd? _ad;
+  var _loadStarted = false;
+  var _disposed = false;
+
+  @override
+  Future<void> load({
+    required void Function(BannerSlotHandle handle) onLoaded,
+    required void Function() onFailedToLoad,
+  }) async {
+    if (_loadStarted) {
+      return;
+    }
+    _loadStarted = true;
+    final ad = BannerAd(
+      size: AdSize.banner,
+      adUnitId: _bannerId,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => onLoaded(this),
+        onAdFailedToLoad: (_, __) => onFailedToLoad(),
+      ),
+    );
+    _ad = ad;
+    try {
+      await ad.load();
+    } catch (_) {
+      ad.dispose();
+      _disposed = true;
+      onFailedToLoad();
+    }
+  }
+
+  @override
+  Widget buildWidget() => AdWidget(ad: _ad!);
+
+  @override
+  void dispose() {
+    if (_disposed) {
+      return;
+    }
+    _disposed = true;
+    _ad?.dispose();
   }
 }

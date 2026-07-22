@@ -104,6 +104,27 @@ void main() {
     expect(entitlement.shouldShowAds, isFalse);
   });
 
+  test('paid entitlement keeps the purchased product in its Play link', () {
+    final entitlement = PremiumEntitlement.yearlyActive(checkedAt: now);
+
+    expect(entitlement.purchasedProductId, 'nurtly_premium_yearly');
+    expect(entitlement.isPaidSubscription, isTrue);
+    expect(entitlement.subscriptionManagementUri.queryParameters, {
+      'sku': 'nurtly_premium_yearly',
+      'package': 'com.graylion.nurtly',
+    });
+  });
+
+  test('reviewer access has no paid subscription management identity', () {
+    final entitlement = PremiumEntitlement.monthlyActive(
+      checkedAt: now,
+    ).withReviewerAccess(true);
+
+    expect(entitlement.purchasedProductId, isNull);
+    expect(entitlement.isPaidSubscription, isFalse);
+    expect(entitlement.subscriptionManagementUri.queryParameters, isEmpty);
+  });
+
   test('yearly checked 6 days ago does not need refresh', () {
     final entitlement = PremiumEntitlement.yearlyActive(
       checkedAt: now.subtract(const Duration(days: 6)),

@@ -8,6 +8,7 @@ import 'package:nurtly/core/monetization/premium_access_controller.dart';
 import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/core/monetization/premium_paywall_sheet.dart';
 import 'package:nurtly/core/monetization/premium_product_catalog.dart';
+import 'package:nurtly/core/monetization/purchase_result.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 
 import '../../test_fakes/fake_premium_entitlement_provider.dart';
@@ -97,6 +98,93 @@ void main() {
       expect(find.text('Google Play monthly title'), findsNothing);
     },
   );
+
+  testWidgets('unavailable purchase remains visible and can be retried',
+      (tester) async {
+    final purchases = FakePremiumPurchaseProvider(
+      buyMonthlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(),
+      ),
+      purchaseProvider: purchases,
+      reviewerAccessStore: FakeReviewerAccessStore(),
+    );
+    await controller.load();
+    await controller.buyMonthly();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: PremiumPaywallScreen(
+          strings: AppStrings.forLanguage(AppLanguage.english),
+          controller: controller,
+          onRestoreAccess: () {},
+        ),
+      ),
+    );
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('premium-paywall-retry')),
+      200,
+    );
+    expect(find.byKey(const ValueKey('premium-paywall-retry')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('premium-paywall-retry')));
+    await tester.pumpAndSettle();
+    expect(purchases.buyMonthlyCalls, 2);
+  });
+
+  testWidgets('Polish unavailable feedback stays readable on a narrow layout',
+      (tester) async {
+    final purchases = FakePremiumPurchaseProvider(
+      buyYearlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(),
+      ),
+      purchaseProvider: purchases,
+      reviewerAccessStore: FakeReviewerAccessStore(),
+    );
+    await controller.load();
+    await controller.buyYearly();
+
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(1.25)),
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: PremiumPaywallScreen(
+            strings: AppStrings.polish,
+            controller: controller,
+            onRestoreAccess: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('premium-paywall-retry')),
+      200,
+    );
+    expect(find.byKey(const ValueKey('premium-paywall-retry')), findsOneWidget);
+    expect(
+      find.textContaining('Zakupy są chwilowo niedostępne'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
 }
 
 ProductDetails _product({

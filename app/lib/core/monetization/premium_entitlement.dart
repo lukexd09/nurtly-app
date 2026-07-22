@@ -13,6 +13,8 @@ enum PremiumState {
   pending,
 }
 
+const _googlePlayPackageName = 'com.graylion.nurtly';
+
 class PremiumEntitlement {
   const PremiumEntitlement({
     required this.state,
@@ -110,6 +112,36 @@ class PremiumEntitlement {
   final DateTime checkedAt;
   final DateTime? expiresAt;
   final bool reviewerAccessEnabled;
+
+  /// The Google Play subscription SKU when this is a paid entitlement.
+  /// Reviewer access deliberately has no subscription identity.
+  String? get purchasedProductId {
+    if (reviewerAccessEnabled) {
+      return null;
+    }
+    return switch (source) {
+      PremiumSource.monthly => 'nurtly_premium_monthly',
+      PremiumSource.yearly => 'nurtly_premium_yearly',
+      PremiumSource.none => null,
+    };
+  }
+
+  bool get isPaidSubscription => purchasedProductId != null;
+
+  Uri get subscriptionManagementUri {
+    final productId = purchasedProductId;
+    if (productId == null) {
+      return Uri.https('play.google.com', '/store/account/subscriptions');
+    }
+    return Uri.https(
+      'play.google.com',
+      '/store/account/subscriptions',
+      {
+        'sku': productId,
+        'package': _googlePlayPackageName,
+      },
+    );
+  }
 
   bool get hasPremiumAccess => hasPremiumAccessAt(DateTime.now());
 

@@ -189,6 +189,10 @@ class AppStrings {
     required this.premiumStatusPaymentIssue,
     required this.premiumUpgrade,
     required this.premiumManage,
+    required this.premiumManageSubscription,
+    required this.premiumManageSubscriptionInfo,
+    required this.premiumManageSubscriptionFailed,
+    required this.premiumRetry,
     required this.restorePurchases,
     required this.premiumNotNow,
     required this.premiumRestoreAccessLink,
@@ -403,6 +407,10 @@ class AppStrings {
   final String premiumStatusPaymentIssue;
   final String premiumUpgrade;
   final String premiumManage;
+  final String premiumManageSubscription;
+  final String premiumManageSubscriptionInfo;
+  final String premiumManageSubscriptionFailed;
+  final String premiumRetry;
   final String restorePurchases;
   final String premiumNotNow;
   final String premiumRestoreAccessLink;
@@ -634,6 +642,12 @@ class AppStrings {
     premiumStatusPaymentIssue: 'Payment issue',
     premiumUpgrade: 'Upgrade to Premium',
     premiumManage: 'Manage Premium',
+    premiumManageSubscription: 'Manage subscription',
+    premiumManageSubscriptionInfo:
+        'Your plan renews automatically unless canceled. Google Play manages payment details, next billing or expiry details, and cancellation.',
+    premiumManageSubscriptionFailed:
+        'Could not open Google Play subscription management. Please try again.',
+    premiumRetry: 'Retry',
     restorePurchases: 'Restore Premium access',
     premiumNotNow: 'Not now',
     premiumRestoreAccessLink: 'Already Premium? Restore access',
@@ -875,6 +889,12 @@ class AppStrings {
     premiumStatusPaymentIssue: 'Problem z płatnością',
     premiumUpgrade: 'Przejdź na Premium',
     premiumManage: 'Zarządzaj Premium',
+    premiumManageSubscription: 'Zarządzaj subskrypcją',
+    premiumManageSubscriptionInfo:
+        'Plan odnawia się automatycznie do czasu anulowania. Google Play zarządza płatnościami, szczegółami następnego rozliczenia lub wygaśnięcia oraz anulowaniem.',
+    premiumManageSubscriptionFailed:
+        'Nie udało się otworzyć zarządzania subskrypcją w Google Play. Spróbuj ponownie.',
+    premiumRetry: 'Spróbuj ponownie',
     restorePurchases: 'Odzyskaj dostęp Premium',
     premiumNotNow: 'Nie teraz',
     premiumRestoreAccessLink: 'Masz już Premium? Odzyskaj dostęp',
