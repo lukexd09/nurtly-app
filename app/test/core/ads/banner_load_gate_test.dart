@@ -61,4 +61,101 @@ void main() {
 
     expect(gate.beginLoadAttempt(), isTrue);
   });
+
+  test('banner slot lifecycle loads once and disposes on teardown', () {
+    final disposed = <String>[];
+    late _FakeBannerHandle handle;
+    final lifecycle = BannerSlotLifecycle(
+      bannerId: 'banner-1',
+      bannerCreator: ({required callbacks, required bannerId}) {
+        handle = _FakeBannerHandle(
+          bannerId: bannerId,
+          disposed: disposed,
+          onLoaded: (id) => callbacks.onLoaded(_FakeBannerAd(id, disposed)),
+        );
+        return handle;
+      },
+    );
+
+    lifecycle.setConsentAllowed(true);
+    expect(lifecycle.beginLoad(), isTrue);
+    expect(lifecycle.beginLoad(), isFalse);
+    handle.simulateLoaded();
+    expect(lifecycle.isLoaded, isTrue);
+    lifecycle.dispose();
+    expect(disposed, contains('banner-1'));
+  });
+
+  test('banner slot lifecycle disposes stale loaded callbacks after revoke',
+      () {
+    final disposed = <String>[];
+    late _FakeBannerHandle handle;
+    final lifecycle = BannerSlotLifecycle(
+      bannerId: 'banner-1',
+      bannerCreator: ({required callbacks, required bannerId}) {
+        handle = _FakeBannerHandle(
+          bannerId: bannerId,
+          disposed: disposed,
+          onLoaded: (id) => callbacks.onLoaded(_FakeBannerAd(id, disposed)),
+        );
+        return handle;
+      },
+    );
+
+    lifecycle.setConsentAllowed(true);
+    expect(lifecycle.beginLoad(), isTrue);
+    lifecycle.setConsentAllowed(false);
+    handle.simulateLoaded();
+
+    expect(lifecycle.isLoaded, isFalse);
+    expect(disposed, contains('banner-1-callback'));
+  });
+
+  test('banner slot lifecycle keeps a reserved slot while loading', () {
+    final lifecycle = BannerSlotLifecycle(
+      bannerId: 'banner-1',
+      bannerCreator: ({required callbacks, required bannerId}) {
+        return _FakeBannerHandle(
+          bannerId: bannerId,
+          disposed: <String>[],
+          onLoaded: (_) {},
+        );
+      },
+    );
+
+    lifecycle.setConsentAllowed(true);
+    expect(lifecycle.canReserveSlot, isTrue);
+    expect(lifecycle.beginLoad(), isTrue);
+    expect(lifecycle.canReserveSlot, isTrue);
+  });
+}
+
+class _FakeBannerHandle implements BannerSlotHandle {
+  _FakeBannerHandle({
+    required this.bannerId,
+    required this.disposed,
+    required this.onLoaded,
+  });
+
+  final String bannerId;
+  final List<String> disposed;
+  final void Function(String bannerId) onLoaded;
+
+  void simulateLoaded() => onLoaded(bannerId);
+
+  @override
+  void dispose() {
+    disposed.add(bannerId);
+  }
+}
+
+class _FakeBannerAd {
+  _FakeBannerAd(this.bannerId, this.disposed);
+
+  final String bannerId;
+  final List<String> disposed;
+
+  void dispose() {
+    disposed.add('$bannerId-callback');
+  }
 }

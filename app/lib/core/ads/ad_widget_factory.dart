@@ -12,6 +12,25 @@ abstract interface class AdWidgetFactory {
   Widget buildPassiveSlot({required AppStrings strings});
 }
 
+typedef BannerSlotCreator = BannerSlotHandle Function({
+  required BannerSlotCallbacks callbacks,
+  required String bannerId,
+});
+
+abstract interface class BannerSlotHandle {
+  void dispose();
+}
+
+class BannerSlotCallbacks {
+  BannerSlotCallbacks({
+    required this.onLoaded,
+    required this.onFailedToLoad,
+  });
+
+  final void Function(Object ad) onLoaded;
+  final void Function() onFailedToLoad;
+}
+
 class FakeAdWidgetFactory implements AdWidgetFactory {
   const FakeAdWidgetFactory();
 
@@ -32,24 +51,32 @@ class RealAdWidgetFactory implements AdWidgetFactory {
     if (defaultTargetPlatform != TargetPlatform.android) {
       return const SizedBox.shrink();
     }
-    return _RealBannerAdSlot(consentFlow: consentFlow, bannerId: bannerId);
+    return _RealBannerAdSlot(
+      consentFlow: consentFlow,
+      bannerId: bannerId,
+      bannerCreator: _createBannerHandle,
+    );
   }
 }
 
 class _RealBannerAdSlot extends StatefulWidget {
-  const _RealBannerAdSlot({required this.consentFlow, required this.bannerId});
+  const _RealBannerAdSlot({
+    required this.consentFlow,
+    required this.bannerId,
+    required this.bannerCreator,
+  });
 
   final ConsentFlow consentFlow;
   final String? bannerId;
+  final BannerSlotCreator bannerCreator;
 
   @override
   State<_RealBannerAdSlot> createState() => _RealBannerAdSlotState();
 }
 
 class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
-  BannerAd? _bannerAd;
-  BannerAd? _loadingAd;
   final BannerLoadGate _loadGate = BannerLoadGate();
+  BannerSlotHandle? _bannerHandle;
   var _isLoaded = false;
   var _loadGeneration = 0;
 
@@ -99,10 +126,8 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
   void _disposeAds() {
     _loadGeneration++;
-    _bannerAd?.dispose();
-    _loadingAd?.dispose();
-    _bannerAd = null;
-    _loadingAd = null;
+    _bannerHandle?.dispose();
+    _bannerHandle = null;
     _isLoaded = false;
   }
 
@@ -115,59 +140,60 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     }
 
     final generation = _loadGeneration;
-    late final BannerAd ad;
-    ad = BannerAd(
-      size: AdSize.banner,
-      adUnitId: widget.bannerId!,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          if (!mounted ||
-              generation != _loadGeneration ||
-              _loadingAd != ad ||
-              !widget.consentFlow.canRequestAds) {
-            ad.dispose();
-            return;
-          }
-          setState(() {
-            _bannerAd = ad as BannerAd;
-            _loadingAd = null;
-            _isLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (ad, _) {
-          ad.dispose();
-          if (generation != _loadGeneration || _loadingAd != ad) {
-            return;
-          }
-          _loadingAd = null;
-          _loadGate.markLoadFailed();
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _bannerAd = null;
-            _isLoaded = false;
-          });
-        },
-      ),
+    late final BannerSlotHandle handle;
+    final callbacks = BannerSlotCallbacks(
+      onLoaded: (ad) {
+        if (!mounted ||
+            generation != _loadGeneration ||
+            _bannerHandle != handle ||
+            !widget.consentFlow.canRequestAds) {
+          (ad as dynamic).dispose();
+          return;
+        }
+        setState(() {
+          _isLoaded = true;
+        });
+      },
+      onFailedToLoad: () {
+        if (generation != _loadGeneration || _bannerHandle != handle) {
+          return;
+        }
+        _bannerHandle = null;
+        _loadGate.markLoadFailed();
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _isLoaded = false;
+        });
+      },
     );
-    _loadingAd = ad;
+    handle = widget.bannerCreator(
+      callbacks: callbacks,
+      bannerId: widget.bannerId!,
+    );
+    _bannerHandle = handle;
 
     try {
+      final ad = BannerAd(
+        size: AdSize.banner,
+        adUnitId: widget.bannerId!,
+        request: const AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (ad) => callbacks.onLoaded(ad),
+          onAdFailedToLoad: (ad, _) {
+            callbacks.onFailedToLoad();
+            ad.dispose();
+          },
+        ),
+      );
       await ad.load();
     } catch (_) {
-      ad.dispose();
-      if (generation != _loadGeneration || _loadingAd != ad) {
-        return;
-      }
-      _loadingAd = null;
       _loadGate.markLoadFailed();
       if (!mounted) {
         return;
       }
       setState(() {
-        _bannerAd = null;
         _isLoaded = false;
       });
     }
@@ -190,15 +216,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
     return SizedBox(
       height: AdSize.banner.height.toDouble(),
-      child: _isLoaded && _bannerAd != null
-          ? Center(
-              child: SizedBox(
-                width: _bannerAd!.size.width.toDouble(),
-                height: _bannerAd!.size.height.toDouble(),
-                child: AdWidget(ad: _bannerAd!),
-              ),
-            )
-          : const SizedBox.shrink(),
+      child: _isLoaded ? const SizedBox.expand() : const SizedBox.shrink(),
     );
   }
 }
@@ -231,6 +249,83 @@ class BannerLoadGate {
   }
 }
 
+class BannerSlotLifecycle {
+  BannerSlotLifecycle({
+    required this.bannerCreator,
+    required this.bannerId,
+  });
+
+  final BannerSlotCreator bannerCreator;
+  String? bannerId;
+  BannerSlotHandle? _handle;
+  var _generation = 0;
+  var _loaded = false;
+  var _consentAllowed = false;
+  var _loadAttempted = false;
+
+  bool get isLoaded => _loaded;
+  bool get hasBanner => _handle != null;
+  bool get canReserveSlot => bannerId != null && _consentAllowed;
+  int get generation => _generation;
+
+  void setConsentAllowed(bool allowed) {
+    _consentAllowed = allowed;
+    if (!allowed) {
+      _disposeHandle();
+      _loadAttempted = false;
+    }
+  }
+
+  void setBannerId(String? newBannerId) {
+    if (bannerId == newBannerId) {
+      return;
+    }
+    bannerId = newBannerId;
+    _disposeHandle();
+    _loadAttempted = false;
+  }
+
+  bool beginLoad() {
+    if (!canReserveSlot || _loadAttempted) {
+      return false;
+    }
+    _loadAttempted = true;
+    final currentGeneration = _generation;
+    _handle = bannerCreator(
+      bannerId: bannerId!,
+      callbacks: BannerSlotCallbacks(
+        onLoaded: (ad) {
+          if (_generation != currentGeneration || !_consentAllowed) {
+            (ad as dynamic).dispose();
+            return;
+          }
+          _loaded = true;
+        },
+        onFailedToLoad: () {
+          if (_generation != currentGeneration) {
+            return;
+          }
+          _handle = null;
+          _loaded = false;
+          _loadAttempted = false;
+        },
+      ),
+    );
+    return true;
+  }
+
+  void dispose() {
+    _disposeHandle();
+  }
+
+  void _disposeHandle() {
+    _generation++;
+    _handle?.dispose();
+    _handle = null;
+    _loaded = false;
+  }
+}
+
 class AdSlotFactory {
   const AdSlotFactory._();
 
@@ -239,5 +334,37 @@ class AdSlotFactory {
       return const FakeAdWidgetFactory();
     }
     return RealAdWidgetFactory(consentFlow: consentFlow);
+  }
+}
+
+BannerSlotHandle _createBannerHandle({
+  required BannerSlotCallbacks callbacks,
+  required String bannerId,
+}) {
+  late final BannerAd ad;
+  ad = BannerAd(
+    size: AdSize.banner,
+    adUnitId: bannerId,
+    request: const AdRequest(),
+    listener: BannerAdListener(
+      onAdLoaded: (loadedAd) => callbacks.onLoaded(loadedAd),
+      onAdFailedToLoad: (failedAd, _) {
+        callbacks.onFailedToLoad();
+        failedAd.dispose();
+      },
+    ),
+  );
+  unawaited(ad.load());
+  return _BannerAdHandle(ad);
+}
+
+class _BannerAdHandle implements BannerSlotHandle {
+  _BannerAdHandle(this._ad);
+
+  final BannerAd _ad;
+
+  @override
+  void dispose() {
+    _ad.dispose();
   }
 }
