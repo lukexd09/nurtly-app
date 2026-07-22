@@ -38,4 +38,27 @@ void main() {
     expect(gate.beginLoadAttempt(hasConfiguration: false), isFalse);
     expect(gate.canAttemptLoad, isTrue);
   });
+
+  test('banner load gate permits one active request at a time', () {
+    final gate = BannerLoadGate();
+
+    gate.markConsentGranted();
+    expect(gate.beginLoadAttempt(), isTrue);
+    expect(gate.beginLoadAttempt(), isFalse);
+
+    gate.markLoadFailed();
+    expect(gate.beginLoadAttempt(), isTrue);
+  });
+
+  test('banner load gate invalidates an active request when consent changes',
+      () {
+    final gate = BannerLoadGate();
+
+    gate.markConsentGranted();
+    expect(gate.beginLoadAttempt(), isTrue);
+    gate.markConsentRevoked();
+    gate.markConsentGranted();
+
+    expect(gate.beginLoadAttempt(), isTrue);
+  });
 }

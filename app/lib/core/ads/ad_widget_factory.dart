@@ -48,8 +48,10 @@ class _RealBannerAdSlot extends StatefulWidget {
 
 class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   BannerAd? _bannerAd;
+  BannerAd? _loadingAd;
   final BannerLoadGate _loadGate = BannerLoadGate();
   var _isLoaded = false;
+  var _loadGeneration = 0;
 
   @override
   void initState() {
@@ -72,6 +74,11 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       }
       _syncConsentState();
     }
+    if (oldWidget.bannerId != widget.bannerId) {
+      _disposeAds();
+      _loadGate.markConsentRevoked();
+      _syncConsentState();
+    }
   }
 
   void _syncConsentState() {
@@ -79,9 +86,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       return;
     }
     if (!widget.consentFlow.canRequestAds) {
-      _bannerAd?.dispose();
-      _bannerAd = null;
-      _isLoaded = false;
+      _disposeAds();
       _loadGate.markConsentRevoked();
     } else {
       _loadGate.markConsentGranted();
@@ -92,6 +97,15 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     setState(() {});
   }
 
+  void _disposeAds() {
+    _loadGeneration++;
+    _bannerAd?.dispose();
+    _loadingAd?.dispose();
+    _bannerAd = null;
+    _loadingAd = null;
+    _isLoaded = false;
+  }
+
   Future<void> _loadAd() async {
     if (defaultTargetPlatform != TargetPlatform.android ||
         !widget.consentFlow.canRequestAds ||
@@ -100,23 +114,33 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
       return;
     }
 
-    final ad = BannerAd(
+    final generation = _loadGeneration;
+    late final BannerAd ad;
+    ad = BannerAd(
       size: AdSize.banner,
       adUnitId: widget.bannerId!,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          if (!mounted) {
+          if (!mounted ||
+              generation != _loadGeneration ||
+              _loadingAd != ad ||
+              !widget.consentFlow.canRequestAds) {
             ad.dispose();
             return;
           }
           setState(() {
             _bannerAd = ad as BannerAd;
+            _loadingAd = null;
             _isLoaded = true;
           });
         },
         onAdFailedToLoad: (ad, _) {
           ad.dispose();
+          if (generation != _loadGeneration || _loadingAd != ad) {
+            return;
+          }
+          _loadingAd = null;
           _loadGate.markLoadFailed();
           if (!mounted) {
             return;
@@ -128,11 +152,17 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
         },
       ),
     );
+    _loadingAd = ad;
 
     try {
       await ad.load();
     } catch (_) {
       ad.dispose();
+      if (generation != _loadGeneration || _loadingAd != ad) {
+        return;
+      }
+      _loadingAd = null;
+      _loadGate.markLoadFailed();
       if (!mounted) {
         return;
       }
@@ -148,20 +178,27 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     if (widget.consentFlow is Listenable) {
       (widget.consentFlow as Listenable).removeListener(_syncConsentState);
     }
-    _bannerAd?.dispose();
+    _disposeAds();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.consentFlow.canRequestAds || !_isLoaded || _bannerAd == null) {
+    if (!widget.consentFlow.canRequestAds || widget.bannerId == null) {
       return const SizedBox.shrink();
     }
 
     return SizedBox(
-      width: _bannerAd!.size.width.toDouble(),
-      height: _bannerAd!.size.height.toDouble(),
-      child: AdWidget(ad: _bannerAd!),
+      height: AdSize.banner.height.toDouble(),
+      child: _isLoaded && _bannerAd != null
+          ? Center(
+              child: SizedBox(
+                width: _bannerAd!.size.width.toDouble(),
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
+              ),
+            )
+          : const SizedBox.shrink(),
     );
   }
 }
