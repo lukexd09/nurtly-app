@@ -641,7 +641,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                   if (entitlement.isPaidSubscription) ...[
                     const SizedBox(height: AppSpacing.xs),
                     _SettingsRow(
-                      key: const ValueKey('settings-premium-manage-subscription'),
+                      key: const ValueKey(
+                          'settings-premium-manage-subscription'),
                       title: strings.premiumManageSubscription,
                       onTap: () {
                         Navigator.of(sheetContext).pop();
