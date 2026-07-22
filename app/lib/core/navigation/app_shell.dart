@@ -337,6 +337,21 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     );
   }
 
+  Future<void> _manageSubscription() async {
+    var opened = false;
+    try {
+      opened = await (widget.externalUrlLauncher ?? launchExternalUrl)(
+        _premiumController.entitlement.subscriptionManagementUri,
+      );
+    } catch (_) {}
+    if (!mounted || opened) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(_strings.premiumManageSubscriptionFailed)),
+    );
+  }
+
   Future<void> _restorePremiumAccess() async {
     final result = await _premiumController.restorePurchases();
     if (!mounted) {
@@ -623,6 +638,24 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       unawaited(_openPremiumPaywall());
                     },
                   ),
+                  if (entitlement.isPaidSubscription) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    _SettingsRow(
+                      key: const ValueKey('settings-premium-manage-subscription'),
+                      title: strings.premiumManageSubscription,
+                      onTap: () {
+                        Navigator.of(sheetContext).pop();
+                        unawaited(_manageSubscription());
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      strings.premiumManageSubscriptionInfo,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xs),
                   _SettingsRow(
                     key: const ValueKey('settings-premium-restore'),
