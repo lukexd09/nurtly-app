@@ -8,6 +8,7 @@ import 'package:nurtly/core/monetization/premium_access_controller.dart';
 import 'package:nurtly/core/monetization/premium_entitlement.dart';
 import 'package:nurtly/core/monetization/premium_paywall_sheet.dart';
 import 'package:nurtly/core/monetization/premium_product_catalog.dart';
+import 'package:nurtly/core/monetization/purchase_result.dart';
 import 'package:nurtly/core/theme/app_theme.dart';
 
 import '../../test_fakes/fake_premium_entitlement_provider.dart';
@@ -97,6 +98,44 @@ void main() {
       expect(find.text('Google Play monthly title'), findsNothing);
     },
   );
+
+  testWidgets('unavailable purchase remains visible and can be retried',
+      (tester) async {
+    final purchases = FakePremiumPurchaseProvider(
+      buyMonthlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(),
+      ),
+      purchaseProvider: purchases,
+      reviewerAccessStore: FakeReviewerAccessStore(),
+    );
+    await controller.load();
+    await controller.buyMonthly();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        home: PremiumPaywallScreen(
+          strings: AppStrings.forLanguage(AppLanguage.english),
+          controller: controller,
+          onRestoreAccess: () {},
+        ),
+      ),
+    );
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('premium-paywall-retry')),
+      200,
+    );
+    expect(find.byKey(const ValueKey('premium-paywall-retry')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('premium-paywall-retry')));
+    await tester.pumpAndSettle();
+    expect(purchases.buyMonthlyCalls, 2);
+  });
 }
 
 ProductDetails _product({

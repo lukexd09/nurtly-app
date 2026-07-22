@@ -10,6 +10,22 @@ import 'reviewer_access_store.dart';
 import 'premium_purchase_provider.dart';
 import 'purchase_result.dart';
 
+enum PremiumPurchaseAction { monthly, yearly, restore }
+
+class PremiumPurchaseFeedback {
+  const PremiumPurchaseFeedback({
+    required this.action,
+    required this.result,
+  });
+
+  final PremiumPurchaseAction action;
+  final PurchaseActionResult result;
+
+  bool get canRetry =>
+      result.status == PurchaseActionStatus.unavailable ||
+      result.status == PurchaseActionStatus.error;
+}
+
 class PremiumAccessController extends ChangeNotifier {
   PremiumAccessController({
     required PremiumEntitlementProvider provider,
@@ -26,9 +42,12 @@ class PremiumAccessController extends ChangeNotifier {
   final PremiumPurchaseProvider? _purchaseProvider;
   late final ReviewerAccessStore _reviewerAccessStore;
   PremiumEntitlement _entitlement = PremiumEntitlement.free();
+  PremiumPurchaseFeedback? _purchaseFeedback;
   bool _hasLoaded = false;
 
   PremiumEntitlement get entitlement => _entitlement;
+
+  PremiumPurchaseFeedback? get purchaseFeedback => _purchaseFeedback;
 
   bool get hasPremiumAccess => _entitlement.hasPremiumAccess;
 
@@ -86,8 +105,11 @@ class PremiumAccessController extends ChangeNotifier {
     final purchaseProvider = _purchaseProvider;
     if (purchaseProvider == null) {
       await refresh();
-      return const PurchaseActionResult(
-        status: PurchaseActionStatus.unavailable,
+      return _recordPurchaseResult(
+        PremiumPurchaseAction.restore,
+        const PurchaseActionResult(
+          status: PurchaseActionStatus.unavailable,
+        ),
       );
     }
 
@@ -95,14 +117,17 @@ class PremiumAccessController extends ChangeNotifier {
     if (result.status != PurchaseActionStatus.unavailable) {
       await refresh();
     }
-    return result;
+    return _recordPurchaseResult(PremiumPurchaseAction.restore, result);
   }
 
   Future<PurchaseActionResult> buyMonthly() async {
     final purchaseProvider = _purchaseProvider;
     if (purchaseProvider == null) {
-      return const PurchaseActionResult(
-        status: PurchaseActionStatus.unavailable,
+      return _recordPurchaseResult(
+        PremiumPurchaseAction.monthly,
+        const PurchaseActionResult(
+          status: PurchaseActionStatus.unavailable,
+        ),
       );
     }
 
@@ -110,14 +135,17 @@ class PremiumAccessController extends ChangeNotifier {
     if (result.status != PurchaseActionStatus.unavailable) {
       await refresh();
     }
-    return result;
+    return _recordPurchaseResult(PremiumPurchaseAction.monthly, result);
   }
 
   Future<PurchaseActionResult> buyYearly() async {
     final purchaseProvider = _purchaseProvider;
     if (purchaseProvider == null) {
-      return const PurchaseActionResult(
-        status: PurchaseActionStatus.unavailable,
+      return _recordPurchaseResult(
+        PremiumPurchaseAction.yearly,
+        const PurchaseActionResult(
+          status: PurchaseActionStatus.unavailable,
+        ),
       );
     }
 
@@ -125,6 +153,32 @@ class PremiumAccessController extends ChangeNotifier {
     if (result.status != PurchaseActionStatus.unavailable) {
       await refresh();
     }
+    return _recordPurchaseResult(PremiumPurchaseAction.yearly, result);
+  }
+
+  Future<PurchaseActionResult?> retryPurchaseAction() async {
+    final feedback = _purchaseFeedback;
+    if (feedback == null || !feedback.canRetry) {
+      return null;
+    }
+    return switch (feedback.action) {
+      PremiumPurchaseAction.monthly => buyMonthly(),
+      PremiumPurchaseAction.yearly => buyYearly(),
+      PremiumPurchaseAction.restore => restorePurchases(),
+    };
+  }
+
+  PurchaseActionResult _recordPurchaseResult(
+    PremiumPurchaseAction action,
+    PurchaseActionResult result,
+  ) {
+    _purchaseFeedback = switch (result.status) {
+      PurchaseActionStatus.unavailable ||
+      PurchaseActionStatus.error =>
+        PremiumPurchaseFeedback(action: action, result: result),
+      _ => null,
+    };
+    notifyListeners();
     return result;
   }
 
