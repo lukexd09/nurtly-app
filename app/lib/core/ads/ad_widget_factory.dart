@@ -80,6 +80,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
   BannerSlotHandle? _bannerHandle;
   var _isLoaded = false;
   var _loadGeneration = 0;
+  var _retryUsedForGeneration = false;
 
   @override
   void initState() {
@@ -127,6 +128,7 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
 
   void _disposeAds() {
     _loadGeneration++;
+    _retryUsedForGeneration = false;
     _bannerHandle?.dispose();
     _bannerHandle = null;
     _isLoaded = false;
@@ -141,8 +143,39 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
     }
 
     final generation = _loadGeneration;
+    await _loadBannerForGeneration(generation);
+  }
+
+  Future<void> _loadBannerForGeneration(int generation) async {
     final handle = widget.bannerCreator(bannerId: widget.bannerId!);
     _bannerHandle = handle;
+
+    Future<void> onFailure() async {
+      if (generation != _loadGeneration || _bannerHandle != handle) {
+        return;
+      }
+      handle.dispose();
+      if (_retryUsedForGeneration) {
+        _bannerHandle = null;
+        _loadGate.markLoadFailed();
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _isLoaded = false;
+        });
+        return;
+      }
+      _retryUsedForGeneration = true;
+      _bannerHandle = null;
+      _loadGate.markLoadFailed();
+      if (!mounted ||
+          generation != _loadGeneration ||
+          !widget.consentFlow.canRequestAds) {
+        return;
+      }
+      await _loadBannerForGeneration(generation);
+    }
 
     try {
       await handle.load(
@@ -159,31 +192,11 @@ class _RealBannerAdSlotState extends State<_RealBannerAdSlot> {
           });
         },
         onFailedToLoad: () {
-          if (generation != _loadGeneration || _bannerHandle != handle) {
-            return;
-          }
-          _bannerHandle = null;
-          _loadGate.markLoadFailed();
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            _isLoaded = false;
-          });
+          unawaited(onFailure());
         },
       );
     } catch (_) {
-      if (generation != _loadGeneration || _bannerHandle != handle) {
-        return;
-      }
-      _bannerHandle = null;
-      _loadGate.markLoadFailed();
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _isLoaded = false;
-      });
+      await onFailure();
     }
   }
 
@@ -262,6 +275,7 @@ class _BannerAdHandle implements BannerSlotHandle {
   final String _bannerId;
   BannerAd? _ad;
   var _loadStarted = false;
+  var _disposed = false;
 
   @override
   Future<void> load({
@@ -285,6 +299,8 @@ class _BannerAdHandle implements BannerSlotHandle {
     try {
       await ad.load();
     } catch (_) {
+      ad.dispose();
+      _disposed = true;
       onFailedToLoad();
     }
   }
@@ -294,6 +310,10 @@ class _BannerAdHandle implements BannerSlotHandle {
 
   @override
   void dispose() {
+    if (_disposed) {
+      return;
+    }
+    _disposed = true;
     _ad?.dispose();
   }
 }
