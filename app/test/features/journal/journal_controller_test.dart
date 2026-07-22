@@ -320,6 +320,65 @@ void main() {
     expect(store.entries, isEmpty);
   });
 
+  test('delete all clears loaded journal state and is safe to repeat',
+      () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.sleep(
+          id: 'sleep-1',
+          startAt: DateTime(2026, 5, 18, 22),
+        ),
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'Remove this note',
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+
+    await controller.deleteAllEntries();
+
+    expect(controller.hasLoaded, isTrue);
+    expect(controller.entries, isEmpty);
+    expect(controller.activeSleep, isNull);
+    expect(controller.summary.notesCount, 0);
+    expect(controller.summary.totalSleep, Duration.zero);
+    expect(store.entries, isEmpty);
+
+    await controller.deleteAllEntries();
+    expect(store.entries, isEmpty);
+  });
+
+  test('concurrent delete all requests share the same deletion', () async {
+    final store = InMemoryJournalStore(
+      entries: [
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'Remove this note',
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+    await controller.load();
+
+    await Future.wait([
+      controller.deleteAllEntries(),
+      controller.deleteAllEntries(),
+    ]);
+
+    expect(store.saveCalls, 1);
+    expect(controller.entries, isEmpty);
+  });
+
   test('deleting an active sleep removes active sleep state', () async {
     final store = InMemoryJournalStore(
       entries: [

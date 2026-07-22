@@ -20,6 +20,7 @@ class JournalController extends ChangeNotifier {
   final List<JournalEntry> _entries = [];
   bool _hasLoaded = false;
   DateTime _selectedDay = DateTime.now();
+  Future<void>? _deleteAllEntriesFuture;
 
   bool get hasLoaded => _hasLoaded;
 
@@ -162,7 +163,12 @@ class JournalController extends ChangeNotifier {
     await _persist();
   }
 
-  Future<void> deleteAllEntries() async {
+  Future<void> deleteAllEntries() {
+    return _deleteAllEntriesFuture ??=
+        _deleteAllEntries().whenComplete(() => _deleteAllEntriesFuture = null);
+  }
+
+  Future<void> _deleteAllEntries() async {
     await _store.deleteAllEntries();
     _entries.clear();
     _selectedDay = DateTime(_now().year, _now().month, _now().day);
