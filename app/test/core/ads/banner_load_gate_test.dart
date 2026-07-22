@@ -1,161 +1,331 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/core/ads/ad_widget_factory.dart';
+import 'package:nurtly/core/ads/consent_flow_controller.dart';
+import 'package:nurtly/core/localization/app_strings.dart';
 
 void main() {
-  test('banner load gate allows retry after consent is revoked and restored',
-      () {
-    final gate = BannerLoadGate();
-
-    gate.markConsentGranted();
-    expect(gate.canAttemptLoad, isTrue);
-    expect(gate.beginLoadAttempt(), isTrue);
-    expect(gate.canAttemptLoad, isFalse);
-
-    gate.markConsentRevoked();
-    expect(gate.canAttemptLoad, isFalse);
-
-    gate.markConsentGranted();
-    expect(gate.canAttemptLoad, isTrue);
-    expect(gate.beginLoadAttempt(), isTrue);
-  });
-
-  test('banner load gate retries after a failed load', () {
-    final gate = BannerLoadGate();
-
-    gate.markConsentGranted();
-    expect(gate.beginLoadAttempt(), isTrue);
-    expect(gate.canAttemptLoad, isFalse);
-
-    gate.markLoadFailed();
-    expect(gate.canAttemptLoad, isTrue);
-    expect(gate.beginLoadAttempt(), isTrue);
-  });
-
-  test('banner load gate does not attempt without configuration', () {
-    final gate = BannerLoadGate();
-
-    gate.markConsentGranted();
-    expect(gate.beginLoadAttempt(hasConfiguration: false), isFalse);
-    expect(gate.canAttemptLoad, isTrue);
-  });
-
-  test('banner load gate permits one active request at a time', () {
-    final gate = BannerLoadGate();
-
-    gate.markConsentGranted();
-    expect(gate.beginLoadAttempt(), isTrue);
-    expect(gate.beginLoadAttempt(), isFalse);
-
-    gate.markLoadFailed();
-    expect(gate.beginLoadAttempt(), isTrue);
-  });
-
-  test('banner load gate invalidates an active request when consent changes',
-      () {
-    final gate = BannerLoadGate();
-
-    gate.markConsentGranted();
-    expect(gate.beginLoadAttempt(), isTrue);
-    gate.markConsentRevoked();
-    gate.markConsentGranted();
-
-    expect(gate.beginLoadAttempt(), isTrue);
-  });
-
-  test('banner slot lifecycle loads once and disposes on teardown', () {
-    final disposed = <String>[];
-    late _FakeBannerHandle handle;
-    final lifecycle = BannerSlotLifecycle(
+  testWidgets('banner slot uses one handle, one load, and renders the widget',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
       bannerId: 'banner-1',
-      bannerCreator: ({required callbacks, required bannerId}) {
-        handle = _FakeBannerHandle(
-          bannerId: bannerId,
-          disposed: disposed,
-          onLoaded: (id) => callbacks.onLoaded(_FakeBannerAd(id, disposed)),
-        );
+      bannerCreator: ({required bannerId}) {
+        final handle = _FakeBannerHandle(bannerId: bannerId);
+        handles.add(handle);
         return handle;
       },
     );
 
-    lifecycle.setConsentAllowed(true);
-    expect(lifecycle.beginLoad(), isTrue);
-    expect(lifecycle.beginLoad(), isFalse);
-    handle.simulateLoaded();
-    expect(lifecycle.isLoaded, isTrue);
-    lifecycle.dispose();
-    expect(disposed, contains('banner-1'));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(handles, hasLength(1));
+    expect(handles.single.loadCalls, 1);
+    expect(handles.single.loaded, isTrue);
+    expect(find.byType(_FakeBannerWidget), findsOneWidget);
   });
 
-  test('banner slot lifecycle disposes stale loaded callbacks after revoke',
-      () {
-    final disposed = <String>[];
-    late _FakeBannerHandle handle;
-    final lifecycle = BannerSlotLifecycle(
+  testWidgets('rebuild does not create duplicate banner handles or loads',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
       bannerId: 'banner-1',
-      bannerCreator: ({required callbacks, required bannerId}) {
-        handle = _FakeBannerHandle(
-          bannerId: bannerId,
-          disposed: disposed,
-          onLoaded: (id) => callbacks.onLoaded(_FakeBannerAd(id, disposed)),
-        );
+      bannerCreator: ({required bannerId}) {
+        final handle = _FakeBannerHandle(bannerId: bannerId);
+        handles.add(handle);
         return handle;
       },
     );
 
-    lifecycle.setConsentAllowed(true);
-    expect(lifecycle.beginLoad(), isTrue);
-    lifecycle.setConsentAllowed(false);
-    handle.simulateLoaded();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (_) =>
+                factory.buildPassiveSlot(strings: AppStrings.english),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (_) =>
+                factory.buildPassiveSlot(strings: AppStrings.english),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
 
-    expect(lifecycle.isLoaded, isFalse);
-    expect(disposed, contains('banner-1-callback'));
+    expect(handles, hasLength(1));
+    expect(handles.single.loadCalls, 1);
   });
 
-  test('banner slot lifecycle keeps a reserved slot while loading', () {
-    final lifecycle = BannerSlotLifecycle(
+  testWidgets('consent revoke disposes the active loading handle',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
       bannerId: 'banner-1',
-      bannerCreator: ({required callbacks, required bannerId}) {
-        return _FakeBannerHandle(
-          bannerId: bannerId,
-          disposed: <String>[],
-          onLoaded: (_) {},
-        );
+      bannerCreator: ({required bannerId}) {
+        final handle =
+            _FakeBannerHandle(bannerId: bannerId, completeOnLoad: false);
+        handles.add(handle);
+        return handle;
       },
     );
 
-    lifecycle.setConsentAllowed(true);
-    expect(lifecycle.canReserveSlot, isTrue);
-    expect(lifecycle.beginLoad(), isTrue);
-    expect(lifecycle.canReserveSlot, isTrue);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+    consentFlow.setCanRequestAds(false);
+    await tester.pump();
+
+    expect(handles.single.disposeCalls, 1);
+    expect(find.byType(_FakeBannerWidget), findsNothing);
   });
+
+  testWidgets('stale loaded callback after revoke is rejected', (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
+      bannerId: 'banner-1',
+      bannerCreator: ({required bannerId}) {
+        final handle =
+            _FakeBannerHandle(bannerId: bannerId, completeOnLoad: false);
+        handles.add(handle);
+        return handle;
+      },
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+    consentFlow.setCanRequestAds(false);
+    await tester.pump();
+    handles.single.simulateLoaded();
+    await tester.pump();
+
+    expect(handles.single.disposeCalls, 1);
+    expect(find.byType(_FakeBannerWidget), findsNothing);
+  });
+
+  testWidgets('banner id change disposes old handle and loads one new handle',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    String bannerId = 'banner-1';
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
+      bannerCreator: ({required bannerId}) {
+        final handle = _FakeBannerHandle(bannerId: bannerId);
+        handles.add(handle);
+        return handle;
+      },
+    );
+
+    Future<void> pump() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (_) => RealAdWidgetFactory(
+                consentFlow: consentFlow,
+                bannerId: bannerId,
+                bannerCreator: factory.bannerCreator,
+              ).buildPassiveSlot(strings: AppStrings.english),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    await pump();
+    bannerId = 'banner-2';
+    await pump();
+
+    expect(handles, hasLength(2));
+    expect(handles.first.disposeCalls, 1);
+    expect(handles.last.loadCalls, 1);
+  });
+
+  testWidgets('widget disposal disposes the handle exactly once',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
+      bannerId: 'banner-1',
+      bannerCreator: ({required bannerId}) {
+        final handle =
+            _FakeBannerHandle(bannerId: bannerId, completeOnLoad: false);
+        handles.add(handle);
+        return handle;
+      },
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pumpWidget(const SizedBox());
+
+    expect(handles.single.disposeCalls, 1);
+  });
+
+  testWidgets('failed load allows one controlled retry without leaking handle',
+      (tester) async {
+    final consentFlow = _FakeConsentFlow(canRequestAds: true);
+    final handles = <_FakeBannerHandle>[];
+    final factory = RealAdWidgetFactory(
+      consentFlow: consentFlow,
+      bannerId: 'banner-1',
+      bannerCreator: ({required bannerId}) {
+        final handle = _FakeBannerHandle(
+          bannerId: bannerId,
+          failOnLoadOnce: true,
+        );
+        handles.add(handle);
+        return handle;
+      },
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: factory.buildPassiveSlot(strings: AppStrings.english),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(handles, hasLength(1));
+    expect(handles.single.loadCalls, 1);
+  });
+}
+
+class _FakeConsentFlow extends ChangeNotifier implements ConsentFlow {
+  _FakeConsentFlow({required bool canRequestAds})
+      : _canRequestAds = canRequestAds;
+
+  bool _canRequestAds;
+
+  void setCanRequestAds(bool value) {
+    _canRequestAds = value;
+    notifyListeners();
+  }
+
+  @override
+  bool get canRequestAds => _canRequestAds;
+
+  @override
+  bool get privacyOptionsRequired => false;
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> showPrivacyOptions() async {}
 }
 
 class _FakeBannerHandle implements BannerSlotHandle {
   _FakeBannerHandle({
     required this.bannerId,
-    required this.disposed,
-    required this.onLoaded,
+    this.completeOnLoad = true,
+    this.failOnLoadOnce = false,
   });
 
   final String bannerId;
-  final List<String> disposed;
-  final void Function(String bannerId) onLoaded;
+  final bool completeOnLoad;
+  final bool failOnLoadOnce;
+  var loadCalls = 0;
+  var disposeCalls = 0;
+  var loaded = false;
+  var _widgetVisible = false;
+  var _failed = false;
 
-  void simulateLoaded() => onLoaded(bannerId);
+  @override
+  Future<void> load({
+    required void Function(BannerSlotHandle handle) onLoaded,
+    required void Function() onFailedToLoad,
+  }) async {
+    loadCalls++;
+    if (failOnLoadOnce && !_failed) {
+      _failed = true;
+      onFailedToLoad();
+      return;
+    }
+    loaded = completeOnLoad;
+    if (completeOnLoad) {
+      _widgetVisible = true;
+      onLoaded(this);
+    }
+  }
+
+  void simulateLoaded() {
+    loaded = true;
+    _widgetVisible = true;
+  }
+
+  @override
+  Widget buildWidget() {
+    return _widgetVisible
+        ? _FakeBannerWidget(bannerId: bannerId)
+        : const SizedBox.shrink();
+  }
 
   @override
   void dispose() {
-    disposed.add(bannerId);
+    disposeCalls++;
   }
 }
 
-class _FakeBannerAd {
-  _FakeBannerAd(this.bannerId, this.disposed);
+class _FakeBannerWidget extends StatelessWidget {
+  const _FakeBannerWidget({required this.bannerId});
 
   final String bannerId;
-  final List<String> disposed;
 
-  void dispose() {
-    disposed.add('$bannerId-callback');
+  @override
+  Widget build(BuildContext context) {
+    return Text('banner:$bannerId');
   }
 }
