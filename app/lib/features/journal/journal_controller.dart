@@ -21,6 +21,7 @@ class JournalController extends ChangeNotifier {
   bool _hasLoaded = false;
   DateTime _selectedDay = DateTime.now();
   Future<void>? _deleteAllEntriesFuture;
+  var _loadGeneration = 0;
 
   bool get hasLoaded => _hasLoaded;
 
@@ -54,12 +55,23 @@ class JournalController extends ChangeNotifier {
       JournalSummary.fromEntries(_entries, selectedDay, now: _now());
 
   Future<void> load() async {
+    final loadGeneration = _loadGeneration;
     try {
+      final loadedEntries = await _store.loadEntries();
+      if (loadGeneration != _loadGeneration) {
+        return;
+      }
       _entries
         ..clear()
-        ..addAll(await _store.loadEntries());
+        ..addAll(loadedEntries);
     } catch (_) {
+      if (loadGeneration != _loadGeneration) {
+        return;
+      }
       _entries.clear();
+    }
+    if (loadGeneration != _loadGeneration) {
+      return;
     }
     _selectedDay = DateTime(_now().year, _now().month, _now().day);
     _hasLoaded = true;
@@ -170,8 +182,10 @@ class JournalController extends ChangeNotifier {
 
   Future<void> _deleteAllEntries() async {
     await _store.deleteAllEntries();
+    _loadGeneration++;
     _entries.clear();
     _selectedDay = DateTime(_now().year, _now().month, _now().day);
+    _hasLoaded = true;
     notifyListeners();
   }
 

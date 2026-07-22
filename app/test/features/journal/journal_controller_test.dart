@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nurtly/features/journal/journal_controller.dart';
 import 'package:nurtly/features/journal/journal_entry.dart';
@@ -354,6 +356,34 @@ void main() {
     expect(store.entries, isEmpty);
   });
 
+  test('delete all ignores an in-flight stale load', () async {
+    final store = _DelayedLoadJournalStore(
+      initialEntries: [
+        JournalEntry.note(
+          id: 'note-1',
+          eventAt: DateTime(2026, 5, 19, 12),
+          note: 'Stale note',
+        ),
+      ],
+    );
+    final controller = JournalController(
+      store: store,
+      now: () => DateTime(2026, 5, 19, 14),
+    );
+
+    await controller.load();
+    expect(controller.entries, hasLength(1));
+
+    final staleReload = controller.load();
+    await controller.deleteAllEntries();
+    await store.releaseStaleLoad();
+    await staleReload;
+
+    expect(controller.entries, isEmpty);
+    expect(controller.summary.notesCount, 0);
+    expect(store.entries, isEmpty);
+  });
+
   test('concurrent delete all requests share the same deletion', () async {
     final store = InMemoryJournalStore(
       entries: [
@@ -443,4 +473,44 @@ void main() {
     expect(controller.activeSleep, isNull);
     expect(controller.entries.single.endAt, DateTime(2026, 5, 19, 10, 0));
   });
+}
+
+class _DelayedLoadJournalStore implements JournalStore {
+  _DelayedLoadJournalStore({
+    required List<JournalEntry> initialEntries,
+  }) : _initialEntries = List<JournalEntry>.from(initialEntries);
+
+  final List<JournalEntry> _initialEntries;
+  List<JournalEntry> _entries = <JournalEntry>[];
+  var _loadCount = 0;
+  Completer<List<JournalEntry>>? _staleLoadCompleter;
+
+  List<JournalEntry> get entries => List<JournalEntry>.unmodifiable(_entries);
+
+  Future<void> releaseStaleLoad() async {
+    _staleLoadCompleter?.complete(List<JournalEntry>.from(_initialEntries));
+    await Future<void>.delayed(Duration.zero);
+  }
+
+  @override
+  Future<List<JournalEntry>> loadEntries() {
+    _loadCount++;
+    if (_loadCount == 1) {
+      return Future<List<JournalEntry>>.value(
+        List<JournalEntry>.from(_initialEntries),
+      );
+    }
+    _staleLoadCompleter = Completer<List<JournalEntry>>();
+    return _staleLoadCompleter!.future;
+  }
+
+  @override
+  Future<void> saveEntries(List<JournalEntry> entries) async {
+    _entries = List<JournalEntry>.from(entries);
+  }
+
+  @override
+  Future<void> deleteAllEntries() async {
+    _entries = <JournalEntry>[];
+  }
 }

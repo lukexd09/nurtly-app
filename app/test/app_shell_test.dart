@@ -935,6 +935,110 @@ void main() {
   });
 
   testWidgets(
+    'paid monthly Premium shows manage subscription and opens the Play link',
+    (tester) async {
+      final entitlementProvider = FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.monthlyActive(
+          checkedAt: DateTime(2026, 7, 22, 12),
+        ),
+      );
+      Uri? openedUri;
+
+      await _pumpNurtlyApp(
+        tester,
+        premiumEntitlementProvider: entitlementProvider,
+        externalUrlLauncher: (uri) async {
+          openedUri = uri;
+          return true;
+        },
+      );
+
+      await _tapSettings(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('settings-premium-manage-subscription')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Manage subscription'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey('settings-premium-manage-subscription')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        openedUri,
+        Uri.https('play.google.com', '/store/account/subscriptions', {
+          'sku': 'nurtly_premium_monthly',
+          'package': 'com.graylion.nurtly',
+        }),
+      );
+    },
+  );
+
+  testWidgets(
+    'reviewer access does not show manage subscription and launcher failure surfaces a snackbar',
+    (tester) async {
+      final reviewerStore = FakeReviewerAccessStore(saved: true);
+      final entitlementProvider = FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.monthlyActive(
+          checkedAt: DateTime(2026, 7, 22, 12),
+        ),
+      );
+
+      await _pumpNurtlyApp(
+        tester,
+        premiumEntitlementProvider: entitlementProvider,
+        reviewerAccessStore: reviewerStore,
+        externalUrlLauncher: (_) async => false,
+      );
+
+      await _tapSettings(tester);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey('settings-premium-manage-subscription')),
+        findsNothing,
+      );
+    },
+  );
+
+  testWidgets(
+    'paid yearly Premium surfaces launcher failure when manage subscription fails',
+    (tester) async {
+      final entitlementProvider = FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.yearlyActive(
+          checkedAt: DateTime(2026, 7, 22, 12),
+        ),
+      );
+
+      await _pumpNurtlyApp(
+        tester,
+        premiumEntitlementProvider: entitlementProvider,
+        externalUrlLauncher: (_) async => false,
+      );
+
+      await _tapSettings(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('settings-premium-manage-subscription')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('settings-premium-manage-subscription')),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+            'Could not open Google Play subscription management. Please try again.'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
     'Delete all local data clears journal, language preference and reviewer access',
     (tester) async {
       final journalStore = InMemoryJournalStore(

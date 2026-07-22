@@ -136,6 +136,55 @@ void main() {
     await tester.pumpAndSettle();
     expect(purchases.buyMonthlyCalls, 2);
   });
+
+  testWidgets('Polish unavailable feedback stays readable on a narrow layout',
+      (tester) async {
+    final purchases = FakePremiumPurchaseProvider(
+      buyYearlyResult: const PurchaseActionResult(
+        status: PurchaseActionStatus.unavailable,
+      ),
+    );
+    final controller = PremiumAccessController(
+      provider: FakePremiumEntitlementProvider(
+        loadEntitlement: PremiumEntitlement.free(),
+      ),
+      purchaseProvider: purchases,
+      reviewerAccessStore: FakeReviewerAccessStore(),
+    );
+    await controller.load();
+    await controller.buyYearly();
+
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(1.25)),
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: PremiumPaywallScreen(
+            strings: AppStrings.polish,
+            controller: controller,
+            onRestoreAccess: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('premium-paywall-retry')),
+      200,
+    );
+    expect(find.byKey(const ValueKey('premium-paywall-retry')), findsOneWidget);
+    expect(
+      find.textContaining('Zakupy są chwilowo niedostępne'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
 }
 
 ProductDetails _product({

@@ -199,23 +199,25 @@ class _PurchaseFeedback extends StatelessWidget {
     if (message == null) {
       return const SizedBox(height: 44);
     }
-    return SizedBox(
-      height: 44,
-      child: Row(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 44),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              message!,
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
-              ),
+          Text(
+            message!,
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textSecondary,
             ),
           ),
           if (canRetry)
-            TextButton(
-              key: const ValueKey('premium-paywall-retry'),
-              onPressed: onRetry,
-              child: Text(retryLabel),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                key: const ValueKey('premium-paywall-retry'),
+                onPressed: onRetry,
+                child: Text(retryLabel),
+              ),
             ),
         ],
       ),
@@ -298,10 +300,12 @@ class _PlanCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xxs,
               children: [
-                Expanded(
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 0),
                   child: Text(
                     key: titleKey,
                     title,
@@ -311,7 +315,6 @@ class _PlanCard extends StatelessWidget {
                   ),
                 ),
                 if (badge != null) ...[
-                  const SizedBox(width: AppSpacing.sm),
                   _Badge(label: badge!),
                 ],
               ],
@@ -321,9 +324,12 @@ class _PlanCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.xxs),
             Text(note, key: noteKey, style: AppTextStyles.caption),
             const SizedBox(height: AppSpacing.sm),
-            FilledButton(
-              onPressed: isLoading ? null : onPressed,
-              child: Text(actionLabel),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: isLoading ? null : onPressed,
+                child: Text(actionLabel),
+              ),
             ),
           ],
         ),
